@@ -23,16 +23,10 @@ A modern open-source new tab page for personalized browsing experience.
 3. Start using your personalized new tab
 
 ## 🖼️ Screenshots
-<div style="display: flex; justify-content: space-between;">
-  <div style="width: 48%;">
-    <p>Main Interface</p>
-    <img src="images/New%20Tab_1.png" alt="Main Interface" style="width:100%">
-  </div>
-  <div style="width: 48%;">
-    <p>Multi-backgrounds</p>
-    <img src="images/New%20Tab_2.png" alt="Multi-backgrounds" style="width:100%">
-  </div>
-</div>
+| Feature | Preview |
+|------|------|
+| Main Interface | ![](images/New%20Tab_1.png) |
+| Multi-backgrounds | ![](images/New%20Tab_2.png) |
 
 ## 👥 Contributing
 Contributions are welcome! Please follow these steps:
