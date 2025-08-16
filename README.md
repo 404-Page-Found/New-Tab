@@ -41,11 +41,7 @@ Contributions are welcome! Please follow these steps:
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin feature/your-feature`)
 5. Create a Pull Request
-
-**Coding Standards:**
-- Use 4-space indentation
-- Follow ESLint rules
-- Add necessary comments
+(Remember to add neccessery comment.)
 
 ## 📄 License
 This project is licensed under the [MIT License](LICENSE).
