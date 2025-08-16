@@ -10,7 +10,7 @@ A modern open-source new tab page for personalized browsing experience.
 - Responsive design
 - Quick access
 - Buildin backgrounds
-- Quick search functionality (coming soon!)
+- Quick search functionality
 - Weather widget (coming soon!)
 - Todo list (coming soon!)
 
