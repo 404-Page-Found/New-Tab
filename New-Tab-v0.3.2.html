@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New-Tab</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+      }
+
+      body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+      body[data-bg="default"] {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      }
+      body[data-bg^="img"] {
+        background: none;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .search-bar {
+        align-items: center; /* Vertical center */
+        background: rgba(255, 255, 255, 0.9);
+        display: flex;
+        padding: 10px 20px;
+        border-radius: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        width: 750px;
+        margin-left: auto;
+        margin-right: auto;
+        transition: transform 0.18s cubic-bezier(0.4, 1.4, 0.6, 1);
+      }
+      .search-bar:focus-within {
+        transform: scale(1.04);
+        box-shadow: 0 6px 24px rgba(33, 150, 243, 0.13);
+      }
+      .search-bar input {
+        width: 100%;
+        padding: 6px;
+        border: none;
+        background: transparent;
+        font-size: 20px;
+        outline: none;
+        flex: 1; /* Automatically expand to fill remaining space */
+      }
+      .search-engine {
+        -webkit-appearance: none;
+        appearance: none;
+        background: url('data:image/svg+xml;utf8,<svg fill="%23999" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') no-repeat right 8px center;
+        padding: 6px 30px 6px 10px;
+        border-radius: 4px;
+        margin-right: 10px;
+        min-width: 80px; /* Minimum width to prevent content overflow */
+        border-color: #b7b7b7;
+      }
+
+      .app-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .app-icon {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-decoration: none;
+        color: #333;
+        transition: transform 0.2s;
+      }
+
+      .app-icon:hover {
+        transform: scale(1.05);
+      }
+
+      .icon {
+        width: 60px;
+        height: 60px;
+        background: white;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 8px;
+      }
+
+      .icon img {
+        width: 35px;
+        height: 35px;
+      }
+
+      .app-name {
+        font-size: 12px;
+        text-align: center;
+        color: #fff;
+        text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000;
+      }
+
+      .clock {
+        text-align: center;
+        font-size: 5em;
+        color: #5e5e5e;
+        margin-bottom: 20px;
+        font-weight: 300;
+      }
+
+      .date {
+        text-align: center;
+        color: #ffffff;
+        margin-bottom: 30px;
+        font-size: 1.5em;
+      }
+
+      /* Settings Modal Styles */
+      #settings-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0); /* transparent overlay for window style */
+        z-index: 1000;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+      #settings-modal > div {
+        background: #fff;
+        border-radius: 16px;
+        padding: 0;
+        min-width: 280px;
+        max-width: 420px;
+        width: 420px;
+        min-height: 500px;
+        max-height: none;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        right: auto;
+        display: flex;
+        flex-direction: column;
+      }
+      .settings-body {
+        display: flex;
+        min-height: 400px;
+      }
+      .settings-menu {
+        width: 160px;
+        background: #f5f7fa;
+        border-top-left-radius: 16px;
+        border-bottom-left-radius: 16px;
+        padding: 24px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .settings-menu-item {
+        background: none;
+        border: none;
+        color: #333;
+        font-size: 1em;
+        cursor: pointer;
+        padding: 10px 20px;
+        text-align: left;
+        border-radius: 8px;
+        transition: background 0.2s;
+      }
+      .settings-menu-item:hover {
+        background: #e0e0e0;
+      }
+      .settings-menu-item.selected {
+        background: #2196f3;
+        color: white;
+      }
+      .settings-content {
+        flex: 1;
+        padding: 20px 20px 16px 20px;
+        font-size: 1em;
+        overflow: visible;
+      }
+      .settings-content label,
+      .settings-content .bg-thumbnails,
+      .settings-content > div {
+        margin-bottom: 10px !important;
+      }
+      .settings-content label {
+        margin-bottom: 6px !important;
+      }
+      .settings-content > div[style*="margin-top"] {
+        margin-top: 12px !important;
+      }
+
+      .bg-thumbnails {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 8px;
+        margin-bottom: 16px;
+      }
+      .bg-thumb {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 2px solid transparent;
+        cursor: pointer;
+        transition: border 0.2s;
+      }
+      .bg-thumb.selected {
+        border: 2px solid #2196f3;
+      }
+
+      /* Add App Modal Styles */
+      #add-app-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 1001;
+        align-items: center;
+        justify-content: center;
+      }
+
+      #add-app-modal > div {
+        background: #fff;
+        border-radius: 16px;
+        padding: 24px 20px;
+        min-width: 280px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        position: relative;
+        max-width: 90vw;
+      }
+
+      #add-app-modal h3 {
+        margin-bottom: 12px;
+        font-size: 1.2em;
+      }
+
+      #add-app-modal input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+
+      #add-app-modal button {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      #add-app-modal button#add-app-confirm {
+        background: #2196f3;
+        color: white;
+      }
+
+      #add-app-modal button#add-app-cancel {
+        background: #eee;
+      }
+
+      /* Settings section options vertical layout */
+      .settings-section label {
+        display: block;
+        margin-bottom: 12px;
+      }
+      .settings-section input[type="radio"] {
+        margin-right: 6px;
+      }
+      .settings-section select,
+      .settings-section input[type="color"],
+      .settings-section input[type="number"] {
+        margin-top: 4px;
+        margin-bottom: 4px;
+      }
+      .settings-section button {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="clock" class="clock">12:00</div>
+      <div id="date" class="date">Monday, June 20</div>
+
+      <div class="search-bar">
+        <select class="search-engine" style="border:none;background:transparent;padding:6px;font-size:16px;margin-right:10px;">
+        <input type="text" placeholder="Search or enter website" />
+        </select>
+      </div>
+
+      <div class="app-grid">
+        <a
+          href="https://www.google.com"
+          class="app-icon"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="icon">
+            <img
+              src="https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png"
+              alt="Google"
+            />
+          </div>
+          <span class="app-name">Google</span>
+        </a>
+        <a
+          href="https://www.youtube.com"
+          class="app-icon"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="icon">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg"
+              alt="YouTube"
+            />
+          </div>
+          <span class="app-name">YouTube</span>
+        </a>
+        <a
+          href="https://www.github.com"
+          class="app-icon"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="icon">
+            <img
+              src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+              alt="GitHub"
+            />
+          </div>
+          <span class="app-name">GitHub</span>
+        </a>
+        <a
+          href="https://www.gmail.com"
+          class="app-icon"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="icon">
+            <img
+              src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico"
+              alt="Gmail"
+            />
+          </div>
+          <span class="app-name">Gmail</span>
+        </a>
+        <a
+          href="https://www.twitter.com"
+          class="app-icon"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="icon">
+            <img
+              src="https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg"
+              alt="X"
+            />
+          </div>
+          <span class="app-name">Twitter</span>
+        </a>
+        <a
+          href="https://www.facebook.com"
+          class="app-icon"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="icon">
+            <img src="https://facebook.com/favicon.ico" alt="Facebook" />
+          </div>
+          <span class="app-name">Facebook</span>
+        </a>
+        <a href="#" class="app-icon" id="tinymind-app">
+          <div class="icon">
+            <span style="font-size: 32px; font-weight: bold">T</span>
+          </div>
+          <span class="app-name">TinyMind-V2</span>
+        </a>
+        <a href="#" class="app-icon" id="settings-app">
+          <div class="icon">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/3524/3524636.png"
+              alt="Settings"
+            />
+          </div>
+          <span class="app-name">Settings</span>
+        </a>
+        <a href="#" class="app-icon" id="add-app">
+          <div class="icon">
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png"
+              alt="Add"
+              style="width: 32px; height: 32px"
+            />
+          </div>
+          <span class="app-name">Add</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div
+      id="settings-modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0);
+        z-index: 1000;
+        align-items: flex-start;
+        justify-content: flex-start;
+      "
+    >
+      <div>
+        <div class="settings-body" style="display: flex; min-height: 400px">
+          <nav
+            class="settings-menu"
+            style="
+              width: 160px;
+              background: #f5f7fa;
+              border-top-left-radius: 16px;
+              border-bottom-left-radius: 16px;
+              padding: 24px 0 24px 0;
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+            "
+          >
+            <button class="settings-menu-item selected" data-section="general">
+              General
+            </button>
+            <button class="settings-menu-item" data-section="background">
+              Background
+            </button>
+            <button class="settings-menu-item" data-section="apps">Apps</button>
+            <button class="settings-menu-item" data-section="clock">
+              Clock
+            </button>
+            <button class="settings-menu-item" data-section="date">Date</button>
+          </nav>
+          <div class="settings-content" style="flex: 1">
+            <section class="settings-section" data-section="general">
+              <label
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  cursor: pointer;
+                "
+                onclick="document.getElementById('open-new-tab-setting').click(); return false;"
+              >
+                <input
+                  type="checkbox"
+                  id="open-new-tab-setting"
+                  style="cursor: pointer"
+                  onclick="event.stopPropagation();"
+                />
+                Open apps in a new tab
+              </label>
+            </section>
+            <section
+              class="settings-section"
+              data-section="background"
+              style="display: none"
+            >
+              <div class="bg-thumbnails" id="bg-thumbnails">
+                <img
+                  class="bg-thumb"
+                  data-bg="default"
+                  src="data:image/svg+xml;utf8,<svg width='48' height='48' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop stop-color='%23f5f7fa' offset='0'/><stop stop-color='%23c3cfe2' offset='1'/></linearGradient></defs><rect width='48' height='48' rx='8' fill='url(%23g)'/></svg>"
+                  title="Default"
+                  alt="Default"
+                />
+                <img
+                  class="bg-thumb"
+                  data-bg="img6"
+                  src="https://images.pexels.com/photos/27135841/pexels-photo-27135841.jpeg"
+                  title="Beach - Australia"
+                  alt="Beach - Australia"
+                />
+                <img
+                  class="bg-thumb"
+                  data-bg="img5"
+                  src="https://images.pexels.com/photos/683940/pexels-photo-683940.jpeg"
+                  title="City - Shanghai"
+                  alt="City - Shanghai"
+                />
+                <img
+                  class="bg-thumb"
+                  data-bg="img3"
+                  src="https://images.pexels.com/photos/219692/pexels-photo-219692.jpeg"
+                  title="Dubai - United Arab Emirates"
+                  alt="Dubai - United Arab Emirates"
+                />
+                <img
+                  class="bg-thumb"
+                  data-bg="img2"
+                  src="https://images.pexels.com/photos/1775777/pexels-photo-1775777.jpeg"
+                  title="Night Sky - Mountain Peak"
+                  alt="Night Sky - Mountain Peak"
+                />
+                <img
+                  class="bg-thumb"
+                  data-bg="img1"
+                  src="https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg"
+                  title="Night Sky - Tree"
+                  alt="Night Sky - Tree"
+                />
+                <img
+                  class="bg-thumb"
+                  data-bg="img4"
+                  src="https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg"
+                  title="Huangshan - Anhui"
+                  alt="Huangshan - Anhui"
+                />
+                <img
+                  class="bg-thumb"
+                  data-bg="img7"
+                  src="https://images.pexels.com/photos/2481190/pexels-photo-2481190.jpeg"
+                  title="Skyline At Night - Hong Kong"
+                  alt="Skyline At Night - Hong Kong"
+                />
+                <img
+                  class="bg-thumb"
+                  data-bg="img9"
+                  src="https://images.pexels.com/photos/547125/pexels-photo-547125.jpeg"
+                  title="Slovenia"
+                  alt="Slovenia"
+                />
+              </div>
+            </section>
+            <section
+              class="settings-section"
+              data-section="apps"
+              style="display: none"
+            >
+              <label
+                ><input type="radio" name="curvature" value="0" /> Square</label
+              >
+              <label
+                ><input type="radio" name="curvature" value="15" />
+                Rounded</label
+              >
+              <label
+                ><input type="radio" name="curvature" value="50" />
+                Circle</label
+              >
+            </section>
+            <section
+              class="settings-section"
+              data-section="clock"
+              style="display: none"
+            >
+              <label
+                >Color:<br /><input type="color" id="clock-color-picker"
+              /></label>
+              <label
+                >Font:<br />
+                <select id="clock-font-picker">
+                  <option
+                    value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+                  >
+                    Default
+                  </option>
+                  <option value="'Arial', sans-serif">Arial</option>
+                  <option value="'Courier New', monospace">Courier New</option>
+                  <option value="'Times New Roman', serif">
+                    Times New Roman
+                  </option>
+                  <option value="'Comic Sans MS', cursive">
+                    Comic Sans MS
+                  </option>
+                  <option value="'Georgia', serif">Georgia</option>
+                </select>
+              </label>
+              <label
+                >Size:<br />
+                <input
+                  type="number"
+                  id="clock-size-picker"
+                  min="20"
+                  max="200"
+                  value="80"
+                  style="width: 60px"
+                />
+                px
+              </label>
+              <button id="clock-style-reset">Reset Clock Style</button>
+            </section>
+            <section
+              class="settings-section"
+              data-section="date"
+              style="display: none"
+            >
+              <label
+                >Color:<br /><input type="color" id="date-color-picker"
+              /></label>
+              <label
+                >Font:<br />
+                <select id="date-font-picker">
+                  <option
+                    value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif"
+                  >
+                    Default
+                  </option>
+                  <option value="'Arial', sans-serif">Arial</option>
+                  <option value="'Courier New', monospace">Courier New</option>
+                  <option value="'Times New Roman', serif">
+                    Times New Roman
+                  </option>
+                  <option value="'Comic Sans MS', cursive">
+                    Comic Sans MS
+                  </option>
+                  <option value="'Georgia', serif">Georgia</option>
+                </select>
+              </label>
+              <label
+                >Size:<br />
+                <input
+                  type="number"
+                  id="date-size-picker"
+                  min="10"
+                  max="80"
+                  value="24"
+                  style="width: 60px"
+                />
+                px
+              </label>
+              <button id="date-style-reset">Reset Date Style</button>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add App Modal -->
+    <div
+      id="add-app-modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 1001;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        style="
+          background: #fff;
+          border-radius: 16px;
+          padding: 24px 20px;
+          min-width: 200px;
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+          position: relative;
+          max-width: 80vw;
+        "
+      >
+        <h3 style="margin-bottom: 12px">Add New App</h3>
+        <input
+          id="add-app-url"
+          type="text"
+          placeholder="Enter website URL"
+          style="width: 100%; padding: 8px; margin-bottom: 12px"
+        />
+        <div id="default-apps-list" style="margin-bottom: 12px"></div>
+        <div style="text-align: right">
+          <button id="add-app-cancel" style="margin-right: 8px">Cancel</button>
+          <button id="add-app-confirm">Add</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TinyMind Modal -->
+    <div
+      id="tinymind-modal"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.18);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+      "
+    >
+      <div
+        style="
+          background: #fff;
+          border-radius: 18px;
+          box-shadow: 0 8px 32px rgba(33, 150, 243, 0.18);
+          width: 95vw;
+          max-width: 700px;
+          min-width: 320px;
+          min-height: 500px;
+          max-height: 90vh;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 18px 24px 10px 24px;
+            border-bottom: 1px solid #e0e6ef;
+          "
+        >
+          <span style="font-size: 1.2em; color: #2196f3; font-weight: bold"
+            >TinyMind-V2 Chat</span
+          >
+          <button
+            id="tinymind-close"
+            style="
+              background: none;
+              border: none;
+              font-size: 1.5em;
+              color: #888;
+              cursor: pointer;
+            "
+          >
+            ✕
+          </button>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column">
+          <div
+            id="tinymind-chat-box"
+            style="
+              flex: 1;
+              overflow-y: auto;
+              padding: 24px 24px 10px 24px;
+              background: #fafbfc;
+            "
+          ></div>
+          <form
+            id="tinymind-chat-form"
+            autocomplete="off"
+            style="
+              display: flex;
+              gap: 8px;
+              padding: 18px 24px 18px 24px;
+              border-top: 1px solid #e0e6ef;
+              background: #fff;
+            "
+          >
+            <input
+              type="text"
+              id="tinymind-user-input"
+              placeholder="Type your message..."
+              required
+              style="
+                flex: 1;
+                padding: 12px 18px;
+                border-radius: 24px;
+                border: none;
+                font-size: 17px;
+                background: #f0f4fa;
+              "
+            />
+            <button
+              type="submit"
+              style="
+                padding: 12px 24px;
+                border-radius: 24px;
+                border: none;
+                background: #2196f3;
+                color: #fff;
+                font-size: 17px;
+                cursor: pointer;
+              "
+            >
+              Send
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+      function updateTime() {
+        const now = new Date();
+        const timeElement = document.getElementById("clock");
+        const dateElement = document.getElementById("date");
+
+        // Update time
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        timeElement.textContent = `${hours}:${minutes}`;
+
+        // Update date
+        const options = { weekday: "long", month: "long", day: "numeric" };
+        dateElement.textContent = now.toLocaleDateString("en-US", options);
+      }
+
+      // Update time immediately and then every minute
+      updateTime();
+      setInterval(updateTime, 60000);
+
+      // Search Engine Configuration
+      const searchEngines = {
+        bing: {
+          name: "Bing",
+          url: " https://www.bing.com/search?q="
+        },
+        duckduckgo: {
+          name: "DuckDuckGo",
+          url: " https://duckduckgo.com/?q="
+        },
+        google: {
+          name: "Google",
+          url: "https://www.google.com/search?q="
+        },
+      }
+        
+      // Load saved search engine
+      function getSavedEngine() {
+        return localStorage.getItem("defaultEngine") || "google";
+      }
+
+      // Save search engine
+      function saveEngine(engine) {
+        localStorage.setItem("defaultEngine", engine);
+      }
+
+      // Initialize search engine dropdown
+      function initSearchEngine() {
+        const select = document.querySelector('.search-engine');
+        const savedEngine = getSavedEngine();
+        
+        // Set current selection
+        select.innerHTML = '';
+        
+        // Add options
+        Object.keys(searchEngines).forEach(key => {
+          const option = document.createElement('option');
+          option.value = key;
+          option.textContent = searchEngines[key].name;
+          select.appendChild(option);
+        });
+        
+        // Set selection last (ensure option exists)
+        select.value = savedEngine;
+
+        // Listen for selection changes
+        select.addEventListener('change', (e) => {
+          saveEngine(e.target.value);
+        });
+      }
+
+      // 修改搜索事件监听器
+      document.querySelector(".search-bar input").addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          const query = this.value.trim();
+          if (!query) return;
+          
+          const selectedEngine = searchEngines[getSavedEngine()];
+          
+          if (query.includes(".")) {
+            // Handle URL input
+            window.location.href = query.startsWith("http") ? query : `https://${query}`;
+          } else {
+            // Use selected search engine
+            window.location.href = `${selectedEngine.url}${encodeURIComponent(query)}`;
+          }
+        }
+      });
+
+      // Initialize on page load
+      initSearchEngine();
+
+
+      // Settings modal logic
+      const settingsApp = document.getElementById("settings-app");
+      const settingsModal = document.getElementById("settings-modal");
+      // const closeSettings = document.getElementById("close-settings"); // This element no longer exists
+      const openNewTabSetting = document.getElementById("open-new-tab-setting");
+      const appLinks = document.querySelectorAll(".app-grid .app-icon");
+
+      // Load setting from localStorage
+      function loadOpenNewTabSetting() {
+        return localStorage.getItem("openAppsInNewTab") !== "false";
+      }
+      function applyOpenNewTabSetting() {
+        const openInNewTab = loadOpenNewTabSetting();
+        appLinks.forEach((link) => {
+          if (link.id === "settings-app") return;
+          if (openInNewTab) {
+            link.setAttribute("target", "_blank");
+            link.setAttribute("rel", "noopener noreferrer");
+          } else {
+            link.removeAttribute("target");
+            link.removeAttribute("rel");
+          }
+        });
+        openNewTabSetting.checked = openInNewTab;
+      }
+      openNewTabSetting.addEventListener("change", function () {
+        localStorage.setItem("openAppsInNewTab", this.checked);
+        applyOpenNewTabSetting();
+      });
+      settingsApp.addEventListener("click", function (e) {
+        e.preventDefault();
+        settingsModal.style.display = "flex";
+      });
+      // Close modal on outside click
+      settingsModal.addEventListener("click", function (e) {
+        if (e.target === settingsModal) settingsModal.style.display = "none";
+      });
+
+      // Add App logic
+      const addAppBtn = document.getElementById("add-app");
+      const addAppModal = document.getElementById("add-app-modal");
+      const addAppUrlInput = document.getElementById("add-app-url");
+      const addAppCancel = document.getElementById("add-app-cancel");
+      const addAppConfirm = document.getElementById("add-app-confirm");
+      const appGrid = document.querySelector(".app-grid");
+
+      function getFavicon(url) {
+        try {
+          const u = new URL(url.startsWith("http") ? url : "https://" + url);
+          return u.origin + "/favicon.ico";
+        } catch {
+          return "";
+        }
+      }
+
+      function loadCustomApps() {
+        return JSON.parse(localStorage.getItem("customApps") || "[]");
+      }
+      function saveCustomApps(apps) {
+        localStorage.setItem("customApps", JSON.stringify(apps));
+      }
+      function renderCustomApps() {
+        document
+          .querySelectorAll(".app-icon.custom-app")
+          .forEach((e) => e.remove());
+        const apps = loadCustomApps();
+        apps.forEach((app, idx) => {
+          let a = document.createElement("a");
+          a.href = app.url;
+          a.className = "app-icon custom-app";
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.innerHTML = `<div class="icon"><img src="${app.icon}" alt="${app.name}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div><span class="app-name">${app.name}</span>`;
+          // Delete button
+          const removeBtn = document.createElement("button");
+          removeBtn.textContent = "✕";
+          removeBtn.title = "Remove widget";
+          removeBtn.style.position = "absolute";
+          removeBtn.style.top = "2px";
+          removeBtn.style.right = "2px";
+          removeBtn.style.background = "rgba(255,255,255,0.8)";
+          removeBtn.style.border = "none";
+          removeBtn.style.borderRadius = "50%";
+          removeBtn.style.width = "20px";
+          removeBtn.style.height = "20px";
+          removeBtn.style.cursor = "pointer";
+          removeBtn.style.fontSize = "14px";
+          removeBtn.style.lineHeight = "18px";
+          removeBtn.style.padding = "0";
+          removeBtn.style.zIndex = "10";
+          removeBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            const apps = loadCustomApps();
+            apps.splice(idx, 1);
+            saveCustomApps(apps);
+            renderCustomApps();
+          });
+          a.appendChild(removeBtn);
+          appGrid.insertBefore(a, addAppBtn);
+        });
+      }
+
+      addAppBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        addAppModal.style.display = "flex";
+        addAppUrlInput.value = "";
+        addAppUrlInput.focus();
+      });
+      addAppCancel.addEventListener("click", function () {
+        addAppModal.style.display = "none";
+      });
+      addAppModal.addEventListener("click", function (e) {
+        if (e.target === addAppModal) addAppModal.style.display = "none";
+      });
+      addAppConfirm.addEventListener("click", function () {
+        const url = addAppUrlInput.value.trim();
+        if (!url) return;
+        let name = url.replace(/^https?:\/\//, "").split("/")[0];
+        const icon = getFavicon(url);
+        const apps = loadCustomApps();
+        apps.push({
+          url: url.startsWith("http") ? url : "https://" + url,
+          name,
+          icon,
+        });
+        saveCustomApps(apps);
+        renderCustomApps();
+        addAppModal.style.display = "none";
+      });
+      // Render custom apps on load
+      renderCustomApps();
+
+      // Curvature logic (radio buttons)
+      const curvatureRadios = document.querySelectorAll(
+        'input[name="curvature"]'
+      );
+      const iconElements = document.querySelectorAll(".icon");
+      function loadCurvature() {
+        return localStorage.getItem("appsButtonCurvature") || "15";
+      }
+      function applyCurvature() {
+        const radius = loadCurvature();
+        iconElements.forEach((icon) => {
+          icon.style.borderRadius = radius + "px";
+        });
+        curvatureRadios.forEach((radio) => {
+          radio.checked = radio.value === radius;
+        });
+      }
+      curvatureRadios.forEach((radio) => {
+        radio.addEventListener("change", function () {
+          if (this.checked) {
+            localStorage.setItem("appsButtonCurvature", this.value);
+            applyCurvature();
+          }
+        });
+      });
+
+      // Background selection logic
+      const bgThumbnails = document.querySelectorAll(".bg-thumb");
+      function loadBg() {
+        return localStorage.getItem("homepageBg") || "default";
+      }
+      function applyBg() {
+        const bg = loadBg();
+        document.body.setAttribute("data-bg", bg);
+        bgThumbnails.forEach((thumb) => {
+          thumb.classList.toggle(
+            "selected",
+            thumb.getAttribute("data-bg") === bg
+          );
+        });
+        if (bg !== "default") {
+          let imgUrl = "";
+          switch (bg) {
+            case "img6":
+              imgUrl =
+                "https://images.pexels.com/photos/27135841/pexels-photo-27135841.jpeg";
+              break;
+            case "img5":
+              imgUrl =
+                "https://images.pexels.com/photos/683940/pexels-photo-683940.jpeg";
+              break;
+            case "img3":
+              imgUrl = "https://images.pexels.com/photos/219692/pexels-photo-219692.jpeg";
+              break;
+            case "img2":
+              imgUrl =
+                "https://images.pexels.com/photos/1775777/pexels-photo-1775777.jpeg";
+              break;
+            case "img1":
+              imgUrl = "https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg";
+              break;
+            case "img4":
+              imgUrl = "https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg";
+              break;
+            case "img7":
+              imgUrl = "https://images.pexels.com/photos/2481190/pexels-photo-2481190.jpeg";
+              break;
+            case "img9":
+              imgUrl =
+                "https://images.pexels.com/photos/547125/pexels-photo-547125.jpeg";
+              break;
+          }
+          document.body.style.background = `url('${imgUrl}') center center/cover no-repeat fixed`;
+        } else {
+          document.body.style.background = "";
+        }
+      }
+      bgThumbnails.forEach((thumb) => {
+        thumb.addEventListener("click", function () {
+          localStorage.setItem("homepageBg", this.getAttribute("data-bg"));
+          applyBg();
+        });
+      });
+
+      // Clock style settings logic
+      const clock = document.getElementById("clock");
+      const clockColorPicker = document.getElementById("clock-color-picker");
+      const clockFontPicker = document.getElementById("clock-font-picker");
+      const clockSizePicker = document.getElementById("clock-size-picker");
+      const clockStyleReset = document.getElementById("clock-style-reset");
+      // Date style settings logic
+      const date = document.getElementById("date");
+      const dateColorPicker = document.getElementById("date-color-picker");
+      const dateFontPicker = document.getElementById("date-font-picker");
+      const dateSizePicker = document.getElementById("date-size-picker");
+      const dateStyleReset = document.getElementById("date-style-reset");
+
+      function loadClockStyle() {
+        return {
+          color: localStorage.getItem("clockColor") || "#5e5e5e",
+          font:
+            localStorage.getItem("clockFont") ||
+            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          size: localStorage.getItem("clockSize") || "80",
+        };
+      }
+      function applyClockStyle() {
+        const style = loadClockStyle();
+        clock.style.color = style.color;
+        clock.style.fontFamily = style.font;
+        clock.style.fontSize = style.size + "px";
+        clockColorPicker.value = style.color;
+        clockFontPicker.value = style.font;
+        clockSizePicker.value = style.size;
+      }
+      clockColorPicker.addEventListener("input", function () {
+        localStorage.setItem("clockColor", this.value);
+        applyClockStyle();
+      });
+      clockFontPicker.addEventListener("change", function () {
+        localStorage.setItem("clockFont", this.value);
+        applyClockStyle();
+      });
+      clockSizePicker.addEventListener("input", function () {
+        let val = this.value;
+        if (val < 20) val = 20;
+        if (val > 200) val = 200;
+        localStorage.setItem("clockSize", val);
+        applyClockStyle();
+      });
+      clockStyleReset.addEventListener("click", function () {
+        localStorage.removeItem("clockColor");
+        localStorage.removeItem("clockFont");
+        localStorage.removeItem("clockSize");
+        applyClockStyle();
+      });
+      // Date style logic
+      function loadDateStyle() {
+        return {
+          color: localStorage.getItem("dateColor") || "#666666",
+          font:
+            localStorage.getItem("dateFont") ||
+            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          size: localStorage.getItem("dateSize") || "24",
+        };
+      }
+      function applyDateStyle() {
+        const style = loadDateStyle();
+        date.style.color = style.color;
+        date.style.fontFamily = style.font;
+        date.style.fontSize = style.size + "px";
+        dateColorPicker.value = style.color;
+        dateFontPicker.value = style.font;
+        dateSizePicker.value = style.size;
+      }
+      dateColorPicker.addEventListener("input", function () {
+        localStorage.setItem("dateColor", this.value);
+        applyDateStyle();
+      });
+      dateFontPicker.addEventListener("change", function () {
+        localStorage.setItem("dateFont", this.value);
+        applyDateStyle();
+      });
+      dateSizePicker.addEventListener("input", function () {
+        let val = this.value;
+        if (val < 10) val = 10;
+        if (val > 80) val = 80;
+        localStorage.setItem("dateSize", val);
+        applyDateStyle();
+      });
+      dateStyleReset.addEventListener("click", function () {
+        localStorage.removeItem("dateColor");
+        localStorage.removeItem("dateFont");
+        localStorage.removeItem("dateSize");
+        applyDateStyle();
+      });
+      // Initial setup
+      applyOpenNewTabSetting();
+      applyCurvature();
+      applyBg();
+      applyClockStyle();
+      applyDateStyle();
+
+      // Settings menu logic
+      const settingsMenuItems = document.querySelectorAll(
+        ".settings-menu-item"
+      );
+      const settingsSections = document.querySelectorAll(".settings-section");
+      settingsMenuItems.forEach((item) => {
+        item.addEventListener("click", function () {
+          const section = this.getAttribute("data-section");
+          settingsMenuItems.forEach((i) => i.classList.remove("selected"));
+          this.classList.add("selected");
+          settingsSections.forEach((s) => {
+            s.style.display =
+              s.getAttribute("data-section") === section ? "block" : "none";
+          });
+        });
+      });
+
+      // Settings menu navigation logic
+      document.querySelectorAll(".settings-menu-item").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          document
+            .querySelectorAll(".settings-menu-item")
+            .forEach((b) => b.classList.remove("selected"));
+          this.classList.add("selected");
+          const section = this.getAttribute("data-section");
+          document.querySelectorAll(".settings-section").forEach((sec) => {
+            sec.style.display =
+              sec.getAttribute("data-section") === section ? "" : "none";
+          });
+        });
+      });
+
+      // --- Add App Modal: Default Apps List ---
+      const defaultApps = [
+        {
+          name: "Google",
+          url: "https://www.google.com",
+          icon: "https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png",
+        },
+        {
+          name: "YouTube",
+          url: "https://www.youtube.com",
+          icon: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg",
+        },
+        {
+          name: "GitHub",
+          url: "https://www.github.com",
+          icon: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+        },
+        {
+          name: "Gmail",
+          url: "https://www.gmail.com",
+          icon: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico",
+        },
+        {
+          name: "Twitter",
+          url: "https://www.twitter.com",
+          icon: "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg",
+        },
+        {
+          name: "Facebook",
+          url: "https://www.facebook.com",
+          icon: "https://facebook.com/favicon.ico",
+        },
+        { name: "TinyMind-V2", url: "TinyMind-V2.html", icon: "" },
+      ];
+      const defaultAppsList = document.getElementById("default-apps-list");
+      function renderDefaultAppsList() {
+        defaultAppsList.innerHTML = "";
+        defaultApps.forEach((app) => {
+          const btn = document.createElement("button");
+          btn.style.display = "inline-flex";
+          btn.style.alignItems = "center";
+          btn.style.gap = "8px";
+          btn.style.margin = "2px 4px 2px 0";
+          btn.style.padding = "6px 12px";
+          btn.style.border = "1px solid #ddd";
+          btn.style.borderRadius = "8px";
+          btn.style.background = "#f5f7fa";
+          btn.style.cursor = "pointer";
+          btn.innerHTML = `${
+            app.icon
+              ? `<img src="${app.icon}" alt="${app.name}" style="width:20px;height:20px;object-fit:contain;background:#f5f7fa;display:block;">`
+              : `<span style='display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;background:#fff;font-size:16px;font-weight:bold;'>T</span>`
+          } <span>${app.name}</span>`;
+          btn.addEventListener("click", function () {
+            // Check if already exists
+            const exists = Array.from(
+              document.querySelectorAll(".app-icon .app-name")
+            ).some((e) => e.textContent === app.name);
+            if (exists) return;
+            // Add to custom apps
+            const apps = loadCustomApps();
+            apps.push({ url: app.url, name: app.name, icon: app.icon });
+            saveCustomApps(apps);
+            renderCustomApps();
+            addAppModal.style.display = "none";
+          });
+          defaultAppsList.appendChild(btn);
+        });
+      }
+      // Render default apps when opening the add app modal
+      addAppBtn.addEventListener("click", function (e) {
+        // ...existing code...
+        renderDefaultAppsList();
+      });
+
+      // TinyMind Modal logic
+      const tinymindApp = document.getElementById("tinymind-app");
+      const tinymindModal = document.getElementById("tinymind-modal");
+      const tinymindClose = document.getElementById("tinymind-close");
+      tinymindApp.addEventListener("click", function (e) {
+        e.preventDefault();
+        tinymindModal.style.display = "flex";
+        renderTinyMindChat();
+      });
+      tinymindClose.addEventListener("click", function () {
+        tinymindModal.style.display = "none";
+      });
+      tinymindModal.addEventListener("click", function (e) {
+        if (e.target === tinymindModal) tinymindModal.style.display = "none";
+      });
+      // TinyMind Chat logic
+      function getTinyMindChats() {
+        return JSON.parse(localStorage.getItem("tinymind_chats") || "[]");
+      }
+      function saveTinyMindChats(chats) {
+        localStorage.setItem("tinymind_chats", JSON.stringify(chats));
+      }
+      function getTinyMindCurrentChatIdx() {
+        return parseInt(
+          localStorage.getItem("tinymind_current_chat") || "0",
+          10
+        );
+      }
+      function setTinyMindCurrentChatIdx(idx) {
+        localStorage.setItem("tinymind_current_chat", idx);
+      }
+      function renderTinyMindChat() {
+        const chatBox = document.getElementById("tinymind-chat-box");
+        chatBox.innerHTML = "";
+        const chats = getTinyMindChats();
+        const idx = getTinyMindCurrentChatIdx();
+        if (!chats[idx]) return;
+        chats[idx].messages.forEach((msg) => {
+          appendTinyMindMessage(msg.role, msg.content);
+        });
+      }
+      function appendTinyMindMessage(role, text) {
+        const chatBox = document.getElementById("tinymind-chat-box");
+        const div = document.createElement("div");
+        div.className = "message " + role;
+        div.innerHTML = `<span style="color:${
+          role === "user" ? "#2196f3" : "#333"
+        };font-weight:${role === "user" ? "bold" : "normal"};">${
+          role === "user" ? "You" : "TinyMind-V2"
+        }:</span> ${text}`;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+      function addTinyMindMessageToCurrentChat(role, content) {
+        const chats = getTinyMindChats();
+        const idx = getTinyMindCurrentChatIdx();
+        if (!chats[idx]) return;
+        chats[idx].messages.push({ role, content });
+        if (role === "user" && !chats[idx].title) {
+          chats[idx].title =
+            content.slice(0, 32) + (content.length > 32 ? "..." : "");
+        }
+        saveTinyMindChats(chats);
+      }
+      function startTinyMindNewChat() {
+        const chats = getTinyMindChats();
+        chats.push({ title: "", messages: [] });
+        saveTinyMindChats(chats);
+        setTinyMindCurrentChatIdx(chats.length - 1);
+        renderTinyMindChat();
+        document.getElementById("tinymind-user-input").focus();
+      }
+      // Initial chat setup
+      if (!getTinyMindChats().length) {
+        startTinyMindNewChat();
+      }
+      // Chat form logic
+      const tinymindChatForm = document.getElementById("tinymind-chat-form");
+      const tinymindUserInput = document.getElementById("tinymind-user-input");
+      tinymindChatForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        const prompt = tinymindUserInput.value.trim();
+        if (!prompt) return;
+        appendTinyMindMessage("user", prompt);
+        addTinyMindMessageToCurrentChat("user", prompt);
+        tinymindUserInput.value = "";
+        appendTinyMindMessage("assistant", "<em>Thinking...</em>");
+        try {
+          const response = await fetch(
+            "http://localhost:5000/v1/chat/completions",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer TINY_MIND",
+              },
+              body: JSON.stringify({
+                messages:
+                  getTinyMindChats()[getTinyMindCurrentChatIdx()].messages,
+              }),
+            }
+          );
+          const data = await response.json();
+          const chatBox = document.getElementById("tinymind-chat-box");
+          chatBox.removeChild(chatBox.lastChild);
+          if (
+            data &&
+            data.choices &&
+            data.choices[0] &&
+            data.choices[0].message &&
+            data.choices[0].message.content
+          ) {
+            appendTinyMindMessage("assistant", data.choices[0].message.content);
+            addTinyMindMessageToCurrentChat(
+              "assistant",
+              data.choices[0].message.content
+            );
+          } else {
+            appendTinyMindMessage(
+              "assistant",
+              "<em>No response from TinyMind-V2.</em>"
+            );
+            addTinyMindMessageToCurrentChat(
+              "assistant",
+              "<em>No response from TinyMind-V2.</em>"
+            );
+          }
+        } catch (err) {
+          const chatBox = document.getElementById("tinymind-chat-box");
+          chatBox.removeChild(chatBox.lastChild);
+          appendTinyMindMessage(
+            "assistant",
+            "<em>Error connecting to API.</em>"
+          );
+          addTinyMindMessageToCurrentChat(
+            "assistant",
+            "<em>Error connecting to API.</em>"
+          );
+        }
+      });
+      // Disable browser default context menu
+      document.addEventListener("contextmenu", function (e) {
+      e.preventDefault();
+      });
+    </script>
+    <div
+      style="
+        position: fixed;
+        bottom: 10px;
+        right: 20px;
+        color: #888;
+        font-size: 0.95em;
+        z-index: 2000;
+        user-select: none;
+        pointer-events: none;
+      "
+    >
+      v0.3.1
+    </div>
+  </body>
+</html>

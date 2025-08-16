@@ -22,7 +22,7 @@ A modern open-source new tab page for personalized browsing experience.
 - Responsive design
 - Quick access
 - Buildin backgrounds
-- Quick search functionality (coming soon!)
+- Quick search functionality
 - Weather widget (coming soon!)
 - Todo list (coming soon!)
 
@@ -31,7 +31,7 @@ A modern open-source new tab page for personalized browsing experience.
    ```bash
    git clone https://github.com/404-Page-Found/New-Tab.git
    ```
-2. Open the `New Tab-V0.3.1.html` file
+2. Open the `New-Tab-v0.3.1.html` file
 3. Start using your personalized new tab
 
 ## 🖼️ Screenshots
