@@ -31,7 +31,7 @@
       }
 
       .search-bar {
-        align-items: center; /* 垂直居中 */
+        align-items: center; /* Vertical center */
         background: rgba(255, 255, 255, 0.9);
         display: flex;
         padding: 10px 20px;
@@ -54,7 +54,7 @@
         background: transparent;
         font-size: 20px;
         outline: none;
-        flex: 1; /* 自动扩展填充剩余空间 */
+        flex: 1; /* Automatically expand to fill remaining space */
       }
       .search-engine {
         -webkit-appearance: none;
@@ -63,7 +63,7 @@
         padding: 6px 30px 6px 10px;
         border-radius: 4px;
         margin-right: 10px;
-        min-width: 80px; /* 最小宽度防止内容溢出 */
+        min-width: 80px; /* Minimum width to prevent content overflow */
         border-color: #b7b7b7;
       }
 
@@ -831,7 +831,7 @@
       updateTime();
       setInterval(updateTime, 60000);
 
-      // 搜索引擎配置
+      // Search Engine Configuration
       const searchEngines = {
         bing: {
           name: "Bing",
@@ -847,25 +847,25 @@
         },
       }
         
-      // 加载保存的搜索引擎
+      // Load saved search engine
       function getSavedEngine() {
         return localStorage.getItem("defaultEngine") || "google";
       }
 
-      // 保存搜索引擎
+      // Save search engine
       function saveEngine(engine) {
         localStorage.setItem("defaultEngine", engine);
       }
 
-      // 初始化搜索引擎选择框
+      // Initialize search engine dropdown
       function initSearchEngine() {
         const select = document.querySelector('.search-engine');
         const savedEngine = getSavedEngine();
         
-        // 设置当前选中项
+        // Set current selection
         select.innerHTML = '';
         
-        // 添加选项
+        // Add options
         Object.keys(searchEngines).forEach(key => {
           const option = document.createElement('option');
           option.value = key;
@@ -873,10 +873,10 @@
           select.appendChild(option);
         });
         
-        // 最后设置选中项（确保选项已存在）
+        // Set selection last (ensure option exists)
         select.value = savedEngine;
 
-        // 监听选择变化
+        // Listen for selection changes
         select.addEventListener('change', (e) => {
           saveEngine(e.target.value);
         });
@@ -891,23 +891,23 @@
           const selectedEngine = searchEngines[getSavedEngine()];
           
           if (query.includes(".")) {
-            // 处理URL输入
+            // Handle URL input
             window.location.href = query.startsWith("http") ? query : `https://${query}`;
           } else {
-            // 使用选中的搜索引擎
+            // Use selected search engine
             window.location.href = `${selectedEngine.url}${encodeURIComponent(query)}`;
           }
         }
       });
 
-      // 在页面加载时初始化
+      // Initialize on page load
       initSearchEngine();
 
 
       // Settings modal logic
       const settingsApp = document.getElementById("settings-app");
       const settingsModal = document.getElementById("settings-modal");
-      // const closeSettings = document.getElementById("close-settings"); // 已无此元素
+      // const closeSettings = document.getElementById("close-settings"); // This element no longer exists
       const openNewTabSetting = document.getElementById("open-new-tab-setting");
       const appLinks = document.querySelectorAll(".app-grid .app-icon");
 
@@ -977,10 +977,10 @@
           a.target = "_blank";
           a.rel = "noopener noreferrer";
           a.innerHTML = `<div class="icon"><img src="${app.icon}" alt="${app.name}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div><span class="app-name">${app.name}</span>`;
-          // 删除按钮
+          // Delete button
           const removeBtn = document.createElement("button");
           removeBtn.textContent = "✕";
-          removeBtn.title = "移除小组件";
+          removeBtn.title = "Remove widget";
           removeBtn.style.position = "absolute";
           removeBtn.style.top = "2px";
           removeBtn.style.right = "2px";
@@ -1305,12 +1305,12 @@
               : `<span style='display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;background:#fff;font-size:16px;font-weight:bold;'>T</span>`
           } <span>${app.name}</span>`;
           btn.addEventListener("click", function () {
-            // 检查是否已存在
+            // Check if already exists
             const exists = Array.from(
               document.querySelectorAll(".app-icon .app-name")
             ).some((e) => e.textContent === app.name);
             if (exists) return;
-            // 添加到自定义应用
+            // Add to custom apps
             const apps = loadCustomApps();
             apps.push({ url: app.url, name: app.name, icon: app.icon });
             saveCustomApps(apps);
@@ -1320,7 +1320,7 @@
           defaultAppsList.appendChild(btn);
         });
       }
-      // 打开添加应用弹窗时渲染默认应用
+      // Render default apps when opening the add app modal
       addAppBtn.addEventListener("click", function (e) {
         // ...existing code...
         renderDefaultAppsList();
@@ -1466,7 +1466,7 @@
           );
         }
       });
-      // 禁用默认的浏览器右键菜单
+      // Disable browser default context menu
       document.addEventListener("contextmenu", function (e) {
       e.preventDefault();
       });
@@ -1487,4 +1487,3 @@
     </div>
   </body>
 </html>
-
