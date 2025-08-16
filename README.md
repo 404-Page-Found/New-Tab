@@ -2,8 +2,8 @@
 
 **Available Languages**:  
 [![简体中文](https://img.shields.io/badge/简体中文-blue)](docs/l10n/README.zh-CN.md)
-[![Español](https://img.shields.io/badge/Español-blue)](docs/l10n/README.es.md)
 [![English](https://img.shields.io/badge/English-blue)](docs/l10n/README.en.md)
+[![Español](https://img.shields.io/badge/Español-blue)](docs/l10n/README.es.md)
 [![हिन्दी](https://img.shields.io/badge/हिन्दी-blue)](docs/l10n/README.hi.md)
 [![Português](https://img.shields.io/badge/Português-blue)](docs/l10n/README.pt.md)
 [![বাংলা](https://img.shields.io/badge/বাংলা-blue)](docs/l10n/README.bn.md)
