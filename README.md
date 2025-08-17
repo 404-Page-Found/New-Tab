@@ -2,7 +2,6 @@
 
 **Available Languages**:  
 [![简体中文](https://img.shields.io/badge/简体中文-blue)](docs/README.zh-CN.md)
-[![English](https://img.shields.io/badge/English-blue)](docs/README.en.md)
 [![Español](https://img.shields.io/badge/Español-blue)](docs/README.es.md)
 [![हिन्दी](https://img.shields.io/badge/हिन्दी-blue)](docs/README.hi.md)
 [![Português](https://img.shields.io/badge/Português-blue)](docs/README.pt.md)
