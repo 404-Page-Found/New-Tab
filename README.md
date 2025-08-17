@@ -25,6 +25,7 @@ A modern open-source new tab page for personalized browsing experience.
 - Quick search functionality
 - Weather widget (coming soon!)
 - Todo list (coming soon!)
+- Motto (coming soon!)
 
 ## 🚀 Quick Start
 1. Clone the repository:
