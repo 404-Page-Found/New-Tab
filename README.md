@@ -37,8 +37,8 @@ A modern open-source new tab page for personalized browsing experience.
 ## 🖼️ Screenshots
 | Feature | Preview |
 |------|------|
-| Main Interface | ![](images/New%20Tab_1.png) |
-| Multi-backgrounds | ![](images/New%20Tab_2.png) |
+| Main Interface | ![](images/Screenshots/New%20Tab_1.png) |
+| Multi-backgrounds | ![](images/Screenshots/New%20Tab_2.png) |
 
 ## 👥 Contributing
 Contributions are welcome! Please follow these steps:
