@@ -1,4 +1,4 @@
-# New Tab v0.3.1
+# New Tab v0.3.2
 
 **Available Languages**:  
 [![简体中文](https://img.shields.io/badge/简体中文-blue)](docs/README.zh-CN.md)
