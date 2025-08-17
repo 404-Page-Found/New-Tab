@@ -59,7 +59,8 @@
       .search-engine {
         -webkit-appearance: none;
         appearance: none;
-        background: url('data:image/svg+xml;utf8,<svg fill="%23999" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') no-repeat right 8px center;
+        background: url('data:image/svg+xml;utf8,<svg fill="%23999" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>')
+          no-repeat right 8px center;
         padding: 6px 30px 6px 10px;
         border-radius: 4px;
         margin-right: 10px;
@@ -307,8 +308,17 @@
       <div id="date" class="date">Monday, June 20</div>
 
       <div class="search-bar">
-        <select class="search-engine" style="border:none;background:transparent;padding:6px;font-size:16px;margin-right:10px;">
-        <input type="text" placeholder="Search or enter website" />
+        <select
+          class="search-engine"
+          style="
+            border: none;
+            background: transparent;
+            padding: 6px;
+            font-size: 16px;
+            margin-right: 10px;
+          "
+        >
+          <input type="text" placeholder="Search or enter website" />
         </select>
       </div>
 
@@ -835,18 +845,18 @@
       const searchEngines = {
         bing: {
           name: "Bing",
-          url: " https://www.bing.com/search?q="
+          url: " https://www.bing.com/search?q=",
         },
         duckduckgo: {
           name: "DuckDuckGo",
-          url: " https://duckduckgo.com/?q="
+          url: " https://duckduckgo.com/?q=",
         },
         google: {
           name: "Google",
-          url: "https://www.google.com/search?q="
+          url: "https://www.google.com/search?q=",
         },
-      }
-        
+      };
+
       // Load saved search engine
       function getSavedEngine() {
         return localStorage.getItem("defaultEngine") || "google";
@@ -859,50 +869,55 @@
 
       // Initialize search engine dropdown
       function initSearchEngine() {
-        const select = document.querySelector('.search-engine');
+        const select = document.querySelector(".search-engine");
         const savedEngine = getSavedEngine();
-        
+
         // Set current selection
-        select.innerHTML = '';
-        
+        select.innerHTML = "";
+
         // Add options
-        Object.keys(searchEngines).forEach(key => {
-          const option = document.createElement('option');
+        Object.keys(searchEngines).forEach((key) => {
+          const option = document.createElement("option");
           option.value = key;
           option.textContent = searchEngines[key].name;
           select.appendChild(option);
         });
-        
+
         // Set selection last (ensure option exists)
         select.value = savedEngine;
 
         // Listen for selection changes
-        select.addEventListener('change', (e) => {
+        select.addEventListener("change", (e) => {
           saveEngine(e.target.value);
         });
       }
 
       // 修改搜索事件监听器
-      document.querySelector(".search-bar input").addEventListener("keypress", function (e) {
-        if (e.key === "Enter") {
-          const query = this.value.trim();
-          if (!query) return;
-          
-          const selectedEngine = searchEngines[getSavedEngine()];
-          
-          if (query.includes(".")) {
-            // Handle URL input
-            window.location.href = query.startsWith("http") ? query : `https://${query}`;
-          } else {
-            // Use selected search engine
-            window.location.href = `${selectedEngine.url}${encodeURIComponent(query)}`;
+      document
+        .querySelector(".search-bar input")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            const query = this.value.trim();
+            if (!query) return;
+
+            const selectedEngine = searchEngines[getSavedEngine()];
+
+            if (query.includes(".")) {
+              // Handle URL input
+              window.location.href = query.startsWith("http")
+                ? query
+                : `https://${query}`;
+            } else {
+              // Use selected search engine
+              window.location.href = `${selectedEngine.url}${encodeURIComponent(
+                query
+              )}`;
+            }
           }
-        }
-      });
+        });
 
       // Initialize on page load
       initSearchEngine();
-
 
       // Settings modal logic
       const settingsApp = document.getElementById("settings-app");
@@ -1088,20 +1103,24 @@
                 "https://images.pexels.com/photos/683940/pexels-photo-683940.jpeg";
               break;
             case "img3":
-              imgUrl = "https://images.pexels.com/photos/219692/pexels-photo-219692.jpeg";
+              imgUrl =
+                "https://images.pexels.com/photos/219692/pexels-photo-219692.jpeg";
               break;
             case "img2":
               imgUrl =
                 "https://images.pexels.com/photos/1775777/pexels-photo-1775777.jpeg";
               break;
             case "img1":
-              imgUrl = "https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg";
+              imgUrl =
+                "https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg";
               break;
             case "img4":
-              imgUrl = "https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg";
+              imgUrl =
+                "https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg";
               break;
             case "img7":
-              imgUrl = "https://images.pexels.com/photos/2481190/pexels-photo-2481190.jpeg";
+              imgUrl =
+                "https://images.pexels.com/photos/2481190/pexels-photo-2481190.jpeg";
               break;
             case "img9":
               imgUrl =
@@ -1468,9 +1487,26 @@
       });
       // Disable browser default context menu
       document.addEventListener("contextmenu", function (e) {
-      e.preventDefault();
+        e.preventDefault();
       });
     </script>
+    <div
+      style="
+        position: fixed;
+        bottom: 10px;
+        left: 20px;
+        color: #888;
+        font-size: 0.95em;
+        z-index: 2000;
+      "
+    >
+      <a
+        href="https://github.com/404-Page-Found/New-Tab"
+        target="_blank"
+        style="color: #888; text-decoration: none"
+        >New-Tab GitHub Repository</a
+      >
+    </div>
     <div
       style="
         position: fixed;
