@@ -27,10 +27,7 @@ A modern open-source new tab page for personalized browsing experience.
 - Todo list (coming soon!)
 
 ## 🚀 Quick Start
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/404-Page-Found/New-Tab.git
-   ```
+1. Download the pre-release source code
 2. Open the `New-Tab-v0.3.2.html` file
 3. Start using your personalized new tab
 
