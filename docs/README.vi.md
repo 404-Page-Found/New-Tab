@@ -1,5 +1,5 @@
-# New Tab v0.3.1
-[![Giấy phép: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+# New Tab v0.3.2
+[![Giấy phép: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![Phiên bản](https://img.shields.io/badge/version-0.3.1-blue)]()
 
 Một trang tab mới mã nguồn mở hiện đại cho trải nghiệm duyệt web cá nhân hóa.
@@ -9,23 +9,21 @@ Một trang tab mới mã nguồn mở hiện đại cho trải nghiệm duyệt
 - Thiết kế đáp ứng
 - Truy cập nhanh
 - Hình nền tích hợp
-- Chức năng tìm kiếm nhanh (sắp ra mắt!)
+- Chức năng tìm kiếm nhanh
+- Phương châm
 - Tiện ích thời tiết (sắp ra mắt!)
 - Danh sách việc cần làm (sắp ra mắt!)
 
 ## 🚀 Bắt đầu nhanh
-1. Sao chép kho lưu trữ:
-   ```bash
-   git clone https://github.com/404-Page-Found/New-Tab.git
-   ```
-2. Mở tệp `New Tab-V0.3.1.html`
+1. Tải xuống mã nguồn đã phát hành
+2. Mở tệp `New-Tab.html`
 3. Bắt đầu sử dụng tab mới cá nhân hóa của bạn
 
 ## 🖼️ Ảnh chụp màn hình
 | Tính năng | Xem trước |
 |------|------|
-| Giao diện chính | ![](../../images/New%20Tab_1.png) |
-| Đa hình nền | ![](../../images/New%20Tab_2.png) |
+| Giao diện chính | ![](../images/Screenshots/New%20Tab_1.png) |
+| Đa hình nền | ![](../images/Screenshots/New%20Tab_2.png) |
 
 ## 👥 Đóng góp
 Đóng góp được hoan nghênh! Vui lòng làm theo các bước sau:
@@ -37,4 +35,4 @@ Một trang tab mới mã nguồn mở hiện đại cho trải nghiệm duyệt
 (Nhớ thêm nhận xét cần thiết)
 
 ## 📄 Giấy phép
-Dự án này được cấp phép theo [Giấy phép MIT](../../LICENSE).
+Dự án này được cấp phép theo [Giấy phép MIT](../LICENSE).

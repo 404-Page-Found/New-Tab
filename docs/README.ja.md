@@ -1,5 +1,5 @@
-# New Tab v0.3.1
-[![ライセンス: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+# New Tab v0.3.2
+[![ライセンス: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![バージョン](https://img.shields.io/badge/version-0.3.1-blue)]()
 
 パーソナライズされたブラウジング体験のためのモダンなオープンソースの新規タブページ。
@@ -9,23 +9,21 @@
 - レスポンシブデザイン
 - クイックアクセス
 - 組み込み背景
-- クイック検索機能（近日公開予定！）
+- クイック検索機能
+- モットー
 - 天気ウィジェット（近日公開予定！）
 - ToDoリスト（近日公開予定！）
 
 ## 🚀 クイックスタート
-1. リポジトリをクローン：
-   ```bash
-   git clone https://github.com/404-Page-Found/New-Tab.git
-   ```
-2. `New Tab-V0.3.1.html` ファイルを開く
+1. 公開されたソースコードをダウンロードする
+2. `New-Tab.html` ファイルを開く
 3. パーソナライズされた新規タブの使用を開始
 
 ## 🖼️ スクリーンショット
 | 機能 | プレビュー |
 |------|------|
-| メインインターフェース | ![](../../images/New%20Tab_1.png) |
-| 複数背景 | ![](../../images/New%20Tab_2.png) |
+| メインインターフェース | ![](../images/Screenshots/New%20Tab_1.png) |
+| 複数背景 | ![](../images/Screenshots/New%20Tab_2.png) |
 
 ## 👥 貢献
 貢献大歓迎！以下の手順に従ってください：
@@ -37,4 +35,4 @@
 (必要なコメントを追加するのを忘れずに)
 
 ## 📄 ライセンス
-このプロジェクトは [MIT ライセンス](../../LICENSE) でライセンスされています。
+このプロジェクトは [MIT ライセンス](../LICENSE) でライセンスされています。

@@ -1,5 +1,5 @@
-# New Tab v0.3.1
-[![Licencia: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+# New Tab v0.3.2
+[![Licencia: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![Versión](https://img.shields.io/badge/version-0.3.1-blue)]()
 
 Una página de nueva pestaña moderna de código abierto para una experiencia de navegación personalizada.
@@ -9,23 +9,21 @@ Una página de nueva pestaña moderna de código abierto para una experiencia de
 - Diseño responsivo
 - Acceso rápido
 - Fondos integrados
-- Función de búsqueda rápida (¡próximamente!)
+- Función de búsqueda rápida
+- Lema
 - Widget meteorológico (¡próximamente!)
 - Lista de tareas (¡próximamente!)
 
 ## 🚀 Comenzar rápidamente
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/404-Page-Found/New-Tab.git
-   ```
-2. Abre el archivo `New Tab-V0.3.1.html`
+1. Descargue el código fuente publicado
+2. Abre el archivo `New-Tab.html`
 3. Comienza a usar tu nueva pestaña personalizada
 
 ## 🖼️ Capturas de pantalla
 | Característica | Vista previa |
 |------|------|
-| Interfaz principal | ![](../../images/New%20Tab_1.png) |
-| Fondos múltiples | ![](../../images/New%20Tab_2.png) |
+| Interfaz principal | ![](../images/Screenshots/New%20Tab_1.png) |
+| Fondos múltiples | ![](../images/Screenshots/New%20Tab_2.png) |
 
 ## 👥 Contribuir
 ¡Las contribuciones son bienvenidas! Por favor sigue estos pasos:
@@ -37,4 +35,4 @@ Una página de nueva pestaña moderna de código abierto para una experiencia de
 (Recuerda agregar comentarios necesarios.)
 
 ## 📄 Licencia
-Este proyecto está bajo la [Licencia MIT](../../LICENSE).
+Este proyecto está bajo la [Licencia MIT](../LICENSE).

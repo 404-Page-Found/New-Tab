@@ -27,8 +27,8 @@ A modern open-source new tab page for personalized browsing experience.
 - Todo list (coming soon!)
 
 ## 🚀 Quick Start
-1. Download the pre-release source code
-2. Open the `New-Tab-v0.3.2.html` file
+1. Download the released source code
+2. Open the `New-Tab.html` file
 3. Start using your personalized new tab
 
 ## 🖼️ Screenshots

@@ -1,5 +1,5 @@
-# New Tab v0.3.1
-[![Licença: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+# New Tab v0.3.2
+[![Licença: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![Versão](https://img.shields.io/badge/version-0.3.1-blue)]()
 
 Uma página de nova aba moderna de código aberto para uma experiência de navegação personalizada.
@@ -9,23 +9,21 @@ Uma página de nova aba moderna de código aberto para uma experiência de naveg
 - Design responsivo
 - Acesso rápido
 - Planos de fundo incorporados
-- Funcionalidade de pesquisa rápida (em breve!)
+- Funcionalidade de pesquisa rápida
+- Lema
 - Widget meteorológico (em breve!)
 - Lista de tarefas (em breve!)
 
 ## 🚀 Início Rápido
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/404-Page-Found/New-Tab.git
-   ```
-2. Abra o arquivo `New Tab-V0.3.1.html`
+1. Baixe o código-fonte lançado
+2. Abra o arquivo `New-Tab.html`
 3. Comece a usar sua nova aba personalizada
 
 ## 🖼️ Capturas de tela
 | Recurso | Visualização |
 |------|------|
-| Interface principal | ![](../../images/New%20Tab_1.png) |
-| Múltiplos planos de fundo | ![](../../images/New%20Tab_2.png) |
+| Interface principal | ![](../images/Screenshots/New%20Tab_1.png) |
+| Múltiplos planos de fundo | ![](../images/Screenshots/New%20Tab_2.png) |
 
 ## 👥 Contribuição
 Contribuições são bem-vindas! Siga estas etapas:
@@ -37,4 +35,4 @@ Contribuições são bem-vindas! Siga estas etapas:
 (Lembre-se de adicionar comentários necessários.)
 
 ## 📄 Licença
-Este projeto está licenciado sob a [Licença MIT](../../LICENSE).
+Este projeto está licenciado sob a [Licença MIT](../LICENSE).
