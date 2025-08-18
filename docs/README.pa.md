@@ -1,6 +1,6 @@
 # New Tab v0.3.2
 [![ਲਾਇਸੈਂਸ: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
-[![ਵਰਜ਼ਨ](https://img.shields.io/badge/version-0.3.1-blue)]()
+[![ਵਰਜ਼ਨ](https://img.shields.io/badge/version-0.3.2-blue)]()
 
 ਵਿਅਕਤੀਗਤ ਬ੍ਰਾਊਜ਼ਿੰਗ ਅਨੁਭਵ ਲਈ ਇੱਕ ਆਧੁਨਿਕ ਓਪਨ-ਸੋਰਸ ਨਵੀਂ ਟੈਬ ਪੇਜ।
 

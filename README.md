@@ -12,7 +12,7 @@
 [![Tiếng%20Việt](https://img.shields.io/badge/Tiếng%20Việt-blue)](docs/README.vi.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.3.1-blue)]()
+[![Version](https://img.shields.io/badge/version-0.3.2-blue)]()
 
 A modern open-source new tab page for personalized browsing experience.
 

@@ -1,6 +1,6 @@
 # New Tab v0.3.2
 [![Giấy phép: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
-[![Phiên bản](https://img.shields.io/badge/version-0.3.1-blue)]()
+[![Phiên bản](https://img.shields.io/badge/version-0.3.2-blue)]()
 
 Một trang tab mới mã nguồn mở hiện đại cho trải nghiệm duyệt web cá nhân hóa.
 

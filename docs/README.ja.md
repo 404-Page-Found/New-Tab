@@ -1,6 +1,6 @@
 # New Tab v0.3.2
 [![ライセンス: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
-[![バージョン](https://img.shields.io/badge/version-0.3.1-blue)]()
+[![バージョン](https://img.shields.io/badge/version-0.3.2-blue)]()
 
 パーソナライズされたブラウジング体験のためのモダンなオープンソースの新規タブページ。
 

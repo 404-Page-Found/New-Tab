@@ -1,6 +1,6 @@
 # New Tab v0.3.2
 [![Licencia: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
-[![Versión](https://img.shields.io/badge/version-0.3.1-blue)]()
+[![Versión](https://img.shields.io/badge/version-0.3.2-blue)]()
 
 Una página de nueva pestaña moderna de código abierto para una experiencia de navegación personalizada.
 

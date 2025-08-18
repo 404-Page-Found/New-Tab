@@ -1,6 +1,6 @@
 # New Tab v0.3.2
 [![Лицензия: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
-[![Версия](https://img.shields.io/badge/version-0.3.1-blue)]()
+[![Версия](https://img.shields.io/badge/version-0.3.2-blue)]()
 
 Современная открытая страница новой вкладки для персонализированного веб-серфинга.
 
