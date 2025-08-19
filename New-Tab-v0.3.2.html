@@ -1494,19 +1494,19 @@
       function displayRandomMotto() {
         try {
           const randomIndex = Math.floor(Math.random() * motto.length);
-          const mottoContainer = document.getElementById('motto-container');
+          const mottoContainer = document.getElementById("motto-container");
           if (mottoContainer) {
             mottoContainer.textContent = motto[randomIndex];
-            
+
             // Add fade-in effect
-            mottoContainer.style.opacity = '0';
+            mottoContainer.style.opacity = "0";
             setTimeout(() => {
-              mottoContainer.style.transition = 'opacity 0.5s';
-              mottoContainer.style.opacity = '1';
+              mottoContainer.style.transition = "opacity 0.5s";
+              mottoContainer.style.opacity = "1";
             }, 50);
           }
         } catch (e) {
-          console.error('Error displaying motto:', e);
+          console.error("Error displaying motto:", e);
         }
       }
 
@@ -1517,28 +1517,33 @@
       }
 
       // Set the motto after the page has finished loading
-      document.addEventListener('DOMContentLoaded', setupMottoRotation);
+      document.addEventListener("DOMContentLoaded", setupMottoRotation);
     </script>
     <!-- Motto area -->
-    <div id="motto-container" style="
-      position: fixed;
-      bottom: 45px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      color: #666;
-      font-size: 0.95em;
-      padding: 5px 10px;
-      background: rgba(255, 255, 255, 0.7);
-      z-index: 1999;
-      border-radius: 12px;
-      max-width: 800px;
-      margin: 0 auto;
-      left: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      user-select: none;
-    ">Loading...</div>
+    <div
+      id="motto-container"
+      style="
+        position: fixed;
+        bottom: 45px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: #666;
+        font-size: 0.95em;
+        padding: 5px 10px;
+        background: rgba(255, 255, 255, 0.7);
+        z-index: 1999;
+        border-radius: 12px;
+        max-width: 800px;
+        margin: 0 auto;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        user-select: none;
+      "
+    >
+      Loading...
+    </div>
     <div
       style="
         position: fixed;
