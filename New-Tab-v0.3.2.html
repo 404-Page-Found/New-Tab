@@ -1486,9 +1486,12 @@
           );
         }
       });
-      // Disable browser default context menu
+      // Prevent default behavior only when the app icon is not clicked
       document.addEventListener("contextmenu", function (e) {
-        e.preventDefault();
+        const appIcon = e.target.closest('.app-icon.custom-app');
+        if (!appIcon) {
+          e.preventDefault();
+        }
       });
       // Display random motto
       function displayRandomMotto() {
@@ -1518,6 +1521,137 @@
 
       // Set the motto after the page has finished loading
       document.addEventListener("DOMContentLoaded", setupMottoRotation);
+      // Create context menu element
+      const contextMenu = document.createElement('div');
+      contextMenu.id = 'app-context-menu';
+      contextMenu.style.cssText = `
+        display: none;
+        position: absolute;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+        z-index: 3000;
+        min-width: 160px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-size: 14px;
+        color: #333;
+      `;
+
+      // Menu items
+      const renameItem = document.createElement('div');
+      renameItem.id = 'rename-app';
+      renameItem.textContent = 'Rename';
+      renameItem.style.cssText = 'padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;';
+
+      const changeThumbnailItem = document.createElement('div');
+      changeThumbnailItem.id = 'change-thumbnail';
+      changeThumbnailItem.textContent = 'Change Thumbnail';
+      changeThumbnailItem.style.cssText = 'padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;';
+
+      const deleteItem = document.createElement('div');
+      deleteItem.id = 'delete-app';
+      deleteItem.textContent = 'Delete';
+      deleteItem.style.cssText = 'padding: 8px 12px; cursor: pointer; color: #f44336; transition: background 0.2s;';
+
+      // Add hover effects
+      [renameItem, changeThumbnailItem, deleteItem].forEach(item => {
+        item.addEventListener('mouseenter', () => item.style.background = '#f5f7fa');
+        item.addEventListener('mouseleave', () => item.style.background = 'white');
+      });
+
+      contextMenu.appendChild(renameItem);
+      contextMenu.appendChild(changeThumbnailItem);
+      contextMenu.appendChild(deleteItem);
+      document.body.appendChild(contextMenu);
+
+      // Track which app is being interacted with
+      let currentAppIndex = -1;
+
+      // Add right-click event listener to custom apps
+      document.addEventListener('contextmenu', function(e) {
+        const appIcon = e.target.closest('.app-icon.custom-app');
+        if (appIcon) {
+          e.preventDefault();
+          
+          // Find the index of this app
+          const appGrid = document.querySelector('.app-grid');
+          const apps = Array.from(appGrid.querySelectorAll('.app-icon.custom-app'));
+          currentAppIndex = apps.indexOf(appIcon);
+          
+          // Position and show context menu
+          // Adjust position if near screen edge
+          let left = e.pageX;
+          let top = e.pageY;
+          
+          if (left + 160 > window.innerWidth) {
+            left = window.innerWidth - 160 - 10;
+          }
+          
+          if (top + 100 > window.innerHeight) {
+            top = window.innerHeight - 100 - 10;
+          }
+          
+          contextMenu.style.left = left + 'px';
+          contextMenu.style.top = top + 'px';
+          contextMenu.style.display = 'block';
+        }
+      });
+
+      // Hide context menu when clicking elsewhere
+      document.addEventListener('click', function(e) {
+        if (!contextMenu.contains(e.target) && e.button !== 2) {
+          contextMenu.style.display = 'none';
+        }
+      });
+
+      // Rename functionality
+      document.getElementById('rename-app').addEventListener('click', function() {
+        if (currentAppIndex === -1) return;
+        
+        const apps = loadCustomApps();
+        const currentApp = apps[currentAppIndex];
+        
+        const newName = prompt('Enter new name:', currentApp.name);
+        if (newName && newName.trim() !== '') {
+          apps[currentAppIndex].name = newName.trim();
+          saveCustomApps(apps);
+          renderCustomApps();
+        }
+        
+        contextMenu.style.display = 'none';
+      });
+
+      // Change thumbnail functionality
+      document.getElementById('change-thumbnail').addEventListener('click', function() {
+        if (currentAppIndex === -1) return;
+        
+        const apps = loadCustomApps();
+        const currentApp = apps[currentAppIndex];
+        
+        const newIcon = prompt('Enter new icon URL:', currentApp.icon);
+        if (newIcon && newIcon.trim() !== '') {
+          apps[currentAppIndex].icon = newIcon.trim();
+          saveCustomApps(apps);
+          renderCustomApps();
+        }
+        
+        contextMenu.style.display = 'none';
+      });
+
+      // Delete functionality
+      document.getElementById('delete-app').addEventListener('click', function() {
+        if (currentAppIndex === -1) return;
+        
+        if (confirm('Are you sure you want to delete this app?')) {
+          const apps = loadCustomApps();
+          apps.splice(currentAppIndex, 1);
+          saveCustomApps(apps);
+          renderCustomApps();
+        }
+        
+        contextMenu.style.display = 'none';
+      });
     </script>
     <!-- Motto area -->
     <div
