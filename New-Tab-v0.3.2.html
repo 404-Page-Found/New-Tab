@@ -993,31 +993,6 @@
           a.target = "_blank";
           a.rel = "noopener noreferrer";
           a.innerHTML = `<div class="icon"><img src="${app.icon}" alt="${app.name}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div><span class="app-name">${app.name}</span>`;
-          // Delete button
-          const removeBtn = document.createElement("button");
-          removeBtn.textContent = "✕";
-          removeBtn.title = "Remove widget";
-          removeBtn.style.position = "absolute";
-          removeBtn.style.top = "2px";
-          removeBtn.style.right = "2px";
-          removeBtn.style.background = "rgba(255,255,255,0.8)";
-          removeBtn.style.border = "none";
-          removeBtn.style.borderRadius = "50%";
-          removeBtn.style.width = "20px";
-          removeBtn.style.height = "20px";
-          removeBtn.style.cursor = "pointer";
-          removeBtn.style.fontSize = "14px";
-          removeBtn.style.lineHeight = "18px";
-          removeBtn.style.padding = "0";
-          removeBtn.style.zIndex = "10";
-          removeBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            const apps = loadCustomApps();
-            apps.splice(idx, 1);
-            saveCustomApps(apps);
-            renderCustomApps();
-          });
-          a.appendChild(removeBtn);
           appGrid.insertBefore(a, addAppBtn);
         });
       }
