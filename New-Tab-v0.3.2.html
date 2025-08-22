@@ -13,16 +13,34 @@
           sans-serif;
       }
 
+      :root {
+        /* colour */
+        --primary-color: #2196f3;
+        --text-color: #333;
+        --text-light: #5e5e5e;
+        --bg-light: #f5f7fa;
+        --bg-dark: #c3cfe2;
+        --shadow-sm: 0 4px 10px rgba(0, 0, 0, 0.1);
+        --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+        --transition-fast: 0.18s cubic-bezier(0.4, 1.4, 0.6, 1);
+        --transition-normal: 0.2s;
+        --border-radius-sm: 4px;
+        --border-radius-md: 8px;
+        --border-radius-lg: 16px;
+        
+        /* size */
+        --app-icon-size: 60px;
+        --app-icon-img-size: 35px;
+        --search-bar-width: 750px;
+        --modal-width: 420px;
+        --modal-min-height: 500px;
+      }
+
       body {
         background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         min-height: 100vh;
         padding: 20px;
-      }
-      body[data-bg="default"] {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      }
-      body[data-bg^="img"] {
-        background: none;
       }
 
       .container {
@@ -38,7 +56,7 @@
         border-radius: 25px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
-        width: 750px;
+        width: var(--search-bar-width);
         margin-left: auto;
         margin-right: auto;
         transition: transform 0.18s cubic-bezier(0.4, 1.4, 0.6, 1);
@@ -89,8 +107,8 @@
       }
 
       .icon {
-        width: 60px;
-        height: 60px;
+        width: var(--app-icon-size);
+        height: var(--app-icon-size);
         background: white;
         border-radius: 15px;
         display: flex;
@@ -101,8 +119,8 @@
       }
 
       .icon img {
-        width: 35px;
-        height: 35px;
+        width: var(--app-icon-img-size);
+        height: var(--app-icon-img-size);
       }
 
       .app-name {
