@@ -1,17 +1,5 @@
 // motto.js
 const motto = [
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
   "When one is young and eager to learn, he is like the sun at sunrise; when one is strong and eager to learn, he is like the sun at noon; when one is old and eager to learn, he is like the light of a bright candle ———— Liu Xiang",
   "Those who are good at making use of their spare time will achieve greater success ———— Hua Luogeng",
   "Failure is the ultimate test of perseverance ———— Bismarck",
