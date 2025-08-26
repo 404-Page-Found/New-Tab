@@ -424,12 +424,7 @@
           </div>
           <span class="app-name">Facebook</span>
         </a>
-        <a href="#" class="app-icon" id="tinymind-app">
-          <div class="icon">
-            <span style="font-size: 32px; font-weight: bold">T</span>
-          </div>
-          <span class="app-name">TinyMind-V2</span>
-        </a>
+  <!-- TinyMind removed -->
         <a href="#" class="app-icon" id="settings-app">
           <div class="icon">
             <img
@@ -668,115 +663,7 @@
       </div>
     </div>
 
-    <!-- TinyMind Modal -->
-    <div
-      id="tinymind-modal"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.18);
-        z-index: 2000;
-        align-items: center;
-        justify-content: center;
-      "
-    >
-      <div
-        style="
-          background: #fff;
-          border-radius: 18px;
-          box-shadow: 0 8px 32px rgba(33, 150, 243, 0.18);
-          width: 95vw;
-          max-width: 700px;
-          min-width: 320px;
-          min-height: 500px;
-          max-height: 90vh;
-          display: flex;
-          flex-direction: column;
-          position: relative;
-        "
-      >
-        <div
-          style="
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 24px 10px 24px;
-            border-bottom: 1px solid #e0e6ef;
-          "
-        >
-          <span style="font-size: 1.2em; color: #2196f3; font-weight: bold"
-            >TinyMind-V2 Chat</span
-          >
-          <button
-            id="tinymind-close"
-            style="
-              background: none;
-              border: none;
-              font-size: 1.5em;
-              color: #888;
-              cursor: pointer;
-            "
-          >
-            ✕
-          </button>
-        </div>
-        <div style="flex: 1; display: flex; flex-direction: column">
-          <div
-            id="tinymind-chat-box"
-            style="
-              flex: 1;
-              overflow-y: auto;
-              padding: 24px 24px 10px 24px;
-              background: #fafbfc;
-            "
-          ></div>
-          <form
-            id="tinymind-chat-form"
-            autocomplete="off"
-            style="
-              display: flex;
-              gap: 8px;
-              padding: 18px 24px 18px 24px;
-              border-top: 1px solid #e0e6ef;
-              background: #fff;
-            "
-          >
-            <input
-              type="text"
-              id="tinymind-user-input"
-              placeholder="Type your message..."
-              required
-              style="
-                flex: 1;
-                padding: 12px 18px;
-                border-radius: 24px;
-                border: none;
-                font-size: 17px;
-                background: #f0f4fa;
-              "
-            />
-            <button
-              type="submit"
-              style="
-                padding: 12px 24px;
-                border-radius: 24px;
-                border: none;
-                background: #2196f3;
-                color: #fff;
-                font-size: 17px;
-                cursor: pointer;
-              "
-            >
-              Send
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
+  <!-- TinyMind removed -->
     <script>
       function updateTime() {
         const now = new Date();
@@ -1207,7 +1094,7 @@
           url: "https://www.facebook.com",
           icon: "https://facebook.com/favicon.ico",
         },
-        { name: "TinyMind-V2", url: "TinyMind-V2.html", icon: "" },
+  // TinyMind removed
       ];
       const defaultAppsList = document.getElementById("default-apps-list");
       function renderDefaultAppsList() {
@@ -1250,146 +1137,7 @@
         renderDefaultAppsList();
       });
 
-      // TinyMind Modal logic
-      const tinymindApp = document.getElementById("tinymind-app");
-      const tinymindModal = document.getElementById("tinymind-modal");
-      const tinymindClose = document.getElementById("tinymind-close");
-      tinymindApp.addEventListener("click", function (e) {
-        e.preventDefault();
-        tinymindModal.style.display = "flex";
-        renderTinyMindChat();
-      });
-      tinymindClose.addEventListener("click", function () {
-        tinymindModal.style.display = "none";
-      });
-      tinymindModal.addEventListener("click", function (e) {
-        if (e.target === tinymindModal) tinymindModal.style.display = "none";
-      });
-      // TinyMind Chat logic
-      function getTinyMindChats() {
-        return JSON.parse(localStorage.getItem("tinymind_chats") || "[]");
-      }
-      function saveTinyMindChats(chats) {
-        localStorage.setItem("tinymind_chats", JSON.stringify(chats));
-      }
-      function getTinyMindCurrentChatIdx() {
-        return parseInt(
-          localStorage.getItem("tinymind_current_chat") || "0",
-          10
-        );
-      }
-      function setTinyMindCurrentChatIdx(idx) {
-        localStorage.setItem("tinymind_current_chat", idx);
-      }
-      function renderTinyMindChat() {
-        const chatBox = document.getElementById("tinymind-chat-box");
-        chatBox.innerHTML = "";
-        const chats = getTinyMindChats();
-        const idx = getTinyMindCurrentChatIdx();
-        if (!chats[idx]) return;
-        chats[idx].messages.forEach((msg) => {
-          appendTinyMindMessage(msg.role, msg.content);
-        });
-      }
-      function appendTinyMindMessage(role, text) {
-        const chatBox = document.getElementById("tinymind-chat-box");
-        const div = document.createElement("div");
-        div.className = "message " + role;
-        div.innerHTML = `<span style="color:${
-          role === "user" ? "#2196f3" : "#333"
-        };font-weight:${role === "user" ? "bold" : "normal"};">${
-          role === "user" ? "You" : "TinyMind-V2"
-        }:</span> ${text}`;
-        chatBox.appendChild(div);
-        chatBox.scrollTop = chatBox.scrollHeight;
-      }
-      function addTinyMindMessageToCurrentChat(role, content) {
-        const chats = getTinyMindChats();
-        const idx = getTinyMindCurrentChatIdx();
-        if (!chats[idx]) return;
-        chats[idx].messages.push({ role, content });
-        if (role === "user" && !chats[idx].title) {
-          chats[idx].title =
-            content.slice(0, 32) + (content.length > 32 ? "..." : "");
-        }
-        saveTinyMindChats(chats);
-      }
-      function startTinyMindNewChat() {
-        const chats = getTinyMindChats();
-        chats.push({ title: "", messages: [] });
-        saveTinyMindChats(chats);
-        setTinyMindCurrentChatIdx(chats.length - 1);
-        renderTinyMindChat();
-        document.getElementById("tinymind-user-input").focus();
-      }
-      // Initial chat setup
-      if (!getTinyMindChats().length) {
-        startTinyMindNewChat();
-      }
-      // Chat form logic
-      const tinymindChatForm = document.getElementById("tinymind-chat-form");
-      const tinymindUserInput = document.getElementById("tinymind-user-input");
-      tinymindChatForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
-        const prompt = tinymindUserInput.value.trim();
-        if (!prompt) return;
-        appendTinyMindMessage("user", prompt);
-        addTinyMindMessageToCurrentChat("user", prompt);
-        tinymindUserInput.value = "";
-        appendTinyMindMessage("assistant", "<em>Thinking...</em>");
-        try {
-          const response = await fetch(
-            "http://localhost:5000/v1/chat/completions",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: "Bearer TINY_MIND",
-              },
-              body: JSON.stringify({
-                messages:
-                  getTinyMindChats()[getTinyMindCurrentChatIdx()].messages,
-              }),
-            }
-          );
-          const data = await response.json();
-          const chatBox = document.getElementById("tinymind-chat-box");
-          chatBox.removeChild(chatBox.lastChild);
-          if (
-            data &&
-            data.choices &&
-            data.choices[0] &&
-            data.choices[0].message &&
-            data.choices[0].message.content
-          ) {
-            appendTinyMindMessage("assistant", data.choices[0].message.content);
-            addTinyMindMessageToCurrentChat(
-              "assistant",
-              data.choices[0].message.content
-            );
-          } else {
-            appendTinyMindMessage(
-              "assistant",
-              "<em>No response from TinyMind-V2.</em>"
-            );
-            addTinyMindMessageToCurrentChat(
-              "assistant",
-              "<em>No response from TinyMind-V2.</em>"
-            );
-          }
-        } catch (err) {
-          const chatBox = document.getElementById("tinymind-chat-box");
-          chatBox.removeChild(chatBox.lastChild);
-          appendTinyMindMessage(
-            "assistant",
-            "<em>Error connecting to API.</em>"
-          );
-          addTinyMindMessageToCurrentChat(
-            "assistant",
-            "<em>Error connecting to API.</em>"
-          );
-        }
-      });
+  // TinyMind removed
       // Prevent default behavior only when the app icon is not clicked
       document.addEventListener("contextmenu", function (e) {
         const appIcon = e.target.closest(".app-icon.custom-app");
