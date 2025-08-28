@@ -26,7 +26,7 @@
 | 多背景支持 | ![](../images/Screenshots/New%20Tab_2.png) |
 
 ## 👥 贡献指南
-欢迎贡献！请按以下步骤操作：
+项目仍处于开发阶段。欢迎大家贡献代码！请按以下步骤操作：
 1. Fork 本仓库
 2. 创建新分支 (`git checkout -b feature/你的功能`)
 3. 提交更改 (`git commit -am '添加新功能'`)
