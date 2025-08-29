@@ -424,7 +424,18 @@
           </div>
           <span class="app-name">Facebook</span>
         </a>
-  <!-- TinyMind removed -->
+        <a
+          href="https://github.com/404-Page-Found/New-Tab/issues/new"
+          class="app-icon"
+          target="_blank"
+          rel="noopener noreferrer"
+          id="feedback-app"
+        >
+          <div class="icon">
+            <img src="https://cdn-icons-png.flaticon.com/512/545/545705.png" alt="Feedback" />
+          </div>
+          <span class="app-name">Feedback</span>
+        </a>
         <a href="#" class="app-icon" id="settings-app">
           <div class="icon">
             <img
@@ -1094,7 +1105,11 @@
           url: "https://www.facebook.com",
           icon: "https://facebook.com/favicon.ico",
         },
-  // TinyMind removed
+        {
+          name: "Feedback",
+          url: "https://github.com/404-Page-Found/New-Tab/issues/new",
+          icon: "https://cdn-icons-png.flaticon.com/512/545/545705.png",
+        },
       ];
       const defaultAppsList = document.getElementById("default-apps-list");
       function renderDefaultAppsList() {
