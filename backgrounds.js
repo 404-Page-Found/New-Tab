@@ -18,10 +18,28 @@ const backgrounds = [
     url: 'https://images.pexels.com/photos/27135841/pexels-photo-27135841.jpeg',
   },
   {
+    id: 'Canion Mountains on Night Sky',
+    title: 'Canion Mountains on Night Sky',
+    thumb: 'https://images.pexels.com/photos/2098428/pexels-photo-2098428.jpeg',
+    url: 'https://images.pexels.com/photos/2098428/pexels-photo-2098428.jpeg',
+  },
+  {
     id: 'City - Shanghai',
     title: 'City - Shanghai',
     thumb: 'https://images.pexels.com/photos/683940/pexels-photo-683940.jpeg',
     url: 'https://images.pexels.com/photos/683940/pexels-photo-683940.jpeg',
+  },
+  {
+    id: 'Close-up Photo of Glowing Blue Butterflies',
+    title: 'Close-up Photo of Glowing Blue Butterflies',
+    thumb: 'https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg',
+    url: 'https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg',
+  },
+  {
+    id: 'Desert during Nighttime',
+    title: 'Desert during Nighttime',
+    thumb: 'https://images.pexels.com/photos/847402/pexels-photo-847402.jpeg',
+    url: 'https://images.pexels.com/photos/847402/pexels-photo-847402.jpeg',
   },
   {
     id: 'Dubai - United Arab Emirates',
@@ -36,6 +54,36 @@ const backgrounds = [
     url: 'https://images.pexels.com/photos/1166209/pexels-photo-1166209.jpeg',
   },
   {
+    id: 'Full Moon',
+    title: 'Full Moon',
+    thumb: 'https://images.pexels.com/photos/167762/pexels-photo-167762.jpeg',
+    url: 'https://images.pexels.com/photos/167762/pexels-photo-167762.jpeg',
+  },
+  {
+    id: 'High-rise Buildings During Nighttime',
+    title: 'High-rise Buildings During Nighttime',
+    thumb: 'https://images.pexels.com/photos/1366957/pexels-photo-1366957.jpeg',
+    url: 'https://images.pexels.com/photos/1366957/pexels-photo-1366957.jpeg',
+  },
+  {
+    id: 'Huangshan - Anhui',
+    title: 'Huangshan - Anhui',
+    thumb: 'https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg',
+    url: 'https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg',
+  },
+  {
+    id: 'Mountain Covered Snow Under Star',
+    title: 'Mountain Covered Snow Under Star',
+    thumb: 'https://images.pexels.com/photos/572897/pexels-photo-572897.jpeg',
+    url: 'https://images.pexels.com/photos/572897/pexels-photo-572897.jpeg',
+  },
+  {
+    id: 'Mountain Covered With Snow during Nighttime',
+    title: 'Mountain Covered With Snow during Nighttime',
+    thumb: 'https://images.pexels.com/photos/358528/pexels-photo-358528.jpeg',
+    url: 'https://images.pexels.com/photos/358528/pexels-photo-358528.jpeg',
+  },
+  {
     id: 'Night Sky - Mountain Peak',
     title: 'Night Sky - Mountain Peak',
     thumb: 'https://images.pexels.com/photos/1775777/pexels-photo-1775777.jpeg',
@@ -48,10 +96,10 @@ const backgrounds = [
     url: 'https://images.pexels.com/photos/268533/pexels-photo-268533.jpeg',
   },
   {
-    id: 'Huangshan - Anhui',
-    title: 'Huangshan - Anhui',
-    thumb: 'https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg',
-    url: 'https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg',
+    id: 'Photo of Starry Night',
+    title: 'Photo of Starry Night',
+    thumb: 'https://images.pexels.com/photos/1421903/pexels-photo-1421903.jpeg',
+    url: 'https://images.pexels.com/photos/1421903/pexels-photo-1421903.jpeg',
   },
   {
     id: 'Skyline At Night - Hong Kong',
