@@ -1,18 +1,11 @@
-# New Tab v0.3.2
+# New Tab v0.3.3
 
 **Available Languages**:  
+[![English](https://img.shields.io/badge/English-blue)](docs/README.en.md)
 [![简体中文](https://img.shields.io/badge/简体中文-blue)](docs/README.zh-CN.md)
-[![Español](https://img.shields.io/badge/Español-blue)](docs/README.es.md)
-[![हिन्दी](https://img.shields.io/badge/हिन्दी-blue)](docs/README.hi.md)
-[![Português](https://img.shields.io/badge/Português-blue)](docs/README.pt.md)
-[![বাংলা](https://img.shields.io/badge/বাংলা-blue)](docs/README.bn.md)
-[![Русский](https://img.shields.io/badge/Русский-blue)](docs/README.ru.md)
-[![日本語](https://img.shields.io/badge/日本語-blue)](docs/README.ja.md)
-[![پنجابی](https://img.shields.io/badge/پنجابی-blue)](docs/README.pa.md)
-[![Tiếng%20Việt](https://img.shields.io/badge/Tiếng%20Việt-blue)](docs/README.vi.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.3.2-blue)]()
+[![Version](https://img.shields.io/badge/version-0.3.3-blue)]()
 
 A modern open-source new tab page for personalized browsing experience.
 
