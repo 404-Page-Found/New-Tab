@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <!-- 添加CSP策略 -->
+  <!-- Add CSP policy -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self';">
   <title>New-Tab</title>
   <style>
-    /* 保留原有CSS样式 */
+  /* Keep original CSS styles */
     * {
       margin: 0;
       padding: 0;
@@ -131,7 +131,7 @@
       font-size: 1.5em;
     }
 
-    /* 其他样式保持不变... */
+  /* Other styles remain unchanged... */
   </style>
 </head>
 <body>
@@ -197,7 +197,7 @@
     </div>
   </div>
 
-  <!-- 设置弹窗 -->
+  <!-- Settings modal -->
   <div id="settings-modal" style="display: none;">
     <div>
       <div class="settings-body" style="display: flex; min-height: 400px">
@@ -228,13 +228,13 @@
               <img class="bg-thumb" data-bg="img8" src="images/bg8.jpg" title="Slovenia" alt="Slovenia" />
             </div>
           </section>
-          <!-- 其他设置部分保持不变 -->
+          <!-- Other settings remain unchanged -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 添加应用弹窗 -->
+  <!-- Add app modal -->
   <div id="add-app-modal" style="display: none;">
     <div>
       <h3 style="margin-bottom: 12px">Add New App</h3>
@@ -248,18 +248,18 @@
   </div>
 
   <script>
-    // 更新背景图片应用函数
+  // Update background image application function
     function applyBg() {
       const bg = localStorage.getItem("homepageBg") || "default";
       document.body.setAttribute("data-bg", bg);
       
-      // 更新缩略图选中状态
+  // Update thumbnail selection status
       document.querySelectorAll(".bg-thumb").forEach((thumb) => {
         thumb.classList.toggle("selected", thumb.getAttribute("data-bg") === bg);
       });
       
       if (bg !== "default") {
-        // 使用本地图片路径
+  // Use local image path
         const bgImages = {
           img1: "images/bg1.jpg",
           img2: "images/bg2.jpg",
@@ -279,7 +279,7 @@
       }
     }
 
-    // 其他JS功能保持不变（已移除TinyMind相关代码）
+  // Other JS functions remain unchanged
     // ...
   </script>
 </body>
