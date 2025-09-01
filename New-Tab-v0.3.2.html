@@ -310,10 +310,18 @@
         const fromIdx = order.indexOf(dragSrcId);
         const toIdx = order.indexOf(this.id);
         if (fromIdx === -1 || toIdx === -1) return;
+        // Only refresh if the order actually changes
+        const oldOrder = order.slice();
         order.splice(toIdx, 0, order.splice(fromIdx, 1)[0]);
         saveAppOrder(order);
         renderAllApps();
         attachDnDEvents();
+        // If the order changed, refresh the page in the background
+        if (JSON.stringify(order) !== JSON.stringify(oldOrder)) {
+          setTimeout(function() {
+            location.reload();
+          }, 300);
+        }
       }
       function attachDnDEvents() {
         getDraggableAppIcons().forEach(icon => {
@@ -800,14 +808,17 @@
           e.preventDefault();
         }
       });
-      // Display random motto
-      function displayRandomMotto() {
+      // Display a motto that stays the same for each day
+      function displayDailyMotto() {
         try {
-          const randomIndex = Math.floor(Math.random() * motto.length);
+          const now = new Date();
+          // Use year, month, and day to get a unique number for the day
+          const daySeed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+          // Deterministically pick a motto for the day
+          const index = daySeed % motto.length;
           const mottoContainer = document.getElementById("motto-container");
           if (mottoContainer) {
-            mottoContainer.textContent = motto[randomIndex];
-
+            mottoContainer.textContent = motto[index];
             // Add fade-in effect
             mottoContainer.style.opacity = "0";
             setTimeout(() => {
@@ -820,14 +831,8 @@
         }
       }
 
-      // Change the motto every 30 minutes.
-      function setupMottoRotation() {
-        displayRandomMotto(); // Initial loading display
-        setInterval(displayRandomMotto, 30 * 60 * 1000); // 30 minutes
-      }
-
       // Set the motto after the page has finished loading
-      document.addEventListener("DOMContentLoaded", setupMottoRotation);
+      document.addEventListener("DOMContentLoaded", displayDailyMotto);
       // Create context menu element
       const contextMenu = document.createElement("div");
       contextMenu.id = "app-context-menu";
