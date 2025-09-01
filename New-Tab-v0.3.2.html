@@ -14,21 +14,11 @@
       <div id="date" class="date">Monday, June 20</div>
 
       <div class="search-bar">
-        <select
-          class="search-engine"
-          style="
-            border: none;
-            background: transparent;
-            padding: 6px;
-            font-size: 16px;
-            margin-right: 10px;
-          "
-        >
-          <input type="text" placeholder="Search or enter website" />
-        </select>
+  <select class="search-engine"></select>
+        <input type="text" placeholder="Search or enter website" />
       </div>
 
-      <div class="app-grid" id="app-grid" style="user-select: none;">
+  <div class="app-grid" id="app-grid">
         <a
           href="https://github.com/404-Page-Found/New-Tab/issues/new"
           class="app-icon default-app"
@@ -65,36 +55,10 @@
     </div>
 
     <!-- Settings Modal -->
-    <div
-      id="settings-modal"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0);
-        z-index: 1000;
-        align-items: flex-start;
-        justify-content: flex-start;
-      "
-    >
+  <div id="settings-modal">
       <div>
-        <div class="settings-body" style="display: flex; min-height: 400px">
-          <nav
-            class="settings-menu"
-            style="
-              width: 160px;
-              background: #f5f7fa;
-              border-top-left-radius: 16px;
-              border-bottom-left-radius: 16px;
-              padding: 24px 0 24px 0;
-              display: flex;
-              flex-direction: column;
-              gap: 8px;
-            "
-          >
+  <div class="settings-body">
+          <nav class="settings-menu">
             <button class="settings-menu-item selected" data-section="general">
               General
             </button>
@@ -107,7 +71,7 @@
             </button>
             <button class="settings-menu-item" data-section="date">Date</button>
           </nav>
-          <div class="settings-content" style="flex: 1">
+          <div class="settings-content">
             <section class="settings-section" data-section="general">
               <label
                 style="
@@ -127,23 +91,15 @@
                 Open apps in a new tab
               </label>
             </section>
-            <section
-              class="settings-section"
-              data-section="background"
-              style="display: none"
-            >
+            <section class="settings-section" data-section="background" style="display: none">
               <div class="bg-thumbnails" id="bg-thumbnails"></div>
             </section>
-            <section
-              class="settings-section"
-              data-section="apps"
-              style="display: none"
-            >
+            <section class="settings-section" data-section="apps" style="display: none">
               <label
                 ><input type="radio" name="curvature" value="0" /> Square</label
               >
               <label
-                ><input type="radio" name="curvature" value="15" />
+                ><input type="radio" name="curvature" value="20" />
                 Rounded</label
               >
               <label
@@ -151,11 +107,7 @@
                 Circle</label
               >
             </section>
-            <section
-              class="settings-section"
-              data-section="clock"
-              style="display: none"
-            >
+            <section class="settings-section" data-section="clock" style="display: none">
               <label
                 >Color:<br /><input type="color" id="clock-color-picker"
               /></label>
@@ -192,11 +144,7 @@
               </label>
               <button id="clock-style-reset">Reset Clock Style</button>
             </section>
-            <section
-              class="settings-section"
-              data-section="date"
-              style="display: none"
-            >
+            <section class="settings-section" data-section="date" style="display: none">
               <label
                 >Color:<br /><input type="color" id="date-color-picker"
               /></label>
@@ -239,42 +187,13 @@
     </div>
 
     <!-- Add App Modal -->
-    <div
-      id="add-app-modal"
-      style="
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.3);
-        z-index: 1001;
-        align-items: center;
-        justify-content: center;
-      "
-    >
-      <div
-        style="
-          background: #fff;
-          border-radius: 16px;
-          padding: 24px 20px;
-          min-width: 200px;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-          position: relative;
-          max-width: 80vw;
-        "
-      >
+  <div id="add-app-modal">
+  <div>
         <h3 style="margin-bottom: 12px">Add New App</h3>
-        <input
-          id="add-app-url"
-          type="text"
-          placeholder="Enter website URL"
-          style="width: 100%; padding: 8px; margin-bottom: 12px"
-        />
-        <div id="default-apps-list" style="margin-bottom: 12px"></div>
-        <div style="text-align: right">
-          <button id="add-app-cancel" style="margin-right: 8px">Cancel</button>
+  <input id="add-app-url" type="text" placeholder="Enter website URL" />
+  <div id="default-apps-list"></div>
+        <div class="add-app-actions">
+          <button id="add-app-cancel">Cancel</button>
           <button id="add-app-confirm">Add</button>
         </div>
       </div>
@@ -327,23 +246,29 @@
       // Render all apps in order
       function renderAllApps() {
         const appGrid = document.getElementById('app-grid');
-        // Remove all except Add
-        Array.from(appGrid.children).forEach(child => {
+        const addApp = document.getElementById('add-app');
+        // Remove all except Add (use while for better perf)
+        let child = appGrid.firstElementChild;
+        while (child) {
+          const next = child.nextElementSibling;
           if (child.id !== 'add-app') appGrid.removeChild(child);
-        });
-        // Get order
+          child = next;
+        }
+        // Get order and all apps once
         let order = getAppOrder();
         const allApps = getAllAppData();
         if (!order || order.length !== allApps.length) {
-          // Fallback: default order
           order = allApps.map(app => app.id);
           saveAppOrder(order);
         }
+        // Build a map for O(1) lookup
+        const appMap = {};
+        for (const app of allApps) appMap[app.id] = app;
         // Render in order
-        order.forEach(appId => {
-          const app = allApps.find(a => a.id === appId);
-          if (!app) return;
-          let a = document.createElement('a');
+        for (const appId of order) {
+          const app = appMap[appId];
+          if (!app) continue;
+          const a = document.createElement('a');
           a.href = app.url;
           a.className = 'app-icon ' + app.className;
           a.id = app.id;
@@ -353,8 +278,8 @@
             a.rel = 'noopener noreferrer';
           }
           a.innerHTML = `<div class="icon"><img src="${app.icon}" alt="${app.name}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div><span class="app-name">${app.name}</span>`;
-          appGrid.insertBefore(a, document.getElementById('add-app'));
-        });
+          appGrid.insertBefore(a, addApp);
+        }
       }
 
       // Drag and drop logic
@@ -518,7 +443,7 @@
       // Settings modal logic
       const settingsApp = document.getElementById("settings-app");
       const settingsModal = document.getElementById("settings-modal");
-      // const closeSettings = document.getElementById("close-settings"); // This element no longer exists
+  // ...existing code...
       const openNewTabSetting = document.getElementById("open-new-tab-setting");
       const appLinks = document.querySelectorAll(".app-grid .app-icon");
 
@@ -624,12 +549,13 @@
       }
       function applyCurvature() {
         const radius = loadCurvature();
-        document.querySelectorAll('.icon').forEach((icon) => {
-          icon.style.borderRadius = radius + "px";
-        });
-        curvatureRadios.forEach((radio) => {
-          radio.checked = radio.value === radius;
-        });
+        const icons = document.querySelectorAll('.icon');
+        for (let i = 0; i < icons.length; i++) {
+          icons[i].style.borderRadius = radius + "px";
+        }
+        for (let i = 0; i < curvatureRadios.length; i++) {
+          curvatureRadios[i].checked = curvatureRadios[i].value === radius;
+        }
       }
       curvatureRadios.forEach((radio) => {
         radio.addEventListener("change", function () {
@@ -651,15 +577,11 @@
         const bg = loadBg();
         document.body.setAttribute("data-bg", bg);
         const thumbs = document.querySelectorAll('.bg-thumb');
-        thumbs.forEach((thumb) => {
-          thumb.classList.toggle(
-            'selected',
-            thumb.getAttribute('data-bg') === bg
-          );
-        });
+        for (let i = 0; i < thumbs.length; i++) {
+          thumbs[i].classList.toggle('selected', thumbs[i].getAttribute('data-bg') === bg);
+        }
         if (bg !== 'default') {
-          const imgUrl =
-            (window._findBackgroundUrlById && window._findBackgroundUrlById(bg)) || '';
+          const imgUrl = (window._findBackgroundUrlById && window._findBackgroundUrlById(bg)) || '';
           if (imgUrl) document.body.style.background = `url('${imgUrl}') center center/cover no-repeat fixed`;
           else document.body.style.background = '';
         } else {
@@ -703,9 +625,9 @@
         clock.style.color = style.color;
         clock.style.fontFamily = style.font;
         clock.style.fontSize = style.size + "px";
-        clockColorPicker.value = style.color;
-        clockFontPicker.value = style.font;
-        clockSizePicker.value = style.size;
+        if (clockColorPicker.value !== style.color) clockColorPicker.value = style.color;
+        if (clockFontPicker.value !== style.font) clockFontPicker.value = style.font;
+        if (clockSizePicker.value !== style.size) clockSizePicker.value = style.size;
       }
       clockColorPicker.addEventListener("input", function () {
         localStorage.setItem("clockColor", this.value);
@@ -743,9 +665,9 @@
         date.style.color = style.color;
         date.style.fontFamily = style.font;
         date.style.fontSize = style.size + "px";
-        dateColorPicker.value = style.color;
-        dateFontPicker.value = style.font;
-        dateSizePicker.value = style.size;
+        if (dateColorPicker.value !== style.color) dateColorPicker.value = style.color;
+        if (dateFontPicker.value !== style.font) dateFontPicker.value = style.font;
+        if (dateSizePicker.value !== style.size) dateSizePicker.value = style.size;
       }
       dateColorPicker.addEventListener("input", function () {
         localStorage.setItem("dateColor", this.value);
@@ -775,10 +697,8 @@
   applyClockStyle();
   applyDateStyle();
 
-      // Settings menu logic
-      const settingsMenuItems = document.querySelectorAll(
-        ".settings-menu-item"
-      );
+      // Settings menu logic (optimized, single event listener)
+      const settingsMenuItems = document.querySelectorAll(".settings-menu-item");
       const settingsSections = document.querySelectorAll(".settings-section");
       settingsMenuItems.forEach((item) => {
         item.addEventListener("click", function () {
@@ -788,21 +708,6 @@
           settingsSections.forEach((s) => {
             s.style.display =
               s.getAttribute("data-section") === section ? "block" : "none";
-          });
-        });
-      });
-
-      // Settings menu navigation logic
-      document.querySelectorAll(".settings-menu-item").forEach((btn) => {
-        btn.addEventListener("click", function () {
-          document
-            .querySelectorAll(".settings-menu-item")
-            .forEach((b) => b.classList.remove("selected"));
-          this.classList.add("selected");
-          const section = this.getAttribute("data-section");
-          document.querySelectorAll(".settings-section").forEach((sec) => {
-            sec.style.display =
-              sec.getAttribute("data-section") === section ? "" : "none";
           });
         });
       });
@@ -852,7 +757,10 @@
       const defaultAppsList = document.getElementById("default-apps-list");
       function renderDefaultAppsList() {
         defaultAppsList.innerHTML = "";
-        defaultApps.forEach((app) => {
+        // Cache app names for existence check
+        const existingNames = new Set(Array.from(document.querySelectorAll(".app-icon .app-name")).map(e => e.textContent));
+        for (let i = 0; i < defaultApps.length; i++) {
+          const app = defaultApps[i];
           const btn = document.createElement("button");
           btn.style.display = "inline-flex";
           btn.style.alignItems = "center";
@@ -869,12 +777,7 @@
               : `<span style='display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;background:#fff;font-size:16px;font-weight:bold;'>T</span>`
           } <span>${app.name}</span>`;
           btn.addEventListener("click", function () {
-            // Check if already exists
-            const exists = Array.from(
-              document.querySelectorAll(".app-icon .app-name")
-            ).some((e) => e.textContent === app.name);
-            if (exists) return;
-            // Add to custom apps with persistent id
+            if (existingNames.has(app.name)) return;
             const apps = loadCustomApps();
             const id = 'custom-app-' + Date.now() + '-' + Math.floor(Math.random()*100000);
             apps.push({ id, url: app.url, name: app.name, icon: app.icon });
@@ -886,7 +789,7 @@
             addAppModal.style.display = "none";
           });
           defaultAppsList.appendChild(btn);
-        });
+        }
       }
 
 
@@ -1085,59 +988,13 @@
         });
     </script>
     <!-- Motto area -->
-    <div
-      id="motto-container"
-      style="
-        position: fixed;
-        bottom: 45px;
-        left: 0;
-        right: 0;
-        text-align: center;
-        color: #666;
-        font-size: 0.95em;
-        padding: 5px 10px;
-        background: rgba(255, 255, 255, 0.7);
-        z-index: 1999;
-        border-radius: 12px;
-        max-width: 800px;
-        margin: 0 auto;
-        left: 50%;
-        transform: translateX(-50%);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        user-select: none;
-      "
-    >
+  <div id="motto-container">
       Loading...
     </div>
-    <div
-      style="
-        position: fixed;
-        bottom: 10px;
-        left: 20px;
-        color: #888;
-        font-size: 0.95em;
-        z-index: 2000;
-      "
-    >
-      <a
-        href="https://github.com/404-Page-Found/New-Tab"
-        target="_blank"
-        style="color: #888; text-decoration: none"
-        >New-Tab GitHub Repository</a
-      >
+  <div class="footer-left">
+  <a href="https://github.com/404-Page-Found/New-Tab" target="_blank" class="footer-link">New-Tab GitHub Repository</a>
     </div>
-    <div
-      style="
-        position: fixed;
-        bottom: 10px;
-        right: 20px;
-        color: #888;
-        font-size: 0.95em;
-        z-index: 2000;
-        user-select: none;
-        pointer-events: none;
-      "
-    >
+  <div class="footer-right">
       v0.3.3
     </div>
   </body>
