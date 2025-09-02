@@ -75,6 +75,7 @@
   --search-bar-width: 750px;
   --modal-width: 420px;
   --modal-min-height: 500px;
+  --icon-radius: 15px;
 }
 
 body {
@@ -147,7 +148,7 @@ body {
   width: var(--app-icon-size);
   height: var(--app-icon-size);
   background: white;
-  border-radius: 15px;
+  border-radius: var(--icon-radius, 15px);
   display: flex;
   align-items: center;
   justify-content: center;

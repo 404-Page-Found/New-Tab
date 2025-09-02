@@ -557,10 +557,8 @@
       }
       function applyCurvature() {
         const radius = loadCurvature();
-        const icons = document.querySelectorAll('.icon');
-        for (let i = 0; i < icons.length; i++) {
-          icons[i].style.borderRadius = radius + "px";
-        }
+        // Set CSS variable for icon border-radius
+        document.documentElement.style.setProperty('--icon-radius', radius + 'px');
         for (let i = 0; i < curvatureRadios.length; i++) {
           curvatureRadios[i].checked = curvatureRadios[i].value === radius;
         }
