@@ -943,6 +943,7 @@
             apps[idx].name = newName.trim();
             saveCustomApps(apps);
             renderCustomApps();
+            location.reload();
           }
           contextMenu.style.display = "none";
         });
@@ -964,6 +965,7 @@
             apps[idx].icon = newIcon.trim();
             saveCustomApps(apps);
             renderCustomApps();
+            location.reload();
           }
           contextMenu.style.display = "none";
         });
@@ -986,6 +988,7 @@
             order = order.filter(oid => oid !== id);
             saveAppOrder(order);
             renderCustomApps();
+            location.reload();
           }
           contextMenu.style.display = "none";
         });
