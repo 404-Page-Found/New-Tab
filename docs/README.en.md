@@ -22,8 +22,8 @@ A modern open-source new tab page for personalized browsing experience.
 ## 🖼️ Screenshots
 | Feature | Preview |
 |------|------|
-| Main Interface | ![](images/Screenshots/New%20Tab_1.png) |
-| Multi-backgrounds | ![](images/Screenshots/New%20Tab_2.png) |
+| Main Interface | ![](../screenshots/New-Tab_1.png) |
+| Multi-backgrounds | ![](../screenshots/New-Tab_2.png) |
 
 ## 👥 Contributing
 Project is still in developing stage. Contributions are highly welcome! Please follow these steps:
