@@ -10,7 +10,7 @@
   padding: 5px 10px;
   background: rgba(255, 255, 255, 0.7);
   z-index: 1999;
-  border-radius: 12px;
+  border-radius: 20px;
   max-width: 800px;
   margin: 0 auto;
   left: 50%;
@@ -93,10 +93,10 @@ body {
   align-items: center;
   background: rgba(255, 255, 255, 0.9);
   display: flex;
-  padding: 10px 20px;
-  border-radius: 25px;
+  padding: 7px 20px;
+  border-radius: 30px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   width: var(--search-bar-width);
   margin-left: auto;
   margin-right: auto;
