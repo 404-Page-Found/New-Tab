@@ -94,7 +94,7 @@ body {
   background: rgba(255, 255, 255, 0.9);
   display: flex;
   padding: 7px 20px;
-  border-radius: 30px;
+  border-radius: 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin-bottom: 15px;
   width: var(--search-bar-width);
