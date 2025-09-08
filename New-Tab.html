@@ -13,7 +13,7 @@
       <div id="clock" class="clock">12:00</div>
       <div id="date" class="date">Monday, June 20</div>
       <div class="search-bar">
-        <select class="search-engine"></select>
+        <div class="search-engines"></div>
         <input type="text" placeholder="Search or enter website" />
       </div>
 
@@ -292,9 +292,9 @@
 
       // Search Engine Configuration
       const searchEngines = {
-        bing: { name: "Bing", url: "https://www.bing.com/search?q=" },
-        duckduckgo: { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
-        google: { name: "Google", url: "https://www.google.com/search?q=" },
+        bing: { name: "Bing", url: "https://www.bing.com/search?q=", icon: "https://www.bing.com/favicon.ico" },
+        duckduckgo: { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=", icon: "https://duckduckgo.com/favicon.ico" },
+        google: { name: "Google", url: "https://www.google.com/search?q=", icon: "https://www.google.com/favicon.ico" },
       };
 
       // Load saved search engine
@@ -307,13 +307,27 @@
         localStorage.setItem("defaultEngine", engine);
       }
 
-      // Initialize search engine dropdown
+      // Initialize search engine icons
       function initSearchEngine() {
-        const select = document.querySelector(".search-engine");
+        const enginesEl = document.querySelector(".search-engines");
         const savedEngine = getSavedEngine();
-        select.innerHTML = Object.keys(searchEngines).map(key => `<option value="${key}">${searchEngines[key].name}</option>`).join("");
-        select.value = savedEngine;
-        select.addEventListener("change", e => saveEngine(e.target.value));
+        enginesEl.innerHTML = "";
+        Object.keys(searchEngines).forEach(key => {
+          const img = document.createElement("img");
+          img.src = searchEngines[key].icon;
+          img.alt = searchEngines[key].name;
+          img.title = searchEngines[key].name;
+          if (key === savedEngine) {
+            img.classList.add("selected");
+          }
+          img.addEventListener("click", () => {
+            // Remove selected class from all
+            enginesEl.querySelectorAll("img").forEach(i => i.classList.remove("selected"));
+            img.classList.add("selected");
+            saveEngine(key);
+          });
+          enginesEl.appendChild(img);
+        });
       }
 
   // Modify search event listener

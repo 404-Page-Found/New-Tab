@@ -115,15 +115,29 @@ body {
   outline: none;
   flex: 1;
 }
-.search-engine {
-  -webkit-appearance: none;
-  appearance: none;
-  background: url('data:image/svg+xml;utf8,<svg fill="%23999" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') no-repeat right 8px center;
-  padding: 6px 30px 6px 10px;
-  border-radius: 4px;
+.search-engines {
+  display: flex;
+  align-items: center;
   margin-right: 10px;
-  min-width: 80px;
-  border-color: #b7b7b7;
+  gap: 5px;
+}
+
+.search-engines img {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border-radius: 3px;
+  border: 2px solid transparent;
+  transition: opacity 0.2s, border 0.2s;
+}
+
+.search-engines img:hover {
+  border-color: rgba(33, 150, 243, 0.5);
+}
+
+.search-engines img.selected {
+  border-color: #2196f3;
+  opacity: 0.8;
 }
 
 .app-grid {
