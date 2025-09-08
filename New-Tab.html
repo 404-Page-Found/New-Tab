@@ -307,26 +307,46 @@
         localStorage.setItem("defaultEngine", engine);
       }
 
-      // Initialize search engine icons
+      // Initialize search engine dropdown
       function initSearchEngine() {
         const enginesEl = document.querySelector(".search-engines");
         const savedEngine = getSavedEngine();
-        enginesEl.innerHTML = "";
-        Object.keys(searchEngines).forEach(key => {
-          const img = document.createElement("img");
-          img.src = searchEngines[key].icon;
-          img.alt = searchEngines[key].name;
-          img.title = searchEngines[key].name;
-          if (key === savedEngine) {
-            img.classList.add("selected");
-          }
-          img.addEventListener("click", () => {
-            // Remove selected class from all
-            enginesEl.querySelectorAll("img").forEach(i => i.classList.remove("selected"));
-            img.classList.add("selected");
+        enginesEl.innerHTML = `
+          <div class="selected-engine">
+            <img src="${searchEngines[savedEngine].icon}" alt="${searchEngines[savedEngine].name}" title="${searchEngines[savedEngine].name}" />
+            <span class="dropdown-arrow">▼</span>
+          </div>
+          <div class="engine-dropdown" style="display: none;">
+            ${Object.keys(searchEngines).map(key => `
+              <div class="engine-option" data-key="${key}" ${key === savedEngine ? 'id="selected"' : ''}>
+                <img src="${searchEngines[key].icon}" alt="${searchEngines[key].name}" title="${searchEngines[key].name}" />
+                <span>${searchEngines[key].name}</span>
+              </div>
+            `).join("")}
+          </div>
+        `;
+        const selectedEngineEl = enginesEl.querySelector(".selected-engine");
+        const dropdownEl = enginesEl.querySelector(".engine-dropdown");
+
+        selectedEngineEl.addEventListener("click", () => {
+          dropdownEl.style.display = dropdownEl.style.display === "block" ? "none" : "block";
+        });
+
+        dropdownEl.querySelectorAll(".engine-option").forEach(option => {
+          option.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const key = option.getAttribute("data-key");
             saveEngine(key);
+            initSearchEngine(); // Re-render to update selected
+            dropdownEl.style.display = "none";
           });
-          enginesEl.appendChild(img);
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener("click", (e) => {
+          if (!enginesEl.contains(e.target)) {
+            dropdownEl.style.display = "none";
+          }
         });
       }
 

@@ -116,28 +116,69 @@ body {
   flex: 1;
 }
 .search-engines {
+  position: relative;
+  margin-right: 10px;
+}
+
+.selected-engine {
   display: flex;
   align-items: center;
-  margin-right: 10px;
-  gap: 5px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background 0.2s;
 }
 
-.search-engines img {
+.selected-engine:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.selected-engine img {
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
+  border-radius: 3px;
+}
+
+.dropdown-arrow {
+  font-size: 12px;
+  color: #ccc;
+}
+
+.engine-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  min-width: 160px;
+  padding: 5px 0;
+}
+
+.engine-option {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.engine-option:hover {
+  background: rgba(33, 150, 243, 0.1);
+}
+
+.engine-option img {
   width: 20px;
   height: 20px;
-  cursor: pointer;
+  margin-right: 10px;
   border-radius: 3px;
-  border: 2px solid transparent;
-  transition: opacity 0.2s, border 0.2s;
 }
 
-.search-engines img:hover {
-  border-color: rgba(33, 150, 243, 0.5);
-}
-
-.search-engines img.selected {
-  border-color: #2196f3;
-  opacity: 0.8;
+.engine-option span {
+  font-size: 14px;
+  color: #333;
 }
 
 .app-grid {
