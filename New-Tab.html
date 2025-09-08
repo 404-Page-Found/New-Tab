@@ -502,10 +502,10 @@
 
       function loadClockStyle() {
         return {
-          color: localStorage.getItem("clockColor") || "#5e5e5e",
+          color: localStorage.getItem("clockColor") || "#ffffff",
           font:
             localStorage.getItem("clockFont") ||
-            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            "'Times New Roman', serif",
           size: localStorage.getItem("clockSize") || "80",
         };
       }
@@ -542,10 +542,10 @@
       // Date style logic
       function loadDateStyle() {
         return {
-          color: localStorage.getItem("dateColor") || "#666666",
+          color: localStorage.getItem("dateColor") || "#ffffff",
           font:
             localStorage.getItem("dateFont") ||
-            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            "'Times New Roman', serif",
           size: localStorage.getItem("dateSize") || "24",
         };
       }
