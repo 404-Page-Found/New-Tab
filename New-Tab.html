@@ -283,7 +283,6 @@
       renderAllApps();
       attachDnDEvents();
       // Re-render and re-attach events after custom app changes
-      const origRenderCustomApps = renderCustomApps;
       renderCustomApps = function() {
         const allApps = getAllAppData();
         let order = getAppOrder();
@@ -293,7 +292,6 @@
         }
         renderAllApps();
         attachDnDEvents();
-        if (origRenderCustomApps) origRenderCustomApps();
       };
       function updateTime() {
         const now = new Date();
@@ -418,9 +416,7 @@
       function saveCustomApps(apps) {
         localStorage.setItem("customApps", JSON.stringify(apps));
       }
-      function renderCustomApps() {
-        // No-op: handled by renderAllApps
-      }
+
 
       addAppBtn.addEventListener("click", function (e) {
         e.preventDefault();
