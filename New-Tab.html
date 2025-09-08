@@ -299,7 +299,7 @@
 
       // Load saved search engine
       function getSavedEngine() {
-        return localStorage.getItem("defaultEngine") || "google";
+        return localStorage.getItem("defaultEngine") || "bing";
       }
 
       // Save search engine
@@ -460,7 +460,7 @@
   if (window._initBackgrounds) window._initBackgrounds();
   const bgThumbnails = document.getElementById('bg-thumbnails');
       function loadBg() {
-        return localStorage.getItem("homepageBg") || "default";
+        return localStorage.getItem("homepageBg") || "Water Beside Forest";
       }
       function applyBg() {
         const bg = loadBg();
