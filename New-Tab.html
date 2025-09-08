@@ -12,9 +12,8 @@
     <div class="container">
       <div id="clock" class="clock">12:00</div>
       <div id="date" class="date">Monday, June 20</div>
-
       <div class="search-bar">
-  <select class="search-engine"></select>
+        <select class="search-engine"></select>
         <input type="text" placeholder="Search or enter website" />
       </div>
 
@@ -202,72 +201,33 @@
 
     <script>
       // --- Drag and Drop for App Grid ---
-      // Helper: get all app icons (default and custom, but not Add)
-      function getDraggableAppIcons() {
-        return Array.from(document.querySelectorAll('.app-grid .app-icon'))
-          .filter(icon => icon.id !== 'add-app');
-      }
-
-      // Helper: get order from localStorage (for custom apps)
-      function getAppOrder() {
-        return JSON.parse(localStorage.getItem('appOrder') || 'null');
-      }
-      function saveAppOrder(order) {
-        localStorage.setItem('appOrder', JSON.stringify(order));
-      }
-
-      // Helper: get all app data (default and custom, with persistent IDs)
-      function getAllAppData() {
-        // Default apps (Feedback, Settings)
+      // Helper functions
+      const getDraggableAppIcons = () => Array.from(document.querySelectorAll('.app-grid .app-icon')).filter(icon => icon.id !== 'add-app');
+      const getAppOrder = () => JSON.parse(localStorage.getItem('appOrder') || 'null');
+      const saveAppOrder = order => localStorage.setItem('appOrder', JSON.stringify(order));
+      const getAllAppData = () => {
         const defaultApps = [
-          {
-            id: 'feedback-app',
-            name: 'Feedback',
-            url: 'https://github.com/404-Page-Found/New-Tab/issues/new',
-            icon: 'https://cdn-icons-png.flaticon.com/512/545/545705.png',
-            className: 'default-app',
-          },
-          {
-            id: 'settings-app',
-            name: 'Settings',
-            url: '#',
-            icon: 'https://cdn-icons-png.flaticon.com/512/3524/3524636.png',
-            className: 'default-app',
-          },
+          { id: 'feedback-app', name: 'Feedback', url: 'https://github.com/404-Page-Found/New-Tab/issues/new', icon: 'https://cdn-icons-png.flaticon.com/512/545/545705.png', className: 'default-app' },
+          { id: 'settings-app', name: 'Settings', url: '#', icon: 'https://cdn-icons-png.flaticon.com/512/3524/3524636.png', className: 'default-app' },
         ];
-        // Custom apps (must have persistent id)
-        const customApps = loadCustomApps().map((app) => ({
-          ...app,
-          className: 'custom-app',
-        }));
+        const customApps = loadCustomApps().map(app => ({ ...app, className: 'custom-app' }));
         return [...defaultApps, ...customApps];
-      }
-
-      // Render all apps in order
+      };
       function renderAllApps() {
         const appGrid = document.getElementById('app-grid');
         const addApp = document.getElementById('add-app');
-        // Remove all except Add (use while for better perf)
-        let child = appGrid.firstElementChild;
-        while (child) {
-          const next = child.nextElementSibling;
-          if (child.id !== 'add-app') appGrid.removeChild(child);
-          child = next;
-        }
-        // Get order and all apps once
+        // Remove all except Add
+        Array.from(appGrid.children).forEach(child => { if (child.id !== 'add-app') appGrid.removeChild(child); });
         let order = getAppOrder();
         const allApps = getAllAppData();
         if (!order || order.length !== allApps.length) {
           order = allApps.map(app => app.id);
           saveAppOrder(order);
         }
-        // Build a map for O(1) lookup
-        const appMap = {};
-        for (const app of allApps) appMap[app.id] = app;
-        // Render in order
-        for (const appId of order) {
+        const appMap = Object.fromEntries(allApps.map(app => [app.id, app]));
+        order.forEach(appId => {
           const app = appMap[appId];
-          if (!app) continue;
+          if (!app) return;
           const a = document.createElement('a');
           a.href = app.url;
           a.className = 'app-icon ' + app.className;
@@ -279,68 +239,52 @@
           }
           a.innerHTML = `<div class="icon"><img src="${app.icon}" alt="${app.name}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div><span class="app-name">${app.name}</span>`;
           appGrid.insertBefore(a, addApp);
-        }
+        });
       }
-
       // Drag and drop logic
       let dragSrcId = null;
-      function handleDragStart(e) {
-        dragSrcId = this.id;
-        this.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'move';
-      }
-      function handleDragEnd(e) {
-        this.classList.remove('dragging');
-      }
-      function handleDragOver(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        // Visual cue
-        this.classList.add('drag-over');
-      }
-      function handleDragLeave(e) {
-        this.classList.remove('drag-over');
-      }
-      function handleDrop(e) {
-        e.stopPropagation();
-        this.classList.remove('drag-over');
-        if (dragSrcId === this.id) return;
-        // Reorder
-        let order = getAppOrder();
-        const fromIdx = order.indexOf(dragSrcId);
-        const toIdx = order.indexOf(this.id);
-        if (fromIdx === -1 || toIdx === -1) return;
-        // Only refresh if the order actually changes
-        const oldOrder = order.slice();
-        order.splice(toIdx, 0, order.splice(fromIdx, 1)[0]);
-        saveAppOrder(order);
-        renderAllApps();
-        attachDnDEvents();
-        // If the order changed, refresh the page in the background
-        if (JSON.stringify(order) !== JSON.stringify(oldOrder)) {
-          setTimeout(function() {
-            location.reload();
-          }, 300);
+      function handleDragEvent(e) {
+        const type = e.type;
+        if (type === 'dragstart') {
+          dragSrcId = this.id;
+          this.classList.add('dragging');
+          e.dataTransfer.effectAllowed = 'move';
+        } else if (type === 'dragend') {
+          this.classList.remove('dragging');
+        } else if (type === 'dragover') {
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'move';
+          this.classList.add('drag-over');
+        } else if (type === 'dragleave') {
+          this.classList.remove('drag-over');
+        } else if (type === 'drop') {
+          e.stopPropagation();
+          this.classList.remove('drag-over');
+          if (dragSrcId === this.id) return;
+          let order = getAppOrder();
+          const fromIdx = order.indexOf(dragSrcId);
+          const toIdx = order.indexOf(this.id);
+          if (fromIdx === -1 || toIdx === -1) return;
+          const oldOrder = order.slice();
+          order.splice(toIdx, 0, order.splice(fromIdx, 1)[0]);
+          saveAppOrder(order);
+          renderAllApps();
+          attachDnDEvents();
+          if (JSON.stringify(order) !== JSON.stringify(oldOrder)) {
+            setTimeout(() => location.reload(), 300);
+          }
         }
       }
       function attachDnDEvents() {
         getDraggableAppIcons().forEach(icon => {
-          icon.addEventListener('dragstart', handleDragStart);
-          icon.addEventListener('dragend', handleDragEnd);
-          icon.addEventListener('dragover', handleDragOver);
-          icon.addEventListener('dragleave', handleDragLeave);
-          icon.addEventListener('drop', handleDrop);
+          ['dragstart','dragend','dragover','dragleave','drop'].forEach(evt => icon.addEventListener(evt, handleDragEvent));
         });
       }
-
-      // Initial render and attach events
       renderAllApps();
       attachDnDEvents();
-
       // Re-render and re-attach events after custom app changes
       const origRenderCustomApps = renderCustomApps;
       renderCustomApps = function() {
-        // Update app order to include new custom apps
         const allApps = getAllAppData();
         let order = getAppOrder();
         if (!order || order.length !== allApps.length) {
@@ -372,18 +316,9 @@
 
       // Search Engine Configuration
       const searchEngines = {
-        bing: {
-          name: "Bing",
-          url: " https://www.bing.com/search?q=",
-        },
-        duckduckgo: {
-          name: "DuckDuckGo",
-          url: " https://duckduckgo.com/?q=",
-        },
-        google: {
-          name: "Google",
-          url: "https://www.google.com/search?q=",
-        },
+        bing: { name: "Bing", url: "https://www.bing.com/search?q=" },
+        duckduckgo: { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
+        google: { name: "Google", url: "https://www.google.com/search?q=" },
       };
 
       // Load saved search engine
@@ -400,50 +335,24 @@
       function initSearchEngine() {
         const select = document.querySelector(".search-engine");
         const savedEngine = getSavedEngine();
-
-        // Set current selection
-        select.innerHTML = "";
-
-        // Add options
-        Object.keys(searchEngines).forEach((key) => {
-          const option = document.createElement("option");
-          option.value = key;
-          option.textContent = searchEngines[key].name;
-          select.appendChild(option);
-        });
-
-        // Set selection last (ensure option exists)
+        select.innerHTML = Object.keys(searchEngines).map(key => `<option value="${key}">${searchEngines[key].name}</option>`).join("");
         select.value = savedEngine;
-
-        // Listen for selection changes
-        select.addEventListener("change", (e) => {
-          saveEngine(e.target.value);
-        });
+        select.addEventListener("change", e => saveEngine(e.target.value));
       }
 
   // Modify search event listener
-      document
-        .querySelector(".search-bar input")
-        .addEventListener("keypress", function (e) {
-          if (e.key === "Enter") {
-            const query = this.value.trim();
-            if (!query) return;
-
-            const selectedEngine = searchEngines[getSavedEngine()];
-
-            if (query.includes(".")) {
-              // Handle URL input
-              window.location.href = query.startsWith("http")
-                ? query
-                : `https://${query}`;
-            } else {
-              // Use selected search engine
-              window.location.href = `${selectedEngine.url}${encodeURIComponent(
-                query
-              )}`;
-            }
+      document.querySelector(".search-bar input").addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          const query = this.value.trim();
+          if (!query) return;
+          const selectedEngine = searchEngines[getSavedEngine()];
+          if (query.includes(".")) {
+            window.location.href = query.startsWith("http") ? query : `https://${query}`;
+          } else {
+            window.location.href = `${selectedEngine.url}${encodeURIComponent(query)}`;
           }
-        });
+        }
+      });
 
       // Initialize on page load
       initSearchEngine();
@@ -801,10 +710,7 @@
 
       // Prevent default behavior only when the app icon is not clicked
       document.addEventListener("contextmenu", function (e) {
-        const appIcon = e.target.closest(".app-icon.custom-app, .app-icon.default-app");
-        if (!appIcon) {
-          e.preventDefault();
-        }
+        if (!e.target.closest(".app-icon.custom-app, .app-icon.default-app")) e.preventDefault();
       });
       // Display a motto that stays the same for each day
       function displayDailyMotto() {
