@@ -778,49 +778,28 @@
       // Create context menu element
       const contextMenu = document.createElement("div");
       contextMenu.id = "app-context-menu";
-      contextMenu.style.cssText = `
-        display: none;
-        position: absolute;
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.15);
-        z-index: 3000;
-        min-width: 160px;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        font-size: 14px;
-        color: #333;
-      `;
+      contextMenu.className = "app-context-menu";
 
       // Menu items
       const renameItem = document.createElement("div");
       renameItem.id = "rename-app";
+      renameItem.className = "context-menu-item";
       renameItem.textContent = "Rename";
-      renameItem.style.cssText =
-        "padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;";
 
       const changeThumbnailItem = document.createElement("div");
       changeThumbnailItem.id = "change-thumbnail";
+      changeThumbnailItem.className = "context-menu-item";
       changeThumbnailItem.textContent = "Change Thumbnail";
-      changeThumbnailItem.style.cssText =
-        "padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;";
 
       const deleteItem = document.createElement("div");
       deleteItem.id = "delete-app";
+      deleteItem.className = "context-menu-item delete-item";
       deleteItem.textContent = "Delete";
-      deleteItem.style.cssText =
-        "padding: 8px 12px; cursor: pointer; color: #f44336; transition: background 0.2s;";
 
       // Add hover effects
       [renameItem, changeThumbnailItem, deleteItem].forEach((item) => {
-        item.addEventListener(
-          "mouseenter",
-          () => (item.style.background = "#f5f7fa")
-        );
-        item.addEventListener(
-          "mouseleave",
-          () => (item.style.background = "white")
-        );
+        item.addEventListener("mouseenter", () => item.classList.add("hover"));
+        item.addEventListener("mouseleave", () => item.classList.remove("hover"));
       });
 
       contextMenu.appendChild(renameItem);
