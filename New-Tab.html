@@ -439,6 +439,33 @@
         addAppUrlInput.value = "";
         addAppUrlInput.focus();
       });
+
+      // Add event listener for Enter key on URL input
+      addAppUrlInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+          e.preventDefault(); // Prevent form submission
+          const url = this.value.trim();
+          if (!url) return;
+          let name = url.replace(/^https?:\/\//, "").split("/")[0];
+          const icon = getFavicon(url);
+          const apps = loadCustomApps();
+          // Assign a persistent unique id
+          const id = 'custom-app-' + Date.now() + '-' + Math.floor(Math.random()*100000);
+          apps.push({
+            id,
+            url: url.startsWith("http") ? url : "https://" + url,
+            name,
+            icon,
+          });
+          saveCustomApps(apps);
+          // Update appOrder to include new app
+          let order = getAppOrder() || [];
+          order.push(id);
+          saveAppOrder(order);
+          renderCustomApps();
+          addAppModal.style.display = "none";
+        }
+      });
       addAppCancel.addEventListener("click", function () {
         addAppModal.style.display = "none";
       });
