@@ -426,14 +426,14 @@ body {
   box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
 }
 #add-app-modal button#add-app-cancel {
-  background: rgba(245, 158, 11, 0.8);
+  background: rgba(255, 0, 0, 0.8);
   color: white  ;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
 }
 #add-app-modal button#add-app-cancel:hover {
-  background: rgba(245, 158, 11, 1);
+  background: rgba(255, 0, 0, 1);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.5);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.5);
 }
 .settings-section label {
   display: flex;
@@ -544,7 +544,7 @@ body {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  background: rgba(245, 158, 11, 0.8);
+  background: rgba(255, 0, 0, 0.8);
   color: white;
   font-weight: 600;
   font-size: 14px;
@@ -554,9 +554,9 @@ body {
 }
 
 .settings-section button:hover {
-  background: rgba(245, 158, 11, 1);
+  background: rgba(255, 0, 0, 1);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.5);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.5);
 }
 
 /* Modern Context Menu Styles */
