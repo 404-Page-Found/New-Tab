@@ -240,7 +240,7 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.4);
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   z-index: 1000;
@@ -249,17 +249,17 @@ body {
   animation: modalFadeIn 0.3s ease-out;
 }
 #settings-modal > div {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
   padding: 0;
   min-width: 280px;
   max-width: 450px;
   width: 450px;
   min-height: 520px;
   max-height: none;
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: fixed;
   top: 100px;
   left: 50%;
@@ -268,7 +268,7 @@ body {
   display: flex;
   flex-direction: column;
   animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .settings-body {
   display: flex;
@@ -276,19 +276,19 @@ body {
 }
 .settings-menu {
   width: 180px;
-  background: linear-gradient(145deg, #f8fafc 0%, #f1f5f9 100%);
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  background: rgba(15, 23, 42, 0.6);
+  border-top-left-radius: 16px;
+  border-bottom-left-radius: 16px;
   padding: 28px 0;
   display: flex;
   flex-direction: column;
   gap: 6px;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
 }
 .settings-menu-item {
   background: none;
   border: none;
-  color: #64748b;
+  color: rgba(203, 213, 225, 0.9);
   font-size: 0.95em;
   font-weight: 500;
   cursor: pointer;
@@ -301,16 +301,16 @@ body {
   margin-right: 8px;
 }
 .settings-menu-item:hover {
-  background: #e2e8f0;
-  color: #334155;
+  background: rgba(33, 150, 243, 0.15);
+  color: #ffffff;
   transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
 }
 .settings-menu-item.selected {
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
+  background: rgba(33, 150, 243, 0.3);
+  color: #ffffff;
   transform: translateX(6px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
   font-weight: 600;
 }
 .settings-menu-item.selected::before {
@@ -320,7 +320,7 @@ body {
   top: 0;
   width: 8px;
   height: 100%;
-  background: #1d4ed8;
+  background: #2196f3;
   border-radius: 0 4px 4px 0;
 }
 .settings-content {
@@ -412,7 +412,7 @@ body {
   margin-bottom: 16px;
   font-size: 0.9em;
   font-weight: 500;
-  color: #374151;
+  color: rgba(203, 213, 225, 0.9);
   gap: 6px;
 }
 
@@ -420,17 +420,17 @@ body {
   appearance: none;
   width: 18px;
   height: 18px;
-  border: 2px solid #d1d5db;
+  border: 2px solid rgba(107, 114, 128, 0.6);
   border-radius: 4px;
-  background: white;
+  background: rgba(31, 41, 55, 0.5);
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
 }
 
 .settings-section input[type="checkbox"]:checked {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: #2196f3;
+  border-color: #2196f3;
 }
 
 .settings-section input[type="checkbox"]:checked::after {
@@ -448,9 +448,9 @@ body {
   appearance: none;
   width: 16px;
   height: 16px;
-  border: 2px solid #d1d5db;
+  border: 2px solid rgba(107, 114, 128, 0.6);
   border-radius: 50%;
-  background: white;
+  background: rgba(31, 41, 55, 0.5);
   cursor: pointer;
   transition: all 0.2s ease;
   margin-right: 8px;
@@ -458,8 +458,8 @@ body {
 }
 
 .settings-section input[type="radio"]:checked {
-  background: #3b82f6;
-  border-color: #3b82f6;
+  background: #2196f3;
+  border-color: #2196f3;
 }
 
 .settings-section input[type="radio"]:checked::after {
@@ -478,10 +478,11 @@ body {
 .settings-section input[type="number"] {
   width: 100%;
   padding: 10px 12px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid rgba(107, 114, 128, 0.6);
   border-radius: 8px;
   font-size: 14px;
-  background: #f9fafb;
+  background: rgba(31, 41, 55, 0.5);
+  color: white;
   transition: all 0.2s ease;
   outline: none;
 }
@@ -489,9 +490,14 @@ body {
 .settings-section select:focus,
 .settings-section input[type="color"]:focus,
 .settings-section input[type="number"]:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  background: white;
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  background: rgba(31, 41, 55, 0.7);
+}
+
+.settings-section select option {
+  background: #1f2937;
+  color: white;
 }
 
 .settings-section input[type="color"] {
@@ -509,7 +515,7 @@ body {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  background: rgba(245, 158, 11, 0.8);
   color: white;
   font-weight: 600;
   font-size: 14px;
@@ -519,9 +525,9 @@ body {
 }
 
 .settings-section button:hover {
-  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  background: rgba(245, 158, 11, 1);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.5);
 }
 
 /* Modern Context Menu Styles */
