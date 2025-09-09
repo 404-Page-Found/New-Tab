@@ -75,7 +75,7 @@
   --search-bar-width: 750px;
   --modal-width: 420px;
   --modal-min-height: 500px;
-  --icon-radius: 15px;
+  --icon-radius: 20px;
 }
 
 body {
@@ -94,7 +94,7 @@ body {
   background: rgba(255, 255, 255, 0.9);
   display: flex;
   padding: 7px 20px;
-  border-radius: 30px;
+  border-radius: 25px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   margin-bottom: 15px;
   width: var(--search-bar-width);
@@ -115,15 +115,70 @@ body {
   outline: none;
   flex: 1;
 }
-.search-engine {
-  -webkit-appearance: none;
-  appearance: none;
-  background: url('data:image/svg+xml;utf8,<svg fill="%23999" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>') no-repeat right 8px center;
-  padding: 6px 30px 6px 10px;
-  border-radius: 4px;
+.search-engines {
+  position: relative;
   margin-right: 10px;
-  min-width: 80px;
-  border-color: #b7b7b7;
+}
+
+.selected-engine {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 5px;
+  transition: background 0.2s;
+}
+
+.selected-engine:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.selected-engine img {
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
+  border-radius: 3px;
+}
+
+.dropdown-arrow {
+  font-size: 12px;
+  color: #ccc;
+}
+
+.engine-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  min-width: 160px;
+  padding: 5px 0;
+}
+
+.engine-option {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.engine-option:hover {
+  background: rgba(33, 150, 243, 0.1);
+}
+
+.engine-option img {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border-radius: 3px;
+}
+
+.engine-option span {
+  font-size: 14px;
+  color: #333;
 }
 
 .app-grid {
@@ -148,7 +203,7 @@ body {
   width: var(--app-icon-size);
   height: var(--app-icon-size);
   background: white;
-  border-radius: var(--icon-radius, 15px);
+  border-radius: var(--icon-radius,20px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -168,7 +223,7 @@ body {
 .clock {
   text-align: center;
   font-size: 5em;
-  color: #5e5e5e;
+  color: #ffffff;
   margin-bottom: 20px;
   font-weight: 300;
 }
@@ -185,60 +240,88 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   z-index: 1000;
   align-items: flex-start;
   justify-content: flex-start;
+  animation: modalFadeIn 0.3s ease-out;
 }
 #settings-modal > div {
-  background: #fff;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-radius: 16px;
   padding: 0;
   min-width: 280px;
-  max-width: 420px;
-  width: 420px;
-  min-height: 500px;
+  max-width: 450px;
+  width: 450px;
+  min-height: 520px;
   max-height: none;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: fixed;
   top: 100px;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(-10px);
   right: auto;
   display: flex;
   flex-direction: column;
+  animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 .settings-body {
   display: flex;
   min-height: 400px;
 }
 .settings-menu {
-  width: 160px;
-  background: #f5f7fa;
+  width: 180px;
+  background: rgba(15, 23, 42, 0.6);
   border-top-left-radius: 16px;
   border-bottom-left-radius: 16px;
-  padding: 24px 0;
+  padding: 28px 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05);
 }
 .settings-menu-item {
   background: none;
   border: none;
-  color: #333;
-  font-size: 1em;
+  color: rgba(203, 213, 225, 0.9);
+  font-size: 0.95em;
+  font-weight: 500;
   cursor: pointer;
-  padding: 10px 20px;
+  padding: 12px 24px;
   text-align: left;
-  border-radius: 8px;
-  transition: background 0.2s;
+  border-radius: 0 12px 12px 0;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  margin-left: 8px;
+  margin-right: 8px;
 }
 .settings-menu-item:hover {
-  background: #e0e0e0;
+  background: rgba(33, 150, 243, 0.15);
+  color: #ffffff;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
 }
 .settings-menu-item.selected {
+  background: rgba(33, 150, 243, 0.3);
+  color: #ffffff;
+  transform: translateX(6px);
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+  font-weight: 600;
+}
+.settings-menu-item.selected::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 0;
+  width: 8px;
+  height: 100%;
   background: #2196f3;
-  color: white;
+  border-radius: 0 4px 4px 0;
 }
 .settings-content {
   flex: 1;
@@ -283,59 +366,276 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   z-index: 1001;
   align-items: center;
   justify-content: center;
+  animation: modalFadeIn 0.3s ease-out;
 }
 #add-app-modal > div {
-  background: #fff;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-radius: 16px;
   padding: 24px 20px;
   min-width: 280px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: relative;
   max-width: 90vw;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 #add-app-modal h3 {
   margin-bottom: 12px;
   font-size: 1.2em;
+  color: rgba(203, 213, 225, 0.9);
 }
 #add-app-modal input {
   width: 100%;
-  padding: 8px;
+  padding: 10px 12px;
   margin-bottom: 12px;
-  border: 1px solid #ccc;
+  border: 2px solid rgba(107, 114, 128, 0.6);
   border-radius: 8px;
+  background: rgba(31, 41, 55, 0.5);
+  color: white;
   font-size: 16px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+#add-app-modal input:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  background: rgba(31, 41, 55, 0.7);
 }
 #add-app-modal button {
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 #add-app-modal button#add-app-confirm {
   background: #2196f3;
   color: white;
 }
+#add-app-modal button#add-app-confirm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
 #add-app-modal button#add-app-cancel {
-  background: #eee;
+  background: rgba(255, 0, 0, 0.8);
+  color: white  ;
+  box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+}
+#add-app-modal button#add-app-cancel:hover {
+  background: rgba(255, 0, 0, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.5);
 }
 .settings-section label {
-  display: block;
-  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  font-size: 0.9em;
+  font-weight: 500;
+  color: rgba(203, 213, 225, 0.9);
+  gap: 6px;
 }
+
+.settings-section input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(107, 114, 128, 0.6);
+  border-radius: 4px;
+  background: rgba(31, 41, 55, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.settings-section input[type="checkbox"]:checked {
+  background: #2196f3;
+  border-color: #2196f3;
+}
+
+.settings-section input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
 .settings-section input[type="radio"] {
-  margin-right: 6px;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(107, 114, 128, 0.6);
+  border-radius: 50%;
+  background: rgba(31, 41, 55, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-right: 8px;
+  position: relative;
 }
+
+.settings-section input[type="radio"]:checked {
+  background: #2196f3;
+  border-color: #2196f3;
+}
+
+.settings-section input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: white;
+}
+
 .settings-section select,
 .settings-section input[type="color"],
 .settings-section input[type="number"] {
-  margin-top: 4px;
-  margin-bottom: 4px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid rgba(107, 114, 128, 0.6);
+  border-radius: 8px;
+  font-size: 14px;
+  background: rgba(31, 41, 55, 0.5);
+  color: white;
+  transition: all 0.2s ease;
+  outline: none;
 }
+
+.settings-section select:focus,
+.settings-section input[type="color"]:focus,
+.settings-section input[type="number"]:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  background: rgba(31, 41, 55, 0.7);
+}
+
+.settings-section select option {
+  background: #1f2937;
+  color: white;
+}
+
+.settings-section input[type="color"] {
+  cursor: pointer;
+  padding: 6px;
+}
+
+.settings-section input[type="number"]::-webkit-outer-spin-button,
+.settings-section input[type="number"]::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
 .settings-section button {
-  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.settings-section button:hover {
+  background: rgba(255, 0, 0, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.5);
+}
+
+/* Modern Context Menu Styles */
+.app-context-menu {
+  display: none;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.85);
+  color: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 3000;
+  min-width: 180px;
+  font-size: 14px;
+  font-weight: 500;
+  overflow: hidden;
+  animation: menuFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes menuFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.context-menu-item {
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.context-menu-item:last-child {
+  border-bottom: none;
+}
+
+.context-menu-item:hover,
+.context-menu-item.hover {
+  background: rgba(33, 150, 243, 0.2);
+  transform: translateX(2px);
+}
+
+.context-menu-item.delete-item {
+  color: #ff5252;
+}
+
+.context-menu-item.delete-item:hover,
+.context-menu-item.delete-item.hover {
+  background: rgba(244, 67, 54, 0.2);
 }
