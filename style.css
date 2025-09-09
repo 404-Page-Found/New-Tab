@@ -366,45 +366,74 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   z-index: 1001;
   align-items: center;
   justify-content: center;
+  animation: modalFadeIn 0.3s ease-out;
 }
 #add-app-modal > div {
-  background: #fff;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-radius: 16px;
   padding: 24px 20px;
   min-width: 280px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: relative;
   max-width: 90vw;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 #add-app-modal h3 {
   margin-bottom: 12px;
   font-size: 1.2em;
+  color: rgba(203, 213, 225, 0.9);
 }
 #add-app-modal input {
   width: 100%;
-  padding: 8px;
+  padding: 10px 12px;
   margin-bottom: 12px;
-  border: 1px solid #ccc;
+  border: 2px solid rgba(107, 114, 128, 0.6);
   border-radius: 8px;
+  background: rgba(31, 41, 55, 0.5);
+  color: white;
   font-size: 16px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+#add-app-modal input:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  background: rgba(31, 41, 55, 0.7);
 }
 #add-app-modal button {
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s ease;
 }
 #add-app-modal button#add-app-confirm {
   background: #2196f3;
   color: white;
 }
+#add-app-modal button#add-app-confirm:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
 #add-app-modal button#add-app-cancel {
-  background: #eee;
+  background: rgba(245, 158, 11, 0.8);
+  color: white  ;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+#add-app-modal button#add-app-cancel:hover {
+  background: rgba(245, 158, 11, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.5);
 }
 .settings-section label {
   display: flex;
