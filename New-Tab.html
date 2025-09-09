@@ -18,7 +18,7 @@
       </div>
 
   <div class="app-grid" id="app-grid">
-        <a href="#" class="app-icon" id="add-app" draggable="false">
+        <a href="#" class="app-icon default-app" id="add-app" draggable="false">
           <div class="icon">
             <img
               src="https://cdn-icons-png.flaticon.com/512/1828/1828817.png"
@@ -293,7 +293,6 @@
       // Search Engine Configuration
       const searchEngines = {
         bing: { name: "Bing", url: "https://www.bing.com/search?q=", icon: "https://www.bing.com/favicon.ico" },
-        duckduckgo: { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=", icon: "https://duckduckgo.com/favicon.ico" },
         google: { name: "Google", url: "https://www.google.com/search?q=", icon: "https://www.google.com/favicon.ico" },
       };
 
@@ -310,7 +309,11 @@
       // Initialize search engine dropdown
       function initSearchEngine() {
         const enginesEl = document.querySelector(".search-engines");
-        const savedEngine = getSavedEngine();
+        let savedEngine = getSavedEngine();
+        if (!searchEngines[savedEngine]) {
+          saveEngine("bing");
+          savedEngine = getSavedEngine();
+        }
         enginesEl.innerHTML = `
           <div class="selected-engine">
             <img src="${searchEngines[savedEngine].icon}" alt="${searchEngines[savedEngine].name}" title="${searchEngines[savedEngine].name}" />
@@ -906,6 +909,14 @@
           }
           contextMenu.style.display = "none";
         });
+
+      // Prevent default context menu on default apps (Feedback, Settings, Add)
+      document.addEventListener("contextmenu", function (e) {
+        const appIcon = e.target.closest(".app-icon.default-app");
+        if (appIcon) {
+          e.preventDefault();
+        }
+      });
     </script>
     <!-- Motto area -->
   <div id="motto-container">
