@@ -1,11 +1,11 @@
-# New Tab v0.3.5
+# New Tab v0.3.6
 
 **Available Languages**:  
 [![English](https://img.shields.io/badge/English-blue)](docs/README.en.md)
 [![简体中文](https://img.shields.io/badge/简体中文-blue)](docs/README.zh-CN.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.3.5-blue)]()
+[![Version](https://img.shields.io/badge/version-0.3.6-blue)]()
 
 A modern open-source new tab page for personalized browsing experience.
 
