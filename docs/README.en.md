@@ -16,8 +16,10 @@ A modern open-source new tab page for personalized browsing experience.
 
 ## 🚀 Quick Start
 1. Download the released source code
-2. Open the `New-Tab.html` file
-3. Start using your personalized new tab
+2. Open the `New-Tab.html` file using a browser
+3. Copy the path at the top
+4. Paste them into the Start-up page path and the home page path in the browser settings
+5. Start using your personalised new tab
 
 ## 🖼️ Screenshots
 | Feature | Preview |
@@ -29,7 +31,7 @@ A modern open-source new tab page for personalized browsing experience.
 Project is still in developing stage. Contributions are highly welcome! Please follow these steps:
 1. Fork the repository
 2. Create a new branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
+3. Commit your changes (`git commit -m 'Add some feature'`)
 4. Push to the branch (`git push origin feature/your-feature`)
 5. Create a Pull Request
 (Remember to add neccessery comment.)
