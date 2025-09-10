@@ -158,6 +158,16 @@ body {
   z-index: 100;
   min-width: 160px;
   padding: 5px 0;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.engine-dropdown.dropdown-open {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 .engine-option {

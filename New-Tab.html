@@ -317,7 +317,7 @@
             <img src="${searchEngines[savedEngine].icon}" alt="${searchEngines[savedEngine].name}" title="${searchEngines[savedEngine].name}" />
             <span class="dropdown-arrow">▼</span>
           </div>
-          <div class="engine-dropdown" style="display: none;">
+          <div class="engine-dropdown">
             ${Object.keys(searchEngines).map(key => `
               <div class="engine-option" data-key="${key}" ${key === savedEngine ? 'id="selected"' : ''}>
                 <img src="${searchEngines[key].icon}" alt="${searchEngines[key].name}" title="${searchEngines[key].name}" />
@@ -330,7 +330,7 @@
         const dropdownEl = enginesEl.querySelector(".engine-dropdown");
 
         selectedEngineEl.addEventListener("click", () => {
-          dropdownEl.style.display = dropdownEl.style.display === "block" ? "none" : "block";
+          dropdownEl.classList.toggle("dropdown-open");
         });
 
         dropdownEl.querySelectorAll(".engine-option").forEach(option => {
@@ -339,14 +339,14 @@
             const key = option.getAttribute("data-key");
             saveEngine(key);
             initSearchEngine(); // Re-render to update selected
-            dropdownEl.style.display = "none";
+            dropdownEl.classList.remove("dropdown-open");
           });
         });
 
         // Close dropdown when clicking outside
         document.addEventListener("click", (e) => {
           if (!enginesEl.contains(e.target)) {
-            dropdownEl.style.display = "none";
+            dropdownEl.classList.remove("dropdown-open");
           }
         });
       }
