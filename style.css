@@ -395,7 +395,7 @@ body {
   -webkit-backdrop-filter: blur(16px);
   border-radius: 16px;
   padding: 24px 20px;
-  min-width: 280px;
+  min-width: 500px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: relative;
   max-width: 90vw;
