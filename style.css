@@ -490,8 +490,8 @@ body {
 
 .settings-section input[type="radio"] {
   appearance: none;
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
   position: relative;
   margin-right: 8px;
@@ -502,8 +502,8 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   background: rgba(255, 255, 255, 0.9);
   border: 2px solid rgba(107, 114, 128, 0.6);
   border-radius: 0;
@@ -517,11 +517,11 @@ body {
 }
 
 .curvature-option[data-value="15"] input::before {
-  border-radius: 5px;
+  border-radius: 8px;
 }
 
 .curvature-option[data-value="20"] input::before {
-  border-radius: 8px;
+  border-radius: 13px;
 }
 
 .curvature-option[data-value="50"] input::before {
