@@ -180,12 +180,22 @@
               <button id="date-style-reset">Reset Date Style</button>
             </section>
             <section class="settings-section" data-section="themes" style="display: none">
-              <label>
-                <input type="radio" name="theme" value="dark" checked /> Dark
-              </label>
-              <label>
-                <input type="radio" name="theme" value="light" /> Light
-              </label>
+              <div class="theme-setting-group">
+                <h4>Theme</h4>
+                <p>Choose your preferred interface theme</p>
+                <div class="theme-options">
+                  <label class="theme-option modern">
+                    <div class="preview-icon dark"></div>
+                    <input type="radio" name="theme" value="dark" checked />
+                    <span class="label">Dark</span>
+                  </label>
+                  <label class="theme-option modern">
+                    <div class="preview-icon light"></div>
+                    <input type="radio" name="theme" value="light" />
+                    <span class="label">Light</span>
+                  </label>
+                </div>
+              </div>
             </section>
           </div>
         </div>
