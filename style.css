@@ -1143,3 +1143,230 @@ body.light-theme .bg-thumb.selected {
 .context-menu-item.delete-item.hover {
   background: rgba(244, 67, 54, 0.2);
 }
+
+/* Modern Clock Settings */
+.clock-setting-group {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.clock-setting-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.clock-setting-group h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.clock-setting-group p {
+  margin: 0 0 16px 0;
+  font-size: 12px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.4;
+}
+
+.clock-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.clock-option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clock-option.reset-option {
+  order: 4;
+}
+
+.setting-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.setting-card:hover {
+  background: rgba(33, 150, 243, 0.05);
+  border-color: rgba(33, 150, 243, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.1);
+}
+
+.setting-icon {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  stroke: var(--settings-text-color);
+  transition: all 0.2s ease;
+}
+
+.setting-card:hover .setting-icon {
+  stroke: #2196f3;
+}
+
+.setting-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.setting-content label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+  margin: 0;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.setting-content select,
+.setting-content input[type="color"],
+.setting-content input[type="number"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 2px solid rgba(107, 114, 128, 0.5);
+  background: rgba(31, 41, 55, 0.5);
+  color: var(--settings-text-color);
+  font-size: 13px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.setting-content input[type="color"] {
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.setting-content select:focus,
+.setting-content input[type="color"]:focus,
+.setting-content input[type="number"]:focus {
+  border-color: #2196f3;
+  background: rgba(31, 41, 55, 0.7);
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+.setting-card button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.8);
+  color: white;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: fit-content;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
+}
+
+.setting-card button:hover {
+  background: rgba(239, 68, 68, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+.reset-card {
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.reset-card:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.reset-card .setting-icon {
+  stroke: rgba(239, 68, 68, 0.8);
+}
+
+.reset-card:hover .setting-icon {
+  stroke: #dc2626;
+}
+
+/* Light theme adjustments for clock settings */
+body.light-theme .clock-setting-group h4,
+body.light-theme .clock-setting-group p {
+  color: rgba(55, 65, 81, 0.9);
+}
+
+body.light-theme .clock-setting-group p {
+  color: rgba(107, 114, 128, 0.8);
+}
+
+body.light-theme .setting-card {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .setting-card:hover {
+  background: rgba(33, 150, 243, 0.05);
+  border-color: rgba(33, 150, 243, 0.2);
+}
+
+body.light-theme .setting-icon {
+  stroke: rgba(55, 65, 81, 0.9);
+}
+
+body.light-theme .setting-content select,
+body.light-theme .setting-content input[type="color"],
+body.light-theme .setting-content input[type="number"] {
+  background: rgba(255, 255, 255, 0.95);
+  color: #1f2937;
+  border-color: #d1d5db;
+}
+
+body.light-theme .setting-content select:focus,
+body.light-theme .setting-content input[type="color"]:focus,
+body.light-theme .setting-content input[type="number"]:focus {
+  background: rgba(255, 255, 255, 1);
+}
+
+body.light-theme .reset-card {
+  background: rgba(239, 68, 68, 0.05);
+}
+
+body.light-theme .reset-card:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+body.light-theme .setting-card button {
+  background: rgba(239, 68, 68, 0.9);
+}
+
+body.light-theme .setting-card button:hover {
+  background: #dc2626;
+}
+
+/* Responsive adjustments */
+@media (max-width: 500px) {
+  .clock-options {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .setting-card {
+    padding: 16px 12px;
+  }
+
+  .setting-icon {
+    width: 20px;
+    height: 20px;
+  }
+}
