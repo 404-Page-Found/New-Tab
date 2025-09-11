@@ -109,6 +109,12 @@ function loadCurvature() {
 function applyCurvature() {
   const radius = loadCurvature();
   document.documentElement.style.setProperty('--icon-radius', radius + 'px');
+
+  // Update radio button selection
+  const curvatureRadios = document.querySelectorAll('input[name="curvature"]');
+  curvatureRadios.forEach((radio) => {
+    radio.checked = radio.value === radius;
+  });
 }
 const curvatureRadios = document.querySelectorAll('input[name="curvature"]');
 curvatureRadios.forEach((radio) => {
@@ -120,6 +126,10 @@ curvatureRadios.forEach((radio) => {
   });
 });
 applyCurvature();
+
+
+
+
 
 // Settings app click
 const settingsApp = document.getElementById("settings-app");

@@ -219,6 +219,7 @@ body {
 .app-icon:hover {
   transform: scale(1.05);
 }
+
 .icon {
   width: var(--app-icon-size);
   height: var(--app-icon-size);
@@ -239,6 +240,7 @@ body {
   text-align: center;
   color: #fff;
   text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000;
+  transition: opacity 0.2s ease;
 }
 .clock {
   text-align: center;
@@ -521,16 +523,112 @@ body {
   border-color: #2196f3;
 }
 
-.curvature-option[data-value="15"] input::before {
+.apps-setting-group {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.apps-setting-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.apps-setting-group h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.apps-setting-group p {
+  margin: 0 0 16px 0;
+  font-size: 12px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.4;
+}
+
+/* Modern Curvature Options */
+.curvature-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.curvature-option.modern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 12px 8px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  position: relative;
+}
+
+.curvature-option.modern:hover {
+  background: rgba(33, 150, 243, 0.05);
+  border-color: rgba(33, 150, 243, 0.2);
+  transform: translateY(-2px);
+}
+
+.curvature-option.modern input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.curvature-option.modern input[type="radio"]:checked ~ .preview-icon {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+.curvature-option.modern input[type="radio"]:checked ~ .label {
+  color: #2196f3;
+  font-weight: 600;
+}
+
+.preview-icon {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(107, 114, 128, 0.3);
+  border-radius: 0;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.curvature-option.modern:has(input[value="8"]) .preview-icon {
+  border-radius: 4px;
+}
+
+.curvature-option.modern:has(input[value="15"]) .preview-icon {
   border-radius: 8px;
 }
 
-.curvature-option[data-value="20"] input::before {
-  border-radius: 13px;
+.curvature-option.modern:has(input[value="20"]) .preview-icon {
+  border-radius: 12px;
 }
 
-.curvature-option[data-value="50"] input::before {
+
+
+.curvature-option.modern:has(input[value="50"]) .preview-icon {
   border-radius: 50%;
+}
+
+.curvature-option.modern .label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--settings-text-color);
+  text-align: center;
+  transition: all 0.2s ease;
 }
 
 .settings-section select,
@@ -840,6 +938,8 @@ body.light-theme .bg-thumb:selected,
 body.light-theme .bg-thumb.selected {
   border-color: #2196f3;
 }
+
+
 
 /* Modern Context Menu Styles */
 .app-context-menu {
