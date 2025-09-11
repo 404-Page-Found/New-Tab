@@ -490,31 +490,42 @@ body {
 
 .settings-section input[type="radio"] {
   appearance: none;
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(107, 114, 128, 0.6);
-  border-radius: 50%;
-  background: rgba(31, 41, 55, 0.5);
+  width: 20px;
+  height: 20px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-right: 8px;
   position: relative;
+  margin-right: 8px;
 }
 
-.settings-section input[type="radio"]:checked {
-  background: #2196f3;
+.settings-section input[type="radio"]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(107, 114, 128, 0.6);
+  border-radius: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.settings-section input[type="radio"]:checked::before {
+  background: rgba(255, 255, 255, 1);
   border-color: #2196f3;
 }
 
-.settings-section input[type="radio"]:checked::after {
-  content: '';
-  position: absolute;
-  top: 3px;
-  left: 3px;
-  width: 6px;
-  height: 6px;
+.curvature-option[data-value="15"] input::before {
+  border-radius: 5px;
+}
+
+.curvature-option[data-value="20"] input::before {
+  border-radius: 8px;
+}
+
+.curvature-option[data-value="50"] input::before {
   border-radius: 50%;
-  background: white;
 }
 
 .settings-section select,
