@@ -780,7 +780,7 @@ body.light-theme .settings-section input[type="radio"]::before {
 }
 
 body.light-theme .settings-section input[type="radio"]:checked::before {
-  background: #2196f3;
+  background: rgba(255, 255, 255, 1);
   border-color: #2196f3;
 }
 
