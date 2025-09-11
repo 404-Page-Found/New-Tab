@@ -47,6 +47,9 @@
               Clock
             </button>
             <button class="settings-menu-item" data-section="date">Date</button>
+            <button class="settings-menu-item" data-section="themes">
+              Themes
+            </button>
           </nav>
           <div class="settings-content">
             <section class="settings-section" data-section="general">
@@ -155,6 +158,14 @@
                 />
               </label>
               <button id="date-style-reset">Reset Date Style</button>
+            </section>
+            <section class="settings-section" data-section="themes" style="display: none">
+              <label>
+                <input type="radio" name="theme" value="dark" checked /> Dark
+              </label>
+              <label>
+                <input type="radio" name="theme" value="light" /> Light
+              </label>
             </section>
           </div>
         </div>

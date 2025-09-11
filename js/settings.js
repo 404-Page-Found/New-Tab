@@ -149,6 +149,29 @@ if (dateStyleReset) {
   });
 }
 
+// Theme
+function loadTheme() {
+  return localStorage.getItem("theme") || "dark";
+}
+function applyTheme() {
+  const theme = loadTheme();
+  document.body.classList.toggle("light-theme", theme === "light");
+  // Update radio buttons
+  const darkRadio = document.querySelector('input[name="theme"][value="dark"]');
+  const lightRadio = document.querySelector('input[name="theme"][value="light"]');
+  if (darkRadio) darkRadio.checked = theme === "dark";
+  if (lightRadio) lightRadio.checked = theme === "light";
+}
+
+// Event listeners for theme
+document.addEventListener("change", function (e) {
+  if (e.target.name === "theme") {
+    const selectedTheme = e.target.value;
+    localStorage.setItem("theme", selectedTheme);
+    applyTheme();
+  }
+});
+
 // Settings menu logic
 const settingsMenuItems = document.querySelectorAll(".settings-menu-item");
 const settingsSections = document.querySelectorAll(".settings-section");
@@ -176,3 +199,4 @@ if (settingsMenuItems.length && settingsSections.length) {
 applyBg();
 applyClockStyle();
 applyDateStyle();
+applyTheme();
