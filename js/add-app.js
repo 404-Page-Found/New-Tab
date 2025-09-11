@@ -1,43 +1,7 @@
 // js/add-app.js - Add app modal and functionality
 
 // Default apps list
-const defaultAppsList = [
-  {
-    name: "Google",
-    url: "https://www.google.com",
-    icon: "https://www.gstatic.com/images/branding/product/2x/googleg_48dp.png",
-  },
-  {
-    name: "YouTube",
-    url: "https://www.youtube.com",
-    icon: "https://upload.wikimedia.org/wikipedia/commons/b/b8/YouTube_Logo_2017.svg",
-  },
-  {
-    name: "GitHub",
-    url: "https://www.github.com",
-    icon: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
-  },
-  {
-    name: "Gmail",
-    url: "https://www.gmail.com",
-    icon: "https://ssl.gstatic.com/ui/v1/icons/mail/rfr/gmail.ico",
-  },
-  {
-    name: "Twitter",
-    url: "https://www.twitter.com",
-    icon: "https://cdn.jsdelivr.net/npm/simple-icons@v11/icons/x.svg",
-  },
-  {
-    name: "Facebook",
-    url: "https://www.facebook.com",
-    icon: "https://facebook.com/favicon.ico",
-  },
-  {
-    name: "Feedback",
-    url: "https://github.com/404-Page-Found/New-Tab/issues/new",
-    icon: "https://cdn-icons-png.flaticon.com/512/545/545705.png",
-  },
-];
+const defaultAppsList = [];
 
 // Render default apps list in modal
 function renderDefaultAppsList() {
