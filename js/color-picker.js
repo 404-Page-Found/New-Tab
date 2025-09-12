@@ -28,18 +28,6 @@ class ModernColorPicker {
 
     if (!element) return;
 
-    // Find and override associated label behavior
-    const label = document.querySelector(`label[for="${element.id}"]`);
-    if (label) {
-      label.addEventListener('click', (e) => {
-        e.preventDefault();
-        // Prevent default browser behavior and call our show method
-        setTimeout(() => {
-          if (!this.isOpen) this.show();
-        }, 0);
-      });
-    }
-
     // Create the color swatch button
     this.swatch = document.createElement('div');
     this.swatch.className = 'color-swatch';
