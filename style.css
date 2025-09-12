@@ -280,7 +280,8 @@ body {
   max-width: 450px;
   width: 450px;
   min-height: 520px;
-  max-height: none;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: fixed;
   top: 100px;
@@ -403,6 +404,8 @@ body {
   border-radius: 16px;
   padding: 24px 20px;
   min-width: 500px;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: relative;
   max-width: 90vw;
