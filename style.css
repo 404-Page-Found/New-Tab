@@ -75,6 +75,7 @@
   --search-bar-width: 750px;
   --modal-width: 420px;
   --modal-min-height: 500px;
+  --overlay-max-height: calc(100vh - 225px);
   --icon-radius: 20px;
   /* Theme specific colors */
   --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
@@ -279,8 +280,8 @@ body {
   min-width: 280px;
   max-width: 450px;
   width: 450px;
-  min-height: 520px;
-  max-height: calc(100vh - 200px);
+  min-height: auto;
+  max-height: var(--overlay-max-height);
   overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: fixed;
@@ -404,7 +405,12 @@ body {
   border-radius: 16px;
   padding: 24px 20px;
   min-width: 500px;
-  max-height: calc(100vh - 60px);
+  max-height: var(--overlay-max-height);
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  position: relative;
+
+  max-height: var(--overlay-max-height);
   overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: relative;
@@ -1081,7 +1087,8 @@ body.light-theme .bg-thumb.selected {
   min-width: 180px;
   font-size: 14px;
   font-weight: 500;
-  overflow: hidden;
+  max-height: var(--overlay-max-height);
+  overflow-y: auto;
   animation: menuFadeIn 0.2s ease-out;
 }
 
@@ -1469,7 +1476,8 @@ body.light-theme .setting-card button:hover {
   transform: scale(0.95) translateY(-10px);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: none;
-  overflow: hidden;
+  max-height: var(--overlay-max-height);
+  overflow-y: auto;
 }
 
 .color-picker-popup.visible {
@@ -1583,6 +1591,69 @@ body.light-theme .color-hex {
     width: 48px;
     height: 48px;
   }
+}
+
+/* Custom Scrollbars for Modals and Popups */
+#settings-modal > div::-webkit-scrollbar,
+#add-app-modal > div::-webkit-scrollbar,
+.color-picker-popup::-webkit-scrollbar,
+.app-context-menu::-webkit-scrollbar {
+  width: 6px;
+}
+
+#settings-modal > div::-webkit-scrollbar-track,
+#add-app-modal > div::-webkit-scrollbar-track,
+.color-picker-popup::-webkit-scrollbar-track,
+.app-context-menu::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+#settings-modal > div::-webkit-scrollbar-thumb,
+#add-app-modal > div::-webkit-scrollbar-thumb,
+.color-picker-popup::-webkit-scrollbar-thumb,
+.app-context-menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  transition: background 0.2s ease;
+}
+
+#settings-modal > div::-webkit-scrollbar-thumb:hover,
+#add-app-modal > div::-webkit-scrollbar-thumb:hover,
+.color-picker-popup::-webkit-scrollbar-thumb:hover,
+.app-context-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Firefox scrollbar */
+#settings-modal > div,
+#add-app-modal > div,
+.color-picker-popup,
+.app-context-menu {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
+}
+
+/* Light theme scrollbars */
+body.light-theme #settings-modal > div::-webkit-scrollbar-thumb,
+body.light-theme #add-app-modal > div::-webkit-scrollbar-thumb,
+body.light-theme .color-picker-popup::-webkit-scrollbar-thumb,
+body.light-theme .app-context-menu::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+body.light-theme #settings-modal > div::-webkit-scrollbar-thumb:hover,
+body.light-theme #add-app-modal > div::-webkit-scrollbar-thumb:hover,
+body.light-theme .color-picker-popup::-webkit-scrollbar-thumb:hover,
+body.light-theme .app-context-menu::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+body.light-theme #settings-modal > div,
+body.light-theme #add-app-modal > div,
+body.light-theme .color-picker-popup,
+body.light-theme .app-context-menu {
+  scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.1);
 }
 
 /* Responsive adjustments */
