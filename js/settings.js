@@ -195,8 +195,22 @@ if (settingsMenuItems.length && settingsSections.length) {
   });
 }
 
-// Apply initial settings
-applyBg();
-applyClockStyle();
-applyDateStyle();
-applyTheme();
+function initSettings() {
+  // Apply initial settings
+  applyBg();
+  applyClockStyle();
+  applyDateStyle();
+  applyTheme();
+
+  // Initialize modern color pickers
+  if (window.initModernColorPickers) {
+    window.initModernColorPickers();
+  }
+}
+
+// Initialize settings when DOM is loaded
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSettings);
+} else {
+  initSettings();
+}
