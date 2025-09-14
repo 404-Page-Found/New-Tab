@@ -408,13 +408,11 @@ body {
   max-height: var(--overlay-max-height);
   overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  position: relative;
-
-  max-height: var(--overlay-max-height);
-  overflow-y: auto;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  position: relative;
-  max-width: 90vw;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: modalSlideInCenter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 #add-app-modal h3 {
@@ -1113,6 +1111,17 @@ body.light-theme .bg-thumb.selected {
   to {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes modalSlideInCenter {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(calc(-50% - 30px));
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%);
   }
 }
 
