@@ -11,13 +11,9 @@ function applyBg() {
   for (let i = 0; i < thumbs.length; i++) {
     thumbs[i].classList.toggle('selected', thumbs[i].getAttribute('data-bg') === bg);
   }
-  if (bg !== 'default') {
-    const imgUrl = window._findBackgroundUrlById ? window._findBackgroundUrlById(bg) : '';
-    if (imgUrl) document.body.style.background = `url('${imgUrl}') center center/cover no-repeat fixed`;
-    else document.body.style.background = '';
-  } else {
-    document.body.style.background = '';
-  }
+  const imgUrl = window._findBackgroundUrlById ? window._findBackgroundUrlById(bg) : '';
+  if (imgUrl) document.body.style.background = `url('${imgUrl}') center center/cover no-repeat fixed`;
+  else document.body.style.background = '';
 }
 
 // Delegate click events for backgrounds

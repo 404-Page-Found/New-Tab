@@ -6,11 +6,6 @@
 */
 // Convert to object map for faster lookup
 const backgroundsMap = {
-  'default': {
-    title: 'Default',
-    thumb: "data:image/svg+xml;utf8,<svg width='48' height='48' xmlns='http://www.w3.org/2000/svg'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop stop-color='%23f5f7fa' offset='0'/><stop stop-color='%23c3cfe2' offset='1'/></linearGradient></defs><rect width='48' height='48' rx='8' fill='url(%23g)'/></svg>",
-    url: null,
-  },
   'Beach - Australia': {
     title: 'Beach - Australia',
     thumb: 'background/Beach_-_Australia.jpeg',
