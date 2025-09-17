@@ -1,26 +1,112 @@
 // js/settings.js - Background, clock/date style settings
 
+// Wallpaper type selection
+function loadWallpaperType() {
+  return localStorage.getItem("wallpaperType") || "static";
+}
+
+function loadDynamicBg() {
+  return localStorage.getItem("dynamicBg") || "wave";
+}
+
 // Background selection
 function loadBg() {
   return localStorage.getItem("homepageBg") || "Water Beside Forest";
 }
+
 function applyBg() {
-  const bg = loadBg();
-  document.body.setAttribute("data-bg", bg);
-  const thumbs = document.querySelectorAll('.bg-thumb');
-  for (let i = 0; i < thumbs.length; i++) {
-    thumbs[i].classList.toggle('selected', thumbs[i].getAttribute('data-bg') === bg);
+  const wallpaperType = loadWallpaperType();
+  document.body.setAttribute("data-wallpaper-type", wallpaperType);
+  
+  if (wallpaperType === "static") {
+    const bg = loadBg();
+    document.body.setAttribute("data-bg", bg);
+    const thumbs = document.querySelectorAll('.bg-thumb');
+    for (let i = 0; i < thumbs.length; i++) {
+      thumbs[i].classList.toggle('selected', thumbs[i].getAttribute('data-bg') === bg);
+    }
+    const imgUrl = window._findBackgroundUrlById ? window._findBackgroundUrlById(bg) : '';
+    if (imgUrl) document.body.style.background = `url('${imgUrl}') center center/cover no-repeat fixed`;
+    else document.body.style.background = '';
+    
+    // Remove video element if exists
+    const existingVideo = document.getElementById('dynamic-wallpaper-video');
+    if (existingVideo) {
+      existingVideo.remove();
+    }
+  } else {
+    const dynamicBg = loadDynamicBg();
+    document.body.setAttribute("data-dynamic-bg", dynamicBg);
+    
+    // Remove static background
+    document.body.style.background = '';
+    
+    // Create or update video element
+    let videoElement = document.getElementById('dynamic-wallpaper-video');
+    if (!videoElement) {
+      videoElement = document.createElement('video');
+      videoElement.id = 'dynamic-wallpaper-video';
+      videoElement.autoplay = true;
+      videoElement.loop = true;
+      videoElement.muted = true;
+      videoElement.playsinline = true;
+      videoElement.style.position = 'fixed';
+      videoElement.style.top = '0';
+      videoElement.style.left = '0';
+      videoElement.style.width = '100%';
+      videoElement.style.height = '100%';
+      videoElement.style.objectFit = 'cover';
+      videoElement.style.zIndex = '-1';
+      document.body.appendChild(videoElement);
+    }
+    
+    // Set video source based on dynamicBg
+    const videoSources = {
+      wave: "live backgrounds/wave.mp4",
+      nightsky: "live backgrounds/nightsky.mp4",
+      beach: "live backgrounds/beach.mp4"
+    };
+    
+    videoElement.src = videoSources[dynamicBg] || videoSources.wave;
+    
+    // Update dynamic wallpaper selection UI
+    const dynamicOptions = document.querySelectorAll('.dynamic-wallpaper-option');
+    for (let i = 0; i < dynamicOptions.length; i++) {
+      dynamicOptions[i].classList.toggle('selected', dynamicOptions[i].getAttribute('data-dynamic-bg') === dynamicBg);
+    }
   }
-  const imgUrl = window._findBackgroundUrlById ? window._findBackgroundUrlById(bg) : '';
-  if (imgUrl) document.body.style.background = `url('${imgUrl}') center center/cover no-repeat fixed`;
-  else document.body.style.background = '';
 }
 
-// Delegate click events for backgrounds
+// Delegate click events for backgrounds and wallpaper types
 document.addEventListener('click', function (e) {
-  const t = e.target.closest && e.target.closest('.bg-thumb');
-  if (t && t.getAttribute('data-bg')) {
-    localStorage.setItem('homepageBg', t.getAttribute('data-bg'));
+  const bgThumb = e.target.closest && e.target.closest('.bg-thumb');
+  if (bgThumb && bgThumb.getAttribute('data-bg')) {
+    localStorage.setItem('homepageBg', bgThumb.getAttribute('data-bg'));
+    applyBg();
+  }
+  
+  const wallpaperTypeRadio = e.target.closest && e.target.closest('input[name="wallpaper-type"]');
+  if (wallpaperTypeRadio) {
+    localStorage.setItem('wallpaperType', wallpaperTypeRadio.value);
+    applyBg();
+    
+    // Show/hide dynamic wallpapers section based on selection
+    const dynamicWallpapers = document.getElementById('dynamic-wallpapers');
+    const bgThumbnails = document.getElementById('bg-thumbnails');
+    if (dynamicWallpapers && bgThumbnails) {
+      if (wallpaperTypeRadio.value === 'dynamic') {
+        dynamicWallpapers.style.display = 'grid';
+        bgThumbnails.style.display = 'none';
+      } else {
+        dynamicWallpapers.style.display = 'none';
+        bgThumbnails.style.display = 'flex';
+      }
+    }
+  }
+  
+  const dynamicWallpaperOption = e.target.closest && e.target.closest('.dynamic-wallpaper-option');
+  if (dynamicWallpaperOption && dynamicWallpaperOption.getAttribute('data-dynamic-bg')) {
+    localStorage.setItem('dynamicBg', dynamicWallpaperOption.getAttribute('data-dynamic-bg'));
     applyBg();
   }
 });
