@@ -153,7 +153,7 @@ const motto = [
   "What we think, we become ———— Buddha",
   "Your work is going to fill a large part of your life, and the only way to be truly satisfied is to do what you believe is great work. And the only way to do great work is to love what you do. ———— Steve Jobs",
   "A creative man is motivated by the desire to achieve, not by the desire to beat others ———— Ayn Rand",
-  "What lies behind you and what lies in front of you, pales in comparison to what lies inside of you ———— Ralph Waldo Emerson",
+  "The best way to have a good idea is to have a lot of ideas ———— Linus Pauling",
   "The greatest glory in living lies not in never falling, but in rising every time we fall ———— Nelson Mandela",
   "The only thing we have to fear is fear itself ———— Franklin D. Roosevelt",
   "To handle yourself, use your head; to handle others, use your heart ———— Eleanor Roosevelt",
