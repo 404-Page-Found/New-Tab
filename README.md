@@ -1,4 +1,4 @@
-# New Tab v0.3.6
+# New Tab v0.3.7
 
 **Available Languages**:  
 [![English](https://img.shields.io/badge/English-blue)](docs/README.en.md)
