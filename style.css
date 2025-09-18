@@ -516,11 +516,11 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   background: rgba(255, 255, 255, 0.9);
   border: 2px solid rgba(107, 114, 128, 0.6);
-  border-radius: 50%;
+  border-radius: 0;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1600,135 +1600,6 @@ body.light-theme .color-hex {
     width: 48px;
     height: 48px;
   }
-}
-
-/* Wallpaper Type Selector */
-.wallpaper-type-selector {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.wallpaper-type-option {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-}
-
-.wallpaper-type-option:hover {
-  background: rgba(33, 150, 243, 0.15);
-  transform: translateY(-1px);
-}
-
-.wallpaper-type-option input[type="radio"] {
-  margin: 0;
-}
-
-.wallpaper-type-option span {
-  color: var(--settings-text-color);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.wallpaper-type-option input[type="radio"]:checked + span {
-  color: #2196f3;
-  font-weight: 600;
-}
-
-/* Dynamic Wallpapers */
-.dynamic-wallpapers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 8px;
-  margin-bottom: 16px;
-}
-
-.dynamic-wallpaper-option {
-  display: block;
-  cursor: pointer;
-  transition: border 0.2s;
-}
-
-.dynamic-wallpaper-option:hover {
-  transform: none;
-}
-
-.dynamic-wallpaper-option.selected {
-  border: none;
-  background: transparent;
-}
-
-.dynamic-preview {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: 2px solid transparent;
-  object-fit: cover;
-  transition: border 0.2s;
-}
-
-.dynamic-wallpaper-option.selected .dynamic-preview {
-  border: 2px solid #2196f3;
-}
-
-.dynamic-wallpaper-option {
-  position: relative;
-}
-
-.dynamic-wallpaper-option span {
-  display: block;
-  position: absolute;
-  bottom: -20px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--settings-text-color);
-  font-size: 12px;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
-.dynamic-wallpaper-option:hover span {
-  opacity: 1;
-}
-
-/* Light theme adjustments */
-body.light-theme .wallpaper-type-selector {
-  background: rgba(0, 0, 0, 0.03);
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-body.light-theme .wallpaper-type-option {
-  background: rgba(0, 0, 0, 0.05);
-}
-
-body.light-theme .wallpaper-type-option:hover {
-  background: rgba(33, 150, 243, 0.1);
-}
-
-body.light-theme .dynamic-wallpaper-option {
-  background: rgba(0, 0, 0, 0.03);
-}
-
-body.light-theme .dynamic-wallpaper-option:hover {
-  background: rgba(33, 150, 243, 0.08);
-}
-
-body.light-theme .dynamic-wallpaper-option.selected {
-  background: rgba(33, 150, 243, 0.12);
 }
 
 /* Custom Scrollbars for Modals and Popups */
