@@ -7,13 +7,13 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.3.6-blue)]()
 
-A modern open-source new tab page for a personalised browsing experience.
+A modern open-source new tab page for personalized browsing experience.
 
 ## ✨ Features
 - Customizable layouts and themes
 - Responsive design
 - Quick access
-- Buildin backgrounds (Now supports dynamic wallpapers!)
+- Buildin backgrounds
 - Quick search functionality
 - Motto
 - Weather widget (coming soon!)
