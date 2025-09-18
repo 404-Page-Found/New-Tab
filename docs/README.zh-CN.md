@@ -1,4 +1,4 @@
-# New Tab v0.3.7
+# New Tab v0.3.6
 [![许可证: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![版本](https://img.shields.io/badge/version-0.3.6-blue)]()
 
