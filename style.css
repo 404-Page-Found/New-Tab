@@ -149,6 +149,11 @@ body {
 .dropdown-arrow {
   font-size: 12px;
   color: #ccc;
+  transition: transform 0.3s ease;
+}
+
+.selected-engine.dropdown-active .dropdown-arrow {
+  transform: rotate(180deg);
 }
 
 .engine-dropdown {
