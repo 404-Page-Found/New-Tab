@@ -27,14 +27,14 @@ function displayDailyMotto() {
     const daySeed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
     // Deterministically pick a motto for the day
     const index = daySeed % motto.length;
-    const mottoContainer = document.getElementById("motto-container");
-    if (mottoContainer) {
-      mottoContainer.textContent = motto[index];
+    const mottoText = document.getElementById("motto-text");
+    if (mottoText) {
+      mottoText.textContent = motto[index];
       // Add fade-in effect
-      mottoContainer.style.opacity = "0";
+      mottoText.style.opacity = "0";
       setTimeout(() => {
-        mottoContainer.style.transition = "opacity 0.5s";
-        mottoContainer.style.opacity = "1";
+        mottoText.style.transition = "opacity 0.5s";
+        mottoText.style.opacity = "1";
       }, 50);
     }
   } catch (e) {
@@ -42,5 +42,46 @@ function displayDailyMotto() {
   }
 }
 
-// Set the motto after the page has finished loading
-document.addEventListener("DOMContentLoaded", displayDailyMotto);
+// Handle copy motto functionality
+function setupCopyMotto() {
+  const copyBtn = document.getElementById("copy-motto-btn");
+  if (copyBtn) {
+    copyBtn.addEventListener("click", async () => {
+      const mottoText = document.getElementById("motto-text");
+      if (mottoText && mottoText.textContent) {
+        try {
+          await navigator.clipboard.writeText(mottoText.textContent);
+          // Temporarily show "Copied!" feedback
+          const originalIcon = copyBtn.textContent;
+          copyBtn.textContent = "✅";
+          setTimeout(() => {
+            copyBtn.textContent = originalIcon;
+          }, 1000);
+        } catch (err) {
+          console.error("Failed to copy motto:", err);
+          // Fallback for older browsers
+          const textArea = document.createElement("textarea");
+          textArea.value = mottoText.textContent;
+          document.body.appendChild(textArea);
+          textArea.select();
+          try {
+            document.execCommand('copy');
+            copyBtn.textContent = "✅";
+            setTimeout(() => {
+              copyBtn.textContent = originalIcon;
+            }, 1000);
+          } catch (fallbackErr) {
+            console.error("Fallback copy failed:", fallbackErr);
+          }
+          document.body.removeChild(textArea);
+        }
+      }
+    });
+  }
+}
+
+// Set the motto and copy functionality after the page has finished loading
+document.addEventListener("DOMContentLoaded", () => {
+  displayDailyMotto();
+  setupCopyMotto();
+});
