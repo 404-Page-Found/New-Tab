@@ -42,6 +42,34 @@ function displayDailyMotto() {
   }
 }
 
+// Handle refresh motto functionality
+function setupRefreshMotto() {
+  const refreshBtn = document.getElementById("refresh-motto-btn");
+  if (refreshBtn) {
+    refreshBtn.addEventListener("click", () => {
+      const mottoText = document.getElementById("motto-text");
+      if (mottoText) {
+        // Pick a random motto
+        const randomIndex = Math.floor(Math.random() * motto.length);
+        mottoText.textContent = motto[randomIndex];
+        // Add refresh animation
+        mottoText.style.opacity = "0";
+        setTimeout(() => {
+          mottoText.style.transition = "opacity 0.3s ease";
+          mottoText.style.opacity = "1";
+        }, 50);
+
+        // Show refresh feedback
+        const originalIcon = refreshBtn.textContent;
+        refreshBtn.textContent = "🔄⟳";
+        setTimeout(() => {
+          refreshBtn.textContent = originalIcon;
+        }, 800);
+      }
+    });
+  }
+}
+
 // Handle copy motto functionality
 function setupCopyMotto() {
   const copyBtn = document.getElementById("copy-motto-btn");
@@ -80,8 +108,9 @@ function setupCopyMotto() {
   }
 }
 
-// Set the motto and copy functionality after the page has finished loading
+// Set the motto and button functionality after the page has finished loading
 document.addEventListener("DOMContentLoaded", () => {
   displayDailyMotto();
+  setupRefreshMotto();
   setupCopyMotto();
 });
