@@ -149,11 +149,22 @@ body {
 .dropdown-arrow {
   font-size: 12px;
   color: #ccc;
-  transition: transform 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  cursor: pointer;
+  display: inline-block;
+  user-select: none;
+}
+
+.dropdown-arrow:hover {
+  transform: scale(1.15);
+  color: #fff;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4));
 }
 
 .selected-engine.dropdown-active .dropdown-arrow {
   transform: rotate(180deg);
+  color: #2196f3;
+  filter: drop-shadow(0 0 4px rgba(33, 150, 243, 0.3));
 }
 
 .engine-dropdown {
