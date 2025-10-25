@@ -167,7 +167,7 @@ body {
   width: var(--search-bar-width);
   margin-left: auto;
   margin-right: auto;
-  transition: transform 0.18s cubic-bezier(0.4, 1.4, 0.6, 1);
+  transition: transform 0.25s ease-out;
 }
 .search-bar:focus-within {
   transform: scale(1.04);
