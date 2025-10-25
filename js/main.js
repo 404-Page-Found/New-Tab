@@ -58,13 +58,6 @@ function setupRefreshMotto() {
           mottoText.style.transition = "opacity 0.3s ease";
           mottoText.style.opacity = "1";
         }, 50);
-
-        // Show refresh feedback
-        const originalIcon = refreshBtn.textContent;
-        refreshBtn.textContent = "🔄⟳";
-        setTimeout(() => {
-          refreshBtn.textContent = originalIcon;
-        }, 800);
       }
     });
   }
@@ -77,14 +70,22 @@ function setupCopyMotto() {
     copyBtn.addEventListener("click", async () => {
       const mottoText = document.getElementById("motto-text");
       if (mottoText && mottoText.textContent) {
+        // Show copy notification
+        let notification = document.querySelector('.copy-notification');
+        if (!notification) {
+          notification = document.createElement('div');
+          notification.className = 'copy-notification';
+          notification.textContent = 'Copied';
+          document.body.appendChild(notification);
+        }
+
+        notification.classList.add('show');
+        setTimeout(() => {
+          notification.classList.remove('show');
+        }, 3000);
+
         try {
           await navigator.clipboard.writeText(mottoText.textContent);
-          // Temporarily show "Copied!" feedback
-          const originalIcon = copyBtn.textContent;
-          copyBtn.textContent = "✅";
-          setTimeout(() => {
-            copyBtn.textContent = originalIcon;
-          }, 1000);
         } catch (err) {
           console.error("Failed to copy motto:", err);
           // Fallback for older browsers
@@ -94,10 +95,6 @@ function setupCopyMotto() {
           textArea.select();
           try {
             document.execCommand('copy');
-            copyBtn.textContent = "✅";
-            setTimeout(() => {
-              copyBtn.textContent = originalIcon;
-            }, 1000);
           } catch (fallbackErr) {
             console.error("Fallback copy failed:", fallbackErr);
           }
