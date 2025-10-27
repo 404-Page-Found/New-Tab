@@ -1210,6 +1210,8 @@ body.light-theme .bg-thumb.selected {
 .app-context-menu {
   display: none;
   position: absolute;
+  width: 160px;
+  overflow-x: hidden;
   background: rgba(0, 0, 0, 0.85);
   color: #ffffff;
   border-radius: 12px;
