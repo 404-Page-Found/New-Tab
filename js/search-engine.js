@@ -42,7 +42,8 @@ function initSearchEngine() {
   const dropdownEl = enginesEl.querySelector(".engine-dropdown");
 
   selectedEngineEl.addEventListener("click", () => {
-    dropdownEl.classList.toggle("dropdown-open");
+    const isOpen = dropdownEl.classList.toggle("dropdown-open");
+    selectedEngineEl.classList.toggle("dropdown-active", isOpen);
   });
 
   dropdownEl.querySelectorAll(".engine-option").forEach(option => {
@@ -59,6 +60,7 @@ function initSearchEngine() {
   document.addEventListener("click", (e) => {
     if (!enginesEl.contains(e.target)) {
       dropdownEl.classList.remove("dropdown-open");
+      selectedEngineEl.classList.remove("dropdown-active");
     }
   });
 }

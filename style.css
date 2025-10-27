@@ -19,6 +19,67 @@
   user-select: none;
 }
 
+#motto-text {
+  display: block;
+  text-align: center;
+}
+
+#refresh-motto-btn {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-12px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 2px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  color: #666;
+  line-height: 1;
+  opacity: 0.7;
+  z-index: 1999;
+}
+
+#refresh-motto-btn:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
+  transform: translateX(-12px) scale(1.1);
+}
+
+#refresh-motto-btn:active {
+  transform: translateX(-12px) scale(0.95);
+}
+
+#copy-motto-btn {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(12px);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 2px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  color: #666;
+  line-height: 1;
+  opacity: 0.7;
+  z-index: 1999;
+}
+
+#copy-motto-btn:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.1);
+  transform: translateX(12px) scale(1.1);
+}
+
+#copy-motto-btn:active {
+  transform: translateX(12px) scale(0.95);
+}
+
 .footer-left {
   position: fixed;
   bottom: 10px;
@@ -106,7 +167,7 @@ body {
   width: var(--search-bar-width);
   margin-left: auto;
   margin-right: auto;
-  transition: transform 0.18s cubic-bezier(0.4, 1.4, 0.6, 1);
+  transition: transform 0.25s ease-out;
 }
 .search-bar:focus-within {
   transform: scale(1.04);
@@ -149,6 +210,22 @@ body {
 .dropdown-arrow {
   font-size: 12px;
   color: #ccc;
+  transition: all 0.35s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  cursor: pointer;
+  display: inline-block;
+  user-select: none;
+}
+
+.dropdown-arrow:hover {
+  transform: scale(1.15);
+  color: #fff;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.4));
+}
+
+.selected-engine.dropdown-active .dropdown-arrow {
+  transform: rotate(180deg);
+  color: #2196f3;
+  filter: drop-shadow(0 0 4px rgba(33, 150, 243, 0.3));
 }
 
 .engine-dropdown {
@@ -782,6 +859,51 @@ body.light-theme .preview-icon.light {
   background: rgba(31, 41, 55, 0.7);
 }
 
+.settings-section input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 8px;
+  background: rgba(107, 114, 128, 0.3);
+  border-radius: 5px;
+  outline: none;
+  cursor: pointer;
+}
+
+.settings-section input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #2196f3;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(33, 150, 243, 0.4);
+}
+
+.settings-section input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.6);
+}
+
+.settings-section input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #2196f3;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(33, 150, 243, 0.4);
+}
+
+.settings-section input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.6);
+}
+
 .settings-section select option {
   background: #1f2937;
   color: white;
@@ -840,6 +962,15 @@ body.light-theme #motto-container {
   color: #333;
   background: rgba(255, 255, 255, 0.85);
   border: 1px solid #e1e5e9;
+}
+
+body.light-theme #copy-motto-btn {
+  color: #333;
+  opacity: 0.7;
+}
+
+body.light-theme #copy-motto-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
 }
 
 body.light-theme .footer-left,
@@ -914,10 +1045,15 @@ body.light-theme .app-context-menu {
 
 body.light-theme .settings-section input[type="text"],
 body.light-theme .settings-section input[type="number"],
+body.light-theme .settings-section input[type="range"],
 body.light-theme .settings-section select {
   background: rgba(255, 255, 255, 0.95);
   color: #1a1a1a;
   border-color: #ced4da;
+}
+
+body.light-theme .settings-section input[type="range"] {
+  background: #d1d5db;
 }
 
 body.light-theme .settings-section input:focus,
@@ -1136,6 +1272,61 @@ body.light-theme .bg-thumb.selected {
   }
 }
 
+/* Copy Motto Notification */
+.copy-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  z-index: 4000;
+  opacity: 0;
+  transform: translateX(-50%) translateY(-10px);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.copy-notification.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  animation: notificationBounce 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes notificationBounce {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-15px) scale(0.85);
+  }
+  30% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1.05);
+  }
+  60% {
+    transform: translateX(-50%) translateY(0) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+}
+
+/* Light theme for copy notification */
+body.light-theme .copy-notification {
+  background: rgba(255, 255, 255, 0.95);
+  color: #1f2937;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
 .context-menu-item {
   padding: 12px 16px;
   cursor: pointer;
@@ -1299,7 +1490,8 @@ body.light-theme .bg-thumb.selected {
 
 .setting-content select,
 .setting-content input[type="color"],
-.setting-content input[type="number"] {
+.setting-content input[type="number"],
+.setting-content input[type="range"] {
   width: 100%;
   padding: 8px 10px;
   border-radius: 8px;
@@ -1318,7 +1510,8 @@ body.light-theme .bg-thumb.selected {
 
 .setting-content select:focus,
 .setting-content input[type="color"]:focus,
-.setting-content input[type="number"]:focus {
+.setting-content input[type="number"]:focus,
+.setting-content input[type="range"]:focus {
   border-color: #2196f3;
   background: rgba(31, 41, 55, 0.7);
   box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
@@ -1397,7 +1590,8 @@ body.light-theme .setting-icon {
 
 body.light-theme .setting-content select,
 body.light-theme .setting-content input[type="color"],
-body.light-theme .setting-content input[type="number"] {
+body.light-theme .setting-content input[type="number"],
+body.light-theme .setting-content input[type="range"] {
   background: rgba(255, 255, 255, 0.95);
   color: #1f2937;
   border-color: #d1d5db;
@@ -1405,8 +1599,13 @@ body.light-theme .setting-content input[type="number"] {
 
 body.light-theme .setting-content select:focus,
 body.light-theme .setting-content input[type="color"]:focus,
-body.light-theme .setting-content input[type="number"]:focus {
+body.light-theme .setting-content input[type="number"]:focus,
+body.light-theme .setting-content input[type="range"]:focus {
   background: rgba(255, 255, 255, 1);
+}
+
+body.light-theme .setting-content input[type="range"] {
+  background: #d1d5db;
 }
 
 body.light-theme .reset-card {
@@ -1424,6 +1623,157 @@ body.light-theme .setting-card button {
 
 body.light-theme .setting-card button:hover {
   background: #dc2626;
+}
+
+/* Live Background Styles */
+.live-bg-setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.live-bg-setting-group h4 {
+  margin: 0 0 8px 0;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.live-bg-setting-group p {
+  margin: 0 0 16px 0;
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.live-bg-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.live-bg-option {
+  border: 2px solid rgba(107, 114, 128, 0.3);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+  overflow: hidden;
+}
+
+.live-bg-option:hover {
+  border-color: rgba(33, 150, 243, 0.6);
+}
+
+.live-bg-option.selected {
+  border-color: #2196f3;
+}
+
+.video-preview {
+  position: relative;
+  width: 100%;
+  height: 80px;
+  background: #1f2937;
+}
+
+.video-preview video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+}
+
+.video-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  font-size: 10px;
+  padding: 4px 6px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-bg-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.setting-btn {
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  color: #2196f3;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.setting-btn:hover {
+  background: rgba(33, 150, 243, 0.2);
+  border-color: rgba(33, 150, 243, 0.5);
+}
+
+.setting-btn.secondary {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.setting-btn.secondary:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
+/* Light theme adjustments */
+body.light-theme .live-bg-setting-group h4 {
+  color: #1f2937;
+}
+
+body.light-theme .live-bg-setting-group p {
+  color: #6b7280;
+}
+
+body.light-theme .live-bg-option {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .live-bg-option:hover {
+  border-color: rgba(33, 150, 243, 0.4);
+}
+
+body.light-theme .video-preview {
+  background: #f9fafb;
+}
+
+body.light-theme .video-overlay {
+  background: rgba(255, 255, 255, 0.9);
+  color: #1f2937;
+}
+
+body.light-theme .setting-btn {
+  background: rgba(33, 150, 243, 0.05);
+  border-color: rgba(33, 150, 243, 0.2);
+}
+
+body.light-theme .setting-btn:hover {
+  background: rgba(33, 150, 243, 0.1);
+  border-color: rgba(33, 150, 243, 0.3);
+}
+
+body.light-theme .setting-btn.secondary {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #dc2626;
+}
+
+body.light-theme .setting-btn.secondary:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 /* Modern Color Picker Styles */

@@ -1,7 +1,7 @@
 // js/app-manager.js - App grid management, drag and drop
 
 // Helper functions
-const getDraggableAppIcons = () => Array.from(document.querySelectorAll('.app-grid .app-icon')).filter(icon => icon.id !== 'add-app');
+const getDraggableAppIcons = () => Array.from(document.querySelectorAll('.app-grid .app-icon')).filter(icon => icon.id !== 'new-app');
 const getAppOrder = () => JSON.parse(localStorage.getItem('appOrder') || 'null');
 const saveAppOrder = order => localStorage.setItem('appOrder', JSON.stringify(order));
 
@@ -38,9 +38,9 @@ const getAllAppData = () => {
 // Render the app grid
 function renderAllApps() {
   const appGrid = document.getElementById('app-grid');
-  const addApp = document.getElementById('add-app');
-  // Remove all except Add
-  Array.from(appGrid.children).forEach(child => { if (child.id !== 'add-app') appGrid.removeChild(child); });
+const addApp = document.getElementById('new-app');
+  // Remove all except New
+  Array.from(appGrid.children).forEach(child => { if (child.id !== 'new-app') appGrid.removeChild(child); });
   let order = getAppOrder();
   const allApps = getAllAppData();
   if (!order || order.length !== allApps.length) {

@@ -44,7 +44,7 @@ function renderDefaultAppsList() {
 }
 
 // Add App Modal
-const addAppBtn = document.getElementById("add-app");
+const addAppBtn = document.getElementById("new-app");
 const addAppModal = document.getElementById("add-app-modal");
 const addAppUrlInput = document.getElementById("add-app-url");
 const addAppCancel = document.getElementById("add-app-cancel");
