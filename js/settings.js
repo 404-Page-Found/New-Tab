@@ -242,11 +242,21 @@ function initLiveBackgrounds() {
 }
 
 // Settings menu logic
-const settingsMenuItems = document.querySelectorAll(".settings-menu-item");
+const settingsMenu = document.querySelector(".settings-menu");
+let settingsMenuItems = [];
 const settingsSections = document.querySelectorAll(".settings-section");
 let backgroundsInitialized = false;
 
-if (settingsMenuItems.length && settingsSections.length) {
+if (settingsMenu) {
+  // Collect menu items, sort them alphabetically by their visible label,
+  // then re-append to the menu so the DOM order matches alphabetical order.
+  settingsMenuItems = Array.from(settingsMenu.querySelectorAll(".settings-menu-item"));
+  settingsMenuItems.sort((a, b) =>
+    a.textContent.trim().localeCompare(b.textContent.trim(), undefined, { sensitivity: 'base' })
+  );
+  settingsMenuItems.forEach((item) => settingsMenu.appendChild(item));
+
+  // Attach click handlers to the (now-sorted) items
   settingsMenuItems.forEach((item) => {
     item.addEventListener("click", function () {
       const section = this.getAttribute("data-section");
@@ -266,6 +276,18 @@ if (settingsMenuItems.length && settingsSections.length) {
       }
     });
   });
+
+  // Auto-open the Apps tab by default. This overrides any `selected` class
+  // present in the HTML so the settings modal starts on Apps.
+  (function setDefaultTab() {
+    const defaultSection = 'apps';
+    const defaultItem = settingsMenuItems.find(i => i.getAttribute('data-section') === defaultSection) || settingsMenuItems[0];
+    if (defaultItem) {
+      // Trigger the same behavior as a user click so lazy init and section
+      // switching run consistently.
+      defaultItem.click();
+    }
+  })();
 }
 
 function initSettings() {
