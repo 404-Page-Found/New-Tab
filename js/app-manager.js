@@ -26,7 +26,7 @@ function getFavicon(url) {
 // Default apps
 const defaultApps = [
   { id: 'feedback-app', name: 'Feedback', url: 'https://github.com/404-Page-Found/New-Tab/issues/new', icon: 'images/icons/feedback.svg', className: 'default-app' },
-  { id: 'settings-app', name: 'Settings', url: '#', icon: 'https://cdn-icons-png.flaticon.com/512/3524/3524636.png', className: 'default-app' },
+  { id: 'settings-app', name: 'Settings', url: '#', icon: 'images/icons/settings.svg', className: 'default-app' },
 ];
 
 // Get all apps data

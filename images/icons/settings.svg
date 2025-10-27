@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Settings icon (gear) - simple SVG placeholder -->
-<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M12 15.5A3.5 3.5 0 1 0 12 8.5a3.5 3.5 0 0 0 0 7z" />
-  <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82L4.3 4.7a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09c0 .6.39 1.12 1 1.51h.09a1.65 1.65 0 0 0 1.82-.33l.06-.06A2 2 0 0 1 19.4 4.3l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.6 0 1.12.39 1.51 1h.09a2 2 0 0 1 0 4h-.09c-.39.61-.91 1-1.51 1v.09c0 .6-.39 1.12-1 1.51z" />
+<!-- Modern Settings icon (sliders) - monochrome, scalable -->
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="false" role="img">
+  <!-- Top slider -->
+  <line x1="4" y1="6" x2="14" y2="6" />
+  <circle cx="18" cy="6" r="1.6" fill="currentColor" stroke="none" />
+
+  <!-- Middle slider -->
+  <line x1="4" y1="12" x2="10" y2="12" />
+  <circle cx="14" cy="12" r="1.6" fill="currentColor" stroke="none" />
+
+  <!-- Bottom slider -->
+  <line x1="4" y1="18" x2="18" y2="18" />
+  <circle cx="8" cy="18" r="1.6" fill="currentColor" stroke="none" />
 </svg>
