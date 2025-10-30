@@ -296,12 +296,27 @@ if (settingsMenu) {
   })();
 }
 
+// About section initialization
+function initAboutSection() {
+  const aboutSection = document.querySelector('.settings-section[data-section="about"]');
+  if (aboutSection) {
+    aboutSection.innerHTML = `
+      <h4>About</h4>
+      <p>New-Tab Extension</p>
+      <p>Version: 1.0.0</p>
+      <p>Created by 404-Page-Found</p>
+      <a href="https://github.com/404-Page-Found/New-Tab" target="_blank">GitHub Repository</a>
+    `;
+  }
+}
+
 function initSettings() {
   // Apply initial settings
   applyBg();
   applyClockStyle();
   applyDateStyle();
   applyTheme();
+  initAboutSection();
 
   // Initialize modern color pickers
   if (window.initModernColorPickers) {
