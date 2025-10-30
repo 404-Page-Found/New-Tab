@@ -60,21 +60,9 @@ const addApp = document.getElementById('new-app');
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
     }
-    // Use an inline modern SVG for the Feedback app so it can inherit theme colors and be styled via CSS.
-    let iconHtml = '';
-    if (app.id === 'feedback-app' && app.icon && app.icon.endsWith('.svg')) {
-      // Use a monochrome outline speech bubble so it matches other app icons (inherits currentColor)
-      iconHtml = `<div class="icon">
-        <svg viewBox="0 0 24 24" role="img" aria-hidden="false" focusable="false" xmlns="http://www.w3.org/2000/svg">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
-          <circle cx="9.5" cy="11" r="0.9" fill="currentColor" />
-          <circle cx="12" cy="11" r="0.9" fill="currentColor" />
-          <circle cx="14.5" cy="11" r="0.9" fill="currentColor" />
-        </svg>
-      </div>`;
-    } else {
-      iconHtml = `<div class="icon"><img src="${app.icon}" alt="${app.name}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div>`;
-    }
+    // Load icon from external file (use images/icons/feedback.svg) rather than embedding inline SVG in JS.
+    // The SVG file (`images/icons/feedback.svg`) uses `currentColor` where appropriate.
+    let iconHtml = `<div class="icon"><img src="${app.icon}" alt="${app.name}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div>`;
     a.innerHTML = iconHtml + `<span class="app-name">${app.name}</span>`;
     appGrid.insertBefore(a, addApp);
   });
