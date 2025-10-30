@@ -244,7 +244,7 @@ function initLiveBackgrounds() {
 // Settings menu logic
 const settingsMenu = document.querySelector(".settings-menu");
 let settingsMenuItems = [];
-const settingsSections = document.querySelectorAll(".settings-section");
+const settingsSections = document.querySelectorAll(".settings-section"); // This will include the About section if present in HTML
 let backgroundsInitialized = false;
 
 if (settingsMenu) {
@@ -263,7 +263,12 @@ if (settingsMenu) {
       settingsMenuItems.forEach((i) => i.classList.remove("selected"));
       this.classList.add("selected");
       settingsSections.forEach((s) => {
-        s.style.display = s.getAttribute("data-section") === section ? "block" : "none";
+        // Show the section that matches the clicked tab, hide others
+        if (s.getAttribute("data-section") === section) {
+          s.style.display = "block";
+        } else {
+          s.style.display = "none";
+        }
       });
       // Lazy load backgrounds
       if (section === 'background' && !backgroundsInitialized) {
@@ -274,6 +279,7 @@ if (settingsMenu) {
       if (section === 'live-background') {
         initLiveBackgrounds();
       }
+      // No special logic needed for 'about' tab, just show the section
     });
   });
 
