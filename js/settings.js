@@ -283,10 +283,10 @@ if (settingsMenu) {
     });
   });
 
-  // Auto-open the Apps tab by default. This overrides any `selected` class
-  // present in the HTML so the settings modal starts on Apps.
+  // Auto-open the About tab by default. This overrides any `selected` class
+  // present in the HTML so the settings modal starts on About.
   (function setDefaultTab() {
-    const defaultSection = 'apps';
+    const defaultSection = 'about';
     const defaultItem = settingsMenuItems.find(i => i.getAttribute('data-section') === defaultSection) || settingsMenuItems[0];
     if (defaultItem) {
       // Trigger the same behavior as a user click so lazy init and section
@@ -302,7 +302,7 @@ function initAboutSection() {
   if (aboutSection) {
     aboutSection.innerHTML = `
       <h4>About</h4>
-      <p>New-Tab Extension</p>
+      <p>New-Tab</p>
       <p>Version: v0.3.8</p>
       <p>Created by 404-Page-Found</p>
       <a href="https://github.com/404-Page-Found/New-Tab" target="_blank">GitHub Repository</a>
