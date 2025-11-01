@@ -2044,6 +2044,43 @@ body.light-theme .app-context-menu {
   scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.1);
 }
 
+/* About Section Styles */
+.settings-section[data-section="about"] h4 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.settings-section[data-section="about"] p {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: var(--settings-text-color);
+  line-height: 1.5;
+}
+
+.settings-section[data-section="about"] a {
+  color: #2196f3;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.settings-section[data-section="about"] a:hover {
+  color: #1976d2;
+  text-decoration: underline;
+}
+
+/* Light theme adjustments for About section */
+body.light-theme .settings-section[data-section="about"] a {
+  color: #1976d2;
+}
+
+body.light-theme .settings-section[data-section="about"] a:hover {
+  color: #1565c0;
+}
+
 /* Responsive adjustments */
 @media (max-width: 500px) {
   .clock-options,

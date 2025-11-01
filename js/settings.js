@@ -303,7 +303,7 @@ function initAboutSection() {
     aboutSection.innerHTML = `
       <h4>About</h4>
       <p>New-Tab Extension</p>
-      <p>Version: 1.0.0</p>
+      <p>Version: v0.3.8</p>
       <p>Created by 404-Page-Found</p>
       <a href="https://github.com/404-Page-Found/New-Tab" target="_blank">GitHub Repository</a>
     `;
