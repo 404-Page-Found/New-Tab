@@ -161,7 +161,7 @@ body {
 
 .search-bar {
   align-items: center;
-  background: rgba(255, 255, 255, 0.9);
+  background: #f0f0f0;
   display: flex;
   padding: 7px 20px;
   border-radius: 25px;
@@ -326,7 +326,7 @@ body {
 .icon {
   width: var(--app-icon-size);
   height: var(--app-icon-size);
-  background: white;
+  background: #f0f0f0;
   border-radius: var(--icon-radius,20px);
   display: flex;
   align-items: center;
