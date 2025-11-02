@@ -2081,6 +2081,305 @@ body.light-theme .settings-section[data-section="about"] a:hover {
   color: #1565c0;
 }
 
+/* Update Notification Styles */
+.update-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-width: 400px;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  z-index: 5000;
+  animation: updateNotificationSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.update-notification-content {
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.update-notification-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.update-notification-text {
+  flex: 1;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.update-notification-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.update-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.update-btn-primary {
+  background: #2196f3;
+  color: white;
+}
+
+.update-btn-primary:hover {
+  background: #1976d2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+.update-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.update-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes updateNotificationSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Manual Check Notification Styles */
+.manual-check-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-width: 350px;
+  background: rgba(33, 150, 243, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 12px;
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  z-index: 4999;
+  animation: manualCheckNotificationSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.manual-check-notification-content {
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.manual-check-notification-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.manual-check-notification-text {
+  flex: 1;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.manual-check-notification-actions {
+  margin-top: 8px;
+}
+
+.manual-check-btn {
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.manual-check-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes manualCheckNotificationSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Manual Check Result Styles */
+.manual-check-result {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.4;
+  animation: manualCheckResultFadeIn 0.3s ease;
+}
+
+@keyframes manualCheckResultFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Update Settings Group Styles */
+.update-settings-group {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.update-settings-group h4 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.update-settings-group label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--settings-text-color);
+}
+
+.update-settings-group p {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.4;
+}
+
+.update-settings-group .setting-btn {
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  color: #2196f3;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.update-settings-group .setting-btn:hover {
+  background: rgba(33, 150, 243, 0.2);
+  border-color: rgba(33, 150, 243, 0.5);
+  transform: translateY(-1px);
+}
+
+.update-settings-group .setting-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Light Theme Adjustments for Update Features */
+body.light-theme .update-notification {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .update-notification-text {
+  color: #1f2937;
+}
+
+body.light-theme .update-btn-secondary {
+  background: rgba(0, 0, 0, 0.05);
+  color: #374151;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .update-btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .manual-check-notification {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .manual-check-notification-text {
+  color: #1f2937;
+}
+
+body.light-theme .manual-check-btn {
+  background: rgba(0, 0, 0, 0.05);
+  color: #374151;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .manual-check-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .manual-check-result {
+  background: rgba(33, 150, 243, 0.05);
+  border-color: rgba(33, 150, 243, 0.2);
+  color: #1f2937;
+}
+
+body.light-theme .update-settings-group {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .update-settings-group .setting-btn {
+  background: rgba(33, 150, 243, 0.05);
+  border-color: rgba(33, 150, 243, 0.2);
+}
+
+body.light-theme .update-settings-group .setting-btn:hover {
+  background: rgba(33, 150, 243, 0.1);
+  border-color: rgba(33, 150, 243, 0.3);
+}
+
 /* Responsive adjustments */
 @media (max-width: 500px) {
   .clock-options,
@@ -2096,5 +2395,21 @@ body.light-theme .settings-section[data-section="about"] a:hover {
   .setting-icon {
     width: 20px;
     height: 20px;
+  }
+
+  .update-notification {
+    left: 20px;
+    right: 20px;
+    max-width: none;
+  }
+
+  .update-notification-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .update-notification-actions {
+    align-self: stretch;
+    justify-content: center;
   }
 }

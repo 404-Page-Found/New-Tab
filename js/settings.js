@@ -300,13 +300,58 @@ if (settingsMenu) {
 function initAboutSection() {
   const aboutSection = document.querySelector('.settings-section[data-section="about"]');
   if (aboutSection) {
+    const updateStatus = window.updateChecker ? updateChecker.getUpdateStatus() : 'Update checker not loaded';
+    const isEnabled = window.updateChecker ? updateChecker.isEnabled() : true;
+
+    const currentVersion = window.CURRENT_VERSION;
     aboutSection.innerHTML = `
       <h4>About</h4>
       <p>New-Tab</p>
-      <p>Version: v0.3.8</p>
+      <p>Version: v${currentVersion}</p>
       <p>Created by 404-Page-Found</p>
       <a href="https://github.com/404-Page-Found/New-Tab" target="_blank">GitHub Repository</a>
+
+      <h4 style="margin-top: 20px;">Updates</h4>
+      <div class="update-settings-group">
+        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 12px;">
+          <input type="checkbox" id="update-check-enabled" style="cursor: pointer;" ${isEnabled ? 'checked' : ''} />
+          Enable automatic update checks
+        </label>
+        <p style="font-size: 14px; color: #888; margin-bottom: 12px;">
+          ${updateStatus}
+        </p>
+        <button id="manual-update-check" class="setting-btn secondary" style="margin-bottom: 8px;">
+          Check for Updates Now
+        </button>
+        <p style="font-size: 12px; color: #666;">
+          Checks for new versions from GitHub releases once per day when enabled.
+        </p>
+      </div>
     `;
+
+    // Add event listeners for update settings
+    const updateEnabledCheckbox = document.getElementById('update-check-enabled');
+    const manualCheckButton = document.getElementById('manual-update-check');
+
+    if (updateEnabledCheckbox && window.updateChecker) {
+      updateEnabledCheckbox.addEventListener('change', function() {
+        updateChecker.setEnabled(this.checked);
+        // Refresh the about section to show updated status
+        setTimeout(() => initAboutSection(), 100);
+      });
+    }
+
+    if (manualCheckButton && window.updateChecker) {
+      manualCheckButton.addEventListener('click', async function() {
+        this.disabled = true;
+        this.textContent = 'Checking...';
+        await updateChecker.manualCheck();
+        this.disabled = false;
+        this.textContent = 'Check for Updates Now';
+        // Refresh the about section after manual check
+        setTimeout(() => initAboutSection(), 100);
+      });
+    }
   }
 }
 
