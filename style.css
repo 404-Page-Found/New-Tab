@@ -2040,39 +2040,72 @@ body.light-theme .app-context-menu {
 }
 
 /* About Section Styles */
-.settings-section[data-section="about"] h4 {
-  margin: 0 0 16px 0;
+.about-setting-group {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.about-setting-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.about-setting-group h4 {
+  margin: 0 0 4px 0;
   font-size: 18px;
   font-weight: 600;
   color: var(--settings-text-color);
 }
 
-.settings-section[data-section="about"] p {
-  margin: 0 0 12px 0;
+.about-setting-group > p {
+  margin: 0 0 20px 0;
   font-size: 14px;
-  color: var(--settings-text-color);
+  color: rgba(107, 114, 128, 0.8);
   line-height: 1.5;
 }
 
-.settings-section[data-section="about"] a {
+.about-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.about-cards .setting-card {
+  margin-bottom: 0;
+}
+
+.about-cards .setting-card a {
   color: #2196f3;
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   transition: all 0.2s ease;
 }
 
-.settings-section[data-section="about"] a:hover {
+.about-cards .setting-card a:hover {
   color: #1976d2;
   text-decoration: underline;
 }
 
 /* Light theme adjustments for About section */
-body.light-theme .settings-section[data-section="about"] a {
+body.light-theme .about-setting-group {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .about-setting-group h4 {
+  color: rgba(55, 65, 81, 0.9);
+}
+
+body.light-theme .about-setting-group > p {
+  color: rgba(107, 114, 128, 0.8);
+}
+
+body.light-theme .about-cards .setting-card a {
   color: #1976d2;
 }
 
-body.light-theme .settings-section[data-section="about"] a:hover {
+body.light-theme .about-cards .setting-card a:hover {
   color: #1565c0;
 }
 

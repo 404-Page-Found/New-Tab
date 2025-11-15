@@ -305,27 +305,74 @@ function initAboutSection() {
 
     const currentVersion = window.CURRENT_VERSION;
     aboutSection.innerHTML = `
-      <h4>About</h4>
-      <p>New-Tab</p>
-      <p>Version: v${currentVersion}</p>
-      <p>Created by 404-Page-Found</p>
-      <a href="https://github.com/404-Page-Found/New-Tab" target="_blank">GitHub Repository</a>
+      <div class="about-setting-group">
+        <h4>About New-Tab</h4>
+        <p>Customize your new tab experience with beautiful backgrounds, apps, and settings</p>
 
-      <h4 style="margin-top: 20px;">Updates</h4>
-      <div class="update-settings-group">
-        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 12px;">
-          <input type="checkbox" id="update-check-enabled" style="cursor: pointer;" ${isEnabled ? 'checked' : ''} />
-          Enable automatic update checks
-        </label>
-        <p style="font-size: 14px; color: #888; margin-bottom: 12px;">
-          ${updateStatus}
-        </p>
-        <button id="manual-update-check" class="setting-btn secondary" style="margin-bottom: 8px;">
-          Check for Updates Now
-        </button>
-        <p style="font-size: 12px; color: #666;">
-          Checks for new versions from GitHub releases once per day when enabled.
-        </p>
+        <div class="about-cards">
+          <div class="setting-card">
+            <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2Z"></path>
+              <path d="M8 5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2H8V5Z"></path>
+              <path d="M16 14h.01"></path>
+              <path d="M8 14h.01"></path>
+              <path d="M12 14h.01"></path>
+            </svg>
+            <div class="setting-content">
+              <label>Project</label>
+              <div style="font-size: 16px; font-weight: 600; color: var(--settings-text-color); margin-bottom: 4px;">New-Tab</div>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">Version v${currentVersion}</div>
+            </div>
+          </div>
+
+          <div class="setting-card">
+            <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M22 2l-4.5 4.5"></path>
+              <path d="M21 3l-4.5 4.5"></path>
+            </svg>
+            <div class="setting-content">
+              <label>Created by</label>
+              <div style="font-size: 16px; font-weight: 600; color: var(--settings-text-color);">404-Page-Found</div>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">Open source project</div>
+            </div>
+          </div>
+
+          <div class="setting-card">
+            <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+            <div class="setting-content">
+              <label>Repository</label>
+              <a href="https://github.com/404-Page-Found/New-Tab" target="_blank" style="font-size: 16px; font-weight: 600; color: #2196f3; text-decoration: none; transition: all 0.2s ease;">GitHub Repository</a>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">View source code & contribute</div>
+            </div>
+          </div>
+
+          <div class="setting-card">
+            <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4v16l13.5-8L4 4z"></path>
+              <path d="M20 12h-3"></path>
+            </svg>
+            <div class="setting-content">
+              <label>Updates</label>
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                <input type="checkbox" id="update-check-enabled" style="cursor: pointer;" ${isEnabled ? 'checked' : ''} />
+                <span style="font-size: 14px; color: var(--settings-text-color);">Enable automatic update checks</span>
+              </div>
+              <div style="font-size: 13px; color: rgba(107, 114, 128, 0.8); margin-bottom: 12px;">
+                ${updateStatus}
+              </div>
+              <button id="manual-update-check" class="setting-btn secondary" style="font-size: 13px; padding: 8px 12px;">
+                Check for Updates Now
+              </button>
+              <div style="font-size: 12px; color: rgba(107, 114, 128, 0.7); margin-top: 8px;">
+                Checks for new versions from GitHub releases once per day when enabled.
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     `;
 
