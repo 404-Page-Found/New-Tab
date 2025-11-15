@@ -168,78 +168,7 @@ document.addEventListener("change", function (e) {
   }
 });
 
-// Live Background
-function initLiveBackgrounds() {
-  if (!window.liveBackgroundManager) return;
 
-  const container = document.getElementById('live-bg-options');
-  if (!container) return;
-
-  container.innerHTML = '';
-
-  // Create video options
-  window.liveBackgroundManager.getVideos().forEach((video) => {
-    const option = document.createElement('div');
-    option.className = 'live-bg-option';
-    option.setAttribute('data-video', video.id);
-    option.innerHTML = `
-      <div class="video-preview">
-        <video width="80" height="60" muted preload="metadata">
-          <source src="${video.url}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <div class="video-overlay">${video.title}</div>
-      </div>
-    `;
-    container.appendChild(option);
-  });
-
-  // Add event listeners
-  container.addEventListener('click', function(e) {
-    const option = e.target.closest('.live-bg-option');
-    if (option) {
-      const videoId = option.getAttribute('data-video');
-
-      // Remove previous selection
-      container.querySelectorAll('.live-bg-option.selected').forEach(el => el.classList.remove('selected'));
-
-      // Add selection to clicked option
-      option.classList.add('selected');
-
-      // Apply video background
-      if (window.liveBackgroundManager) {
-        window.liveBackgroundManager.saveBackground(videoId);
-      }
-
-      // Clear static background selection if video is active
-      const thumbs = document.querySelectorAll('.bg-thumb');
-      thumbs.forEach(thumb => thumb.classList.remove('selected'));
-    }
-  });
-
-  // Initialize selection state
-  const currentVideo = window.liveBackgroundManager.loadSavedBackground();
-  if (currentVideo) {
-    const selectedOption = container.querySelector(`[data-video="${currentVideo}"]`);
-    if (selectedOption) {
-      selectedOption.classList.add('selected');
-    }
-  }
-
-  // Handle disable button
-  const disableBtn = document.getElementById('live-bg-disable');
-  if (disableBtn) {
-    disableBtn.addEventListener('click', function() {
-      // Remove selection from all video options
-      container.querySelectorAll('.live-bg-option.selected').forEach(el => el.classList.remove('selected'));
-
-      // Disable live background
-      if (window.liveBackgroundManager) {
-        window.liveBackgroundManager.saveBackground(null);
-      }
-    });
-  }
-}
 
 // Settings menu logic
 const settingsMenu = document.querySelector(".settings-menu");
@@ -274,10 +203,6 @@ if (settingsMenu) {
       if (section === 'background' && !backgroundsInitialized) {
         backgroundsInitialized = true;
         if (window._initBackgrounds) window._initBackgrounds();
-      }
-      // Lazy load live backgrounds
-      if (section === 'live-background') {
-        initLiveBackgrounds();
       }
       // No special logic needed for 'about' tab, just show the section
     });
