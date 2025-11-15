@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="style.css" />
     <script src="motto.js"></script>
   <script src="backgrounds.js"></script>
-  <script src="js/live-background.js"></script>
+  <script src="js/version.js"></script>
   </head>
   <body>
     <div class="container">
@@ -15,7 +15,7 @@
       <div id="date" class="date"></div>
       <div class="search-bar">
         <div class="search-engines"></div>
-        <input type="text" placeholder="Search or enter website" />
+        <input type="text" placeholder="Search or enter website" autofocus />
       </div>
 
   <div class="app-grid" id="app-grid">
@@ -42,9 +42,6 @@
             <button class="settings-menu-item" data-section="background">
               Background
             </button>
-            <button class="settings-menu-item" data-section="live-background">
-              Live Background
-            </button>
             <button class="settings-menu-item" data-section="apps">Apps</button>
             <button class="settings-menu-item" data-section="clock">
               Clock
@@ -53,6 +50,7 @@
             <button class="settings-menu-item" data-section="themes">
               Themes
             </button>
+            <button class="settings-menu-item" data-section="about">About</button>
           </nav>
           <div class="settings-content">
             <section class="settings-section" data-section="general">
@@ -76,16 +74,6 @@
             </section>
             <section class="settings-section" data-section="background" style="display: none">
               <div class="bg-thumbnails" id="bg-thumbnails"></div>
-            </section>
-            <section class="settings-section" data-section="live-background" style="display: none">
-              <div class="live-bg-setting-group">
-                <h4>Video Backgrounds</h4>
-                <p>Choose from animated video backgrounds for a dynamic experience</p>
-                <div class="live-bg-options" id="live-bg-options"></div>
-                <div class="live-bg-controls">
-                  <button id="live-bg-disable" class="setting-btn secondary">Disable Live Background</button>
-                </div>
-              </div>
             </section>
             <section class="settings-section" data-section="apps" style="display: none">
               <div class="apps-setting-group">
@@ -284,6 +272,7 @@
                 </div>
               </div>
             </section>
+            <section class="settings-section" data-section="about" style="display: none"></section>
           </div>
         </div>
       </div>
@@ -312,6 +301,7 @@
 <script src="js/color-picker.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/context-menu.js"></script>
+<script src="js/update-checker.js"></script>
   <!-- Motto area -->
   <div id="motto-container">
     <span id="motto-text">Loading...</span>
@@ -322,7 +312,7 @@
   <a href="https://github.com/404-Page-Found/New-Tab" target="_blank" class="footer-link">New-Tab GitHub Repository</a>
     </div>
   <div class="footer-right">
-      v0.3.7
+      v<span id="version-display">0.3.8</span>
     </div>
   </body>
 </html>

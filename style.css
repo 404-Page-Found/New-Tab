@@ -133,6 +133,10 @@
   --app-icon-size: 60px;
   --app-icon-img-size: 35px;
   --search-bar-width: 750px;
+  /* search engine hover colors (dark by default) */
+  --engine-hover-bg: rgba(33, 150, 243, 0.08);
+  --engine-hover-border: rgba(33, 150, 243, 0.2);
+  --engine-hover-shadow: 0 8px 24px rgba(33, 150, 243, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
   --modal-width: 420px;
   --modal-min-height: 500px;
   --overlay-max-height: calc(100vh - 225px);
@@ -157,7 +161,7 @@ body {
 
 .search-bar {
   align-items: center;
-  background: rgba(255, 255, 255, 0.9);
+  background: #f0f0f0;
   display: flex;
   padding: 7px 20px;
   border-radius: 25px;
@@ -192,12 +196,13 @@ body {
   cursor: pointer;
   padding: 5px;
   border-radius: 5px;
-  transition: background 0.2s;
+  /* keep layout stable on hover by reserving space for the border */
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
 
-.selected-engine:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
+
 
 .selected-engine img {
   width: 30px;
@@ -316,7 +321,7 @@ body {
 .icon {
   width: var(--app-icon-size);
   height: var(--app-icon-size);
-  background: white;
+  background: #f0f0f0;
   border-radius: var(--icon-radius,20px);
   display: flex;
   align-items: center;
@@ -374,7 +379,6 @@ body {
   width: 450px;
   min-height: auto;
   max-height: var(--overlay-max-height);
-  overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: fixed;
   top: 100px;
@@ -443,7 +447,7 @@ body {
   flex: 1;
   padding: 20px 20px 16px 20px;
   font-size: 1em;
-  overflow: visible;
+  overflow-y: auto;
 }
 .settings-content label,
 .settings-content .bg-thumbnails,
@@ -956,6 +960,10 @@ body.light-theme .preview-icon.light {
 
 /* Light Theme */
 body.light-theme {
+  /* override engine hover to use same blue color scheme but lighter for light theme */
+  --engine-hover-bg: rgba(33, 150, 243, 0.06);
+  --engine-hover-border: rgba(33, 150, 243, 0.15);
+  --engine-hover-shadow: 0 8px 24px rgba(33, 150, 243, 0.1), 0 2px 8px rgba(0, 0, 0, 0.05);
   --body-bg: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
   --settings-modal-bg: rgba(255, 255, 255, 0.98);
   --settings-menu-bg: rgba(0, 0, 0, 0.03);
@@ -1037,9 +1045,7 @@ body.light-theme .icon {
   border: 1px solid #f0f0f0;
 }
 
-body.light-theme .selected-engine:hover {
-  background: rgba(0, 0, 0, 0.08);
-}
+
 
 body.light-theme .icon:hover {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
@@ -1642,156 +1648,7 @@ body.light-theme .setting-card button:hover {
   background: #dc2626;
 }
 
-/* Live Background Styles */
-.live-bg-setting-group {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
 
-.live-bg-setting-group h4 {
-  margin: 0 0 8px 0;
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.live-bg-setting-group p {
-  margin: 0 0 16px 0;
-  color: #9ca3af;
-  font-size: 14px;
-}
-
-.live-bg-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 12px;
-}
-
-.live-bg-option {
-  border: 2px solid rgba(107, 114, 128, 0.3);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: border-color 0.2s ease;
-  overflow: hidden;
-}
-
-.live-bg-option:hover {
-  border-color: rgba(33, 150, 243, 0.6);
-}
-
-.live-bg-option.selected {
-  border-color: #2196f3;
-}
-
-.video-preview {
-  position: relative;
-  width: 100%;
-  height: 80px;
-  background: #1f2937;
-}
-
-.video-preview video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border: none;
-}
-
-.video-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.7);
-  color: #ffffff;
-  font-size: 10px;
-  padding: 4px 6px;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.live-bg-controls {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 16px;
-}
-
-.setting-btn {
-  background: rgba(33, 150, 243, 0.1);
-  border: 1px solid rgba(33, 150, 243, 0.3);
-  color: #2196f3;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.setting-btn:hover {
-  background: rgba(33, 150, 243, 0.2);
-  border-color: rgba(33, 150, 243, 0.5);
-}
-
-.setting-btn.secondary {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #ef4444;
-}
-
-.setting-btn.secondary:hover {
-  background: rgba(239, 68, 68, 0.2);
-  border-color: rgba(239, 68, 68, 0.5);
-}
-
-/* Light theme adjustments */
-body.light-theme .live-bg-setting-group h4 {
-  color: #1f2937;
-}
-
-body.light-theme .live-bg-setting-group p {
-  color: #6b7280;
-}
-
-body.light-theme .live-bg-option {
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-body.light-theme .live-bg-option:hover {
-  border-color: rgba(33, 150, 243, 0.4);
-}
-
-body.light-theme .video-preview {
-  background: #f9fafb;
-}
-
-body.light-theme .video-overlay {
-  background: rgba(255, 255, 255, 0.9);
-  color: #1f2937;
-}
-
-body.light-theme .setting-btn {
-  background: rgba(33, 150, 243, 0.05);
-  border-color: rgba(33, 150, 243, 0.2);
-}
-
-body.light-theme .setting-btn:hover {
-  background: rgba(33, 150, 243, 0.1);
-  border-color: rgba(33, 150, 243, 0.3);
-}
-
-body.light-theme .setting-btn.secondary {
-  background: rgba(239, 68, 68, 0.05);
-  border-color: rgba(239, 68, 68, 0.2);
-  color: #dc2626;
-}
-
-body.light-theme .setting-btn.secondary:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.3);
-}
 
 /* Modern Color Picker Styles */
 .color-swatch {
@@ -2032,6 +1889,375 @@ body.light-theme .app-context-menu {
   scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.1);
 }
 
+/* About Section Styles */
+.about-setting-group {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.about-setting-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.about-setting-group h4 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.about-setting-group > p {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.5;
+}
+
+.about-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.about-cards .setting-card {
+  margin-bottom: 0;
+}
+
+.about-cards .setting-card a {
+  color: #2196f3;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.about-cards .setting-card a:hover {
+  color: #1976d2;
+  text-decoration: underline;
+}
+
+/* Light theme adjustments for About section */
+body.light-theme .about-setting-group {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .about-setting-group h4 {
+  color: rgba(55, 65, 81, 0.9);
+}
+
+body.light-theme .about-setting-group > p {
+  color: rgba(107, 114, 128, 0.8);
+}
+
+body.light-theme .about-cards .setting-card a {
+  color: #1976d2;
+}
+
+body.light-theme .about-cards .setting-card a:hover {
+  color: #1565c0;
+}
+
+/* Update Notification Styles */
+.update-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-width: 400px;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  z-index: 5000;
+  animation: updateNotificationSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.update-notification-content {
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.update-notification-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.update-notification-text {
+  flex: 1;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.update-notification-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.update-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.update-btn-primary {
+  background: #2196f3;
+  color: white;
+}
+
+.update-btn-primary:hover {
+  background: #1976d2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+.update-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.update-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes updateNotificationSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Manual Check Notification Styles */
+.manual-check-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  max-width: 350px;
+  background: rgba(33, 150, 243, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 12px;
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  z-index: 4999;
+  animation: manualCheckNotificationSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.manual-check-notification-content {
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.manual-check-notification-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.manual-check-notification-text {
+  flex: 1;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.manual-check-notification-actions {
+  margin-top: 8px;
+}
+
+.manual-check-btn {
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.manual-check-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+@keyframes manualCheckNotificationSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+/* Manual Check Result Styles */
+.manual-check-result {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 14px;
+  line-height: 1.4;
+  animation: manualCheckResultFadeIn 0.3s ease;
+}
+
+@keyframes manualCheckResultFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Update Settings Group Styles */
+.update-settings-group {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.update-settings-group h4 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.update-settings-group label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--settings-text-color);
+}
+
+.update-settings-group p {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.4;
+}
+
+.update-settings-group .setting-btn {
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  color: #2196f3;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.update-settings-group .setting-btn:hover {
+  background: rgba(33, 150, 243, 0.2);
+  border-color: rgba(33, 150, 243, 0.5);
+  transform: translateY(-1px);
+}
+
+.update-settings-group .setting-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Light Theme Adjustments for Update Features */
+body.light-theme .update-notification {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .update-notification-text {
+  color: #1f2937;
+}
+
+body.light-theme .update-btn-secondary {
+  background: rgba(0, 0, 0, 0.05);
+  color: #374151;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .update-btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .manual-check-notification {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .manual-check-notification-text {
+  color: #1f2937;
+}
+
+body.light-theme .manual-check-btn {
+  background: rgba(0, 0, 0, 0.05);
+  color: #374151;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .manual-check-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .manual-check-result {
+  background: rgba(33, 150, 243, 0.05);
+  border-color: rgba(33, 150, 243, 0.2);
+  color: #1f2937;
+}
+
+body.light-theme .update-settings-group {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .update-settings-group .setting-btn {
+  background: rgba(33, 150, 243, 0.05);
+  border-color: rgba(33, 150, 243, 0.2);
+}
+
+body.light-theme .update-settings-group .setting-btn:hover {
+  background: rgba(33, 150, 243, 0.1);
+  border-color: rgba(33, 150, 243, 0.3);
+}
+
 /* Responsive adjustments */
 @media (max-width: 500px) {
   .clock-options,
@@ -2047,5 +2273,21 @@ body.light-theme .app-context-menu {
   .setting-icon {
     width: 20px;
     height: 20px;
+  }
+
+  .update-notification {
+    left: 20px;
+    right: 20px;
+    max-width: none;
+  }
+
+  .update-notification-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .update-notification-actions {
+    align-self: stretch;
+    justify-content: center;
   }
 }

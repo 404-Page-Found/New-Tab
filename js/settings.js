@@ -168,83 +168,12 @@ document.addEventListener("change", function (e) {
   }
 });
 
-// Live Background
-function initLiveBackgrounds() {
-  if (!window.liveBackgroundManager) return;
 
-  const container = document.getElementById('live-bg-options');
-  if (!container) return;
-
-  container.innerHTML = '';
-
-  // Create video options
-  window.liveBackgroundManager.getVideos().forEach((video) => {
-    const option = document.createElement('div');
-    option.className = 'live-bg-option';
-    option.setAttribute('data-video', video.id);
-    option.innerHTML = `
-      <div class="video-preview">
-        <video width="80" height="60" muted preload="metadata">
-          <source src="${video.url}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <div class="video-overlay">${video.title}</div>
-      </div>
-    `;
-    container.appendChild(option);
-  });
-
-  // Add event listeners
-  container.addEventListener('click', function(e) {
-    const option = e.target.closest('.live-bg-option');
-    if (option) {
-      const videoId = option.getAttribute('data-video');
-
-      // Remove previous selection
-      container.querySelectorAll('.live-bg-option.selected').forEach(el => el.classList.remove('selected'));
-
-      // Add selection to clicked option
-      option.classList.add('selected');
-
-      // Apply video background
-      if (window.liveBackgroundManager) {
-        window.liveBackgroundManager.saveBackground(videoId);
-      }
-
-      // Clear static background selection if video is active
-      const thumbs = document.querySelectorAll('.bg-thumb');
-      thumbs.forEach(thumb => thumb.classList.remove('selected'));
-    }
-  });
-
-  // Initialize selection state
-  const currentVideo = window.liveBackgroundManager.loadSavedBackground();
-  if (currentVideo) {
-    const selectedOption = container.querySelector(`[data-video="${currentVideo}"]`);
-    if (selectedOption) {
-      selectedOption.classList.add('selected');
-    }
-  }
-
-  // Handle disable button
-  const disableBtn = document.getElementById('live-bg-disable');
-  if (disableBtn) {
-    disableBtn.addEventListener('click', function() {
-      // Remove selection from all video options
-      container.querySelectorAll('.live-bg-option.selected').forEach(el => el.classList.remove('selected'));
-
-      // Disable live background
-      if (window.liveBackgroundManager) {
-        window.liveBackgroundManager.saveBackground(null);
-      }
-    });
-  }
-}
 
 // Settings menu logic
 const settingsMenu = document.querySelector(".settings-menu");
 let settingsMenuItems = [];
-const settingsSections = document.querySelectorAll(".settings-section");
+const settingsSections = document.querySelectorAll(".settings-section"); // This will include the About section if present in HTML
 let backgroundsInitialized = false;
 
 if (settingsMenu) {
@@ -263,24 +192,26 @@ if (settingsMenu) {
       settingsMenuItems.forEach((i) => i.classList.remove("selected"));
       this.classList.add("selected");
       settingsSections.forEach((s) => {
-        s.style.display = s.getAttribute("data-section") === section ? "block" : "none";
+        // Show the section that matches the clicked tab, hide others
+        if (s.getAttribute("data-section") === section) {
+          s.style.display = "block";
+        } else {
+          s.style.display = "none";
+        }
       });
       // Lazy load backgrounds
       if (section === 'background' && !backgroundsInitialized) {
         backgroundsInitialized = true;
         if (window._initBackgrounds) window._initBackgrounds();
       }
-      // Lazy load live backgrounds
-      if (section === 'live-background') {
-        initLiveBackgrounds();
-      }
+      // No special logic needed for 'about' tab, just show the section
     });
   });
 
-  // Auto-open the Apps tab by default. This overrides any `selected` class
-  // present in the HTML so the settings modal starts on Apps.
+  // Auto-open the About tab by default. This overrides any `selected` class
+  // present in the HTML so the settings modal starts on About.
   (function setDefaultTab() {
-    const defaultSection = 'apps';
+    const defaultSection = 'about';
     const defaultItem = settingsMenuItems.find(i => i.getAttribute('data-section') === defaultSection) || settingsMenuItems[0];
     if (defaultItem) {
       // Trigger the same behavior as a user click so lazy init and section
@@ -290,12 +221,119 @@ if (settingsMenu) {
   })();
 }
 
+// About section initialization
+function initAboutSection() {
+  const aboutSection = document.querySelector('.settings-section[data-section="about"]');
+  if (aboutSection) {
+    const updateStatus = window.updateChecker ? updateChecker.getUpdateStatus() : 'Update checker not loaded';
+    const isEnabled = window.updateChecker ? updateChecker.isEnabled() : true;
+
+    const currentVersion = window.CURRENT_VERSION;
+    aboutSection.innerHTML = `
+      <div class="about-setting-group">
+        <h4>About New-Tab</h4>
+        <p>Customize your new tab experience with beautiful backgrounds, apps, and settings</p>
+
+        <div class="about-cards">
+          <div class="setting-card">
+            <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2Z"></path>
+              <path d="M8 5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2H8V5Z"></path>
+              <path d="M16 14h.01"></path>
+              <path d="M8 14h.01"></path>
+              <path d="M12 14h.01"></path>
+            </svg>
+            <div class="setting-content">
+              <label>Project</label>
+              <div style="font-size: 16px; font-weight: 600; color: var(--settings-text-color); margin-bottom: 4px;">New-Tab</div>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">Version v${currentVersion}</div>
+            </div>
+          </div>
+
+          <div class="setting-card">
+            <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M22 2l-4.5 4.5"></path>
+              <path d="M21 3l-4.5 4.5"></path>
+            </svg>
+            <div class="setting-content">
+              <label>Created by</label>
+              <div style="font-size: 16px; font-weight: 600; color: var(--settings-text-color);">404-Page-Found</div>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">Open source project</div>
+            </div>
+          </div>
+
+          <div class="setting-card">
+            <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+            </svg>
+            <div class="setting-content">
+              <label>Repository</label>
+              <a href="https://github.com/404-Page-Found/New-Tab" target="_blank" style="font-size: 16px; font-weight: 600; color: #2196f3; text-decoration: none; transition: all 0.2s ease;">GitHub Repository</a>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">View source code & contribute</div>
+            </div>
+          </div>
+
+          <div class="setting-card">
+            <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 4v16l13.5-8L4 4z"></path>
+              <path d="M20 12h-3"></path>
+            </svg>
+            <div class="setting-content">
+              <label>Updates</label>
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                <input type="checkbox" id="update-check-enabled" style="cursor: pointer;" ${isEnabled ? 'checked' : ''} />
+                <span style="font-size: 14px; color: var(--settings-text-color);">Enable automatic update checks</span>
+              </div>
+              <div style="font-size: 13px; color: rgba(107, 114, 128, 0.8); margin-bottom: 12px;">
+                ${updateStatus}
+              </div>
+              <button id="manual-update-check" class="setting-btn secondary" style="font-size: 13px; padding: 8px 12px;">
+                Check for Updates Now
+              </button>
+              <div style="font-size: 12px; color: rgba(107, 114, 128, 0.7); margin-top: 8px;">
+                Checks for new versions from GitHub releases once per day when enabled.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Add event listeners for update settings
+    const updateEnabledCheckbox = document.getElementById('update-check-enabled');
+    const manualCheckButton = document.getElementById('manual-update-check');
+
+    if (updateEnabledCheckbox && window.updateChecker) {
+      updateEnabledCheckbox.addEventListener('change', function() {
+        updateChecker.setEnabled(this.checked);
+        // Refresh the about section to show updated status
+        setTimeout(() => initAboutSection(), 100);
+      });
+    }
+
+    if (manualCheckButton && window.updateChecker) {
+      manualCheckButton.addEventListener('click', async function() {
+        this.disabled = true;
+        this.textContent = 'Checking...';
+        await updateChecker.manualCheck();
+        this.disabled = false;
+        this.textContent = 'Check for Updates Now';
+        // Refresh the about section after manual check
+        setTimeout(() => initAboutSection(), 100);
+      });
+    }
+  }
+}
+
 function initSettings() {
   // Apply initial settings
   applyBg();
   applyClockStyle();
   applyDateStyle();
   applyTheme();
+  initAboutSection();
 
   // Initialize modern color pickers
   if (window.initModernColorPickers) {
