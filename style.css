@@ -379,7 +379,6 @@ body {
   width: 450px;
   min-height: auto;
   max-height: var(--overlay-max-height);
-  overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
   position: fixed;
   top: 100px;
@@ -448,7 +447,7 @@ body {
   flex: 1;
   padding: 20px 20px 16px 20px;
   font-size: 1em;
-  overflow: visible;
+  overflow-y: auto;
 }
 .settings-content label,
 .settings-content .bg-thumbnails,
