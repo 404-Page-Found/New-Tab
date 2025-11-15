@@ -202,12 +202,7 @@ body {
   transition: background 0.18s, border-color 0.18s, box-shadow 0.18s;
 }
 
-.selected-engine:hover {
-  /* Use theme-aware variables so both light and dark themes show a visible hover "box" */
-  background: var(--engine-hover-bg);
-  border: 1px solid var(--engine-hover-border);
-  box-shadow: var(--engine-hover-shadow);
-}
+
 
 .selected-engine img {
   width: 30px;
