@@ -358,9 +358,8 @@ class OnboardingTour {
 
   // End the tour
   end() {
-    if (this.currentStep === this.steps.length - 1) {
-      this.markCompleted();
-    }
+    // Always mark as completed once the user has seen the tour (even partially)
+    this.markCompleted();
 
     this.isActive = false;
 
