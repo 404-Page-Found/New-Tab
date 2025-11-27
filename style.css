@@ -1464,6 +1464,23 @@ body.light-theme .copy-notification {
   order: 4;
 }
 
+.icon-size-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.icon-size-option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.icon-size-option.reset-option {
+  order: 4;
+}
+
 .setting-card {
   display: flex;
   align-items: center;

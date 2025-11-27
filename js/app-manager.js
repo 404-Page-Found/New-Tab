@@ -105,18 +105,57 @@ if (openNewTabSetting) {
 // Apply on load
 applyOpenNewTabSetting();
 
-// Load and apply app button curvature
+// Load and apply icon size
+function loadIconSize() {
+  return parseInt(localStorage.getItem("iconSize") || "60");
+}
+function applyIconSize() {
+  const size = loadIconSize();
+  document.documentElement.style.setProperty('--app-icon-size', size + 'px');
+  // Also update icon radius if curvature is set
+  applyCurvature();
+
+  // Update slider
+  const iconSizePicker = document.getElementById("icon-size-picker");
+  if (iconSizePicker && iconSizePicker.value !== size.toString()) {
+    iconSizePicker.value = size;
+  }
+}
+const iconSizePicker = document.getElementById("icon-size-picker");
+if (iconSizePicker) {
+  iconSizePicker.addEventListener("input", function () {
+    let val = parseInt(this.value);
+    if (val < 40) val = 40;
+    if (val > 100) val = 100;
+    localStorage.setItem("iconSize", val);
+    applyIconSize();
+  });
+}
+
+// Reset icon size
+function resetIconSize() {
+  localStorage.removeItem("iconSize");
+  applyIconSize();
+}
+const iconSizeReset = document.getElementById("icon-size-reset");
+if (iconSizeReset) {
+  iconSizeReset.addEventListener("click", resetIconSize);
+}
+
+// Load and apply app button curvature (now relative to icon size)
 function loadCurvature() {
   return localStorage.getItem("appsButtonCurvature") || "20";
 }
 function applyCurvature() {
-  const radius = loadCurvature();
-  document.documentElement.style.setProperty('--icon-radius', radius + 'px');
+  const baseRadius = parseInt(loadCurvature());
+  const size = loadIconSize();
+  const actualRadius = size * (baseRadius / 60);
+  document.documentElement.style.setProperty('--icon-radius', actualRadius + 'px');
 
   // Update radio button selection
   const curvatureRadios = document.querySelectorAll('input[name="curvature"]');
   curvatureRadios.forEach((radio) => {
-    radio.checked = radio.value === radius;
+    radio.checked = radio.value === baseRadius.toString();
   });
 }
 const curvatureRadios = document.querySelectorAll('input[name="curvature"]');
