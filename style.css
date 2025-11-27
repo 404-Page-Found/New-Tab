@@ -2309,3 +2309,257 @@ body.light-theme .update-settings-group .setting-btn:hover {
     justify-content: center;
   }
 }
+
+/* Onboarding Tour Styles */
+.onboarding-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.onboarding-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.onboarding-spotlight {
+  position: absolute;
+  border: 3px solid #2196f3;
+  border-radius: 12px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 10001;
+}
+
+.onboarding-tooltip {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  min-width: 300px;
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  z-index: 10002;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.onboarding-tooltip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px 0 20px;
+}
+
+.onboarding-step-counter {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+}
+
+.onboarding-close-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.onboarding-close-btn:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
+}
+
+.onboarding-tooltip-content {
+  padding: 16px 20px;
+}
+
+.onboarding-tooltip-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.3;
+}
+
+.onboarding-tooltip-text {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.onboarding-tooltip-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px 20px 20px;
+  gap: 12px;
+}
+
+.onboarding-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.onboarding-btn-primary {
+  background: #2196f3;
+  color: white;
+}
+
+.onboarding-btn-primary:hover {
+  background: #1976d2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+}
+
+.onboarding-btn-secondary {
+  background: rgba(0, 0, 0, 0.05);
+  color: #6b7280;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.onboarding-btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: #374151;
+}
+
+.onboarding-progress {
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  justify-content: center;
+}
+
+.progress-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.progress-dot.active {
+  background: #2196f3;
+  transform: scale(1.2);
+}
+
+.progress-dot:hover {
+  background: #1976d2;
+}
+
+/* Light theme adjustments for onboarding */
+body.light-theme .onboarding-overlay {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .onboarding-spotlight {
+  box-shadow: 0 0 0 9999px rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .onboarding-tooltip {
+  background: rgba(0, 0, 0, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .onboarding-tooltip-title {
+  color: #ffffff;
+}
+
+body.light-theme .onboarding-tooltip-text {
+  color: #e5e7eb;
+}
+
+body.light-theme .onboarding-step-counter {
+  color: #9ca3af;
+}
+
+body.light-theme .onboarding-close-btn {
+  color: #9ca3af;
+}
+
+body.light-theme .onboarding-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+body.light-theme .onboarding-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+body.light-theme .onboarding-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+body.light-theme .progress-dot {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+body.light-theme .progress-dot.active {
+  background: #2196f3;
+}
+
+/* Responsive onboarding adjustments */
+@media (max-width: 480px) {
+  .onboarding-tooltip {
+    max-width: 90vw;
+    min-width: 280px;
+    margin: 20px;
+  }
+
+  .onboarding-tooltip-header {
+    padding: 16px 16px 0 16px;
+  }
+
+  .onboarding-tooltip-content {
+    padding: 12px 16px;
+  }
+
+  .onboarding-tooltip-actions {
+    padding: 0 16px 16px 16px;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .onboarding-progress {
+    order: -1;
+  }
+
+  .onboarding-btn {
+    width: 100%;
+  }
+}

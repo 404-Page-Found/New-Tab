@@ -266,6 +266,24 @@ function initAboutSection() {
 
           <div class="setting-card">
             <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2Z"></path>
+              <path d="M8 5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2H8V5Z"></path>
+              <path d="M16 14h.01"></path>
+              <path d="M8 14h.01"></path>
+              <path d="M12 14h.01"></path>
+            </svg>
+            <div class="setting-content">
+              <label>Onboarding Tour</label>
+              <div style="font-size: 16px; font-weight: 600; color: var(--settings-text-color);">Restart Tour</div>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8); margin-bottom: 12px;">Review the key features and customization options</div>
+              <button id="restart-onboarding-btn" class="setting-btn" style="font-size: 13px; padding: 6px 12px;">
+                Start Tour
+              </button>
+            </div>
+          </div>
+
+          <div class="setting-card">
+            <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
             </svg>
             <div class="setting-content">
@@ -304,6 +322,7 @@ function initAboutSection() {
     // Add event listeners for update settings
     const updateEnabledCheckbox = document.getElementById('update-check-enabled');
     const manualCheckButton = document.getElementById('manual-update-check');
+    const restartOnboardingBtn = document.getElementById('restart-onboarding-btn');
 
     if (updateEnabledCheckbox && window.updateChecker) {
       updateEnabledCheckbox.addEventListener('change', function() {
@@ -322,6 +341,19 @@ function initAboutSection() {
         this.textContent = 'Check for Updates Now';
         // Refresh the about section after manual check
         setTimeout(() => initAboutSection(), 100);
+      });
+    }
+
+    if (restartOnboardingBtn && window.onboardingTour) {
+      restartOnboardingBtn.addEventListener('click', function() {
+        // Close settings modal first
+        const settingsModal = document.getElementById('settings-modal');
+        if (settingsModal) {
+          settingsModal.style.display = 'none';
+        }
+        // Reset and start onboarding tour
+        window.onboardingTour.reset();
+        window.onboardingTour.start();
       });
     }
   }
