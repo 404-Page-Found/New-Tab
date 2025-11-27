@@ -54,23 +54,25 @@
           </nav>
           <div class="settings-content">
             <section class="settings-section" data-section="general">
-              <label
-                style="
-                  display: flex;
-                  align-items: center;
-                  gap: 8px;
-                  cursor: pointer;
-                "
-                onclick="document.getElementById('open-new-tab-setting').click(); return false;"
-              >
-                <input
-                  type="checkbox"
-                  id="open-new-tab-setting"
-                  style="cursor: pointer"
-                  onclick="event.stopPropagation();"
-                />
-                Open apps in a new tab
-              </label>
+              <div class="general-setting-group">
+                <h4>General</h4>
+                <p>Configure basic app behavior</p>
+                <div class="general-options">
+                  <div class="general-option">
+                    <div class="setting-card">
+                      <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15,3 21,3 21,9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                      <div class="setting-content">
+                        <label for="open-new-tab-setting">Open apps in a new tab</label>
+                        <input type="checkbox" id="open-new-tab-setting" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </section>
             <section class="settings-section" data-section="background" style="display: none">
               <div class="bg-thumbnails" id="bg-thumbnails"></div>

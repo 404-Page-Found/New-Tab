@@ -652,6 +652,45 @@ body {
   line-height: 1.4;
 }
 
+/* General Settings */
+.general-setting-group {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.general-setting-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.general-setting-group h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.general-setting-group p {
+  margin: 0 0 16px 0;
+  font-size: 12px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.4;
+}
+
+.general-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.general-option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 /* Modern Curvature Options */
 .curvature-options {
   display: grid;
