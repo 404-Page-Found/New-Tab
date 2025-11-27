@@ -375,8 +375,8 @@ body {
   border-radius: 16px;
   padding: 0;
   min-width: 280px;
-  max-width: 450px;
-  width: 450px;
+  max-width: 620px;
+  width: 620px;
   min-height: auto;
   max-height: var(--overlay-max-height);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
@@ -469,8 +469,8 @@ body {
   margin-bottom: 16px;
 }
 .bg-thumb {
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   border-radius: 8px;
   object-fit: cover;
   border: 2px solid transparent;
@@ -1199,12 +1199,12 @@ body.light-theme .settings-section select option {
 }
 
 body.light-theme .settings-section button {
-  background: rgba(239, 68, 68, 0.9);
+  background: rgba(255, 0, 0, 0.9);
   color: white;
 }
 
 body.light-theme .settings-section button:hover {
-  background: #dc2626;
+  background: #ff0000;
   color: white;
 }
 
@@ -1561,7 +1561,7 @@ body.light-theme .copy-notification {
 .setting-card button {
   padding: 8px 16px;
   border-radius: 8px;
-  background: rgba(239, 68, 68, 0.8);
+  background: rgba(255, 0, 0, 0.8);
   color: white;
   border: none;
   font-size: 12px;
@@ -1569,30 +1569,30 @@ body.light-theme .copy-notification {
   cursor: pointer;
   transition: all 0.2s ease;
   width: fit-content;
-  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.2);
+  box-shadow: 0 2px 6px rgba(255, 0, 0, 0.2);
 }
 
 .setting-card button:hover {
-  background: rgba(239, 68, 68, 1);
+  background: rgba(255, 0, 0, 1);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
 }
 
 .reset-card {
-  background: rgba(239, 68, 68, 0.05);
+  background: rgba(255, 0, 0, 0.05);
 }
 
 .reset-card:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.4);
 }
 
 .reset-card .setting-icon {
-  stroke: rgba(239, 68, 68, 0.8);
+  stroke: rgba(255, 0, 0, 0.8);
 }
 
 .reset-card:hover .setting-icon {
-  stroke: #dc2626;
+  stroke: #ff0000;
 }
 
 /* Light theme adjustments for date settings */
@@ -1650,20 +1650,20 @@ body.light-theme .setting-content input[type="range"] {
 }
 
 body.light-theme .reset-card {
-  background: rgba(239, 68, 68, 0.05);
+  background: rgba(255, 0, 0, 0.05);
 }
 
 body.light-theme .reset-card:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.2);
+  background: rgba(255, 0, 0, 0.1);
+  border-color: rgba(255, 0, 0, 0.2);
 }
 
 body.light-theme .setting-card button {
-  background: rgba(239, 68, 68, 0.9);
+  background: rgba(255, 0, 0, 0.9);
 }
 
 body.light-theme .setting-card button:hover {
-  background: #dc2626;
+  background: #ff0000;
 }
 
 
