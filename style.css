@@ -299,11 +299,14 @@ body {
   background: rgba(33, 150, 243, 0.2);
 }
 
-.app-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+.app-grid{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 20px;
   padding: 20px;
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
 }
 
 .app-icon {
