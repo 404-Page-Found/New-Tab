@@ -1,19 +1,19 @@
 #motto-container {
   position: fixed;
   bottom: 45px;
-  left: 0;
-  right: 0;
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: min(800px, calc(100% - 40px)); 
   text-align: center;
+
   color: #666;
   font-size: 0.95em;
   padding: 5px 10px;
   background: rgba(255, 255, 255, 0.7);
   z-index: 1999;
   border-radius: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-  left: 50%;
-  transform: translateX(-50%);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   user-select: none;
 }
