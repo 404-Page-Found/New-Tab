@@ -339,6 +339,11 @@ function updateDynamicTranslations() {
   if (window.renderCustomApps) {
     window.renderCustomApps();
   }
+
+  // Update date display with new language
+  if (window.updateTime) {
+    window.updateTime();
+  }
 }
 
 // Get translated text

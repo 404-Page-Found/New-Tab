@@ -10,14 +10,19 @@ function updateTime() {
   const minutes = String(now.getMinutes()).padStart(2, "0");
   timeElement.textContent = `${hours}:${minutes}`;
 
-  // Update date
+  // Update date - use current language for locale
   const options = { weekday: "long", month: "long", day: "numeric" };
-  dateElement.textContent = now.toLocaleDateString("en-US", options);
+  const currentLang = window.i18n ? window.i18n.currentLanguage() : 'en';
+  const locale = currentLang === 'zh' ? 'zh-CN' : 'en-US';
+  dateElement.textContent = now.toLocaleDateString(locale, options);
 }
 
 // Update time immediately and then every minute
 updateTime();
 setInterval(updateTime, 60000);
+
+// Make updateTime globally accessible for language switching
+window.updateTime = updateTime;
 
 // Display a motto that stays the same for each day
 function displayDailyMotto() {
