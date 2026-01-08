@@ -15,7 +15,7 @@
       <div id="date" class="date"></div>
       <div class="search-bar">
         <div class="search-engines"></div>
-        <input type="text" placeholder="Search or enter website" autofocus />
+        <input type="text" placeholder="{{searchPlaceholder}}" data-i18n="searchPlaceholder" autofocus />
       </div>
 
   <div class="app-grid" id="app-grid">
@@ -26,14 +26,14 @@
               <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
           </div>
-          <span class="app-name">New</span>
+          <span class="app-name" data-i18n="newApp">New</span>
         </a>
       </div>
 
       <!-- Todo List Section -->
       <div class="todo-section">
         <div class="todo-header">
-          <h3 class="todo-title">Todo List</h3>
+          <h3 class="todo-title" data-i18n="todoList">Todo List</h3>
           <div class="todo-stats">
             <div class="progress-ring">
               <svg class="progress-ring-circle" width="40" height="40">
@@ -48,7 +48,7 @@
 
         <div class="todo-controls">
           <div class="todo-input-container">
-            <input type="text" id="todo-input" placeholder="Add a new todo..." maxlength="200" />
+            <input type="text" id="todo-input" placeholder="{{addTodoPlaceholder}}" data-i18n="addTodoPlaceholder" maxlength="200" />
             <div class="custom-date-picker">
               <button type="button" id="date-picker-trigger" class="date-picker-trigger" title="Select Due Date">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -135,21 +135,24 @@
       <div>
   <div class="settings-body">
           <nav class="settings-menu">
-            <button class="settings-menu-item selected" data-section="general">
+            <button class="settings-menu-item selected" data-section="general" data-i18n="general">
               General
             </button>
-            <button class="settings-menu-item" data-section="background">
+            <button class="settings-menu-item" data-section="background" data-i18n="background">
               Background
             </button>
-            <button class="settings-menu-item" data-section="apps">Apps</button>
-            <button class="settings-menu-item" data-section="clock">
+            <button class="settings-menu-item" data-section="apps" data-i18n="apps">Apps</button>
+            <button class="settings-menu-item" data-section="clock" data-i18n="clock">
               Clock
             </button>
-            <button class="settings-menu-item" data-section="date">Date</button>
-            <button class="settings-menu-item" data-section="themes">
+            <button class="settings-menu-item" data-section="date" data-i18n="date">Date</button>
+            <button class="settings-menu-item" data-section="themes" data-i18n="themes">
               Themes
             </button>
-            <button class="settings-menu-item" data-section="about">About</button>
+            <button class="settings-menu-item" data-section="language" data-i18n="language">
+              Language
+            </button>
+            <button class="settings-menu-item" data-section="about" data-i18n="about">About</button>
           </nav>
           <div class="settings-content">
             <section class="settings-section" data-section="general">
@@ -412,6 +415,22 @@
                 </div>
               </div>
             </section>
+            <section class="settings-section" data-section="language" style="display: none">
+              <div class="language-setting-group">
+                <h4>Language</h4>
+                <p>Choose your preferred language</p>
+                <div class="language-options">
+                  <label class="language-option modern">
+                    <input type="radio" name="language" value="en" checked />
+                    <span class="label">English</span>
+                  </label>
+                  <label class="language-option modern">
+                    <input type="radio" name="language" value="zh" />
+                    <span class="label">中文 (Chinese)</span>
+                  </label>
+                </div>
+              </div>
+            </section>
             <section class="settings-section" data-section="about" style="display: none"></section>
           </div>
         </div>
@@ -439,6 +458,7 @@
 <script src="js/drag-drop.js"></script>
 <script src="js/add-app.js"></script>
 <script src="js/color-picker.js"></script>
+<script src="js/languages.js"></script>
 <script src="js/settings.js"></script>
 <script src="js/context-menu.js"></script>
 <script src="js/update-checker.js"></script>

@@ -159,12 +159,39 @@ function applyTheme() {
   if (lightRadio) lightRadio.checked = theme === "light";
 }
 
+// Language
+function loadLanguageSetting() {
+  return localStorage.getItem("language") || "en";
+}
+function applyLanguageSetting() {
+  const lang = loadLanguageSetting();
+  // Update radio buttons
+  const enRadio = document.querySelector('input[name="language"][value="en"]');
+  const zhRadio = document.querySelector('input[name="language"][value="zh"]');
+  if (enRadio) enRadio.checked = lang === "en";
+  if (zhRadio) zhRadio.checked = lang === "zh";
+
+  // Apply language if i18n is available
+  if (window.i18n && window.i18n.applyLanguage) {
+    window.i18n.applyLanguage(lang);
+  }
+}
+
 // Event listeners for theme
 document.addEventListener("change", function (e) {
   if (e.target.name === "theme") {
     const selectedTheme = e.target.value;
     localStorage.setItem("theme", selectedTheme);
     applyTheme();
+  }
+});
+
+// Event listeners for language
+document.addEventListener("change", function (e) {
+  if (e.target.name === "language") {
+    const selectedLanguage = e.target.value;
+    localStorage.setItem("language", selectedLanguage);
+    applyLanguageSetting();
   }
 });
 
@@ -231,8 +258,8 @@ function initAboutSection() {
     const currentVersion = window.CURRENT_VERSION;
     aboutSection.innerHTML = `
       <div class="about-setting-group">
-        <h4>About New-Tab</h4>
-        <p>Customize your new tab experience with beautiful backgrounds, apps, and settings</p>
+        <h4 data-i18n="aboutSettings">${window.i18n ? window.i18n.t('aboutSettings') : 'About New-Tab'}</h4>
+        <p data-i18n="aboutSettingsDesc">${window.i18n ? window.i18n.t('aboutSettingsDesc') : 'Customize your new tab experience with beautiful backgrounds, apps, and settings'}</p>
 
         <div class="about-cards">
           <div class="setting-card">
@@ -365,6 +392,7 @@ function initSettings() {
   applyClockStyle();
   applyDateStyle();
   applyTheme();
+  applyLanguageSetting();
   initAboutSection();
 
   // Initialize modern color pickers
