@@ -157,8 +157,8 @@
           <div class="settings-content">
             <section class="settings-section" data-section="general">
               <div class="general-setting-group">
-                <h4>General</h4>
-                <p>Configure basic app behavior</p>
+                <h4 data-i18n="generalSettings">General</h4>
+                <p data-i18n="generalSettingsDesc">Configure basic app behavior</p>
                 <div class="general-options">
                   <div class="general-option">
                     <div class="setting-card">
@@ -168,7 +168,7 @@
                         <line x1="10" y1="14" x2="21" y2="3"></line>
                       </svg>
                       <div class="setting-content">
-                        <label for="open-new-tab-setting">Open apps in a new tab</label>
+                        <label for="open-new-tab-setting" data-i18n="openNewTab">Open apps in a new tab</label>
                         <input type="checkbox" id="open-new-tab-setting" />
                       </div>
                     </div>
@@ -181,36 +181,36 @@
             </section>
             <section class="settings-section" data-section="apps" style="display: none">
               <div class="apps-setting-group">
-                <h4>Icon Style</h4>
-                <p>Choose the shape and appearance of your app icons</p>
+                <h4 data-i18n="iconStyle">Icon Style</h4>
+                <p data-i18n="iconStyleDesc">Choose the shape and appearance of your app icons</p>
 
                 <div class="curvature-options">
                   <label class="curvature-option modern" data-value="8">
                     <div class="preview-icon"></div>
                     <input type="radio" name="curvature" value="8" />
-                    <span class="label">Minimal</span>
+                    <span class="label" data-i18n="minimal">Minimal</span>
                   </label>
                   <label class="curvature-option modern" data-value="15">
                     <div class="preview-icon"></div>
                     <input type="radio" name="curvature" value="15" />
-                    <span class="label">Square</span>
+                    <span class="label" data-i18n="square">Square</span>
                   </label>
                   <label class="curvature-option modern" data-value="20">
                     <div class="preview-icon"></div>
                     <input type="radio" name="curvature" value="20" />
-                    <span class="label">Rounded</span>
+                    <span class="label" data-i18n="rounded">Rounded</span>
                   </label>
                   <label class="curvature-option modern" data-value="50">
                     <div class="preview-icon"></div>
                     <input type="radio" name="curvature" value="50" />
-                    <span class="label">Circle</span>
+                    <span class="label" data-i18n="circle">Circle</span>
                   </label>
                 </div>
               </div>
 
               <div class="apps-setting-group">
-                <h4>Icon Size</h4>
-                <p>Adjust the size of your app icons</p>
+                <h4 data-i18n="iconSize">Icon Size</h4>
+                <p data-i18n="iconSizeDesc">Adjust the size of your app icons</p>
                 <div class="icon-size-options">
                   <div class="icon-size-option">
                     <div class="setting-card">
@@ -226,7 +226,7 @@
                         <path d="m5.64 5.64 4.24 4.24"></path>
                       </svg>
                       <div class="setting-content">
-                        <label for="icon-size-picker">Size</label>
+                        <label for="icon-size-picker" data-i18n="size">Size</label>
                         <input type="range" id="icon-size-picker" min="40" max="100" value="60" step="1" />
                       </div>
                     </div>
@@ -240,7 +240,7 @@
                         <path d="M3 21v-5h5"></path>
                       </svg>
                       <div class="setting-content">
-                        <button id="icon-size-reset">Reset Size</button>
+                        <button id="icon-size-reset" data-i18n="resetSize">Reset Size</button>
                       </div>
                     </div>
                   </div>
@@ -253,8 +253,8 @@
             </section>
             <section class="settings-section" data-section="clock" style="display: none">
               <div class="clock-setting-group">
-                <h4>Clock Style</h4>
-                <p>Customize the appearance of your clock display</p>
+                <h4 data-i18n="clockSettings">Clock Style</h4>
+                <p data-i18n="clockSettingsDesc">Customize the appearance of your clock display</p>
                 <div class="clock-options">
                   <div class="clock-option">
                     <div class="setting-card">
@@ -262,7 +262,7 @@
                         <path d="m2 12 5.25 5L13 7l3.5 3.5L19.75 12"></path>
                       </svg>
                       <div class="setting-content">
-                        <label>Color</label>
+                        <label data-i18n="color">Color</label>
                         <input type="color" id="clock-color-picker" />
                       </div>
                     </div>
@@ -277,7 +277,7 @@
                         <path d="M15 11v5"></path>
                       </svg>
                       <div class="setting-content">
-                        <label for="clock-font-picker">Font</label>
+                        <label for="clock-font-picker" data-i18n="font">Font</label>
                         <select id="clock-font-picker">
                           <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Default</option>
                           <option value="'Arial', sans-serif">Arial</option>
@@ -303,7 +303,7 @@
                         <path d="m5.64 5.64 4.24 4.24"></path>
                       </svg>
                       <div class="setting-content">
-                        <label for="clock-size-picker">Size</label>
+                        <label for="clock-size-picker" data-i18n="size">Size</label>
                         <input type="range" id="clock-size-picker" min="20" max="200" value="80" step="1" />
                       </div>
                     </div>
@@ -317,7 +317,7 @@
                         <path d="M3 21v-5h5"></path>
                       </svg>
                       <div class="setting-content">
-                        <button id="clock-style-reset">Reset Style</button>
+                        <button id="clock-style-reset" data-i18n="resetStyle">Reset Style</button>
                       </div>
                     </div>
                   </div>
@@ -326,8 +326,8 @@
             </section>
             <section class="settings-section" data-section="date" style="display: none">
               <div class="date-setting-group">
-                <h4>Date Style</h4>
-                <p>Customize the appearance of your date display</p>
+                <h4 data-i18n="dateSettings">Date Style</h4>
+                <p data-i18n="dateSettingsDesc">Customize the appearance of your date display</p>
                 <div class="date-options">
                   <div class="date-option">
                     <div class="setting-card">
@@ -335,7 +335,7 @@
                         <path d="m2 12 5.25 5L13 7l3.5 3.5L19.75 12"></path>
                       </svg>
                       <div class="setting-content">
-                        <label>Color</label>
+                        <label data-i18n="color">Color</label>
                         <input type="color" id="date-color-picker" />
                       </div>
                     </div>
@@ -350,7 +350,7 @@
                         <path d="M15 11v5"></path>
                       </svg>
                       <div class="setting-content">
-                        <label for="date-font-picker">Font</label>
+                        <label for="date-font-picker" data-i18n="font">Font</label>
                         <select id="date-font-picker">
                           <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Default</option>
                           <option value="'Arial', sans-serif">Arial</option>
@@ -376,7 +376,7 @@
                         <path d="m5.64 5.64 4.24 4.24"></path>
                       </svg>
                       <div class="setting-content">
-                        <label for="date-size-picker">Size</label>
+                        <label for="date-size-picker" data-i18n="size">Size</label>
                         <input type="range" id="date-size-picker" min="10" max="80" value="24" step="1" />
                       </div>
                     </div>
@@ -390,7 +390,7 @@
                         <path d="M3 21v-5h5"></path>
                       </svg>
                       <div class="setting-content">
-                        <button id="date-style-reset">Reset Style</button>
+                        <button id="date-style-reset" data-i18n="resetStyle">Reset Style</button>
                       </div>
                     </div>
                   </div>
@@ -399,34 +399,34 @@
             </section>
             <section class="settings-section" data-section="themes" style="display: none">
               <div class="theme-setting-group">
-                <h4>Theme</h4>
-                <p>Choose your preferred interface theme</p>
+                <h4 data-i18n="themeSettings">Theme</h4>
+                <p data-i18n="themeSettingsDesc">Choose your preferred interface theme</p>
                 <div class="theme-options">
                   <label class="theme-option modern">
                     <div class="preview-icon dark"></div>
                     <input type="radio" name="theme" value="dark" checked />
-                    <span class="label">Dark</span>
+                    <span class="label" data-i18n="dark">Dark</span>
                   </label>
                   <label class="theme-option modern">
                     <div class="preview-icon light"></div>
                     <input type="radio" name="theme" value="light" />
-                    <span class="label">Light</span>
+                    <span class="label" data-i18n="light">Light</span>
                   </label>
                 </div>
               </div>
             </section>
             <section class="settings-section" data-section="language" style="display: none">
               <div class="language-setting-group">
-                <h4>Language</h4>
-                <p>Choose your preferred language</p>
+                <h4 data-i18n="languageSettings">Language</h4>
+                <p data-i18n="languageSettingsDesc">Choose your preferred language</p>
                 <div class="language-options">
                   <label class="language-option modern">
                     <input type="radio" name="language" value="en" checked />
-                    <span class="label">English</span>
+                    <span class="label" data-i18n="english">English</span>
                   </label>
                   <label class="language-option modern">
                     <input type="radio" name="language" value="zh" />
-                    <span class="label">中文 (Chinese)</span>
+                    <span class="label" data-i18n="chinese">中文 (Chinese)</span>
                   </label>
                 </div>
               </div>

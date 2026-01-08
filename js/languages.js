@@ -5,6 +5,8 @@ const translations = {
     // General UI
     searchPlaceholder: "Search or enter website",
     newApp: "New",
+    feedback: "Feedback",
+    settings: "Settings",
     todoList: "Todo List",
     addTodoPlaceholder: "Add a new todo...",
     dueDate: "Due Date",
@@ -129,6 +131,8 @@ const translations = {
     // General UI
     searchPlaceholder: "搜索或输入网站",
     newApp: "新建",
+    feedback: "反馈",
+    settings: "设置",
     todoList: "待办清单",
     addTodoPlaceholder: "添加新待办事项...",
     dueDate: "到期日期",
@@ -329,6 +333,11 @@ function updateDynamicTranslations() {
   if (selectedCount) {
     const count = selectedCount.textContent.split(' ')[0];
     selectedCount.textContent = `${count} ${translations[currentLanguage].selectedCount}`;
+  }
+
+  // Re-render apps to update default app names
+  if (window.renderCustomApps) {
+    window.renderCustomApps();
   }
 }
 
