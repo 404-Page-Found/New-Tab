@@ -30,11 +30,15 @@ function displayDailyMotto() {
     const now = new Date();
     // Use year, month, and day to get a unique number for the day
     const daySeed = now.getFullYear() * 10000 + (now.getMonth() + 1) * 100 + now.getDate();
+    // Get current language
+    const currentLang = window.i18n ? window.i18n.currentLanguage() : 'en';
+    // Get mottos for current language, fallback to English
+    const currentMottos = mottos[currentLang] || mottos.en;
     // Deterministically pick a motto for the day
-    const index = daySeed % motto.length;
+    const index = daySeed % currentMottos.length;
     const mottoText = document.getElementById("motto-text");
     if (mottoText) {
-      mottoText.textContent = motto[index];
+      mottoText.textContent = currentMottos[index];
       // Add fade-in effect
       mottoText.style.opacity = "0";
       setTimeout(() => {
@@ -54,9 +58,13 @@ function setupRefreshMotto() {
     refreshBtn.addEventListener("click", () => {
       const mottoText = document.getElementById("motto-text");
       if (mottoText) {
+        // Get current language
+        const currentLang = window.i18n ? window.i18n.currentLanguage() : 'en';
+        // Get mottos for current language, fallback to English
+        const currentMottos = mottos[currentLang] || mottos.en;
         // Pick a random motto
-        const randomIndex = Math.floor(Math.random() * motto.length);
-        mottoText.textContent = motto[randomIndex];
+        const randomIndex = Math.floor(Math.random() * currentMottos.length);
+        mottoText.textContent = currentMottos[randomIndex];
         // Add refresh animation
         mottoText.style.opacity = "0";
         setTimeout(() => {
@@ -109,6 +117,9 @@ function setupCopyMotto() {
     });
   }
 }
+
+// Make displayDailyMotto globally accessible for language switching
+window.displayDailyMotto = displayDailyMotto;
 
 // Set the motto and button functionality after the page has finished loading
 document.addEventListener("DOMContentLoaded", () => {

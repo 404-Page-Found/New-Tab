@@ -366,6 +366,11 @@ function updateDynamicTranslations() {
   if (window.initSearchEngine) {
     window.initSearchEngine();
   }
+
+  // Update motto to match new language
+  if (window.displayDailyMotto) {
+    window.displayDailyMotto();
+  }
 }
 
 // Get translated text
