@@ -11,6 +11,8 @@ const translations = {
     addTodoPlaceholder: "Add a new todo...",
     dueDate: "Due Date",
     addTodo: "Add Todo",
+    bing: "Bing",
+    google: "Google",
     selectAll: "Select All",
     complete: "Complete",
     delete: "Delete",
@@ -141,6 +143,8 @@ const translations = {
     addTodoPlaceholder: "添加新待办事项...",
     dueDate: "到期日期",
     addTodo: "添加待办",
+    bing: "必应",
+    google: "谷歌",
     selectAll: "全选",
     complete: "完成",
     delete: "删除",
@@ -356,6 +360,11 @@ function updateDynamicTranslations() {
   // Re-render calendar if it's open
   if (window.customDatePicker && window.customDatePicker.renderCalendar) {
     window.customDatePicker.renderCalendar();
+  }
+
+  // Update search engine names
+  if (window.initSearchEngine) {
+    window.initSearchEngine();
   }
 }
 
