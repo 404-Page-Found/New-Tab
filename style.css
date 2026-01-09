@@ -2252,6 +2252,148 @@ body.light-theme .about-cards .setting-card a:hover {
   transform: none;
 }
 
+/* Modern Language Options */
+.language-setting-group {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.language-setting-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.language-setting-group h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.language-setting-group p {
+  margin: 0 0 16px 0;
+  font-size: 12px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.4;
+}
+
+.language-options {
+  display: flex;
+  gap: 16px;
+}
+
+.language-option.modern {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 20px 16px;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  flex: 1;
+  min-height: 100px;
+  text-align: center;
+}
+
+.language-option.modern:hover {
+  background: rgba(33, 150, 243, 0.05);
+  border-color: rgba(33, 150, 243, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(33, 150, 243, 0.2);
+}
+
+.language-option.modern input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.language-option.modern input[type="radio"]:checked ~ .language-preview {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
+
+.language-option.modern input[type="radio"]:checked ~ .label {
+  color: #2196f3;
+  font-weight: 600;
+}
+
+.language-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(107, 114, 128, 0.3);
+  transition: all 0.2s ease;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.language-flag {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.language-code {
+  font-size: 10px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.language-option.modern .label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--settings-text-color);
+  text-align: center;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+}
+
+/* Light theme adjustments for language options */
+body.light-theme .language-setting-group {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .language-setting-group h4,
+body.light-theme .language-setting-group p {
+  color: rgba(55, 65, 81, 0.9);
+}
+
+body.light-theme .language-setting-group p {
+  color: rgba(107, 114, 128, 0.8);
+}
+
+body.light-theme .language-option.modern {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+body.light-theme .language-option.modern:hover {
+  background: rgba(33, 150, 243, 0.05);
+  border-color: rgba(33, 150, 243, 0.2);
+}
+
+body.light-theme .language-preview {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(107, 114, 128, 0.4);
+}
+
+body.light-theme .language-code {
+  color: #666;
+}
+
 /* Light Theme Adjustments for Update Features */
 body.light-theme .update-notification {
   background: rgba(255, 255, 255, 0.95);

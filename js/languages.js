@@ -80,7 +80,7 @@ const translations = {
     languageSettings: "Language",
     languageSettingsDesc: "Choose your preferred language",
     english: "English",
-    chinese: "中文 (Chinese)",
+    chinese: "中文",
 
     // About settings
     aboutSettings: "About New-Tab",
@@ -212,7 +212,7 @@ const translations = {
     languageSettings: "语言",
     languageSettingsDesc: "选择您喜欢的语言",
     english: "English",
-    chinese: "中文 (Chinese)",
+    chinese: "中文",
 
     // About settings
     aboutSettings: "关于 New-Tab",
