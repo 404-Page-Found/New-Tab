@@ -124,7 +124,11 @@ const translations = {
     september: "September",
     october: "October",
     november: "November",
-    december: "December"
+    december: "December",
+
+    // Todo date picker
+    clearDate: "Clear",
+    todayDate: "Today"
   },
 
   zh: {
@@ -250,7 +254,11 @@ const translations = {
     september: "九月",
     october: "十月",
     november: "十一月",
-    december: "十二月"
+    december: "十二月",
+
+    // Todo date picker
+    clearDate: "清除",
+    todayDate: "今天"
   }
 };
 
@@ -343,6 +351,11 @@ function updateDynamicTranslations() {
   // Update date display with new language
   if (window.updateTime) {
     window.updateTime();
+  }
+
+  // Re-render calendar if it's open
+  if (window.customDatePicker && window.customDatePicker.renderCalendar) {
+    window.customDatePicker.renderCalendar();
   }
 }
 

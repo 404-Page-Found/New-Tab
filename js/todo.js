@@ -32,7 +32,9 @@ function generateTodoId() {
 function formatDate(dateString) {
   if (!dateString) return '';
   const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', {
+  const currentLang = window.i18n ? window.i18n.currentLanguage() : 'en';
+  const locale = currentLang === 'zh' ? 'zh-CN' : 'en-US';
+  return date.toLocaleDateString(locale, {
     month: 'short',
     day: 'numeric',
     year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
@@ -577,7 +579,7 @@ class CustomDatePicker {
 
   updateTriggerDisplay() {
     if (this.selectedDateText) {
-      this.selectedDateText.textContent = this.selectedDate ? this.formatDateForDisplay(this.selectedDate) : 'Due Date';
+      this.selectedDateText.textContent = this.selectedDate ? this.formatDateForDisplay(this.selectedDate) : (window.i18n ? window.i18n.t('dueDate') : 'Due Date');
     }
     if (this.trigger) {
       this.trigger.classList.toggle('selected', !!this.selectedDate);
@@ -589,7 +591,9 @@ class CustomDatePicker {
   }
 
   formatDateForDisplay(date) {
-    return date.toLocaleDateString('en-US', {
+    const currentLang = window.i18n ? window.i18n.currentLanguage() : 'en';
+    const locale = currentLang === 'zh' ? 'zh-CN' : 'en-US';
+    return date.toLocaleDateString(locale, {
       month: 'short',
       day: 'numeric',
       year: date.getFullYear() !== new Date().getFullYear() ? 'numeric' : undefined
@@ -600,9 +604,11 @@ class CustomDatePicker {
     if (!this.monthElement || !this.yearElement || !this.daysContainer) return;
 
     // Update month/year display
-    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                       'July', 'August', 'September', 'October', 'November', 'December'];
-    this.monthElement.textContent = monthNames[this.currentDate.getMonth()];
+    const monthIndex = this.currentDate.getMonth();
+    const monthKey = ['january', 'february', 'march', 'april', 'may', 'june',
+                      'july', 'august', 'september', 'october', 'november', 'december'][monthIndex];
+    const monthName = window.i18n ? window.i18n.t(monthKey) : monthKey;
+    this.monthElement.textContent = monthName;
     this.yearElement.textContent = this.currentDate.getFullYear();
 
     // Clear previous days
