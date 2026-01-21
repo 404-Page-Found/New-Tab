@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>New-Tab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="motto.js"></script>
+  <script src="backgrounds.js"></script>
+  <script src="js/version.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div id="clock" class="clock"></div>
+    <div id="date" class="date"></div>
+    <div class="search-bar">
+      <div class="search-engines"></div>
+      <input type="text" placeholder="Search or enter website" autofocus />
+    </div>
+
+    <div class="app-grid" id="app-grid">
+      <a href="#" class="app-icon default-app" id="new-app" draggable="false">
+        <div class="icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </div>
+        <span class="app-name">New</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div id="settings-modal">
+    <div>
+      <div class="settings-body">
+        <nav class="settings-menu">
+          <button class="settings-menu-item selected" data-section="general">
+            General
+          </button>
+          <button class="settings-menu-item" data-section="background">
+            Background
+          </button>
+          <button class="settings-menu-item" data-section="apps">Apps</button>
+          <button class="settings-menu-item" data-section="clock">
+            Clock
+          </button>
+          <button class="settings-menu-item" data-section="date">Date</button>
+          <button class="settings-menu-item" data-section="themes">
+            Themes
+          </button>
+          <button class="settings-menu-item" data-section="about">About</button>
+        </nav>
+        <div class="settings-content">
+          <section class="settings-section" data-section="general">
+            <label style="
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  cursor: pointer;
+                " onclick="document.getElementById('open-new-tab-setting').click(); return false;">
+              <input type="checkbox" id="open-new-tab-setting" style="cursor: pointer"
+                onclick="event.stopPropagation();" />
+              Open apps in a new tab
+            </label>
+          </section>
+          <section class="settings-section" data-section="background" style="display: none">
+            <div class="bg-thumbnails" id="bg-thumbnails"></div>
+          </section>
+          <section class="settings-section" data-section="apps" style="display: none">
+            <div class="apps-setting-group">
+              <h4>Icon Style</h4>
+              <p>Choose the shape and appearance of your app icons</p>
+
+              <div class="curvature-options">
+                <label class="curvature-option modern" data-value="8">
+                  <div class="preview-icon"></div>
+                  <input type="radio" name="curvature" value="8" />
+                  <span class="label">Minimal</span>
+                </label>
+                <label class="curvature-option modern" data-value="15">
+                  <div class="preview-icon"></div>
+                  <input type="radio" name="curvature" value="15" />
+                  <span class="label">Square</span>
+                </label>
+                <label class="curvature-option modern" data-value="20">
+                  <div class="preview-icon"></div>
+                  <input type="radio" name="curvature" value="20" />
+                  <span class="label">Rounded</span>
+                </label>
+                <label class="curvature-option modern" data-value="50">
+                  <div class="preview-icon"></div>
+                  <input type="radio" name="curvature" value="50" />
+                  <span class="label">Circle</span>
+                </label>
+              </div>
+            </div>
+
+
+
+
+          </section>
+          <section class="settings-section" data-section="clock" style="display: none">
+            <div class="clock-setting-group">
+              <h4>Clock Style</h4>
+              <p>Customize the appearance of your clock display</p>
+              <div class="clock-options">
+                <div class="clock-option">
+                  <div class="setting-card">
+                    <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="m2 12 5.25 5L13 7l3.5 3.5L19.75 12"></path>
+                    </svg>
+                    <div class="setting-content">
+                      <label>Color</label>
+                      <input type="color" id="clock-color-picker" />
+                    </div>
+                  </div>
+                </div>
+                <div class="clock-option">
+                  <div class="setting-card">
+                    <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 7V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3"></path>
+                      <path d="M4 7h16l-1 12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 7z"></path>
+                      <path d="M9 11v5"></path>
+                      <path d="M12 11v5"></path>
+                      <path d="M15 11v5"></path>
+                    </svg>
+                    <div class="setting-content">
+                      <label for="clock-font-picker">Font</label>
+                      <select id="clock-font-picker">
+                        <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Default
+                        </option>
+                        <option value="'Arial', sans-serif">Arial</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                        <option value="'Georgia', serif">Georgia</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="clock-option">
+                  <div class="setting-card">
+                    <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="3"></circle>
+                      <path d="m12 1 0 6"></path>
+                      <path d="m12 17 0 6"></path>
+                      <path d="m21 12-6 0"></path>
+                      <path d="m3 12 6 0"></path>
+                      <path d="m18.36 5.64-4.24 4.24"></path>
+                      <path d="m5.64 18.36 4.24-4.24"></path>
+                      <path d="m18.36 18.36-4.24-4.24"></path>
+                      <path d="m5.64 5.64 4.24 4.24"></path>
+                    </svg>
+                    <div class="setting-content">
+                      <label for="clock-size-picker">Size</label>
+                      <input type="range" id="clock-size-picker" min="20" max="200" value="80" step="1" />
+                    </div>
+                  </div>
+                </div>
+                <div class="clock-option reset-option">
+                  <div class="setting-card reset-card">
+                    <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                      <path d="M21 3v5h-5"></path>
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                      <path d="M3 21v-5h5"></path>
+                    </svg>
+                    <div class="setting-content">
+                      <button id="clock-style-reset">Reset Style</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="settings-section" data-section="date" style="display: none">
+            <div class="date-setting-group">
+              <h4>Date Style</h4>
+              <p>Customize the appearance of your date display</p>
+              <div class="date-options">
+                <div class="date-option">
+                  <div class="setting-card">
+                    <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="m2 12 5.25 5L13 7l3.5 3.5L19.75 12"></path>
+                    </svg>
+                    <div class="setting-content">
+                      <label>Color</label>
+                      <input type="color" id="date-color-picker" />
+                    </div>
+                  </div>
+                </div>
+                <div class="date-option">
+                  <div class="setting-card">
+                    <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M4 7V4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v3"></path>
+                      <path d="M4 7h16l-1 12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 7z"></path>
+                      <path d="M9 11v5"></path>
+                      <path d="M12 11v5"></path>
+                      <path d="M15 11v5"></path>
+                    </svg>
+                    <div class="setting-content">
+                      <label for="date-font-picker">Font</label>
+                      <select id="date-font-picker">
+                        <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">Default
+                        </option>
+                        <option value="'Arial', sans-serif">Arial</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="'Comic Sans MS', cursive">Comic Sans MS</option>
+                        <option value="'Georgia', serif">Georgia</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="date-option">
+                  <div class="setting-card">
+                    <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="3"></circle>
+                      <path d="m12 1 0 6"></path>
+                      <path d="m12 17 0 6"></path>
+                      <path d="m21 12-6 0"></path>
+                      <path d="m3 12 6 0"></path>
+                      <path d="m18.36 5.64-4.24 4.24"></path>
+                      <path d="m5.64 18.36 4.24-4.24"></path>
+                      <path d="m18.36 18.36-4.24-4.24"></path>
+                      <path d="m5.64 5.64 4.24 4.24"></path>
+                    </svg>
+                    <div class="setting-content">
+                      <label for="date-size-picker">Size</label>
+                      <input type="range" id="date-size-picker" min="10" max="80" value="24" step="1" />
+                    </div>
+                  </div>
+                </div>
+                <div class="date-option reset-option">
+                  <div class="setting-card reset-card">
+                    <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                      <path d="M21 3v5h-5"></path>
+                      <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                      <path d="M3 21v-5h5"></path>
+                    </svg>
+                    <div class="setting-content">
+                      <button id="date-style-reset">Reset Style</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section class="settings-section" data-section="themes" style="display: none">
+            <div class="theme-setting-group">
+              <h4>Theme</h4>
+              <p>Choose your preferred interface theme</p>
+              <div class="theme-options">
+                <label class="theme-option modern">
+                  <div class="preview-icon dark"></div>
+                  <input type="radio" name="theme" value="dark" checked />
+                  <span class="label">Dark</span>
+                </label>
+                <label class="theme-option modern">
+                  <div class="preview-icon light"></div>
+                  <input type="radio" name="theme" value="light" />
+                  <span class="label">Light</span>
+                </label>
+              </div>
+            </div>
+          </section>
+          <section class="settings-section" data-section="about" style="display: none"></section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add App Modal -->
+  <div id="add-app-modal">
+    <div>
+      <h3 style="margin-bottom: 12px">New App</h3>
+      <input id="add-app-url" type="text" placeholder="Enter website URL" />
+      <div id="default-apps-list"></div>
+      <div class="add-app-actions">
+        <button id="add-app-cancel">Cancel</button>
+        <button id="add-app-confirm">Create</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script src="js/utils.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/app-manager.js"></script>
+  <script src="js/search-engine.js"></script>
+  <script src="js/drag-drop.js"></script>
+  <script src="js/add-app.js"></script>
+  <script src="js/color-picker.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/context-menu.js"></script>
+  <script src="js/update-checker.js"></script>
+  <!-- Motto area -->
+  <div id="motto-container">
+    <span id="motto-text">Loading...</span>
+  </div>
+  <button id="refresh-motto-btn" class="motto-btn" title="Refresh motto" aria-label="Refresh motto">↻</button>
+  <button id="copy-motto-btn" class="motto-btn" title="Copy motto" aria-label="Copy motto">↩</button>
+  <div class="footer-left">
+    <a href="https://github.com/404-Page-Found/New-Tab" target="_blank" class="footer-link">New-Tab GitHub
+      Repository</a>
+  </div>
+  <div class="footer-right">
+    v<span id="version-display">0.3.8</span>
+  </div>
+</body>
+
+</html>
