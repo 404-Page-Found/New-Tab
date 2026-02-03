@@ -11,8 +11,8 @@ A modern open-source new tab page for personalized browsing experience.
 - Buildin backgrounds
 - Quick search functionality
 - Motto
+- Todo list
 - Weather widget (coming soon!)
-- Todo list (coming soon!)
 
 ## 🚀 Quick Start
 1. Download the released `.zip` file

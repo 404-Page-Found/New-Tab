@@ -7,7 +7,7 @@
   color: #666;
   font-size: 0.95em;
   padding: 5px 10px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgb(200, 200, 200);
   z-index: 1999;
   border-radius: 20px;
   max-width: 800px;
@@ -1023,7 +1023,7 @@ body.light-theme .date {
 
 body.light-theme #motto-container {
   color: #333;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 1.0);
   border: 1px solid #e1e5e9;
 }
 
