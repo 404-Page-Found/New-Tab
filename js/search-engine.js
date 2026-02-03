@@ -2,8 +2,8 @@
 
 // Search Engine Configuration
 const searchEngines = {
-  bing: { name: "Bing", url: "https://www.bing.com/search?q=", icon: "https://www.bing.com/favicon.ico" },
-  google: { name: "Google", url: "https://www.google.com/search?q=", icon: "https://www.google.com/favicon.ico" },
+  bing: { nameKey: "bing", url: "https://www.bing.com/search?q=", icon: "https://www.bing.com/favicon.ico" },
+  google: { nameKey: "google", url: "https://www.google.com/search?q=", icon: "https://www.google.com/favicon.ico" },
 };
 
 // Load saved search engine
@@ -24,18 +24,22 @@ function initSearchEngine() {
     saveEngine("bing");
     savedEngine = getSavedEngine();
   }
+  const savedEngineName = window.i18n ? window.i18n.t(searchEngines[savedEngine].nameKey) : searchEngines[savedEngine].nameKey;
   enginesEl.innerHTML = `
     <div class="selected-engine">
-      <img src="${searchEngines[savedEngine].icon}" alt="${searchEngines[savedEngine].name}" title="${searchEngines[savedEngine].name}" />
+      <img src="${searchEngines[savedEngine].icon}" alt="${savedEngineName}" title="${savedEngineName}" />
       <span class="dropdown-arrow">▼</span>
     </div>
     <div class="engine-dropdown">
-      ${Object.keys(searchEngines).map(key => `
+      ${Object.keys(searchEngines).map(key => {
+        const name = window.i18n ? window.i18n.t(searchEngines[key].nameKey) : searchEngines[key].nameKey;
+        return `
         <div class="engine-option" data-key="${key}" ${key === savedEngine ? 'id="selected"' : ''}>
-          <img src="${searchEngines[key].icon}" alt="${searchEngines[key].name}" title="${searchEngines[key].name}" />
-          <span>${searchEngines[key].name}</span>
+          <img src="${searchEngines[key].icon}" alt="${name}" title="${name}" />
+          <span>${name}</span>
         </div>
-      `).join("")}
+      `;
+      }).join("")}
     </div>
   `;
   const selectedEngineEl = enginesEl.querySelector(".selected-engine");
@@ -81,3 +85,6 @@ document.querySelector(".search-bar input").addEventListener("keypress", functio
 
 // Initialize on page load
 initSearchEngine();
+
+// Expose for global access (used by language switching)
+window.initSearchEngine = initSearchEngine;

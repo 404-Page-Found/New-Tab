@@ -25,8 +25,8 @@ function getFavicon(url) {
 
 // Default apps
 const defaultApps = [
-  { id: 'feedback-app', name: 'Feedback', url: 'https://github.com/404-Page-Found/New-Tab/issues/new', icon: 'images/icons/feedback.svg', className: 'default-app' },
-  { id: 'settings-app', name: 'Settings', url: '#', icon: 'images/icons/settings.svg', className: 'default-app' },
+  { id: 'feedback-app', nameKey: 'feedback', url: 'https://github.com/404-Page-Found/New-Tab/issues/new', icon: 'images/icons/feedback.svg', className: 'default-app' },
+  { id: 'settings-app', nameKey: 'settings', url: '#', icon: 'images/icons/settings.svg', className: 'default-app' },
 ];
 
 // Get all apps data
@@ -60,12 +60,17 @@ const addApp = document.getElementById('new-app');
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
     }
+    // Get translated name
+    const displayName = app.nameKey && window.i18n ? window.i18n.t(app.nameKey) : (app.name || app.nameKey);
     // Load icon from external file (use images/icons/feedback.svg) rather than embedding inline SVG in JS.
     // The SVG file (`images/icons/feedback.svg`) uses `currentColor` where appropriate.
-    let iconHtml = `<div class="icon"><img src="${app.icon}" alt="${app.name}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div>`;
-    a.innerHTML = iconHtml + `<span class="app-name">${app.name}</span>`;
+    let iconHtml = `<div class="icon"><img src="${app.icon}" alt="${displayName}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div>`;
+    a.innerHTML = iconHtml + `<span class="app-name">${displayName}</span>`;
     appGrid.insertBefore(a, addApp);
   });
+
+  // Re-attach settings app click handler after render
+  attachSettingsAppHandler();
 }
 
 // Initial render
@@ -173,16 +178,32 @@ applyCurvature();
 
 
 
-// Settings app click
-const settingsApp = document.getElementById("settings-app");
-if (settingsApp) {
+// Attach settings app click handler
+function attachSettingsAppHandler() {
+  const settingsApp = document.getElementById("settings-app");
+  if (settingsApp) {
+    // Remove existing listeners to avoid duplicates
+    settingsApp.removeEventListener("click", settingsApp._clickHandler);
+    // Create and attach new handler
+    settingsApp._clickHandler = function (e) {
+      e.preventDefault();
+      const settingsModal = document.getElementById("settings-modal");
+      if (settingsModal) {
+        settingsModal.style.display = "flex";
+      }
+    };
+    settingsApp.addEventListener("click", settingsApp._clickHandler);
+  }
+
+  // Attach modal close handler (only once)
   const settingsModal = document.getElementById("settings-modal");
-  settingsApp.addEventListener("click", function (e) {
-    e.preventDefault();
-    settingsModal.style.display = "flex";
-  });
-  // Close modal on outside click
-  settingsModal.addEventListener("click", function (e) {
-    if (e.target === settingsModal) settingsModal.style.display = "none";
-  });
+  if (settingsModal && !settingsModal._closeHandlerAttached) {
+    settingsModal._closeHandlerAttached = true;
+    settingsModal.addEventListener("click", function (e) {
+      if (e.target === settingsModal) settingsModal.style.display = "none";
+    });
+  }
 }
+
+// Initial attachment
+attachSettingsAppHandler();
