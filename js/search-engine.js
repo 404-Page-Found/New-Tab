@@ -27,7 +27,7 @@ function initSearchEngine() {
   const savedEngineName = window.i18n ? window.i18n.t(searchEngines[savedEngine].nameKey) : searchEngines[savedEngine].nameKey;
   enginesEl.innerHTML = `
     <div class="selected-engine">
-      <img src="${searchEngines[savedEngine].icon}" alt="${savedEngineName}" title="${savedEngineName}" />
+      <img src="${searchEngines[savedEngine].icon}" alt="${savedEngineName}" />
       <span class="dropdown-arrow">▼</span>
     </div>
     <div class="engine-dropdown">
@@ -35,7 +35,7 @@ function initSearchEngine() {
         const name = window.i18n ? window.i18n.t(searchEngines[key].nameKey) : searchEngines[key].nameKey;
         return `
         <div class="engine-option" data-key="${key}" ${key === savedEngine ? 'id="selected"' : ''}>
-          <img src="${searchEngines[key].icon}" alt="${name}" title="${name}" />
+          <img src="${searchEngines[key].icon}" alt="${name}" />
           <span>${name}</span>
         </div>
       `;

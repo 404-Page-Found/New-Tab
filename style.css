@@ -1,3 +1,12 @@
+/* Disable browser default tooltips while preserving interactivity */
+*[title] {
+  /* Use empty title to prevent tooltips without blocking pointer events */
+  pointer-events: auto;
+}
+
+/* For elements that should never show tooltips, use empty title attribute */
+/* This is handled via JavaScript - elements with title="" won't show tooltips */
+
 #motto-container {
   position: fixed;
   bottom: 45px;
