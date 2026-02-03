@@ -177,12 +177,20 @@ function applyLanguageSetting() {
   }
 }
 
-// Event listeners for theme
+// Event listeners for theme and language
 document.addEventListener("change", function (e) {
   if (e.target.name === "theme") {
     const selectedTheme = e.target.value;
     localStorage.setItem("theme", selectedTheme);
     applyTheme();
+  } else if (e.target.name === "language") {
+    const selectedLanguage = e.target.value;
+    localStorage.setItem("language", selectedLanguage);
+    applyLanguageSetting();
+    // Update motto to match the new language
+    if (window.displayDailyMotto) {
+      window.displayDailyMotto();
+    }
   }
 });
 
