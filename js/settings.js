@@ -168,6 +168,29 @@ document.addEventListener("change", function (e) {
   }
 });
 
+// Todo enabled
+function loadTodoEnabled() {
+  return localStorage.getItem("todoEnabled") !== "false";
+}
+function applyTodoEnabled() {
+  const enabled = loadTodoEnabled();
+  const todoSection = document.querySelector('.todo-section');
+  if (todoSection) {
+    todoSection.style.display = enabled ? 'block' : 'none';
+  }
+  const todoEnabledSetting = document.getElementById("todo-enabled-setting");
+  if (todoEnabledSetting) todoEnabledSetting.checked = enabled;
+}
+
+// Event listeners for todo enabled
+const todoEnabledSetting = document.getElementById("todo-enabled-setting");
+if (todoEnabledSetting) {
+  todoEnabledSetting.addEventListener("change", function () {
+    localStorage.setItem("todoEnabled", this.checked);
+    applyTodoEnabled();
+  });
+}
+
 
 
 // Settings menu logic
@@ -365,6 +388,7 @@ function initSettings() {
   applyClockStyle();
   applyDateStyle();
   applyTheme();
+  applyTodoEnabled();
   initAboutSection();
 
   // Initialize modern color pickers
