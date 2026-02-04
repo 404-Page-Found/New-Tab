@@ -11,10 +11,19 @@ function updateTime() {
   timeElement.textContent = `${hours}:${minutes}`;
 
   // Update date - use current language for locale
-  const options = { weekday: "long", month: "long", day: "numeric" };
   const currentLang = window.i18n ? window.i18n.currentLanguage() : 'en';
   const locale = currentLang === 'zh' ? 'zh-CN' : 'en-US';
-  dateElement.textContent = now.toLocaleDateString(locale, options);
+  
+  // For Chinese locale, manually format to add space between weekday and date
+  if (currentLang === 'zh') {
+    const weekday = now.toLocaleDateString('zh-CN', { weekday: "long" });
+    const month = now.toLocaleDateString('zh-CN', { month: "long" });
+    const day = now.toLocaleDateString('zh-CN', { day: "numeric" });
+    dateElement.textContent = `${month}${day} ${weekday}`;
+  } else {
+    const options = { weekday: "long", month: "long", day: "numeric" };
+    dateElement.textContent = now.toLocaleDateString(locale, options);
+  }
 }
 
 // Update time immediately and then every minute
