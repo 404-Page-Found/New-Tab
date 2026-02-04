@@ -25,6 +25,9 @@ const translations = {
     create: "Create",
     refreshMotto: "Refresh motto",
     copyMotto: "Copy motto",
+    renameApp: "Rename",
+    changeThumbnail: "Change Thumbnail",
+    deleteApp: "Delete",
 
     // Settings
     general: "General",
@@ -157,6 +160,9 @@ const translations = {
     create: "创建",
     refreshMotto: "刷新格言",
     copyMotto: "复制格言",
+    renameApp: "重命名",
+    changeThumbnail: "更改缩略图",
+    deleteApp: "删除",
 
     // Settings
     general: "通用",
