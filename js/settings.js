@@ -159,14 +159,63 @@ function applyTheme() {
   if (lightRadio) lightRadio.checked = theme === "light";
 }
 
-// Event listeners for theme
+// Language
+function loadLanguageSetting() {
+  return localStorage.getItem("language") || "en";
+}
+function applyLanguageSetting() {
+  const lang = loadLanguageSetting();
+  // Update radio buttons
+  const enRadio = document.querySelector('input[name="language"][value="en"]');
+  const zhRadio = document.querySelector('input[name="language"][value="zh"]');
+  if (enRadio) enRadio.checked = lang === "en";
+  if (zhRadio) zhRadio.checked = lang === "zh";
+
+  // Apply language if i18n is available
+  if (window.i18n && window.i18n.applyLanguage) {
+    window.i18n.applyLanguage(lang);
+  }
+}
+
+// Event listeners for theme and language
 document.addEventListener("change", function (e) {
   if (e.target.name === "theme") {
     const selectedTheme = e.target.value;
     localStorage.setItem("theme", selectedTheme);
     applyTheme();
+  } else if (e.target.name === "language") {
+    const selectedLanguage = e.target.value;
+    localStorage.setItem("language", selectedLanguage);
+    applyLanguageSetting();
+    // Update motto to match the new language
+    if (window.displayDailyMotto) {
+      window.displayDailyMotto();
+    }
   }
 });
+
+// Todo enabled
+function loadTodoEnabled() {
+  return localStorage.getItem("todoEnabled") !== "false";
+}
+function applyTodoEnabled() {
+  const enabled = loadTodoEnabled();
+  const todoSection = document.querySelector('.todo-section');
+  if (todoSection) {
+    todoSection.style.display = enabled ? 'block' : 'none';
+  }
+  const todoEnabledSetting = document.getElementById("todo-enabled-setting");
+  if (todoEnabledSetting) todoEnabledSetting.checked = enabled;
+}
+
+// Event listeners for todo enabled
+const todoEnabledSetting = document.getElementById("todo-enabled-setting");
+if (todoEnabledSetting) {
+  todoEnabledSetting.addEventListener("change", function () {
+    localStorage.setItem("todoEnabled", this.checked);
+    applyTodoEnabled();
+  });
+}
 
 
 
@@ -229,10 +278,11 @@ function initAboutSection() {
     const isEnabled = window.updateChecker ? updateChecker.isEnabled() : true;
 
     const currentVersion = window.CURRENT_VERSION;
+    const t = window.i18n ? window.i18n.t : (key => key);
     aboutSection.innerHTML = `
       <div class="about-setting-group">
-        <h4>About New-Tab</h4>
-        <p>Customize your new tab experience with beautiful backgrounds, apps, and settings</p>
+        <h4 data-i18n="aboutSettings">${t('aboutSettings')}</h4>
+        <p data-i18n="aboutSettingsDesc">${t('aboutSettingsDesc')}</p>
 
         <div class="about-cards">
           <div class="setting-card">
@@ -244,7 +294,7 @@ function initAboutSection() {
               <path d="M12 14h.01"></path>
             </svg>
             <div class="setting-content">
-              <label>Project</label>
+              <label data-i18n="project">${t('project')}</label>
               <div style="font-size: 16px; font-weight: 600; color: var(--settings-text-color); margin-bottom: 4px;">New-Tab</div>
               <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">Version v${currentVersion}</div>
             </div>
@@ -258,9 +308,27 @@ function initAboutSection() {
               <path d="M21 3l-4.5 4.5"></path>
             </svg>
             <div class="setting-content">
-              <label>Created by</label>
+              <label data-i18n="createdBy">${t('createdBy')}</label>
               <div style="font-size: 16px; font-weight: 600; color: var(--settings-text-color);">404-Page-Found</div>
-              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">Open source project</div>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);" data-i18n="openSource">${t('openSource')}</div>
+            </div>
+          </div>
+
+          <div class="setting-card">
+            <svg class="setting-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2Z"></path>
+              <path d="M8 5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2H8V5Z"></path>
+              <path d="M16 14h.01"></path>
+              <path d="M8 14h.01"></path>
+              <path d="M12 14h.01"></path>
+            </svg>
+            <div class="setting-content">
+              <label data-i18n="onboardingTour">${t('onboardingTour')}</label>
+              <div style="font-size: 16px; font-weight: 600; color: var(--settings-text-color);" data-i18n="restartTour">${t('restartTour')}</div>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8); margin-bottom: 12px;" data-i18n="tourDesc">${t('tourDesc')}</div>
+              <button id="restart-onboarding-btn" class="setting-btn" style="font-size: 13px; padding: 6px 12px;" data-i18n="startTour">
+                ${t('startTour')}
+              </button>
             </div>
           </div>
 
@@ -269,9 +337,9 @@ function initAboutSection() {
               <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
             </svg>
             <div class="setting-content">
-              <label>Repository</label>
+              <label data-i18n="repository">${t('repository')}</label>
               <a href="https://github.com/404-Page-Found/New-Tab" target="_blank" style="font-size: 16px; font-weight: 600; color: #2196f3; text-decoration: none; transition: all 0.2s ease;">GitHub Repository</a>
-              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">View source code & contribute</div>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);" data-i18n="viewSource">${t('viewSource')}</div>
             </div>
           </div>
 
@@ -281,19 +349,19 @@ function initAboutSection() {
               <path d="M20 12h-3"></path>
             </svg>
             <div class="setting-content">
-              <label>Updates</label>
+              <label data-i18n="updates">${t('updates')}</label>
               <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
                 <input type="checkbox" id="update-check-enabled" style="cursor: pointer;" ${isEnabled ? 'checked' : ''} />
-                <span style="font-size: 14px; color: var(--settings-text-color);">Enable automatic update checks</span>
+                <span style="font-size: 14px; color: var(--settings-text-color);" data-i18n="enableUpdates">${t('enableUpdates')}</span>
               </div>
               <div style="font-size: 13px; color: rgba(107, 114, 128, 0.8); margin-bottom: 12px;">
                 ${updateStatus}
               </div>
-              <button id="manual-update-check" class="setting-btn secondary" style="font-size: 13px; padding: 8px 12px;">
-                Check for Updates Now
+              <button id="manual-update-check" class="setting-btn secondary" style="font-size: 13px; padding: 8px 12px;" data-i18n="checkNow">
+                ${t('checkNow')}
               </button>
-              <div style="font-size: 12px; color: rgba(107, 114, 128, 0.7); margin-top: 8px;">
-                Checks for new versions from GitHub releases once per day when enabled.
+              <div style="font-size: 12px; color: rgba(107, 114, 128, 0.7); margin-top: 8px;" data-i18n="updateDesc">
+                ${t('updateDesc')}
               </div>
             </div>
           </div>
@@ -304,6 +372,7 @@ function initAboutSection() {
     // Add event listeners for update settings
     const updateEnabledCheckbox = document.getElementById('update-check-enabled');
     const manualCheckButton = document.getElementById('manual-update-check');
+    const restartOnboardingBtn = document.getElementById('restart-onboarding-btn');
 
     if (updateEnabledCheckbox && window.updateChecker) {
       updateEnabledCheckbox.addEventListener('change', function() {
@@ -324,6 +393,19 @@ function initAboutSection() {
         setTimeout(() => initAboutSection(), 100);
       });
     }
+
+    if (restartOnboardingBtn && window.onboardingTour) {
+      restartOnboardingBtn.addEventListener('click', function() {
+        // Close settings modal first
+        const settingsModal = document.getElementById('settings-modal');
+        if (settingsModal) {
+          settingsModal.style.display = 'none';
+        }
+        // Reset and start onboarding tour
+        window.onboardingTour.reset();
+        window.onboardingTour.start();
+      });
+    }
   }
 }
 
@@ -333,6 +415,8 @@ function initSettings() {
   applyClockStyle();
   applyDateStyle();
   applyTheme();
+  applyTodoEnabled();
+  applyLanguageSetting();
   initAboutSection();
 
   // Initialize modern color pickers

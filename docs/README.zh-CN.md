@@ -1,6 +1,6 @@
-# New Tab v0.3.8
+# New Tab v0.3.9
 [![许可证: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
-[![版本](https://img.shields.io/badge/version-0.3.8-blue)]()
+[![版本](https://img.shields.io/badge/version-0.3.9-blue)]()
 
 现代化的开源新标签页，提供个性化浏览体验。
 
@@ -11,12 +11,12 @@
 - 内置背景
 - 快速搜索功能
 - 格言
+- 待办清单
 - 天气组件（即将推出！）
-- 待办清单（即将推出！）
 
 ## 🚀 快速开始
-1. 下载发布的源代码
-2. 使用浏览器打开 `index.html` 文件
+1. 下载发布的`.zip`文件
+2. 使用浏览器打开 `New-Tab.html` 文件
 3. 复制顶部的路径
 4. 将其粘贴到浏览器设置中的启动页路径和主页路径中
 5. 开始使用您的个性化新标签页

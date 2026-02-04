@@ -1,11 +1,11 @@
-# New Tab v0.3.8
+# New Tab v0.3.9
 
 **Available Languages**:  
 [![English](https://img.shields.io/badge/English-blue)](docs/README.en.md)
 [![简体中文](https://img.shields.io/badge/简体中文-blue)](docs/README.zh-CN.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.3.8-blue)]()
+[![Version](https://img.shields.io/badge/version-0.3.9-blue)]()
 
 A modern open-source new tab page for personalized browsing experience.
 
@@ -16,12 +16,12 @@ A modern open-source new tab page for personalized browsing experience.
 - Buildin backgrounds
 - Quick search functionality
 - Motto
+- Todo list
 - Weather widget (coming soon!)
-- Todo list (coming soon!)
 
 ## 🚀 Quick Start
-1. Download the released source code
-2. Open the `Index.html` file using a browser
+1. Download the released `.zip` file
+2. Open the `New-Tab.html` file using a browser
 3. Copy the path at the top
 4. Paste them into the Start-up page path and the home page path in the browser settings
 5. Start using your personalised new tab

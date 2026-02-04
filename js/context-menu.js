@@ -11,16 +11,19 @@ contextMenu.className = "app-context-menu";
 const renameItem = document.createElement("div");
 renameItem.id = "rename-app";
 renameItem.className = "context-menu-item";
+renameItem.setAttribute('data-i18n', 'renameApp');
 renameItem.textContent = "Rename";
 
 const changeThumbnailItem = document.createElement("div");
 changeThumbnailItem.id = "change-thumbnail";
 changeThumbnailItem.className = "context-menu-item";
+changeThumbnailItem.setAttribute('data-i18n', 'changeThumbnail');
 changeThumbnailItem.textContent = "Change Thumbnail";
 
 const deleteItem = document.createElement("div");
 deleteItem.id = "delete-app";
 deleteItem.className = "context-menu-item delete-item";
+deleteItem.setAttribute('data-i18n', 'deleteApp');
 deleteItem.textContent = "Delete";
 
 // Add hover effects
