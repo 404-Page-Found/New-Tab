@@ -313,9 +313,8 @@ body {
 .app-grid{
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  padding: 20px;
+  gap: 50px;
+  padding: 30px 70px;
   width: min(1200px, calc(100% - 40px));
   margin: 0 auto;
 }
