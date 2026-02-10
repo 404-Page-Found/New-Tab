@@ -20,7 +20,7 @@ A modern open-source new tab page for personalized browsing experience.
 - Weather widget (coming soon!)
 
 ## 🚀 Quick Start
-1. Download the released `.zip` file
+1. Download the `.zip` file or the released `Source code` file
 2. Open the `New-Tab.html` file using a browser
 3. Copy the path at the top
 4. Paste them into the Start-up page path and the home page path in the browser settings
