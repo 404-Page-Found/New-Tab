@@ -399,19 +399,37 @@ document.addEventListener('DOMContentLoaded', () => {
   // Wait for all elements to be ready
   let attempts = 0;
   const maxAttempts = 50; // 5 seconds max wait
+  let checkTimeout = null;
 
   const checkAndStart = () => {
+    // Skip if tab is not visible
+    if (window.visibilityManager && !window.visibilityManager.isVisible) {
+      // Wait for visibility to resume checking
+      const unsubscribe = window.visibilityManager.onChange((visible) => {
+        if (visible) {
+          unsubscribe();
+          checkAndStart();
+        }
+      });
+      return;
+    }
+
     attempts++;
 
     if (!onboardingTour.isCompleted() && checkRequiredElements()) {
       console.log('🎯 Starting New-Tab onboarding tour...');
       onboardingTour.start();
     } else if (attempts < maxAttempts) {
-      setTimeout(checkAndStart, 100);
+      checkTimeout = setTimeout(checkAndStart, 100);
     } else {
       console.log('⚠️ Onboarding tour skipped - elements not ready or already completed');
     }
   };
+
+  // Clean up timeout on page unload
+  window.addEventListener('beforeunload', () => {
+    if (checkTimeout) clearTimeout(checkTimeout);
+  });
 
   // Initial delay to let other scripts initialize
   setTimeout(checkAndStart, 500);

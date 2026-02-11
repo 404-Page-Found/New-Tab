@@ -118,10 +118,44 @@ class UpdateChecker {
 
     document.body.appendChild(notification);
 
-    // Auto-hide after 30 seconds
-    setTimeout(() => {
-      this.hideUpdateNotification();
-    }, 30000);
+    // Auto-hide after 30 seconds (visibility-aware)
+    this._scheduleAutoHide(() => this.hideUpdateNotification(), 30000);
+  }
+
+  // Schedule auto-hide with visibility awareness
+  _scheduleAutoHide(callback, delay) {
+    if (window.visibilityManager) {
+      let remaining = delay;
+      let startTime = Date.now();
+      let timeoutId = null;
+
+      const hide = () => {
+        callback();
+        if (unsubscribe) unsubscribe();
+      };
+
+      const onVisibilityChange = (visible) => {
+        if (visible) {
+          // Tab became visible, resume timer
+          startTime = Date.now();
+          timeoutId = setTimeout(hide, remaining);
+        } else {
+          // Tab hidden, pause timer
+          remaining -= Date.now() - startTime;
+          if (timeoutId) clearTimeout(timeoutId);
+        }
+      };
+
+      const unsubscribe = window.visibilityManager.onChange(onVisibilityChange);
+
+      // Start timer if visible
+      if (window.visibilityManager.isVisible) {
+        timeoutId = setTimeout(hide, remaining);
+      }
+    } else {
+      // Fallback for browsers without visibility manager
+      setTimeout(callback, delay);
+    }
   }
 
   // Hide update notification
@@ -184,10 +218,8 @@ class UpdateChecker {
 
     document.body.appendChild(notification);
 
-    // Auto-hide after 5 seconds
-    setTimeout(() => {
-      this.hideManualCheckNotification();
-    }, 5000);
+    // Auto-hide after 5 seconds (visibility-aware)
+    this._scheduleAutoHide(() => this.hideManualCheckNotification(), 5000);
   }
 
   // Hide manual check notification
@@ -244,7 +276,7 @@ class UpdateChecker {
     const aboutSection = document.querySelector('.settings-section[data-section="about"]');
     if (aboutSection) {
       aboutSection.appendChild(result);
-      setTimeout(() => result.remove(), 5000);
+      this._scheduleAutoHide(() => result.remove(), 5000);
     }
   }
 

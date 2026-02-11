@@ -26,9 +26,25 @@ function updateTime() {
   }
 }
 
-// Update time immediately and then every minute
+// Update time immediately and then every minute using visibility-aware interval
 updateTime();
-setInterval(updateTime, 60000);
+let clockInterval = null;
+
+function initClock() {
+  // Use VisibilityInterval if available, fallback to regular setInterval
+  if (window.VisibilityInterval) {
+    clockInterval = new VisibilityInterval(updateTime, 60000);
+  } else {
+    clockInterval = setInterval(updateTime, 60000);
+  }
+}
+
+// Initialize clock when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initClock);
+} else {
+  initClock();
+}
 
 // Make updateTime globally accessible for language switching
 window.updateTime = updateTime;
