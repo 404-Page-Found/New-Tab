@@ -23,7 +23,7 @@
 
   color: #666;
   font-size: 0.95em;
-  padding: 8px 12px;
+  padding: 2px 12px;
   background: rgb(200, 200, 200);
   z-index: 1999;
   border-radius: 20px;
@@ -56,11 +56,14 @@
 
 #refresh-motto-btn {
   color: #343232;
-  background: rgba(255, 255, 255, 0.90);
+  background: rgb(200, 200, 200);
   padding: 3px 6px;
   border: none;
   border-radius: 8px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #refresh-motto-btn:hover {
@@ -74,10 +77,14 @@
 }
 
 #copy-motto-btn {
+  background: rgb(200, 200, 200);
   padding: 3px 5px;
   border: none;
   border-radius: 8px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #copy-motto-btn:hover {
