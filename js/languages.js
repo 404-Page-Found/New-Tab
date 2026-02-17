@@ -13,10 +13,6 @@ const translations = {
     addTodo: "Add Todo",
     bing: "Bing",
     google: "Google",
-    selectAll: "Select All",
-    complete: "Complete",
-    delete: "Delete",
-    selectedCount: "selected",
     noTodos: "No todos yet. Add one above!",
     noTodosHint: "Try adding due dates for better organization.",
     newAppTitle: "New App",
@@ -148,10 +144,6 @@ const translations = {
     addTodo: "添加待办",
     bing: "必应",
     google: "谷歌",
-    selectAll: "全选",
-    complete: "完成",
-    delete: "删除",
-    selectedCount: "已选中",
     noTodos: "还没有待办事项。在上方添加一个！",
     noTodosHint: "尝试添加到期日期以更好地组织。",
     newAppTitle: "新建应用",
@@ -334,23 +326,6 @@ function updateDynamicTranslations() {
   const emptyStateSmall = document.querySelector('.empty-state small');
   if (emptyStateSmall) {
     emptyStateSmall.textContent = translations[currentLanguage].noTodosHint;
-  }
-
-  // Update bulk actions
-  const selectAllBtn = document.getElementById('select-all-btn');
-  if (selectAllBtn) selectAllBtn.textContent = translations[currentLanguage].selectAll;
-
-  const completeSelectedBtn = document.getElementById('complete-selected-btn');
-  if (completeSelectedBtn) completeSelectedBtn.textContent = translations[currentLanguage].complete;
-
-  const deleteSelectedBtn = document.getElementById('delete-selected-btn');
-  if (deleteSelectedBtn) deleteSelectedBtn.textContent = translations[currentLanguage].delete;
-
-  // Update selected count text
-  const selectedCount = document.getElementById('selected-count');
-  if (selectedCount) {
-    const count = selectedCount.textContent.split(' ')[0];
-    selectedCount.textContent = `${count} ${translations[currentLanguage].selectedCount}`;
   }
 
   // Re-render apps to update default app names

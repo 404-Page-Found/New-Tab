@@ -3014,47 +3014,6 @@ body.light-theme .calendar-btn.secondary:hover {
   box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
 }
 
-.bulk-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  animation: slideInUp 0.3s ease;
-}
-
-.bulk-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  color: #ffffff;
-  padding: 8px 16px;
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.bulk-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
-.bulk-btn.danger {
-  background: rgba(255, 82, 82, 0.2);
-  border-color: rgba(255, 82, 82, 0.3);
-  color: #ff5252;
-}
-
-.bulk-btn.danger:hover {
-  background: rgba(255, 82, 82, 0.3);
-  border-color: rgba(255, 82, 82, 0.5);
-}
-
-#selected-count {
-  font-size: 12px;
-  color: rgba(255, 255, 255, 0.7);
-  font-weight: 500;
-}
 
 .todo-list-container {
   position: relative;
@@ -3134,14 +3093,6 @@ body.light-theme .calendar-btn.secondary:hover {
   background: rgba(33, 150, 243, 0.15);
   border-color: rgba(33, 150, 243, 0.3);
   box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
-}
-
-.todo-bulk-checkbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  accent-color: #2196f3;
-  margin-right: 8px;
 }
 
 .todo-checkbox {
