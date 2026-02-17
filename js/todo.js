@@ -49,26 +49,6 @@ function isOverdue(dateString) {
   return dueDate < today;
 }
 
-// Progress calculation
-function updateProgress() {
-  const total = todos.length;
-  const completed = todos.filter(todo => todo.completed).length;
-  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-  // Update progress ring
-  const progressRing = elements.progressRing;
-  const progressText = elements.progressText;
-  if (progressRing && progressText) {
-    const circle = progressRing.querySelector('circle:last-child');
-    const radius = 16;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (percentage / 100) * circumference;
-
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = offset;
-    progressText.textContent = `${percentage}%`;
-  }
-}
 
 // Filtering and sorting
 function filterTodos() {
@@ -219,7 +199,6 @@ function deleteTodo(id) {
 function applyFilters() {
   filterTodos();
   renderTodos();
-  updateProgress();
 }
 
 function updateFilters() {
@@ -337,9 +316,7 @@ function initTodo() {
     addTodoBtn: document.getElementById('add-todo-btn'),
     todoList: document.getElementById('todo-list'),
     emptyState: document.getElementById('empty-state'),
-    filterStatus: document.getElementById('filter-status'),
-    progressRing: document.querySelector('.progress-ring-circle'),
-    progressText: document.querySelector('.progress-text')
+    filterStatus: document.getElementById('filter-status')
   };
 
   // Check if all elements exist
@@ -372,7 +349,6 @@ function initTodo() {
 
   // Initial render
   applyFilters();
-  updateProgress();
 }
 
 // Custom Date Picker Functionality

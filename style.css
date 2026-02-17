@@ -3261,38 +3261,6 @@ body.light-theme .update-settings-group .setting-btn:hover {
   margin: 0;
 }
 
-.todo-stats {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.progress-ring {
-  position: relative;
-  width: 40px;
-  height: 40px;
-}
-
-.progress-ring-circle {
-  width: 40px;
-  height: 40px;
-  transform: rotate(-90deg);
-}
-
-.progress-ring circle {
-  transition: stroke-dashoffset 0.3s ease;
-}
-
-.progress-text {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 11px;
-  font-weight: 600;
-  color: #ffffff;
-  text-shadow: 0 0 2px #000;
-}
 
 .todo-controls {
   margin-bottom: 24px;
