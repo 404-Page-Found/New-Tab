@@ -2481,6 +2481,759 @@ body.light-theme .update-settings-group .setting-btn:hover {
   border-color: rgba(33, 150, 243, 0.3);
 }
 
+/* ========================================
+   RESPONSIVE OPTIMIZATIONS FOR ALL SCREENS
+   ======================================== */
+
+/* CSS Custom Properties for Responsive Scaling */
+:root {
+  /* Fluid typography base */
+  --clock-size: clamp(2.5rem, 8vw, 5rem);
+  --date-size: clamp(1rem, 3vw, 1.5rem);
+  
+  /* Responsive spacing */
+  --container-padding: clamp(10px, 3vw, 40px);
+  --app-grid-gap: clamp(15px, 4vw, 50px);
+  --app-grid-padding: clamp(15px, 5vw, 70px);
+  
+  /* Responsive widths */
+  --search-bar-width: clamp(85%, 55vw, 55%);
+  --todo-width: clamp(90%, 75vw, 75%);
+  
+  /* Responsive icon size */
+  --app-icon-size: clamp(40px, 8vw, 60px);
+  --app-icon-img-size: clamp(24px, 5vw, 35px);
+}
+
+/* Extra Small Screens (< 360px) */
+@media screen and (max-width: 360px) {
+  body {
+    padding: 10px;
+  }
+  
+  .clock {
+    font-size: 2.2rem;
+  }
+  
+  .date {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+  
+  .search-bar {
+    width: 95%;
+    height: 44px;
+    padding: 5px 15px;
+  }
+  
+  .search-bar input {
+    font-size: 16px;
+  }
+  
+  .app-grid {
+    gap: 15px;
+    padding: 15px;
+    width: calc(100% - 20px);
+  }
+  
+  .app-icon {
+    transform: scale(0.85);
+  }
+  
+  .icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .icon img,
+  .app-grid .app-icon .icon svg {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .app-name {
+    font-size: 10px;
+  }
+  
+  .todo-section {
+    width: 95%;
+    margin: 20px auto 120px;
+    padding: 16px;
+  }
+  
+  .todo-title {
+    font-size: 1.1em;
+  }
+  
+  .todo-input-container {
+    padding: 10px 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  #todo-input {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+  
+  .date-picker-trigger {
+    flex: 1 1 auto;
+    min-width: 120px;
+    width: auto;
+  }
+  
+  #add-todo-btn {
+    flex: 0 0 auto;
+    width: 44px;
+    height: 44px;
+  }
+  
+  .footer-left,
+  .footer-right {
+    font-size: 0.8em;
+  }
+  
+  #motto-container {
+    width: calc(100% - 20px);
+    font-size: 0.85em;
+    padding: 4px 8px;
+  }
+}
+
+/* Small Screens (361px - 480px) */
+@media screen and (min-width: 361px) and (max-width: 480px) {
+  body {
+    padding: 15px;
+  }
+  
+  .clock {
+    font-size: 2.8rem;
+  }
+  
+  .date {
+    font-size: 1rem;
+    margin-bottom: 25px;
+  }
+  
+  .search-bar {
+    width: 90%;
+    height: 46px;
+  }
+  
+  .search-bar input {
+    font-size: 18px;
+  }
+  
+  .app-grid {
+    gap: 20px;
+    padding: 20px 40px;
+  }
+  
+  .icon {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .icon img,
+  .app-grid .app-icon .icon svg {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .app-name {
+    font-size: 11px;
+  }
+  
+  .todo-section {
+    width: 92%;
+    margin: 25px auto 130px;
+    padding: 18px;
+  }
+  
+  .todo-title {
+    font-size: 1.2em;
+  }
+  
+  .todo-input-container {
+    padding: 12px 16px;
+  }
+  
+  .footer-left {
+    left: 10px;
+    bottom: 8px;
+  }
+  
+  .footer-right {
+    right: 10px;
+    bottom: 8px;
+  }
+  
+  #motto-container {
+    width: calc(100% - 30px);
+  }
+}
+
+/* Medium Screens (481px - 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+  
+  .clock {
+    font-size: 3.5rem;
+  }
+  
+  .date {
+    font-size: 1.2rem;
+    margin-bottom: 25px;
+  }
+  
+  .search-bar {
+    width: 75%;
+    height: 48px;
+  }
+  
+  .app-grid {
+    gap: 30px;
+    padding: 30px 50px;
+    width: calc(100% - 30px);
+  }
+  
+  .icon {
+    width: 58px;
+    height: 58px;
+  }
+  
+  .app-name {
+    font-size: 11px;
+  }
+  
+  .todo-section {
+    width: 85%;
+    margin: 30px auto 140px;
+    padding: 20px;
+  }
+  
+  .todo-title {
+    font-size: 1.3em;
+  }
+  
+  .settings-menu {
+    width: 140px;
+  }
+  
+  .settings-menu-item {
+    padding: 10px 16px;
+    font-size: 0.9em;
+  }
+  
+  #settings-modal > div {
+    width: 90%;
+    max-width: 550px;
+  }
+  
+  #add-app-modal > div {
+    min-width: 90%;
+    max-width: 450px;
+  }
+  
+  .footer-left {
+    left: 15px;
+  }
+  
+  .footer-right {
+    right: 15px;
+  }
+}
+
+/* Tablet Landscape / Small Desktop (769px - 1024px) */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    max-width: 900px;
+  }
+  
+  .clock {
+    font-size: 4rem;
+  }
+  
+  .search-bar {
+    width: 60%;
+  }
+  
+  .app-grid {
+    gap: 35px;
+    padding: 35px 60px;
+    max-width: 900px;
+  }
+  
+  .todo-section {
+    max-width: 80%;
+  }
+  
+  #settings-modal > div {
+    max-width: 700px;
+  }
+}
+
+/* Large Screens (1025px - 1440px) */
+@media screen and (min-width: 1025px) and (max-width: 1440px) {
+  .container {
+    max-width: 1100px;
+  }
+  
+  .clock {
+    font-size: 4.5rem;
+  }
+  
+  .app-grid {
+    max-width: 1100px;
+  }
+  
+  .todo-section {
+    max-width: 70%;
+  }
+}
+
+/* Extra Large Screens (1441px - 1920px) */
+@media screen and (min-width: 1441px) and (max-width: 1920px) {
+  .container {
+    max-width: 1400px;
+  }
+  
+  body {
+    padding: 40px;
+  }
+  
+  .clock {
+    font-size: 5.5rem;
+    margin-bottom: 30px;
+  }
+  
+  .date {
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+  }
+  
+  .search-bar {
+    height: 60px;
+  }
+  
+  .search-bar input {
+    font-size: 22px;
+  }
+  
+  .app-grid {
+    gap: 45px;
+    padding: 40px 80px;
+    max-width: 1400px;
+  }
+  
+  .icon {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .icon img,
+  .app-grid .app-icon .icon svg {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .app-name {
+    font-size: 14px;
+  }
+  
+  .todo-section {
+    max-width: 65%;
+    margin-top: 40px;
+    margin-bottom: 180px;
+    padding: 30px;
+  }
+  
+  .todo-title {
+    font-size: 1.6em;
+  }
+  
+  #motto-container {
+    bottom: 15px;
+    font-size: 1em;
+  }
+  
+  .footer-left,
+  .footer-right {
+    bottom: 15px;
+    font-size: 1em;
+  }
+}
+
+/* Ultra Wide Screens (> 1920px) */
+@media screen and (min-width: 1921px) {
+  .container {
+    max-width: 1600px;
+  }
+  
+  body {
+    padding: 50px 60px;
+  }
+  
+  .clock {
+    font-size: 6rem;
+    margin-bottom: 35px;
+  }
+  
+  .date {
+    font-size: 2rem;
+    margin-bottom: 50px;
+  }
+  
+  .search-bar {
+    width: 50%;
+    height: 65px;
+    max-width: 700px;
+  }
+  
+  .search-bar input {
+    font-size: 24px;
+  }
+  
+  .selected-engine img {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .app-grid {
+    gap: 55px;
+    padding: 50px 100px;
+    max-width: 1500px;
+  }
+  
+  .icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 24px;
+  }
+  
+  .icon img,
+  .app-grid .app-icon .icon svg {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .app-name {
+    font-size: 15px;
+  }
+  
+  .todo-section {
+    max-width: 55%;
+    max-width: 900px;
+    margin-top: 50px;
+    margin-bottom: 200px;
+    padding: 35px;
+  }
+  
+  .todo-title {
+    font-size: 1.8em;
+  }
+  
+  .todo-input-container {
+    padding: 16px 24px;
+  }
+  
+  #todo-input {
+    font-size: 18px;
+  }
+  
+  .date-picker-trigger {
+    min-width: 160px;
+    padding: 10px 16px;
+  }
+  
+  #add-todo-btn {
+    width: 50px;
+    height: 50px;
+  }
+  
+  #motto-container {
+    bottom: 20px;
+    padding: 6px 16px;
+    font-size: 1.05em;
+  }
+  
+  .footer-left,
+  .footer-right {
+    bottom: 20px;
+    font-size: 1.05em;
+  }
+  
+  #settings-modal > div {
+    max-width: 800px;
+    min-width: 700px;
+  }
+  
+  .settings-menu {
+    width: 200px;
+  }
+  
+  .settings-content {
+    padding: 24px;
+  }
+}
+
+/* Very Tall Screens (Mobile Landscape to Portrait adjustments) */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .clock {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .date {
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+  }
+  
+  .search-bar {
+    height: 40px;
+    margin-bottom: 10px;
+  }
+  
+  .app-grid {
+    padding: 15px;
+    gap: 15px;
+  }
+  
+  .icon {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .app-name {
+    font-size: 9px;
+  }
+  
+  .todo-section {
+    margin-bottom: 80px;
+    padding: 12px;
+  }
+  
+  .todo-title {
+    font-size: 1em;
+  }
+  
+  .todo-input-container {
+    padding: 8px 12px;
+  }
+  
+  #motto-container {
+    bottom: 8px;
+  }
+  
+  .footer-left,
+  .footer-right {
+    bottom: 8px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  .clock, .date {
+    color: black !important;
+    text-shadow: none !important;
+  }
+  
+  .app-grid,
+  .search-bar,
+  .todo-section,
+  #motto-container,
+  .footer-left,
+  .footer-right {
+    display: none !important;
+  }
+}
+
+/* High DPI / Retina Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .icon img,
+  .app-grid .app-icon .icon svg {
+    /* Ensure sharp rendering on retina */
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Reduced Motion for Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark Mode Support (System Preference) */
+@media (prefers-color-scheme: dark) {
+  /* Already optimized - this is the default theme */
+}
+
+/* Light Mode Support (System Preference) */
+@media (prefers-color-scheme: light) {
+  body:not(.light-theme) {
+    --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  }
+  
+  body:not(.light-theme) .app-name {
+    color: #fff;
+    text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000;
+  }
+  
+  body:not(.light-theme) .clock,
+  body:not(.light-theme) .date {
+    color: #0a0a0a;
+    text-shadow: none;
+  }
+}
+
+/* Settings Modal Responsive */
+@media screen and (max-width: 600px) {
+  #settings-modal {
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+  
+  #settings-modal > div {
+    width: 95%;
+    max-height: 85vh;
+    top: 30px;
+    transform: translateX(-50%);
+  }
+  
+  .settings-body {
+    flex-direction: column;
+    min-height: auto;
+  }
+  
+  .settings-menu {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 12px 0;
+    gap: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .settings-menu-item {
+    padding: 8px 12px;
+    font-size: 0.85em;
+    margin: 2px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .settings-menu-item.selected::before {
+    display: none;
+  }
+  
+  .settings-content {
+    padding: 16px;
+    max-height: 60vh;
+  }
+  
+  .clock-options,
+  .date-options,
+  .icon-size-options,
+  .general-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .theme-options {
+    flex-direction: column;
+  }
+  
+  .language-options {
+    flex-direction: column;
+  }
+  
+  .curvature-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Add App Modal Responsive */
+@media screen and (max-width: 500px) {
+  #add-app-modal > div {
+    width: 95%;
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+  
+  #add-app-modal h3 {
+    font-size: 1.1em;
+  }
+  
+  #add-app-modal input {
+    font-size: 14px;
+    padding: 10px;
+  }
+  
+  .add-app-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .add-app-actions button {
+    flex: 1;
+    padding: 10px;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .app-icon:hover {
+    transform: none;
+  }
+  
+  .app-icon:active {
+    transform: scale(0.95);
+  }
+  
+  .todo-actions {
+    opacity: 1;
+  }
+  
+  .settings-menu-item:hover {
+    transform: none;
+  }
+  
+  .settings-menu-item:active {
+    background: rgba(33, 150, 243, 0.3);
+    transform: translateX(6px);
+  }
+  
+  /* Larger touch targets */
+  .calendar-day {
+    min-height: 40px;
+  }
+  
+  .engine-option {
+    padding: 14px 16px;
+  }
+  
+  .context-menu-item {
+    padding: 14px 16px;
+  }
+  
+  .todo-item {
+    padding: 18px 20px;
+  }
+}
+
 /* Modern Todo List Styles */
 .todo-section {
   max-width: var(--todo-list-width);
@@ -3391,9 +4144,23 @@ body.light-theme .empty-icon {
   }
 
   .todo-input-container {
-    flex-direction: column;
-    gap: 12px;
-    padding: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+
+  #todo-input {
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .date-picker-trigger {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+
+  #add-todo-btn {
+    flex: 0 0 auto;
   }
 
   .filter-group {
