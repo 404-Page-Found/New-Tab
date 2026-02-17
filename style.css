@@ -151,7 +151,8 @@
   --border-radius-lg: 16px;
   --app-icon-size: 60px;
   --app-icon-img-size: 35px;
-  --search-bar-width: 650px;
+  --search-bar-width: 55%;
+  --todo-list-width: 75%;
   /* search engine hover colors (dark by default) */
   --engine-hover-bg: rgba(33, 150, 243, 0.08);
   --engine-hover-border: rgba(33, 150, 243, 0.2);
@@ -2482,7 +2483,7 @@ body.light-theme .update-settings-group .setting-btn:hover {
 
 /* Modern Todo List Styles */
 .todo-section {
-  max-width: var(--search-bar-width);
+  max-width: var(--todo-list-width);
   margin: 30px auto 150px;
   padding: 24px;
   background: rgba(255, 255, 255, 0.02);
