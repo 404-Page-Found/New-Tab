@@ -104,6 +104,7 @@
   color: #888;
   font-size: 0.95em;
   z-index: 2000;
+  transition: opacity 0.3s ease;
 }
 .footer-link {
   color: #888;
@@ -118,6 +119,7 @@
   z-index: 2000;
   user-select: none;
   pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 .add-app-actions {
   text-align: right;
