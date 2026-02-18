@@ -282,24 +282,28 @@ class UpdateChecker {
 
   // Get update status for about section
   getUpdateStatus() {
+    const t = window.i18n ? window.i18n.t : (key => key);
+
     if (!this.isEnabled()) {
-      return 'Update checks disabled';
+      return t('updateChecksDisabled');
     }
 
     const lastCheck = this.getLastCheckTime();
     if (lastCheck === 0) {
-      return 'Never checked for updates';
+      return t('neverChecked');
     }
 
     const now = Date.now();
     const hoursSince = Math.floor((now - lastCheck) / (1000 * 60 * 60));
     if (hoursSince < 1) {
-      return 'Last checked: less than an hour ago';
+      return t('lastCheckedLessThanHour');
     } else if (hoursSince < 24) {
-      return `Last checked: ${hoursSince} hour${hoursSince === 1 ? '' : 's'} ago`;
+      const key = hoursSince === 1 ? 'lastCheckedHoursAgo' : 'lastCheckedHoursAgoPlural';
+      return t(key).replace('{n}', hoursSince);
     } else {
       const daysSince = Math.floor(hoursSince / 24);
-      return `Last checked: ${daysSince} day${daysSince === 1 ? '' : 's'} ago`;
+      const key = daysSince === 1 ? 'lastCheckedDaysAgo' : 'lastCheckedDaysAgoPlural';
+      return t(key).replace('{n}', daysSince);
     }
   }
 }

@@ -296,7 +296,7 @@ function initAboutSection() {
             <div class="setting-content">
               <label data-i18n="project">${t('project')}</label>
               <div style="font-size: 16px; font-weight: 600; color: var(--settings-text-color); margin-bottom: 4px;">New-Tab</div>
-              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">Version v${currentVersion}</div>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">${t('versionLabel')} v${currentVersion}</div>
             </div>
           </div>
 
@@ -384,11 +384,12 @@ function initAboutSection() {
 
     if (manualCheckButton && window.updateChecker) {
       manualCheckButton.addEventListener('click', async function() {
+        const tBtn = window.i18n ? window.i18n.t : (key => key);
         this.disabled = true;
-        this.textContent = 'Checking...';
+        this.textContent = tBtn('checking');
         await updateChecker.manualCheck();
         this.disabled = false;
-        this.textContent = 'Check for Updates Now';
+        this.textContent = tBtn('checkNow');
         // Refresh the about section after manual check
         setTimeout(() => initAboutSection(), 100);
       });
@@ -408,6 +409,9 @@ function initAboutSection() {
     }
   }
 }
+
+// Expose initAboutSection globally so language changes can re-render it
+window.initAboutSection = initAboutSection;
 
 function initSettings() {
   // Apply initial settings

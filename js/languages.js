@@ -99,6 +99,15 @@ const translations = {
     updateStatus: "Update checker not loaded",
     checkNow: "Check for Updates Now",
     updateDesc: "Checks for new versions from GitHub releases once per day when enabled.",
+    versionLabel: "Version",
+    updateChecksDisabled: "Update checks disabled",
+    neverChecked: "Never checked for updates",
+    lastCheckedLessThanHour: "Last checked: less than an hour ago",
+    lastCheckedHoursAgo: "Last checked: {n} hour ago",
+    lastCheckedHoursAgoPlural: "Last checked: {n} hours ago",
+    lastCheckedDaysAgo: "Last checked: {n} day ago",
+    lastCheckedDaysAgoPlural: "Last checked: {n} days ago",
+    checking: "Checking...",
 
     // Calendar
     clear: "Clear",
@@ -230,6 +239,15 @@ const translations = {
     updateStatus: "更新检查器未加载",
     checkNow: "立即检查更新",
     updateDesc: "启用后，每天从 GitHub releases 检查新版本一次。",
+    versionLabel: "版本",
+    updateChecksDisabled: "更新检查已禁用",
+    neverChecked: "从未检查更新",
+    lastCheckedLessThanHour: "上次检查：不到一小时前",
+    lastCheckedHoursAgo: "上次检查：{n} 小时前",
+    lastCheckedHoursAgoPlural: "上次检查：{n} 小时前",
+    lastCheckedDaysAgo: "上次检查：{n} 天前",
+    lastCheckedDaysAgoPlural: "上次检查：{n} 天前",
+    checking: "检查中...",
 
     // Calendar
     clear: "清除",
@@ -351,6 +369,11 @@ function updateDynamicTranslations() {
   // Update motto to match new language
   if (window.displayDailyMotto) {
     window.displayDailyMotto();
+  }
+
+  // Re-render the About section so version label and last-checked text update
+  if (window.initAboutSection) {
+    window.initAboutSection();
   }
 }
 
