@@ -20,8 +20,8 @@ A modern open-source new tab page for personalized browsing experience.
 - Weather widget (coming soon!)
 
 ## 🚀 Quick Start
-1. Download the extension from `Edge Add-ons ` or the released `.zip` file
-2. To install the extension from `.zip` file, extract the file, go in to the extension settings in your browser, turn on developer mode, select load unpacked and choose the folder extracted. 
+1. Download the extension from `Edge Add-ons ` or the released `.crx` file
+2. To install the extension from `.crx` file, go to manage extension page in your browser, turn on developer mode, drag and drop or select load unpacked and choose the `.crx` file. 
 3. Start using your personalised new tab
 
 ## 🖼️ Screenshots
