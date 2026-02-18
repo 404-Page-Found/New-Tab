@@ -14,7 +14,8 @@
   left: 50%;
   transform: translateX(-50%);
 
-  width: min(800px, calc(100% - 40px)); 
+  width: fit-content;
+  max-width: min(800px, calc(100% - 40px));
   text-align: center;
   display: flex;
   align-items: center;
@@ -22,7 +23,6 @@
   gap: 10px;
 
   color: #666;
-  font-size: 0.95em;
   padding: 2px 12px;
   background: rgb(200, 200, 200);
   z-index: 1999;
@@ -34,7 +34,7 @@
 #motto-text {
   display: block;
   text-align: center;
-  flex: 1;
+  font-size: 0.7em;
 }
 
 .motto-buttons {
