@@ -344,6 +344,30 @@ body {
   transform: scale(1.05);
 }
 
+/* Drag and Drop Visual Feedback */
+.app-icon.dragging {
+  opacity: 0.5;
+  transform: scale(0.95);
+}
+
+.app-icon.drag-over {
+  transform: scale(1.1);
+}
+
+.app-icon.drag-over .icon {
+  box-shadow: 0 8px 24px rgba(33, 150, 243, 0.4), 0 0 0 3px rgba(33, 150, 243, 0.3);
+  border: 2px solid #2196f3;
+}
+
+/* Touch device: don't scale on hover when dragging */
+.app-icon.dragging:hover {
+  transform: scale(0.95);
+}
+
+.app-icon.drag-over:hover {
+  transform: scale(1.1);
+}
+
 .icon {
   width: var(--app-icon-size);
   height: var(--app-icon-size);
