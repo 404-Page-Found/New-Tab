@@ -70,9 +70,9 @@
     
     // Calculate index
     let index = row * itemsPerRow + col;
-    const maxIndex = icons.length;
+    const maxIndex = icons.length - 1;
     
-    // Clamp index
+    // Clamp index - ensure placeholder never goes after the last draggable icon
     if (index < 0) index = 0;
     if (index > maxIndex) index = maxIndex;
     
@@ -92,6 +92,7 @@
   function insertPlaceholder(index) {
     const grid = getAppGrid();
     const icons = getDraggableIcons();
+    const addAppBtn = document.getElementById('new-app');
     
     // Remove existing placeholder
     removePlaceholder();
@@ -101,14 +102,23 @@
       dragState.placeholder = createPlaceholder(dragState.sourceElement);
     }
     
+    // Ensure we never place placeholder after the add app button
+    // Clamp index to valid range
+    const maxIndex = Math.min(index, icons.length - 1);
+    
     // Insert at the appropriate position
-    if (index >= icons.length) {
-      grid.appendChild(dragState.placeholder);
-    } else if (index === 0) {
+    if (maxIndex < 0 || icons.length === 0) {
+      // No icons yet, insert before add app button
+      if (addAppBtn) {
+        grid.insertBefore(dragState.placeholder, addAppBtn);
+      } else {
+        grid.appendChild(dragState.placeholder);
+      }
+    } else if (maxIndex === 0) {
       grid.insertBefore(dragState.placeholder, icons[0]);
     } else {
       // Find the icon at the target index
-      const targetIcon = icons[index];
+      const targetIcon = icons[maxIndex];
       grid.insertBefore(dragState.placeholder, targetIcon);
     }
     
