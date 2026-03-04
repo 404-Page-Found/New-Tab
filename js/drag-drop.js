@@ -60,8 +60,11 @@
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', target.id);
     
-    // Set drag image (optional, can be customized)
-    e.dataTransfer.setDragImage(target, 0, 0);
+    // Set drag image at the position where the user clicked inside the element
+    const rect = target.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+    e.dataTransfer.setDragImage(target, offsetX, offsetY);
   }
 
   // Drag end handler
