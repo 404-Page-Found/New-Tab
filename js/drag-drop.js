@@ -124,9 +124,8 @@
     const placeholder = dragState.placeholder;
     
     icons.forEach((icon, idx) => {
-      // Skip the source element
+      // Skip the source element - don't change its opacity
       if (icon.id === dragState.sourceId) {
-        icon.style.opacity = '0.3';
         return;
       }
       
