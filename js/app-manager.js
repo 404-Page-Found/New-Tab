@@ -78,6 +78,7 @@ renderAllApps();
 
 // Re-render function (export for other modules)
 window.renderCustomApps = renderAllApps;
+window.renderAllApps = renderAllApps;
 
 // Load and apply open in new tab setting
 function loadOpenNewTabSetting() {
