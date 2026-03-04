@@ -368,6 +368,58 @@ body {
   transform: scale(1.1);
 }
 
+/* Drag Placeholder - shows where item will be dropped */
+.drag-placeholder {
+  background: rgba(33, 150, 243, 0.1);
+  border: 2px dashed rgba(33, 150, 243, 0.5);
+  border-radius: var(--icon-radius, 20px);
+  flex-shrink: 0;
+  animation: placeholderPulse 1.5s ease-in-out infinite;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes placeholderPulse {
+  0%, 100% {
+    background: rgba(33, 150, 243, 0.1);
+    border-color: rgba(33, 150, 243, 0.4);
+  }
+  50% {
+    background: rgba(33, 150, 243, 0.2);
+    border-color: rgba(33, 150, 243, 0.7);
+  }
+}
+
+/* Dodging animation - smooth transition when items move aside */
+.app-grid.dodging .app-icon {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.25s ease,
+              margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* App icon during drag - enhanced visibility */
+.app-grid:has(.dragging) .app-icon:not(.dragging) {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+              opacity 0.2s ease;
+}
+
+/* Light theme placeholder */
+body.light-theme .drag-placeholder {
+  background: rgba(33, 150, 243, 0.08);
+  border-color: rgba(33, 150, 243, 0.4);
+  animation: placeholderPulseLight 1.5s ease-in-out infinite;
+}
+
+@keyframes placeholderPulseLight {
+  0%, 100% {
+    background: rgba(33, 150, 243, 0.08);
+    border-color: rgba(33, 150, 243, 0.3);
+  }
+  50% {
+    background: rgba(33, 150, 243, 0.15);
+    border-color: rgba(33, 150, 243, 0.5);
+  }
+}
+
 .icon {
   width: var(--app-icon-size);
   height: var(--app-icon-size);
