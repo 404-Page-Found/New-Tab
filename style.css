@@ -3774,7 +3774,7 @@ body.light-theme .empty-icon {
 }
 
 .onboarding-tooltip {
-  background: rgba(255, 255, 255, 0.95);
+  background: var(--settings-modal-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-radius: 16px;
@@ -3798,7 +3798,7 @@ body.light-theme .empty-icon {
 .onboarding-step-counter {
   font-size: 14px;
   font-weight: 600;
-  color: #666;
+  color: #9ca3af;
 }
 
 .onboarding-close-btn {
@@ -3806,7 +3806,7 @@ body.light-theme .empty-icon {
   border: none;
   font-size: 24px;
   cursor: pointer;
-  color: #666;
+  color: #9ca3af;
   padding: 0;
   width: 30px;
   height: 30px;
@@ -3818,8 +3818,8 @@ body.light-theme .empty-icon {
 }
 
 .onboarding-close-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
-  color: #333;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
 .onboarding-tooltip-content {
@@ -3830,14 +3830,14 @@ body.light-theme .empty-icon {
   margin: 0 0 8px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #1f2937;
+  color: #ffffff;
   line-height: 1.3;
 }
 
 .onboarding-tooltip-text {
   margin: 0;
   font-size: 14px;
-  color: #6b7280;
+  color: #e5e7eb;
   line-height: 1.5;
 }
 
@@ -3872,14 +3872,14 @@ body.light-theme .empty-icon {
 }
 
 .onboarding-btn-secondary {
-  background: rgba(0, 0, 0, 0.05);
-  color: #6b7280;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.1);
+  color: #e5e7eb;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .onboarding-btn-secondary:hover {
-  background: rgba(0, 0, 0, 0.1);
-  color: #374151;
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
 }
 
 .onboarding-progress {
@@ -3893,7 +3893,7 @@ body.light-theme .empty-icon {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(255, 255, 255, 0.3);
   transition: all 0.2s ease;
   cursor: pointer;
 }
@@ -3909,52 +3909,52 @@ body.light-theme .empty-icon {
 
 /* Light theme adjustments for onboarding */
 body.light-theme .onboarding-overlay {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(0, 0, 0, 0.4);
 }
 
 body.light-theme .onboarding-spotlight {
-  box-shadow: 0 0 0 9999px rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.4);
 }
 
 body.light-theme .onboarding-tooltip {
-  background: rgba(0, 0, 0, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   border-color: rgba(0, 0, 0, 0.1);
 }
 
 body.light-theme .onboarding-tooltip-title {
-  color: #ffffff;
+  color: #1f2937;
 }
 
 body.light-theme .onboarding-tooltip-text {
-  color: #e5e7eb;
+  color: #6b7280;
 }
 
 body.light-theme .onboarding-step-counter {
-  color: #9ca3af;
+  color: #666;
 }
 
 body.light-theme .onboarding-close-btn {
-  color: #9ca3af;
+  color: #666;
 }
 
 body.light-theme .onboarding-close-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
+  background: rgba(0, 0, 0, 0.1);
+  color: #333;
 }
 
 body.light-theme .onboarding-btn-secondary {
-  background: rgba(255, 255, 255, 0.1);
-  color: #e5e7eb;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.05);
+  color: #6b7280;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 body.light-theme .onboarding-btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #ffffff;
+  background: rgba(0, 0, 0, 0.1);
+  color: #374151;
 }
 
 body.light-theme .progress-dot {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 body.light-theme .progress-dot.active {

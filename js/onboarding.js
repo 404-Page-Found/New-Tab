@@ -42,6 +42,15 @@ class OnboardingTour {
         waitForAction: true
       },
       {
+        id: 'theme',
+        title: window.i18n ? window.i18n.t('onboardingThemeTitle') : 'Choose Your Theme 🌙',
+        content: window.i18n ? window.i18n.t('onboardingThemeContent') : 'Select your preferred interface theme. You can switch between dark and light modes anytime in Settings.',
+        target: null,
+        position: 'center',
+        action: 'select-theme',
+        waitForAction: true
+      },
+      {
         id: 'welcome',
         title: window.i18n ? window.i18n.t('onboardingWelcomeTitle') : 'Welcome to New-Tab! 🎉',
         content: window.i18n ? window.i18n.t('onboardingWelcomeContent') : 'Let\'s take a quick tour of the features to help you get started with personalizing your new tab page.',
@@ -211,6 +220,10 @@ class OnboardingTour {
           translatedTitle = window.i18n.t('onboardingLanguageTitle');
           translatedContent = window.i18n.t('onboardingLanguageContent');
           break;
+        case 'theme':
+          translatedTitle = window.i18n.t('onboardingThemeTitle');
+          translatedContent = window.i18n.t('onboardingThemeContent');
+          break;
         case 'welcome':
           translatedTitle = window.i18n.t('onboardingWelcomeTitle');
           translatedContent = window.i18n.t('onboardingWelcomeContent');
@@ -265,6 +278,22 @@ class OnboardingTour {
               <span class="language-code">中文</span>
             </div>
             <input type="radio" name="onboarding-language" value="zh" ${localStorage.getItem('language') === 'zh' ? 'checked' : ''} />
+          </label>
+        </div>
+      `;
+    } else if (step.id === 'theme') {
+      text.innerHTML = `
+        <p>${translatedContent}</p>
+        <div class="theme-options">
+          <label class="theme-option modern">
+            <div class="preview-icon dark"></div>
+            <input type="radio" name="onboarding-theme" value="dark" ${localStorage.getItem('theme') === 'dark' || !localStorage.getItem('theme') ? 'checked' : ''} />
+            <span class="label">${window.i18n ? window.i18n.t('dark') : 'Dark'}</span>
+          </label>
+          <label class="theme-option modern">
+            <div class="preview-icon light"></div>
+            <input type="radio" name="onboarding-theme" value="light" ${localStorage.getItem('theme') === 'light' ? 'checked' : ''} />
+            <span class="label">${window.i18n ? window.i18n.t('light') : 'Light'}</span>
           </label>
         </div>
       `;
@@ -417,6 +446,25 @@ class OnboardingTour {
             // Update motto to match the new language
             if (window.displayDailyMotto) {
               window.displayDailyMotto();
+            }
+            // Proceed to next step after a short delay
+            setTimeout(() => this.nextStep(), 500);
+          });
+        });
+        break;
+      case 'select-theme':
+        // Add event listeners to theme radio buttons
+        const themeRadios = this.overlay.querySelectorAll('input[name="onboarding-theme"]');
+        themeRadios.forEach(radio => {
+          radio.addEventListener('change', (e) => {
+            const selectedTheme = e.target.value;
+            localStorage.setItem('theme', selectedTheme);
+            // Apply theme immediately
+            if (window.applyTheme) {
+              window.applyTheme();
+            } else {
+              // Fallback: directly apply theme
+              document.body.classList.toggle('light-theme', selectedTheme === 'light');
             }
             // Proceed to next step after a short delay
             setTimeout(() => this.nextStep(), 500);

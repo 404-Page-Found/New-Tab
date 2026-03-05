@@ -143,6 +143,8 @@ const translations = {
     // Onboarding
     onboardingLanguageTitle: "Choose Your Language 🌐",
     onboardingLanguageContent: "Select your preferred language for the interface. You can change this later in Settings.",
+    onboardingThemeTitle: "Choose Your Theme 🌙",
+    onboardingThemeContent: "Select your preferred interface theme. You can switch between dark and light modes anytime in Settings.",
     onboardingWelcomeTitle: "Welcome to New-Tab! 🎉",
     onboardingWelcomeContent: "Let's take a quick tour of the features to help you get started with personalizing your new tab page.",
     onboardingClockTitle: "Clock & Date Display",
@@ -303,6 +305,8 @@ const translations = {
     // Onboarding
     onboardingLanguageTitle: "选择您的语言 🌐",
     onboardingLanguageContent: "为界面选择您偏好的语言。您可以稍后在设置中更改此选项。",
+    onboardingThemeTitle: "选择您的主题 🌙",
+    onboardingThemeContent: "选择您偏好的界面主题。您可以随时在设置中在深色和浅色模式之间切换。",
     onboardingWelcomeTitle: "欢迎使用 New-Tab！🎉",
     onboardingWelcomeContent: "让我们快速浏览一下功能，帮助您开始个性化新标签页。",
     onboardingClockTitle: "时钟和日期显示",
