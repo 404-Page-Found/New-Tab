@@ -6,6 +6,8 @@ class UpdateChecker {
     this.apiUrl = `https://api.github.com/repos/${this.repo}/releases/latest`;
     this.currentVersion = window.CURRENT_VERSION; // Use centralized version
     this.checkInterval = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+    this._autoHideTimeoutId = null; // Track auto-hide timeout for cleanup
+    this._autoHideUnsubscribe = null; // Track visibility unsubscribe for cleanup
   }
 
   // Check if update checking is enabled
@@ -90,6 +92,18 @@ class UpdateChecker {
     return null; // No update available
   }
 
+  // Clear any existing auto-hide timer
+  _clearAutoHideTimer() {
+    if (this._autoHideTimeoutId) {
+      clearTimeout(this._autoHideTimeoutId);
+      this._autoHideTimeoutId = null;
+    }
+    if (this._autoHideUnsubscribe) {
+      this._autoHideUnsubscribe();
+      this._autoHideUnsubscribe = null;
+    }
+  }
+
   // Show update notification
   showUpdateNotification(release) {
     // Remove existing notification if present
@@ -106,10 +120,10 @@ class UpdateChecker {
           New-Tab v${release.version} is now available.
         </div>
         <div class="update-notification-actions">
-          <button class="update-btn update-btn-primary" onclick="window.open('${release.url}', '_blank')">
+          <button class="update-btn update-btn-primary" id="update-view-btn">
             View Release
           </button>
-          <button class="update-btn update-btn-secondary" onclick="updateChecker.hideUpdateNotification()">
+          <button class="update-btn update-btn-secondary" id="update-dismiss-btn">
             Dismiss
           </button>
         </div>
@@ -118,48 +132,75 @@ class UpdateChecker {
 
     document.body.appendChild(notification);
 
+    // Add event listeners programmatically for better reliability
+    const viewBtn = document.getElementById('update-view-btn');
+    const dismissBtn = document.getElementById('update-dismiss-btn');
+
+    if (viewBtn) {
+      viewBtn.addEventListener('click', () => {
+        window.open(release.url, '_blank');
+      });
+    }
+
+    if (dismissBtn) {
+      dismissBtn.addEventListener('click', () => {
+        this.hideUpdateNotification();
+      });
+    }
+
     // Auto-hide after 30 seconds (visibility-aware)
     this._scheduleAutoHide(() => this.hideUpdateNotification(), 30000);
   }
 
   // Schedule auto-hide with visibility awareness
   _scheduleAutoHide(callback, delay) {
+    // Clear any existing timer first
+    this._clearAutoHideTimer();
+
     if (window.visibilityManager) {
       let remaining = delay;
       let startTime = Date.now();
-      let timeoutId = null;
 
       const hide = () => {
+        this._clearAutoHideTimer();
         callback();
-        if (unsubscribe) unsubscribe();
       };
 
       const onVisibilityChange = (visible) => {
         if (visible) {
           // Tab became visible, resume timer
           startTime = Date.now();
-          timeoutId = setTimeout(hide, remaining);
+          this._autoHideTimeoutId = setTimeout(hide, remaining);
         } else {
           // Tab hidden, pause timer
-          remaining -= Date.now() - startTime;
-          if (timeoutId) clearTimeout(timeoutId);
+          if (this._autoHideTimeoutId) {
+            remaining -= Date.now() - startTime;
+            clearTimeout(this._autoHideTimeoutId);
+            this._autoHideTimeoutId = null;
+          }
         }
       };
 
-      const unsubscribe = window.visibilityManager.onChange(onVisibilityChange);
+      this._autoHideUnsubscribe = window.visibilityManager.onChange(onVisibilityChange);
 
       // Start timer if visible
       if (window.visibilityManager.isVisible) {
-        timeoutId = setTimeout(hide, remaining);
+        this._autoHideTimeoutId = setTimeout(hide, remaining);
       }
     } else {
       // Fallback for browsers without visibility manager
-      setTimeout(callback, delay);
+      this._autoHideTimeoutId = setTimeout(() => {
+        this._clearAutoHideTimer();
+        callback();
+      }, delay);
     }
   }
 
   // Hide update notification
   hideUpdateNotification() {
+    // Clear the auto-hide timer first to prevent any race conditions
+    this._clearAutoHideTimer();
+    
     const notification = document.querySelector('.update-notification');
     if (notification) {
       notification.remove();
@@ -199,7 +240,7 @@ class UpdateChecker {
           ${message}
         </div>
         <div class="manual-check-notification-actions">
-          <button class="manual-check-btn" onclick="updateChecker.hideManualCheckNotification()">
+          <button class="manual-check-btn" id="manual-check-dismiss-btn">
             Dismiss
           </button>
         </div>
@@ -218,12 +259,81 @@ class UpdateChecker {
 
     document.body.appendChild(notification);
 
+    // Add event listener programmatically
+    const dismissBtn = document.getElementById('manual-check-dismiss-btn');
+    if (dismissBtn) {
+      dismissBtn.addEventListener('click', () => {
+        this.hideManualCheckNotification();
+      });
+    }
+
     // Auto-hide after 5 seconds (visibility-aware)
-    this._scheduleAutoHide(() => this.hideManualCheckNotification(), 5000);
+    this._scheduleManualCheckAutoHide(() => this.hideManualCheckNotification(), 5000);
+  }
+
+  // Schedule auto-hide for manual check notification (separate timer tracking)
+  _scheduleManualCheckAutoHide(callback, delay) {
+    // Clear any existing manual check timer
+    if (this._manualCheckTimeoutId) {
+      clearTimeout(this._manualCheckTimeoutId);
+    }
+    if (this._manualCheckUnsubscribe) {
+      this._manualCheckUnsubscribe();
+    }
+
+    if (window.visibilityManager) {
+      let remaining = delay;
+      let startTime = Date.now();
+
+      const hide = () => {
+        if (this._manualCheckUnsubscribe) {
+          this._manualCheckUnsubscribe();
+          this._manualCheckUnsubscribe = null;
+        }
+        callback();
+      };
+
+      const onVisibilityChange = (visible) => {
+        if (visible) {
+          startTime = Date.now();
+          this._manualCheckTimeoutId = setTimeout(hide, remaining);
+        } else {
+          if (this._manualCheckTimeoutId) {
+            remaining -= Date.now() - startTime;
+            clearTimeout(this._manualCheckTimeoutId);
+            this._manualCheckTimeoutId = null;
+          }
+        }
+      };
+
+      this._manualCheckUnsubscribe = window.visibilityManager.onChange(onVisibilityChange);
+
+      if (window.visibilityManager.isVisible) {
+        this._manualCheckTimeoutId = setTimeout(hide, remaining);
+      }
+    } else {
+      this._manualCheckTimeoutId = setTimeout(() => {
+        if (this._manualCheckUnsubscribe) {
+          this._manualCheckUnsubscribe();
+          this._manualCheckUnsubscribe = null;
+        }
+        callback();
+      }, delay);
+    }
   }
 
   // Hide manual check notification
   hideManualCheckNotification() {
+    // Clear timers
+    if (this._manualCheckTimeoutId) {
+      clearTimeout(this._manualCheckTimeoutId);
+      this._manualCheckTimeoutId = null;
+    }
+    if (this._manualCheckUnsubscribe) {
+      this._manualCheckUnsubscribe();
+      this._manualCheckUnsubscribe = null;
+    }
+
     const notification = document.querySelector('.manual-check-notification');
     if (notification) {
       notification.remove();
