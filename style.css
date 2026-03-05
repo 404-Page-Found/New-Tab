@@ -57,7 +57,7 @@
 #refresh-motto-btn {
   color: #343232;
   background: rgb(200, 200, 200);
-  padding: 3px 6px;
+  padding: 2px 5px;
   border: none;
   border-radius: 8px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -78,7 +78,7 @@
 
 #copy-motto-btn {
   background: rgb(200, 200, 200);
-  padding: 3px 5px;
+  padding: 2px 4px;
   border: none;
   border-radius: 8px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
