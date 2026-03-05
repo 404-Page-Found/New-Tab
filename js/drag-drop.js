@@ -62,7 +62,10 @@
     
     // Calculate position relative to grid
     const relativeX = e.clientX - gridRect.left - layout.paddingLeft;
-    const relativeY = e.clientY - gridRect.top - grid.querySelector('.app-icon')?.offsetTop || 30;
+    // NOTE: the || operator had lower precedence, causing a constant 30 when
+    // the subtraction evaluated to 0 or NaN.  Parentheses fix the order.
+    const relativeY = e.clientY - gridRect.top -
+      (grid.querySelector('.app-icon')?.offsetTop || 30);
     
     // Calculate row and column
     const col = Math.max(0, Math.floor(relativeX / itemWidth));
@@ -151,22 +154,30 @@
     dragState.dropIndex = -1;
   }
 
-  // Handle drag events using event delegation
+  // Handle drag events using event delegation.  We want drop events
+  // even when the pointer isn't over another icon, so `handleDrop` may be
+  // invoked with `target===null`.
   function handleDragEvent(e) {
     const type = e.type;
     const target = e.target.closest('.app-icon');
-    
-    if (!target || target.id === 'new-app' || target.id === 'add-app') {
+
+    // Helper to ignore the "new/app" button for dragstart only
+    const isControl = target && (target.id === 'new-app' || target.id === 'add-app');
+
+    if (type === 'dragstart') {
+      if (!target || isControl) return;
+      handleDragStart(e, target);
       return;
     }
 
+    if (type === 'dragend') {
+      // even if target is null, we need to clean up state
+      handleDragEnd(e, target);
+      return;
+    }
+
+    // For the remaining events we allow target to be null
     switch (type) {
-      case 'dragstart':
-        handleDragStart(e, target);
-        break;
-      case 'dragend':
-        handleDragEnd(e, target);
-        break;
       case 'dragover':
         handleDragOver(e, target);
         break;
@@ -232,22 +243,26 @@
     dragState.placeholder = null;
   }
 
-  // Drag over handler
+  // Drag over handler (fires when cursor is over an icon).  It is
+  // possible for `target` to be null if the user is hovering empty grid
+  // space; the global dragover listener already handles placeholder
+  // positioning in that case.
   function handleDragOver(e, target) {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
-    
-    // Only add class if not dragging the same element
-    if (target.id !== dragState.sourceId) {
-      target.classList.add('drag-over');
-    }
-    
-    // Update placeholder position based on target
-    const icons = getDraggableIcons();
-    const targetIndex = icons.indexOf(target);
-    
-    if (targetIndex !== -1 && targetIndex !== dragState.dropIndex) {
-      insertPlaceholder(targetIndex);
+
+    if (target) {
+      // Only add class if not dragging the same element
+      if (target.id !== dragState.sourceId) {
+        target.classList.add('drag-over');
+      }
+
+      // Update placeholder position based on target
+      const icons = getDraggableIcons();
+      const targetIndex = icons.indexOf(target);
+      if (targetIndex !== -1 && targetIndex !== dragState.dropIndex) {
+        insertPlaceholder(targetIndex);
+      }
     }
   }
 
@@ -260,55 +275,55 @@
   function handleDrop(e, target) {
     e.preventDefault();
     e.stopPropagation();
-    
-    target.classList.remove('drag-over');
-    
-    const sourceId = dragState.sourceId;
-    const targetId = target.id;
-    
-    // Don't do anything if dropped on same element
-    if (!sourceId || sourceId === targetId) {
-      return;
+
+    if (target) {
+      target.classList.remove('drag-over');
     }
-    
+
+    const sourceId = dragState.sourceId;
+    if (!sourceId) return;
+
     // Get current order from localStorage
     let order = JSON.parse(localStorage.getItem('appOrder') || 'null');
     if (!order) {
       return;
     }
-    
-    // Use the calculated drop index
+
+    // Compute where we want to move the source; prefer the placeholder index
     let toIdx = dragState.dropIndex;
     const fromIdx = order.indexOf(sourceId);
-    
-    // If no placeholder was created, fall back to target-based index
-    if (toIdx === -1) {
-      toIdx = order.indexOf(targetId);
+
+    if (toIdx === -1 && target) {
+      // fallback when we dropped directly on another icon
+      toIdx = order.indexOf(target.id);
     }
-    
-    // Both elements must be in the order array
+
+    // nothing to do if source or target not found
     if (fromIdx === -1 || toIdx === -1) {
       return;
     }
-    
-    // Adjust index if moving forward
+
+    // When moving forward in the array the removal shifts indices left;
+    // compensate so the item ends up *after* the placeholder position.
     let adjustedToIdx = toIdx;
     if (fromIdx < toIdx) {
       adjustedToIdx = toIdx - 1;
     }
-    
-    // Create new order
+
+    // Reorder
     const newOrder = order.slice();
     const [movedItem] = newOrder.splice(fromIdx, 1);
     newOrder.splice(adjustedToIdx, 0, movedItem);
-    
-    // Save new order
+
+    // Persist and refresh
     localStorage.setItem('appOrder', JSON.stringify(newOrder));
-    
-    // Re-render apps (instead of reloading page)
     if (typeof window.renderAllApps === 'function') {
       window.renderAllApps();
     }
+
+    // Clear placeholder & state (dragend will also run, but be safe)
+    removePlaceholder();
+    dragState.dropIndex = -1;
   }
 
   // Attach event listeners to the container (event delegation)
