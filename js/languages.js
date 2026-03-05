@@ -160,7 +160,12 @@ const translations = {
     onboardingSettingsTitle: "Customization Center",
     onboardingSettingsContent: "Click the gear icon to access extensive customization options for themes, styling, and more.",
     onboardingCompleteTitle: "You're All Set! ✨",
-    onboardingCompleteContent: "You now know the basics of New-Tab. Explore the settings to make it truly yours. You can always restart this tour from Settings > About."
+    onboardingCompleteContent: "You now know the basics of New-Tab. Explore the settings to make it truly yours. You can always restart this tour from Settings > About.",
+
+    // Onboarding navigation
+    previous: "Previous",
+    next: "Next",
+    finish: "Finish"
   },
 
   zh: {
@@ -322,7 +327,12 @@ const translations = {
     onboardingSettingsTitle: "自定义中心",
     onboardingSettingsContent: "点击齿轮图标访问主题、样式等方面的广泛自定义选项。",
     onboardingCompleteTitle: "您已准备就绪！✨",
-    onboardingCompleteContent: "您现在知道了 New-Tab 的基础知识。探索设置以使其真正属于您。您可以随时从设置 > 关于中重新启动此之旅。"
+    onboardingCompleteContent: "您现在知道了 New-Tab 的基础知识。探索设置以使其真正属于您。您可以随时从设置 > 关于中重新启动此之旅。",
+
+    // Onboarding navigation
+    previous: "上一步",
+    next: "下一步",
+    finish: "完成"
   }
 };
 

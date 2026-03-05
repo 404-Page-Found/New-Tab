@@ -336,7 +336,13 @@ class OnboardingTour {
 
     // Handle navigation buttons
     prevBtn.style.display = this.currentStep === 0 ? 'none' : 'block';
-    nextBtn.textContent = this.currentStep === this.steps.length - 1 ? 'Finish' : 'Next';
+    
+    // Update button labels with translated text
+    const prevText = window.i18n ? window.i18n.t('previous') : 'Previous';
+    const nextText = window.i18n ? window.i18n.t('next') : 'Next';
+    const finishText = window.i18n ? window.i18n.t('finish') : 'Finish';
+    nextBtn.textContent = this.currentStep === this.steps.length - 1 ? finishText : nextText;
+    prevBtn.textContent = prevText;
 
     // Handle special actions
     if (step.action) {
