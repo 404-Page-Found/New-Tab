@@ -98,7 +98,7 @@ class OnboardingTour {
       {
         id: 'motto',
         title: window.i18n ? window.i18n.t('onboardingMottoTitle') : 'Daily Inspiration',
-        content: window.i18n ? window.i18n.t('onboardingMottoContent') : 'Enjoy a new motivational quote each day. Click ↻ to get a random quote or ↩ to copy it.',
+        content: window.i18n ? window.i18n.t('onboardingMottoContent') : 'Enjoy a new motivational quote each day. Click the refresh button to get a random quote or the copy button to copy it.',
         target: '#motto-container',
         position: 'top',
         action: null,
