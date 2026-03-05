@@ -74,7 +74,7 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
 
   // Add app from input
   const addAppFromInput = (url) => {
-    let name = url.replace(/^https?:\/\//, "").split("/")[0];
+    let name = url.replace(/^https?:\/\//, "").split("/")[0].replace(/\.[^.]*$/, "");
     const icon = window.getFavicon ? window.getFavicon(url) : url.replace(/^https?:\/\//, "").split("/")[0] + "/favicon.ico";
     const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
     const id = 'custom-app-' + Date.now() + '-' + Math.floor(Math.random()*100000);
