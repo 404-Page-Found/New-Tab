@@ -138,7 +138,27 @@ const translations = {
 
     // Todo date picker
     clearDate: "Clear",
-    todayDate: "Today"
+    todayDate: "Today",
+
+    // Onboarding
+    onboardingLanguageTitle: "Choose Your Language 🌐",
+    onboardingLanguageContent: "Select your preferred language for the interface. You can change this later in Settings.",
+    onboardingWelcomeTitle: "Welcome to New-Tab! 🎉",
+    onboardingWelcomeContent: "Let's take a quick tour of the features to help you get started with personalizing your new tab page.",
+    onboardingClockTitle: "Clock & Date Display",
+    onboardingClockContent: "Your current time and date are displayed here. You can customize the appearance in Settings.",
+    onboardingSearchTitle: "Smart Search",
+    onboardingSearchContent: "Search the web directly from your new tab. Click the search icon to switch between different search engines.",
+    onboardingAppsTitle: "App Shortcuts",
+    onboardingAppsContent: "Add your favorite websites as quick-launch icons. Drag and drop to reorder them.",
+    onboardingBackgroundTitle: "Beautiful Backgrounds",
+    onboardingBackgroundContent: "Choose from stunning built-in backgrounds or upload your own. Access this in Settings > Background.",
+    onboardingMottoTitle: "Daily Inspiration",
+    onboardingMottoContent: "Enjoy a new motivational quote each day. Click ↻ to get a random quote or ↩ to copy it.",
+    onboardingSettingsTitle: "Customization Center",
+    onboardingSettingsContent: "Click the gear icon to access extensive customization options for themes, styling, and more.",
+    onboardingCompleteTitle: "You're All Set! ✨",
+    onboardingCompleteContent: "You now know the basics of New-Tab. Explore the settings to make it truly yours. You can always restart this tour from Settings > About."
   },
 
   zh: {
@@ -278,7 +298,27 @@ const translations = {
 
     // Todo date picker
     clearDate: "清除",
-    todayDate: "今天"
+    todayDate: "今天",
+
+    // Onboarding
+    onboardingLanguageTitle: "选择您的语言 🌐",
+    onboardingLanguageContent: "为界面选择您偏好的语言。您可以稍后在设置中更改此选项。",
+    onboardingWelcomeTitle: "欢迎使用 New-Tab！🎉",
+    onboardingWelcomeContent: "让我们快速浏览一下功能，帮助您开始个性化新标签页。",
+    onboardingClockTitle: "时钟和日期显示",
+    onboardingClockContent: "此处显示您当前的日期和时间。您可以在设置中自定义外观。",
+    onboardingSearchTitle: "智能搜索",
+    onboardingSearchContent: "直接从新标签页搜索网络。点击搜索图标可在不同的搜索引擎之间切换。",
+    onboardingAppsTitle: "应用快捷方式",
+    onboardingAppsContent: "将您最喜爱的网站添加为快速启动图标。拖拽重新排序。",
+    onboardingBackgroundTitle: "美丽的背景",
+    onboardingBackgroundContent: "从令人惊叹的内置背景中选择，或上传您自己的背景。在设置 > 背景中访问此功能。",
+    onboardingMottoTitle: "每日灵感",
+    onboardingMottoContent: "每天享受新的励志语录。点击 ↻ 获取随机语录或 ↩ 复制它。",
+    onboardingSettingsTitle: "自定义中心",
+    onboardingSettingsContent: "点击齿轮图标访问主题、样式等方面的广泛自定义选项。",
+    onboardingCompleteTitle: "您已准备就绪！✨",
+    onboardingCompleteContent: "您现在知道了 New-Tab 的基础知识。探索设置以使其真正属于您。您可以随时从设置 > 关于中重新启动此之旅。"
   }
 };
 
