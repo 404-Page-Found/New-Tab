@@ -73,11 +73,11 @@
     
     // Calculate index
     let index = row * itemsPerRow + col;
-    const maxIndex = icons.length - 1;
     
-    // Clamp index - ensure placeholder never goes after the last draggable icon
+    // Allow index to reach icons.length so we can drop after the last icon
+    // Clamp index to [0, icons.length]
     if (index < 0) index = 0;
-    if (index > maxIndex) index = maxIndex;
+    if (index > icons.length) index = icons.length;
     
     return index;
   }
@@ -106,29 +106,38 @@
     }
     
     // Ensure we never place placeholder after the add app button
-    // Clamp index to valid range
-    const maxIndex = Math.min(index, icons.length - 1);
+    // Clamp index to valid range (0 through icons.length inclusive)
+    let insertIndex = index;
+    if (insertIndex < 0) insertIndex = 0;
+    if (insertIndex > icons.length) insertIndex = icons.length;
     
     // Insert at the appropriate position
-    if (maxIndex < 0 || icons.length === 0) {
+    if (icons.length === 0) {
       // No icons yet, insert before add app button
       if (addAppBtn) {
         grid.insertBefore(dragState.placeholder, addAppBtn);
       } else {
         grid.appendChild(dragState.placeholder);
       }
-    } else if (maxIndex === 0) {
+    } else if (insertIndex === 0) {
       grid.insertBefore(dragState.placeholder, icons[0]);
+    } else if (insertIndex === icons.length) {
+      // Place after the last icon (before add-app button if present)
+      if (addAppBtn) {
+        grid.insertBefore(dragState.placeholder, addAppBtn);
+      } else {
+        grid.appendChild(dragState.placeholder);
+      }
     } else {
       // Find the icon at the target index
-      const targetIcon = icons[maxIndex];
+      const targetIcon = icons[insertIndex];
       grid.insertBefore(dragState.placeholder, targetIcon);
     }
     
     // Animate other icons to dodge
-    animateDodging(index);
+    animateDodging(insertIndex);
     
-    dragState.dropIndex = index;
+    dragState.dropIndex = insertIndex;
   }
 
   // Animate icons to dodge around the placeholder
@@ -298,13 +307,18 @@
       toIdx = order.indexOf(target.id);
     }
 
-    // nothing to do if source or target not found
-    if (fromIdx === -1 || toIdx === -1) {
+    // nothing to do if source not found
+    if (fromIdx === -1) {
       return;
     }
 
+    // If toIdx is invalid (e.g. placeholder at end) treat it as insertion at the end
+    if (toIdx === -1 || toIdx > order.length) {
+      toIdx = order.length;
+    }
+
     // When moving forward in the array the removal shifts indices left;
-    // compensate so the item ends up *after* the placeholder position.
+    // compensate so the item ends up *after* the drop position.
     let adjustedToIdx = toIdx;
     if (fromIdx < toIdx) {
       adjustedToIdx = toIdx - 1;
