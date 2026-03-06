@@ -3,7 +3,7 @@
 // Default apps list
 const defaultAppsList = [];
 
-// Render default apps list in modal
+// Render default apps list in modal - modern grid layout
 function renderDefaultAppsList() {
   const container = document.getElementById("default-apps-list");
   if (!container) return;
@@ -13,18 +13,20 @@ function renderDefaultAppsList() {
   for (let i = 0; i < defaultAppsList.length; i++) {
     const app = defaultAppsList[i];
     const btn = document.createElement("button");
-    btn.style.display = "inline-flex";
-    btn.style.alignItems = "center";
-    btn.style.gap = "8px";
-    btn.style.margin = "2px 4px 2px 0";
-    btn.style.padding = "6px 12px";
-    btn.style.border = "1px solid #ddd";
-    btn.style.borderRadius = "8px";
-    btn.style.background = "#f5f7fa";
-    btn.style.cursor = "pointer";
-    btn.innerHTML = app.icon
-      ? `<img src="${app.icon}" alt="${app.name}" style="width:20px;height:20px;object-fit:contain;background:#f5f7fa;display:block;">`
-      : `<span style='display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:6px;background:#fff;font-size:16px;font-weight:bold;'>T</span>` + `<span>${app.name}</span>`;
+    btn.className = 'quick-add-btn';
+    btn.innerHTML = `
+      <div class="quick-add-icon">
+        ${app.icon 
+          ? `<img src="${app.icon}" alt="${app.name}" />`
+          : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21,15 16,10 5,21"></polyline>
+            </svg>`
+        }
+      </div>
+      <span class="quick-add-name">${app.name}</span>
+    `;
     btn.addEventListener("click", function () {
       if (existingNames.has(app.name)) return;
       const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
@@ -50,6 +52,82 @@ const addAppUrlInput = document.getElementById("add-app-url");
 const addAppCancel = document.getElementById("add-app-cancel");
 const addAppConfirm = document.getElementById("add-app-confirm");
 
+// URL validation function
+function isValidUrl(string) {
+  try {
+    const url = new URL(string.startsWith('http') ? string : 'https://' + string);
+    return url.hostname.length > 0;
+  } catch (_) {
+    return false;
+  }
+}
+
+// Extract app name from URL
+function extractAppName(url) {
+  try {
+    const urlObj = new URL(url.startsWith('http') ? url : 'https://' + url);
+    let name = urlObj.hostname.replace(/^www\./, '').split('.')[0];
+    // Capitalize first letter
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    return name;
+  } catch (_) {
+    return 'App Name';
+  }
+}
+
+// Get favicon URL
+function getFaviconUrl(url) {
+  try {
+    const urlObj = new URL(url.startsWith('http') ? url : 'https://' + url);
+    return `https://www.google.com/s2/favicons?domain=${urlObj.hostname}&sz=64`;
+  } catch (_) {
+    return null;
+  }
+}
+
+// Update preview based on input
+function updatePreview() {
+  const url = addAppUrlInput.value.trim();
+  const previewSection = document.getElementById('add-app-preview');
+  const previewIcon = document.getElementById('preview-icon');
+  const previewName = document.getElementById('preview-name');
+  const previewUrl = document.getElementById('preview-url');
+  const validationIcon = document.querySelector('.add-app-url-validation');
+  
+  if (!url) {
+    previewSection.classList.remove('visible', 'valid', 'invalid');
+    validationIcon.classList.remove('show', 'valid', 'invalid');
+    addAppConfirm.disabled = true;
+    return;
+  }
+  
+  const isValid = isValidUrl(url);
+  const fullUrl = url.startsWith('http') ? url : 'https://' + url;
+  const appName = extractAppName(url);
+  
+  // Update preview
+  previewName.textContent = appName;
+  previewUrl.textContent = fullUrl;
+  
+  // Try to load favicon
+  const faviconUrl = getFaviconUrl(url);
+  if (faviconUrl) {
+    previewIcon.innerHTML = `<img src="${faviconUrl}" alt="${appName}" onerror="this.parentElement.innerHTML='<svg viewBox=\\'0 0 24 24\\' fill=\\'none\\' stroke=\\'currentColor\\' stroke-width=\\'1.5\\'><rect x=\\'3\\' y=\\'3\\' width=\\'18\\' height=\\'18\\' rx=\\'2\\' ry=\\'2\\'></rect><circle cx=\\'8.5\\' cy=\\'8.5\\' r=\\'1.5\\'></circle><polyline points=\\'21,15 16,10 5,21\\'></polyline></svg>'" />`;
+  }
+  
+  // Show validation state
+  previewSection.classList.add('visible');
+  previewSection.classList.toggle('valid', isValid);
+  previewSection.classList.toggle('invalid', !isValid);
+  
+  validationIcon.classList.add('show');
+  validationIcon.classList.toggle('valid', isValid);
+  validationIcon.classList.toggle('invalid', !isValid);
+  
+  // Enable/disable confirm button
+  addAppConfirm.disabled = !isValid;
+}
+
 // Open modal
 if (addAppBtn && addAppModal && addAppUrlInput) {
   addAppBtn.addEventListener("click", function (e) {
@@ -58,6 +136,13 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
     addAppUrlInput.value = "";
     addAppUrlInput.focus();
     renderDefaultAppsList();
+    
+    // Reset preview
+    const previewSection = document.getElementById('add-app-preview');
+    const validationIcon = document.querySelector('.add-app-url-validation');
+    previewSection.classList.remove('visible', 'valid', 'invalid');
+    validationIcon.classList.remove('show', 'valid', 'invalid');
+    addAppConfirm.disabled = true;
   });
 
   // Close on outside click
@@ -74,8 +159,8 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
 
   // Add app from input
   const addAppFromInput = (url) => {
-    let name = url.replace(/^https?:\/\//, "").split("/")[0].replace(/\.[^.]*$/, "");
-    const icon = window.getFavicon ? window.getFavicon(url) : url.replace(/^https?:\/\//, "").split("/")[0] + "/favicon.ico";
+    let name = extractAppName(url);
+    const icon = getFaviconUrl(url);
     const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
     const id = 'custom-app-' + Date.now() + '-' + Math.floor(Math.random()*100000);
     apps.push({
@@ -93,12 +178,17 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
     addAppModal.style.display = "none";
   };
 
+  // Input event for real-time preview
+  addAppUrlInput.addEventListener("input", function() {
+    updatePreview();
+  });
+
   // Enter key in input
   addAppUrlInput.addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
       e.preventDefault();
       const url = this.value.trim();
-      if (!url) return;
+      if (!url || !isValidUrl(url)) return;
       addAppFromInput(url);
     }
   });
@@ -107,7 +197,7 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
   if (addAppConfirm) {
     addAppConfirm.addEventListener("click", function () {
       const url = addAppUrlInput.value.trim();
-      if (!url) return;
+      if (!url || !isValidUrl(url)) return;
       addAppFromInput(url);
     });
   }
