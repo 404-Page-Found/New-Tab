@@ -23,11 +23,8 @@ function getFavicon(url) {
   }
 }
 
-// Default apps
-const defaultApps = [
-  { id: 'feedback-app', nameKey: 'feedback', url: 'https://github.com/404-Page-Found/New-Tab/issues/new', icon: 'images/icons/feedback.svg', className: 'default-app' },
-  { id: 'settings-app', nameKey: 'settings', url: '#', icon: 'images/icons/settings.svg', className: 'default-app' },
-];
+// Default apps (settings & feedback moved to corner buttons)
+const defaultApps = [];
 
 // Get all apps data
 const getAllAppData = () => {
@@ -87,7 +84,6 @@ function applyOpenNewTabSetting() {
   const openInNewTab = loadOpenNewTabSetting();
   const appLinks = document.querySelectorAll(".app-grid .app-icon");
   appLinks.forEach((link) => {
-    if (link.id === "settings-app") return;
     if (openInNewTab) {
       link.setAttribute("target", "_blank");
       link.setAttribute("rel", "noopener noreferrer");
@@ -178,21 +174,19 @@ applyCurvature();
 
 
 
-// Attach settings app click handler
+// Attach settings corner button click handler
 function attachSettingsAppHandler() {
-  const settingsApp = document.getElementById("settings-app");
-  if (settingsApp) {
-    // Remove existing listeners to avoid duplicates
-    settingsApp.removeEventListener("click", settingsApp._clickHandler);
-    // Create and attach new handler
-    settingsApp._clickHandler = function (e) {
+  const settingsBtn = document.getElementById("settings-btn");
+  if (settingsBtn) {
+    settingsBtn.removeEventListener("click", settingsBtn._clickHandler);
+    settingsBtn._clickHandler = function (e) {
       e.preventDefault();
       const settingsModal = document.getElementById("settings-modal");
       if (settingsModal) {
         settingsModal.style.display = "flex";
       }
     };
-    settingsApp.addEventListener("click", settingsApp._clickHandler);
+    settingsBtn.addEventListener("click", settingsBtn._clickHandler);
   }
 
   // Attach modal close handler (only once)

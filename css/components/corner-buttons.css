@@ -1,0 +1,91 @@
+/* =============================================
+   Corner Buttons (Settings & Feedback)
+   ============================================= */
+
+.corner-buttons {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 999;
+}
+
+.corner-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  padding: 0;
+}
+
+.corner-btn svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.corner-btn:hover {
+  transform: scale(1.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+
+.corner-btn.settings-btn:hover {
+  background: rgba(33, 150, 243, 0.25);
+  border-color: rgba(33, 150, 243, 0.4);
+  color: #fff;
+}
+
+.corner-btn.settings-btn:hover svg {
+  transform: rotate(90deg);
+}
+
+.corner-btn.feedback-btn:hover {
+  background: rgba(76, 175, 80, 0.25);
+  border-color: rgba(76, 175, 80, 0.4);
+  color: #fff;
+}
+
+.corner-btn.feedback-btn:hover svg {
+  transform: scale(1.1);
+}
+
+.corner-btn:active {
+  transform: scale(0.95);
+}
+
+/* --- Light Theme: Corner Buttons --- */
+
+body.light-theme .corner-btn {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgba(55, 65, 81, 0.85);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .corner-btn:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+body.light-theme .corner-btn.settings-btn:hover {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #1976d2;
+}
+
+body.light-theme .corner-btn.feedback-btn:hover {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: rgba(76, 175, 80, 0.3);
+  color: #388e3c;
+}

@@ -130,9 +130,16 @@ function setupCopyMotto() {
 // Make displayDailyMotto globally accessible for language switching
 window.displayDailyMotto = displayDailyMotto;
 
-// Set the motto and button functionality after the page has finished loading
-document.addEventListener("DOMContentLoaded", () => {
+// Set the motto and button functionality
+// Use readyState check since scripts may load after DOMContentLoaded has fired
+if (document.readyState === 'loading') {
+  document.addEventListener("DOMContentLoaded", () => {
+    displayDailyMotto();
+    setupRefreshMotto();
+    setupCopyMotto();
+  });
+} else {
   displayDailyMotto();
   setupRefreshMotto();
   setupCopyMotto();
-});
+}
