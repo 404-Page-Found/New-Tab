@@ -52,16 +52,6 @@ const addAppUrlInput = document.getElementById("add-app-url");
 const addAppCancel = document.getElementById("add-app-cancel");
 const addAppConfirm = document.getElementById("add-app-confirm");
 
-// URL validation function
-function isValidUrl(string) {
-  try {
-    const url = new URL(string.startsWith('http') ? string : 'https://' + string);
-    return url.hostname.length > 0;
-  } catch (_) {
-    return false;
-  }
-}
-
 // Extract app name from URL
 function extractAppName(url) {
   try {
@@ -93,16 +83,23 @@ function updatePreview() {
   const previewName = document.getElementById('preview-name');
   const previewUrl = document.getElementById('preview-url');
   const validationIcon = document.querySelector('.add-app-url-validation');
+  const validationMessage = document.querySelector('.add-app-validation-message');
   
   if (!url) {
     previewSection.classList.remove('visible', 'valid', 'invalid');
     validationIcon.classList.remove('show', 'valid', 'invalid');
+    if (validationMessage) {
+      validationMessage.textContent = '';
+      validationMessage.classList.remove('show');
+    }
     addAppConfirm.disabled = true;
     return;
   }
   
-  const isValid = isValidUrl(url);
-  const fullUrl = url.startsWith('http') ? url : 'https://' + url;
+  // Use the comprehensive validateUrl function
+  const validation = validateUrl(url);
+  const isValid = validation.status === 'valid';
+  const fullUrl = validation.url ? validation.url.href : (url.startsWith('http') ? url : 'https://' + url);
   const appName = extractAppName(url);
   
   // Update preview
@@ -124,6 +121,14 @@ function updatePreview() {
   validationIcon.classList.toggle('valid', isValid);
   validationIcon.classList.toggle('invalid', !isValid);
   
+  // Show detailed validation message
+  if (validationMessage) {
+    validationMessage.textContent = validation.message;
+    validationMessage.classList.toggle('show', true);
+    validationMessage.classList.toggle('malformed', validation.status === 'malformed');
+    validationMessage.classList.toggle('undetectable', validation.status === 'undetectable');
+  }
+  
   // Enable/disable confirm button
   addAppConfirm.disabled = !isValid;
 }
@@ -140,8 +145,13 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
     // Reset preview
     const previewSection = document.getElementById('add-app-preview');
     const validationIcon = document.querySelector('.add-app-url-validation');
+    const validationMessage = document.querySelector('.add-app-validation-message');
     previewSection.classList.remove('visible', 'valid', 'invalid');
     validationIcon.classList.remove('show', 'valid', 'invalid');
+    if (validationMessage) {
+      validationMessage.textContent = '';
+      validationMessage.classList.remove('show', 'malformed', 'undetectable');
+    }
     addAppConfirm.disabled = true;
   });
 
@@ -188,7 +198,9 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
     if (e.key === "Enter") {
       e.preventDefault();
       const url = this.value.trim();
-      if (!url || !isValidUrl(url)) return;
+      if (!url) return;
+      const validation = validateUrl(url);
+      if (validation.status !== 'valid') return;
       addAppFromInput(url);
     }
   });
@@ -197,7 +209,9 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
   if (addAppConfirm) {
     addAppConfirm.addEventListener("click", function () {
       const url = addAppUrlInput.value.trim();
-      if (!url || !isValidUrl(url)) return;
+      if (!url) return;
+      const validation = validateUrl(url);
+      if (validation.status !== 'valid') return;
       addAppFromInput(url);
     });
   }
