@@ -444,16 +444,35 @@ body.light-theme .drag-placeholder {
 }
 .clock {
   text-align: center;
-  font-size: 5em;
+  font-size: clamp(3rem, 10vw, 6rem);
   color: #ffffff;
   margin-bottom: 20px;
-  font-weight: 300;
+  font-weight: 200;
+  letter-spacing: 4px;
+  text-shadow: 0 0 40px rgba(255, 255, 255, 0.3), 0 0 80px rgba(33, 150, 243, 0.2);
+  animation: clockGlow 4s ease-in-out infinite alternate;
 }
+
+@keyframes clockGlow {
+  0% {
+    text-shadow: 0 0 40px rgba(255, 255, 255, 0.3), 0 0 80px rgba(33, 150, 243, 0.2);
+  }
+  100% {
+    text-shadow: 0 0 60px rgba(255, 255, 255, 0.5), 0 0 120px rgba(33, 150, 243, 0.4);
+  }
+}
+
 .date {
   text-align: center;
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 30px;
-  font-size: 1.5em;
+  font-size: clamp(1rem, 3vw, 1.5em);
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0;
+  animation: fadeInUp 0.8s ease-out forwards;
+  animation-delay: 0.3s;
 }
 #settings-modal {
   display: none;
@@ -3506,6 +3525,18 @@ body.light-theme .calendar-btn.secondary:hover {
   to {
     opacity: 0;
     transform: scale(0.95) translateY(-10px);
+  }
+}
+
+/* Fade in up animation for date */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
