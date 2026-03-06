@@ -131,6 +131,7 @@
 /* Modern Add App Modal Styles */
 #add-app-modal > div {
   padding: 28px 24px;
+  min-width: 520px;
 }
 
 .add-app-header {
@@ -138,23 +139,35 @@
   align-items: center;
   gap: 16px;
   margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .add-app-header-icon {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
-  border-radius: 14px;
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #d946ef 100%);
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+  animation: iconPulse 3s ease-in-out infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 30px rgba(139, 92, 246, 0.5);
+  }
 }
 
 .add-app-header-icon svg {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   color: white;
 }
 
