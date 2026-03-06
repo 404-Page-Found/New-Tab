@@ -538,8 +538,32 @@
   box-shadow: 0 6px 20px rgba(255, 0, 0, 0.1);
 }
 
+.reset-card .setting-icon {
+  stroke: rgba(255, 0, 0, 0.8);
+}
+
 .reset-card:hover .setting-icon {
   stroke: #ff0000;
+}
+
+.setting-card button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: fit-content;
+  box-shadow: 0 2px 6px rgba(255, 0, 0, 0.2);
+}
+
+.setting-card button:hover {
+  background: rgba(255, 0, 0, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.4);
 }
 
 /* About Section */
@@ -593,14 +617,36 @@
 
 /* Update Settings Group */
 .update-settings-group {
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(107, 114, 128, 0.2);
 }
 
 .update-settings-group:last-child {
   border-bottom: none;
   margin-bottom: 0;
+}
+
+.update-settings-group h4 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.update-settings-group label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.update-settings-group p {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.4;
 }
 
 .update-settings-group .setting-btn {
