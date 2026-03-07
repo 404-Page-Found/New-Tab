@@ -199,7 +199,7 @@
 .add-app-input-icon {
   position: absolute;
   left: 14px;
-  top: 25%;
+  top: 23%;
   width: 20px;
   height: 20px;
   color: rgba(203, 213, 225, 0.5);
@@ -230,7 +230,7 @@
 .add-app-url-validation {
   position: absolute;
   right: 14px;
-  top: 50%;
+  top: 40%;
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
