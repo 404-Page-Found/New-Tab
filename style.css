@@ -189,19 +189,34 @@
   margin-bottom: 16px;
 }
 
+.add-app-input-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
 .add-app-input-icon {
   position: absolute;
   left: 14px;
-  top: 35%;
-  transform: translateY(-50%);
   width: 20px;
   height: 20px;
   color: rgba(203, 213, 225, 0.5);
   pointer-events: none;
   transition: color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
 }
 
-.add-app-input-wrapper:focus-within .add-app-input-icon {
+.add-app-input-container input {
+  padding-left: 44px;
+  padding-right: 44px;
+  width: 100%;
+}
+
+.add-app-input-container:focus-within .add-app-input-icon {
   color: #2196f3;
 }
 
@@ -210,10 +225,6 @@
   height: 100%;
 }
 
-#add-app-modal .add-app-input-wrapper input {
-  padding-left: 44px;
-  padding-right: 44px;
-}
 
 .add-app-url-validation {
   position: absolute;
@@ -548,13 +559,13 @@ body.light-theme .add-app-input-icon {
   color: rgba(55, 65, 81, 0.5);
 }
 
-body.light-theme #add-app-modal .add-app-input-wrapper input {
+body.light-theme .add-app-input-container input {
   background: rgba(255, 255, 255, 0.9);
   border-color: rgba(0, 0, 0, 0.1);
   color: #1f2937;
 }
 
-body.light-theme #add-app-modal .add-app-input-wrapper input:focus {
+body.light-theme .add-app-input-container input:focus {
   border-color: #2196f3;
   background: rgba(255, 255, 255, 1);
   box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
