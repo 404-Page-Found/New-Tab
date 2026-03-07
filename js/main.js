@@ -33,9 +33,9 @@ let clockInterval = null;
 function initClock() {
   // Use VisibilityInterval if available, fallback to regular setInterval
   if (window.VisibilityInterval) {
-    clockInterval = new VisibilityInterval(updateTime, 60000);
+    clockInterval = new VisibilityInterval(updateTime, 1000);
   } else {
-    clockInterval = setInterval(updateTime, 60000);
+    clockInterval = setInterval(updateTime, 1000);
   }
 }
 
