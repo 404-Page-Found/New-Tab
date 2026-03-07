@@ -199,6 +199,7 @@
 .add-app-input-icon {
   position: absolute;
   left: 14px;
+  top: 25%;
   width: 20px;
   height: 20px;
   color: rgba(203, 213, 225, 0.5);
@@ -211,7 +212,7 @@
 }
 
 .add-app-input-container input {
-  padding-left: 44px;
+  padding-left: 44px !important;
   padding-right: 44px;
   width: 100%;
 }
