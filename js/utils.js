@@ -28,7 +28,7 @@ function validateUrl(input) {
     return {
       status: 'undetectable',
       url: null,
-      message: 'This appears to be a search query. Press Enter to search.',
+      message: 'This URL appears to be invalid. Press Enter to Create',
       originalInput: originalInput
     };
   }
