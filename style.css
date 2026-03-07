@@ -666,7 +666,7 @@ body.light-theme .btn-secondary:hover {
   --modal-width: 420px;
   --modal-min-height: 500px;
   --overlay-max-height: calc(100vh - 225px);
-  --icon-radius: 20px;
+  --icon-radius: 33.33%;
   /* Theme specific colors */
   --body-bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   --settings-modal-bg: rgba(0, 0, 0, 0.85);
@@ -876,7 +876,7 @@ body {
 .drag-placeholder {
   background: rgba(33, 150, 243, 0.1);
   border: 2px dashed rgba(33, 150, 243, 0.5);
-  border-radius: var(--icon-radius, 20px);
+  border-radius: var(--icon-radius,33.33%);
   flex-shrink: 0;
   animation: placeholderPulse 1.5s ease-in-out infinite;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -928,7 +928,7 @@ body.light-theme .drag-placeholder {
   width: var(--app-icon-size);
   height: var(--app-icon-size);
   background: #f0f0f0;
-  border-radius: var(--icon-radius,20px);
+  border-radius: var(--icon-radius,33.33%);
   display: flex;
   align-items: center;
   justify-content: center;
