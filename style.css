@@ -1373,21 +1373,19 @@ body.light-theme .drag-placeholder {
   justify-content: center;
 }
 
-.curvature-option.modern:has(input[value="8"]) .preview-icon {
+.curvature-option-8 .preview-icon {
   border-radius: 25%;
 }
 
-.curvature-option.modern:has(input[value="15"]) .preview-icon {
+.curvature-option-15 .preview-icon {
   border-radius: 30%;
 }
 
-.curvature-option.modern:has(input[value="20"]) .preview-icon {
+.curvature-option-20 .preview-icon {
   border-radius: 35%;
 }
 
-
-
-.curvature-option.modern:has(input[value="50"]) .preview-icon {
+.curvature-option-50 .preview-icon {
   border-radius: 50%;
 }
 
