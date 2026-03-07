@@ -3335,6 +3335,12 @@ body.light-theme .update-settings-group .setting-btn:hover {
   transform: translateY(-2px);
 }
 
+.context-menu-open .todo-input-container {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: rgba(0, 0, 0, 0.1);
+}
+
 #todo-input {
   flex: 1;
   background: transparent;
