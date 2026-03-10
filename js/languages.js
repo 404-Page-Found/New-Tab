@@ -13,10 +13,6 @@ const translations = {
     addTodo: "Add Todo",
     bing: "Bing",
     google: "Google",
-    selectAll: "Select All",
-    complete: "Complete",
-    delete: "Delete",
-    selectedCount: "selected",
     noTodos: "No todos yet. Add one above!",
     noTodosHint: "Try adding due dates for better organization.",
     newAppTitle: "New App",
@@ -103,6 +99,15 @@ const translations = {
     updateStatus: "Update checker not loaded",
     checkNow: "Check for Updates Now",
     updateDesc: "Checks for new versions from GitHub releases once per day when enabled.",
+    versionLabel: "Version",
+    updateChecksDisabled: "Update checks disabled",
+    neverChecked: "Never checked for updates",
+    lastCheckedLessThanHour: "Last checked: less than an hour ago",
+    lastCheckedHoursAgo: "Last checked: {n} hour ago",
+    lastCheckedHoursAgoPlural: "Last checked: {n} hours ago",
+    lastCheckedDaysAgo: "Last checked: {n} day ago",
+    lastCheckedDaysAgoPlural: "Last checked: {n} days ago",
+    checking: "Checking...",
 
     // Calendar
     clear: "Clear",
@@ -133,7 +138,34 @@ const translations = {
 
     // Todo date picker
     clearDate: "Clear",
-    todayDate: "Today"
+    todayDate: "Today",
+
+    // Onboarding
+    onboardingLanguageTitle: "Choose Your Language 🌐",
+    onboardingLanguageContent: "Select your preferred language for the interface. You can change this later in Settings.",
+    onboardingThemeTitle: "Choose Your Theme 🌙",
+    onboardingThemeContent: "Select your preferred interface theme. You can switch between dark and light modes anytime in Settings.",
+    onboardingWelcomeTitle: "Welcome to New-Tab! 🎉",
+    onboardingWelcomeContent: "Let's take a quick tour of the features to help you get started with personalizing your new tab page.",
+    onboardingClockTitle: "Clock & Date Display",
+    onboardingClockContent: "Your current time and date are displayed here. You can customize the appearance in Settings.",
+    onboardingSearchTitle: "Smart Search",
+    onboardingSearchContent: "Search the web directly from your new tab. Click the search icon to switch between different search engines.",
+    onboardingAppsTitle: "App Shortcuts",
+    onboardingAppsContent: "Add your favorite websites as quick-launch icons. Drag and drop to reorder them.",
+    onboardingBackgroundTitle: "Beautiful Backgrounds",
+    onboardingBackgroundContent: "Choose from stunning built-in backgrounds or upload your own. Access this in Settings > Background.",
+    onboardingMottoTitle: "Daily Inspiration",
+    onboardingMottoContent: "Enjoy a new motivational quote each day. Click the refresh button to get a random quote or the copy button to copy it.",
+    onboardingSettingsTitle: "Customization Center",
+    onboardingSettingsContent: "Click the gear icon to access extensive customization options for themes, styling, and more.",
+    onboardingCompleteTitle: "You're All Set! ✨",
+    onboardingCompleteContent: "You now know the basics of New-Tab. Explore the settings to make it truly yours. You can always restart this tour from Settings > About.",
+
+    // Onboarding navigation
+    previous: "Previous",
+    next: "Next",
+    finish: "Finish"
   },
 
   zh: {
@@ -148,10 +180,6 @@ const translations = {
     addTodo: "添加待办",
     bing: "必应",
     google: "谷歌",
-    selectAll: "全选",
-    complete: "完成",
-    delete: "删除",
-    selectedCount: "已选中",
     noTodos: "还没有待办事项。在上方添加一个！",
     noTodosHint: "尝试添加到期日期以更好地组织。",
     newAppTitle: "新建应用",
@@ -238,6 +266,15 @@ const translations = {
     updateStatus: "更新检查器未加载",
     checkNow: "立即检查更新",
     updateDesc: "启用后，每天从 GitHub releases 检查新版本一次。",
+    versionLabel: "版本",
+    updateChecksDisabled: "更新检查已禁用",
+    neverChecked: "从未检查更新",
+    lastCheckedLessThanHour: "上次检查：不到一小时前",
+    lastCheckedHoursAgo: "上次检查：{n} 小时前",
+    lastCheckedHoursAgoPlural: "上次检查：{n} 小时前",
+    lastCheckedDaysAgo: "上次检查：{n} 天前",
+    lastCheckedDaysAgoPlural: "上次检查：{n} 天前",
+    checking: "检查中...",
 
     // Calendar
     clear: "清除",
@@ -268,7 +305,34 @@ const translations = {
 
     // Todo date picker
     clearDate: "清除",
-    todayDate: "今天"
+    todayDate: "今天",
+
+    // Onboarding
+    onboardingLanguageTitle: "选择您的语言 🌐",
+    onboardingLanguageContent: "为界面选择您偏好的语言。您可以稍后在设置中更改此选项。",
+    onboardingThemeTitle: "选择您的主题 🌙",
+    onboardingThemeContent: "选择您偏好的界面主题。您可以随时在设置中在深色和浅色模式之间切换。",
+    onboardingWelcomeTitle: "欢迎使用 New-Tab！🎉",
+    onboardingWelcomeContent: "让我们快速浏览一下功能，帮助您开始个性化新标签页。",
+    onboardingClockTitle: "时钟和日期显示",
+    onboardingClockContent: "此处显示您当前的日期和时间。您可以在设置中自定义外观。",
+    onboardingSearchTitle: "智能搜索",
+    onboardingSearchContent: "直接从新标签页搜索网络。点击搜索图标可在不同的搜索引擎之间切换。",
+    onboardingAppsTitle: "应用快捷方式",
+    onboardingAppsContent: "将您最喜爱的网站添加为快速启动图标。拖拽重新排序。",
+    onboardingBackgroundTitle: "美丽的背景",
+    onboardingBackgroundContent: "从令人惊叹的内置背景中选择，或上传您自己的背景。在设置 > 背景中访问此功能。",
+    onboardingMottoTitle: "每日灵感",
+    onboardingMottoContent: "每天享受新的励志语录。点击刷新按钮获取随机语录或点击复制按钮复制它。",
+    onboardingSettingsTitle: "自定义中心",
+    onboardingSettingsContent: "点击齿轮图标访问主题、样式等方面的广泛自定义选项。",
+    onboardingCompleteTitle: "您已准备就绪！✨",
+    onboardingCompleteContent: "您现在知道了 New-Tab 的基础知识。探索设置以使其真正属于您。您可以随时从设置 > 关于中重新启动此之旅。",
+
+    // Onboarding navigation
+    previous: "上一步",
+    next: "下一步",
+    finish: "完成"
   }
 };
 
@@ -336,23 +400,6 @@ function updateDynamicTranslations() {
     emptyStateSmall.textContent = translations[currentLanguage].noTodosHint;
   }
 
-  // Update bulk actions
-  const selectAllBtn = document.getElementById('select-all-btn');
-  if (selectAllBtn) selectAllBtn.textContent = translations[currentLanguage].selectAll;
-
-  const completeSelectedBtn = document.getElementById('complete-selected-btn');
-  if (completeSelectedBtn) completeSelectedBtn.textContent = translations[currentLanguage].complete;
-
-  const deleteSelectedBtn = document.getElementById('delete-selected-btn');
-  if (deleteSelectedBtn) deleteSelectedBtn.textContent = translations[currentLanguage].delete;
-
-  // Update selected count text
-  const selectedCount = document.getElementById('selected-count');
-  if (selectedCount) {
-    const count = selectedCount.textContent.split(' ')[0];
-    selectedCount.textContent = `${count} ${translations[currentLanguage].selectedCount}`;
-  }
-
   // Re-render apps to update default app names
   if (window.renderCustomApps) {
     window.renderCustomApps();
@@ -376,6 +423,11 @@ function updateDynamicTranslations() {
   // Update motto to match new language
   if (window.displayDailyMotto) {
     window.displayDailyMotto();
+  }
+
+  // Re-render the About section so version label and last-checked text update
+  if (window.initAboutSection) {
+    window.initAboutSection();
   }
 }
 

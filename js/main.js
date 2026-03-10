@@ -26,9 +26,25 @@ function updateTime() {
   }
 }
 
-// Update time immediately and then every minute
+// Update time immediately and then every minute using visibility-aware interval
 updateTime();
-setInterval(updateTime, 60000);
+let clockInterval = null;
+
+function initClock() {
+  // Use VisibilityInterval if available, fallback to regular setInterval
+  if (window.VisibilityInterval) {
+    clockInterval = new VisibilityInterval(updateTime, 1000);
+  } else {
+    clockInterval = setInterval(updateTime, 1000);
+  }
+}
+
+// Initialize clock when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initClock);
+} else {
+  initClock();
+}
 
 // Make updateTime globally accessible for language switching
 window.updateTime = updateTime;
@@ -79,6 +95,7 @@ function setupRefreshMotto() {
         setTimeout(() => {
           mottoText.style.transition = "opacity 0.3s ease";
           mottoText.style.opacity = "1";
+          checkFooterOverlap();
         }, 50);
       }
     });
@@ -143,3 +160,39 @@ if (document.readyState === 'loading') {
   setupRefreshMotto();
   setupCopyMotto();
 }
+// Hide footer-left / footer-right when they overlap with the motto container
+function checkFooterOverlap() {
+  const motto = document.getElementById("motto-container");
+  const footerLeft = document.querySelector(".footer-left");
+  const footerRight = document.querySelector(".footer-right");
+
+  if (!motto || (!footerLeft && !footerRight)) return;
+
+  const mottoRect = motto.getBoundingClientRect();
+
+  if (footerLeft) {
+    const leftRect = footerLeft.getBoundingClientRect();
+    // Check if the right edge of footer-left is past the left edge of motto (with 5px buffer)
+    const overlaps = leftRect.right + 5 >= mottoRect.left;
+    footerLeft.style.opacity = overlaps ? "0" : "";
+  }
+
+  if (footerRight) {
+    const rightRect = footerRight.getBoundingClientRect();
+    // Check if the left edge of footer-right is before the right edge of motto (with 5px buffer)
+    const overlaps = rightRect.left - 5 <= mottoRect.right;
+    footerRight.style.opacity = overlaps ? "0" : "";
+  }
+}
+
+// Make checkFooterOverlap globally accessible
+window.checkFooterOverlap = checkFooterOverlap;
+
+// Set the motto and button functionality after the page has finished loading
+document.addEventListener("DOMContentLoaded", () => {
+  displayDailyMotto();
+  setupRefreshMotto();
+  setupCopyMotto();
+  checkFooterOverlap();
+  window.addEventListener("resize", checkFooterOverlap);
+});

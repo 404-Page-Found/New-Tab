@@ -3,7 +3,6 @@
 // State management
 let todos = [];
 let filteredTodos = [];
-let selectedTodos = new Set();
 let currentFilters = {
   status: 'all'
 };
@@ -50,26 +49,6 @@ function isOverdue(dateString) {
   return dueDate < today;
 }
 
-// Progress calculation
-function updateProgress() {
-  const total = todos.length;
-  const completed = todos.filter(todo => todo.completed).length;
-  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-  // Update progress ring
-  const progressRing = elements.progressRing;
-  const progressText = elements.progressText;
-  if (progressRing && progressText) {
-    const circle = progressRing.querySelector('circle:last-child');
-    const radius = 16;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (percentage / 100) * circumference;
-
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = offset;
-    progressText.textContent = `${percentage}%`;
-  }
-}
 
 // Filtering and sorting
 function filterTodos() {
@@ -123,7 +102,6 @@ function renderTodos() {
   // Show/hide empty state
   if (filteredTodos.length === 0) {
     emptyState.style.display = 'flex';
-    updateBulkActionsVisibility();
     return;
   }
 
@@ -136,10 +114,7 @@ function renderTodos() {
     li.dataset.id = todo.id;
     li.draggable = true;
 
-    const isSelected = selectedTodos.has(todo.id);
-
     li.innerHTML = `
-      <input type="checkbox" class="todo-bulk-checkbox" ${isSelected ? 'checked' : ''} data-id="${todo.id}">
       <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-id="${todo.id}">
       <div class="todo-content">
         <p class="todo-text">${todo.text}</p>
@@ -171,23 +146,6 @@ function renderTodos() {
 
     todoList.appendChild(li);
   });
-
-  updateBulkActionsVisibility();
-}
-
-// Update bulk actions visibility
-function updateBulkActionsVisibility() {
-  const bulkActions = elements.bulkActions;
-  const selectedCount = elements.selectedCount;
-
-  if (!bulkActions || !selectedCount) return;
-
-  if (selectedTodos.size > 0) {
-    bulkActions.style.display = 'flex';
-    selectedCount.textContent = `${selectedTodos.size} selected`;
-  } else {
-    bulkActions.style.display = 'none';
-  }
 }
 
 // Add a new todo
@@ -233,40 +191,6 @@ function toggleTodo(id) {
 // Delete a todo
 function deleteTodo(id) {
   todos = todos.filter(t => t.id !== id);
-  selectedTodos.delete(id);
-  saveTodos(todos);
-  applyFilters();
-}
-
-// Bulk operations
-function toggleTodoSelection(id) {
-  if (selectedTodos.has(id)) {
-    selectedTodos.delete(id);
-  } else {
-    selectedTodos.add(id);
-  }
-  renderTodos();
-}
-
-function selectAllTodos() {
-  filteredTodos.forEach(todo => selectedTodos.add(todo.id));
-  renderTodos();
-}
-
-function completeSelectedTodos() {
-  todos.forEach(todo => {
-    if (selectedTodos.has(todo.id)) {
-      todo.completed = true;
-    }
-  });
-  selectedTodos.clear();
-  saveTodos(todos);
-  applyFilters();
-}
-
-function deleteSelectedTodos() {
-  todos = todos.filter(todo => !selectedTodos.has(todo.id));
-  selectedTodos.clear();
   saveTodos(todos);
   applyFilters();
 }
@@ -275,7 +199,6 @@ function deleteSelectedTodos() {
 function applyFilters() {
   filterTodos();
   renderTodos();
-  updateProgress();
 }
 
 function updateFilters() {
@@ -362,14 +285,6 @@ function handleTodoListClick(event) {
     return;
   }
 
-  // Handle bulk checkbox
-  if (target.classList.contains('todo-bulk-checkbox')) {
-    event.stopPropagation();
-    const id = target.dataset.id;
-    toggleTodoSelection(id);
-    return;
-  }
-
   // Handle delete button
   if (target.closest('.todo-delete-btn')) {
     event.stopPropagation();
@@ -401,14 +316,7 @@ function initTodo() {
     addTodoBtn: document.getElementById('add-todo-btn'),
     todoList: document.getElementById('todo-list'),
     emptyState: document.getElementById('empty-state'),
-    filterStatus: document.getElementById('filter-status'),
-    bulkActions: document.getElementById('bulk-actions'),
-    selectedCount: document.getElementById('selected-count'),
-    selectAllBtn: document.getElementById('select-all-btn'),
-    completeSelectedBtn: document.getElementById('complete-selected-btn'),
-    deleteSelectedBtn: document.getElementById('delete-selected-btn'),
-    progressRing: document.querySelector('.progress-ring-circle'),
-    progressText: document.querySelector('.progress-text')
+    filterStatus: document.getElementById('filter-status')
   };
 
   // Check if all elements exist
@@ -430,17 +338,6 @@ function initTodo() {
     elements.filterStatus.addEventListener('change', updateFilters);
   }
 
-  // Bulk action listeners
-  if (elements.selectAllBtn) {
-    elements.selectAllBtn.addEventListener('click', selectAllTodos);
-  }
-  if (elements.completeSelectedBtn) {
-    elements.completeSelectedBtn.addEventListener('click', completeSelectedTodos);
-  }
-  if (elements.deleteSelectedBtn) {
-    elements.deleteSelectedBtn.addEventListener('click', deleteSelectedTodos);
-  }
-
   // Todo list event delegation
   elements.todoList.addEventListener('click', handleTodoListClick);
 
@@ -452,7 +349,6 @@ function initTodo() {
 
   // Initial render
   applyFilters();
-  updateProgress();
 }
 
 // Custom Date Picker Functionality

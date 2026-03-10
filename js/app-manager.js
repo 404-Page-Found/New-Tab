@@ -75,6 +75,7 @@ renderAllApps();
 
 // Re-render function (export for other modules)
 window.renderCustomApps = renderAllApps;
+window.renderAllApps = renderAllApps;
 
 // Load and apply open in new tab setting
 function loadOpenNewTabSetting() {
@@ -143,20 +144,28 @@ if (iconSizeReset) {
   iconSizeReset.addEventListener("click", resetIconSize);
 }
 
-// Load and apply app button curvature (now relative to icon size)
+// Map curvature values to percentage border-radius
+const curvatureToPercentage = {
+  '8': '25%',   // Minimal
+  '15': '30%',  // Square
+  '20': '35%',  // Rounded
+  '50': '50%'   // Circle
+};
+
+// Load and apply app button curvature (now using percentage values)
 function loadCurvature() {
   return localStorage.getItem("appsButtonCurvature") || "20";
 }
 function applyCurvature() {
-  const baseRadius = parseInt(loadCurvature());
-  const size = loadIconSize();
-  const actualRadius = size * (baseRadius / 60);
-  document.documentElement.style.setProperty('--icon-radius', actualRadius + 'px');
+  const baseRadius = loadCurvature();
+  // Use the percentage value directly from the mapping
+  const percentageRadius = curvatureToPercentage[baseRadius] || '35%';
+  document.documentElement.style.setProperty('--icon-radius', percentageRadius);
 
   // Update radio button selection
   const curvatureRadios = document.querySelectorAll('input[name="curvature"]');
   curvatureRadios.forEach((radio) => {
-    radio.checked = radio.value === baseRadius.toString();
+    radio.checked = radio.value === baseRadius;
   });
 }
 const curvatureRadios = document.querySelectorAll('input[name="curvature"]');

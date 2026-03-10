@@ -33,9 +33,27 @@ class OnboardingTour {
   defineSteps() {
     return [
       {
+        id: 'language',
+        title: window.i18n ? window.i18n.t('onboardingLanguageTitle') : 'Choose Your Language 🌐',
+        content: window.i18n ? window.i18n.t('onboardingLanguageContent') : 'Select your preferred language for the interface. You can change this later in Settings.',
+        target: null,
+        position: 'center',
+        action: 'select-language',
+        waitForAction: true
+      },
+      {
+        id: 'theme',
+        title: window.i18n ? window.i18n.t('onboardingThemeTitle') : 'Choose Your Theme 🌙',
+        content: window.i18n ? window.i18n.t('onboardingThemeContent') : 'Select your preferred interface theme. You can switch between dark and light modes anytime in Settings.',
+        target: null,
+        position: 'center',
+        action: 'select-theme',
+        waitForAction: true
+      },
+      {
         id: 'welcome',
-        title: 'Welcome to New-Tab! 🎉',
-        content: 'Let\'s take a quick tour of the features to help you get started with personalizing your new tab page.',
+        title: window.i18n ? window.i18n.t('onboardingWelcomeTitle') : 'Welcome to New-Tab! 🎉',
+        content: window.i18n ? window.i18n.t('onboardingWelcomeContent') : 'Let\'s take a quick tour of the features to help you get started with personalizing your new tab page.',
         target: null,
         position: 'center',
         action: null,
@@ -43,8 +61,8 @@ class OnboardingTour {
       },
       {
         id: 'clock',
-        title: 'Clock & Date Display',
-        content: 'Your current time and date are displayed here. You can customize the appearance in Settings.',
+        title: window.i18n ? window.i18n.t('onboardingClockTitle') : 'Clock & Date Display',
+        content: window.i18n ? window.i18n.t('onboardingClockContent') : 'Your current time and date are displayed here. You can customize the appearance in Settings.',
         target: '#clock',
         position: 'bottom',
         action: null,
@@ -52,8 +70,8 @@ class OnboardingTour {
       },
       {
         id: 'search',
-        title: 'Smart Search',
-        content: 'Search the web directly from your new tab. Click the search icon to switch between different search engines.',
+        title: window.i18n ? window.i18n.t('onboardingSearchTitle') : 'Smart Search',
+        content: window.i18n ? window.i18n.t('onboardingSearchContent') : 'Search the web directly from your new tab. Click the search icon to switch between different search engines.',
         target: '.search-bar',
         position: 'bottom',
         action: null,
@@ -61,8 +79,8 @@ class OnboardingTour {
       },
       {
         id: 'apps',
-        title: 'App Shortcuts',
-        content: 'Add your favorite websites as quick-launch icons. Drag and drop to reorder them.',
+        title: window.i18n ? window.i18n.t('onboardingAppsTitle') : 'App Shortcuts',
+        content: window.i18n ? window.i18n.t('onboardingAppsContent') : 'Add your favorite websites as quick-launch icons. Drag and drop to reorder them.',
         target: '#app-grid',
         position: 'top',
         action: 'add-app',
@@ -70,8 +88,8 @@ class OnboardingTour {
       },
       {
         id: 'background',
-        title: 'Beautiful Backgrounds',
-        content: 'Choose from stunning built-in backgrounds or upload your own. Access this in Settings > Background.',
+        title: window.i18n ? window.i18n.t('onboardingBackgroundTitle') : 'Beautiful Backgrounds',
+        content: window.i18n ? window.i18n.t('onboardingBackgroundContent') : 'Choose from stunning built-in backgrounds or upload your own. Access this in Settings > Background.',
         target: 'body',
         position: 'center',
         action: null,
@@ -79,8 +97,8 @@ class OnboardingTour {
       },
       {
         id: 'motto',
-        title: 'Daily Inspiration',
-        content: 'Enjoy a new motivational quote each day. Click ↻ to get a random quote or ↩ to copy it.',
+        title: window.i18n ? window.i18n.t('onboardingMottoTitle') : 'Daily Inspiration',
+        content: window.i18n ? window.i18n.t('onboardingMottoContent') : 'Enjoy a new motivational quote each day. Click the refresh button to get a random quote or the copy button to copy it.',
         target: '#motto-container',
         position: 'top',
         action: null,
@@ -88,8 +106,8 @@ class OnboardingTour {
       },
       {
         id: 'settings',
-        title: 'Customization Center',
-        content: 'Click the gear icon to access extensive customization options for themes, styling, and more.',
+        title: window.i18n ? window.i18n.t('onboardingSettingsTitle') : 'Customization Center',
+        content: window.i18n ? window.i18n.t('onboardingSettingsContent') : 'Click the gear icon to access extensive customization options for themes, styling, and more.',
         target: '#settings-modal',
         position: 'left',
         action: 'open-settings',
@@ -97,8 +115,8 @@ class OnboardingTour {
       },
       {
         id: 'complete',
-        title: 'You\'re All Set! ✨',
-        content: 'You now know the basics of New-Tab. Explore the settings to make it truly yours. You can always restart this tour from Settings > About.',
+        title: window.i18n ? window.i18n.t('onboardingCompleteTitle') : 'You\'re All Set! ✨',
+        content: window.i18n ? window.i18n.t('onboardingCompleteContent') : 'You now know the basics of New-Tab. Explore the settings to make it truly yours. You can always restart this tour from Settings > About.',
         target: null,
         position: 'center',
         action: null,
@@ -192,8 +210,96 @@ class OnboardingTour {
     const nextBtn = this.overlay.querySelector('#onboarding-next');
 
     // Update content
-    title.textContent = step.title;
-    text.textContent = step.content;
+    let translatedTitle = step.title;
+    let translatedContent = step.content;
+    
+    // Use translations if available
+    if (window.i18n) {
+      switch (step.id) {
+        case 'language':
+          translatedTitle = window.i18n.t('onboardingLanguageTitle');
+          translatedContent = window.i18n.t('onboardingLanguageContent');
+          break;
+        case 'theme':
+          translatedTitle = window.i18n.t('onboardingThemeTitle');
+          translatedContent = window.i18n.t('onboardingThemeContent');
+          break;
+        case 'welcome':
+          translatedTitle = window.i18n.t('onboardingWelcomeTitle');
+          translatedContent = window.i18n.t('onboardingWelcomeContent');
+          break;
+        case 'clock':
+          translatedTitle = window.i18n.t('onboardingClockTitle');
+          translatedContent = window.i18n.t('onboardingClockContent');
+          break;
+        case 'search':
+          translatedTitle = window.i18n.t('onboardingSearchTitle');
+          translatedContent = window.i18n.t('onboardingSearchContent');
+          break;
+        case 'apps':
+          translatedTitle = window.i18n.t('onboardingAppsTitle');
+          translatedContent = window.i18n.t('onboardingAppsContent');
+          break;
+        case 'background':
+          translatedTitle = window.i18n.t('onboardingBackgroundTitle');
+          translatedContent = window.i18n.t('onboardingBackgroundContent');
+          break;
+        case 'motto':
+          translatedTitle = window.i18n.t('onboardingMottoTitle');
+          translatedContent = window.i18n.t('onboardingMottoContent');
+          break;
+        case 'settings':
+          translatedTitle = window.i18n.t('onboardingSettingsTitle');
+          translatedContent = window.i18n.t('onboardingSettingsContent');
+          break;
+        case 'complete':
+          translatedTitle = window.i18n.t('onboardingCompleteTitle');
+          translatedContent = window.i18n.t('onboardingCompleteContent');
+          break;
+      }
+    }
+    
+    title.textContent = translatedTitle;
+    
+    if (step.id === 'language') {
+      text.innerHTML = `
+        <p>${translatedContent}</p>
+        <div class="language-options">
+          <label class="language-option modern">
+            <div class="language-preview">
+              <span class="language-flag">🇺🇸</span>
+              <span class="language-code">EN</span>
+            </div>
+            <input type="radio" name="onboarding-language" value="en" ${localStorage.getItem('language') === 'en' || !localStorage.getItem('language') ? 'checked' : ''} />
+          </label>
+          <label class="language-option modern">
+            <div class="language-preview">
+              <span class="language-flag">🇨🇳</span>
+              <span class="language-code">中文</span>
+            </div>
+            <input type="radio" name="onboarding-language" value="zh" ${localStorage.getItem('language') === 'zh' ? 'checked' : ''} />
+          </label>
+        </div>
+      `;
+    } else if (step.id === 'theme') {
+      text.innerHTML = `
+        <p>${translatedContent}</p>
+        <div class="theme-options">
+          <label class="theme-option modern">
+            <div class="preview-icon dark"></div>
+            <input type="radio" name="onboarding-theme" value="dark" ${localStorage.getItem('theme') === 'dark' || !localStorage.getItem('theme') ? 'checked' : ''} />
+            <span class="label">${window.i18n ? window.i18n.t('dark') : 'Dark'}</span>
+          </label>
+          <label class="theme-option modern">
+            <div class="preview-icon light"></div>
+            <input type="radio" name="onboarding-theme" value="light" ${localStorage.getItem('theme') === 'light' ? 'checked' : ''} />
+            <span class="label">${window.i18n ? window.i18n.t('light') : 'Light'}</span>
+          </label>
+        </div>
+      `;
+    } else {
+      text.textContent = translatedContent;
+    }
     stepCounter.textContent = this.currentStep + 1;
 
     // Update progress dots
@@ -230,7 +336,13 @@ class OnboardingTour {
 
     // Handle navigation buttons
     prevBtn.style.display = this.currentStep === 0 ? 'none' : 'block';
-    nextBtn.textContent = this.currentStep === this.steps.length - 1 ? 'Finish' : 'Next';
+    
+    // Update button labels with translated text
+    const prevText = window.i18n ? window.i18n.t('previous') : 'Previous';
+    const nextText = window.i18n ? window.i18n.t('next') : 'Next';
+    const finishText = window.i18n ? window.i18n.t('finish') : 'Finish';
+    nextBtn.textContent = this.currentStep === this.steps.length - 1 ? finishText : nextText;
+    prevBtn.textContent = prevText;
 
     // Handle special actions
     if (step.action) {
@@ -327,6 +439,44 @@ class OnboardingTour {
       case 'add-app':
         // This step doesn't require specific action
         break;
+      case 'select-language':
+        // Add event listeners to language radio buttons
+        const languageRadios = this.overlay.querySelectorAll('input[name="onboarding-language"]');
+        languageRadios.forEach(radio => {
+          radio.addEventListener('change', (e) => {
+            const selectedLanguage = e.target.value;
+            localStorage.setItem('language', selectedLanguage);
+            if (window.i18n && window.i18n.applyLanguage) {
+              window.i18n.applyLanguage(selectedLanguage);
+            }
+            // Update motto to match the new language
+            if (window.displayDailyMotto) {
+              window.displayDailyMotto();
+            }
+            // Proceed to next step after a short delay
+            setTimeout(() => this.nextStep(), 500);
+          });
+        });
+        break;
+      case 'select-theme':
+        // Add event listeners to theme radio buttons
+        const themeRadios = this.overlay.querySelectorAll('input[name="onboarding-theme"]');
+        themeRadios.forEach(radio => {
+          radio.addEventListener('change', (e) => {
+            const selectedTheme = e.target.value;
+            localStorage.setItem('theme', selectedTheme);
+            // Apply theme immediately
+            if (window.applyTheme) {
+              window.applyTheme();
+            } else {
+              // Fallback: directly apply theme
+              document.body.classList.toggle('light-theme', selectedTheme === 'light');
+            }
+            // Proceed to next step after a short delay
+            setTimeout(() => this.nextStep(), 500);
+          });
+        });
+        break;
     }
   }
 
@@ -399,19 +549,37 @@ document.addEventListener('DOMContentLoaded', () => {
   // Wait for all elements to be ready
   let attempts = 0;
   const maxAttempts = 50; // 5 seconds max wait
+  let checkTimeout = null;
 
   const checkAndStart = () => {
+    // Skip if tab is not visible
+    if (window.visibilityManager && !window.visibilityManager.isVisible) {
+      // Wait for visibility to resume checking
+      const unsubscribe = window.visibilityManager.onChange((visible) => {
+        if (visible) {
+          unsubscribe();
+          checkAndStart();
+        }
+      });
+      return;
+    }
+
     attempts++;
 
     if (!onboardingTour.isCompleted() && checkRequiredElements()) {
       console.log('🎯 Starting New-Tab onboarding tour...');
       onboardingTour.start();
     } else if (attempts < maxAttempts) {
-      setTimeout(checkAndStart, 100);
+      checkTimeout = setTimeout(checkAndStart, 100);
     } else {
       console.log('⚠️ Onboarding tour skipped - elements not ready or already completed');
     }
   };
+
+  // Clean up timeout on page unload
+  window.addEventListener('beforeunload', () => {
+    if (checkTimeout) clearTimeout(checkTimeout);
+  });
 
   // Initial delay to let other scripts initialize
   setTimeout(checkAndStart, 500);

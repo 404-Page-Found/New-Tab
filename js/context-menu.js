@@ -70,6 +70,7 @@ document.addEventListener("contextmenu", function (e) {
     contextMenu.style.left = left + "px";
     contextMenu.style.top = top + "px";
     contextMenu.style.display = "block";
+    document.body.classList.add("context-menu-open");
   }
 });
 
@@ -77,6 +78,7 @@ document.addEventListener("contextmenu", function (e) {
 document.addEventListener("click", function (e) {
   if (!contextMenu.contains(e.target) && e.button !== 2) {
     contextMenu.style.display = "none";
+    document.body.classList.remove("context-menu-open");
   }
 });
 
@@ -98,6 +100,7 @@ document.getElementById("rename-app").addEventListener("click", function () {
     location.reload();
   }
   contextMenu.style.display = "none";
+  document.body.classList.remove("context-menu-open");
 });
 
 // Change thumbnail functionality
@@ -118,6 +121,7 @@ document.getElementById("change-thumbnail").addEventListener("click", function (
     location.reload();
   }
   contextMenu.style.display = "none";
+  document.body.classList.remove("context-menu-open");
 });
 
 // Delete functionality
@@ -139,6 +143,7 @@ document.getElementById("delete-app").addEventListener("click", function () {
     location.reload();
   }
   contextMenu.style.display = "none";
+  document.body.classList.remove("context-menu-open");
 });
 
 // Edit URL functionality
