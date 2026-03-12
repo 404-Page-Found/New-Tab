@@ -4533,6 +4533,41 @@ body.light-theme .progress-dot.active {
 
 /* ==================== AI Chat Modal Styles ==================== */
 
+/* AI Chat - Connection Status */
+.ai-connection-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.ai-connection-status svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ai-connection-status.online {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+}
+
+.ai-connection-status.offline {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.ai-connection-status.offline svg {
+  stroke: #ef4444;
+}
+
+.ai-connection-status.online svg {
+  stroke: #22c55e;
+}
+
 #ai-chat-modal {
   display: none;
   position: fixed;

@@ -1,5 +1,6 @@
 // js/ai/ai-service.js - AI Service Module
 // Handles chat UI, message management, topics/conversations, and integrates with OpenRouter API
+// Includes offline mode support for when API is unavailable
 
 const AIService = (function() {
   // DOM Elements cache
@@ -9,6 +10,7 @@ const AIService = (function() {
   let currentConversationId = null;
   let conversations = [];
   let isLoading = false;
+  let isOfflineMode = false;
   
   // Storage keys
   const STORAGE_KEYS = {
@@ -671,6 +673,257 @@ const AIService = (function() {
     initEventListeners();
     renderTopicsList();
     renderMessages();
+    initNetworkListener();
+  }
+
+  /**
+   * Initialize network status listener
+   */
+  function initNetworkListener() {
+    // Listen for network status changes
+    NetworkDetector.addListener(handleNetworkStatusChange);
+    
+    // Update initial status
+    const status = NetworkDetector.getStatus();
+    handleNetworkStatusChange(status);
+  }
+
+  /**
+   * Handle network status changes
+   * @param {Object} status - Network status object
+   */
+  function handleNetworkStatusChange(status) {
+    const wasOffline = isOfflineMode;
+    isOfflineMode = status.isOffline;
+    
+    // Update UI if status changed
+    if (wasOffline !== isOfflineMode) {
+      updateConnectionStatus();
+      
+      // Notify user of status change
+      if (isOfflineMode) {
+        console.info('AI Service: Switched to offline mode');
+      } else {
+        console.info('AI Service: Back to online mode');
+      }
+    }
+  }
+
+  /**
+   * Update connection status indicator in UI
+   */
+  function updateConnectionStatus() {
+    const statusIndicator = document.getElementById('ai-connection-status');
+    if (!statusIndicator) {
+      // Create status indicator if it doesn't exist
+      createConnectionStatusIndicator();
+      return;
+    }
+    
+    if (isOfflineMode) {
+      statusIndicator.className = 'ai-connection-status offline';
+      statusIndicator.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path><path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg><span>Offline</span>';
+    } else {
+      statusIndicator.className = 'ai-connection-status online';
+      statusIndicator.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg><span>Online</span>';
+    }
+  }
+
+  /**
+   * Create connection status indicator in UI
+   */
+  function createConnectionStatusIndicator() {
+    // Find the chat title area
+    const titleArea = document.querySelector('.ai-chat-header');
+    if (!titleArea) return;
+    
+    const statusDiv = document.createElement('div');
+    statusDiv.id = 'ai-connection-status';
+    statusDiv.className = isOfflineMode ? 'ai-connection-status offline' : 'ai-connection-status online';
+    statusDiv.innerHTML = isOfflineMode 
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="1" y1="1" x2="23" y2="23"></line><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path><path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg><span>Offline</span>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg><span>Online</span>';
+    
+    titleArea.appendChild(statusDiv);
+  }
+
+  /**
+   * Send a message with streaming support
+   * @param {string} userMessage - User's message
+   */
+  async function sendMessage(userMessage) {
+    if (!userMessage || isLoading) return;
+    
+    // Check if we should use offline mode
+    const networkStatus = NetworkDetector.getStatus();
+    
+    // Add user message to chat
+    const userMsg = {
+      role: 'user',
+      content: userMessage.trim(),
+      timestamp: Date.now()
+    };
+    addMessageToConversation(userMsg);
+    renderMessages();
+    renderTopicsList();
+    saveConversations();
+    
+    // Clear input
+    if (elements.input) {
+      elements.input.value = '';
+    }
+    
+    // Show loading
+    showLoading();
+    
+    // Get conversation history for context
+    const messages = getCurrentMessages();
+    const historyForAPI = messages
+      .filter(m => m.role !== 'system')
+      .slice(0, -1)
+      .map(m => ({ role: m.role, content: m.content }));
+    
+    // Create placeholder for streaming response
+    const assistantMsg = {
+      role: 'assistant',
+      content: '',
+      timestamp: Date.now(),
+      isStreaming: true
+    };
+    addMessageToConversation(assistantMsg);
+    
+    // Render and get reference to the assistant message element
+    renderMessages();
+    
+    // Get the assistant message element for direct updates
+    const assistantElements = elements.container?.querySelectorAll('.ai-message-assistant');
+    const streamingElement = assistantElements ? assistantElements[assistantElements.length - 1] : null;
+    const streamingTextElement = streamingElement?.querySelector('.ai-message-text');
+    
+    try {
+      let result;
+      
+      if (networkStatus.isOffline) {
+        // Use offline mode
+        result = OfflineMode.getResponse(userMessage);
+        
+        // Simulate streaming for offline responses
+        if (result.success && result.content) {
+          const content = result.content;
+          const chunks = content.split('');
+          
+          for (let i = 0; i < chunks.length; i++) {
+            if (streamingTextElement) {
+              streamingTextElement.textContent += chunks[i];
+            }
+            // Small delay for effect
+            if (i % 10 === 0) {
+              await new Promise(resolve => setTimeout(resolve, 5));
+            }
+          }
+        }
+      } else {
+        // Try cache first
+        result = await CacheManager.getOrFetch(
+          userMessage,
+          () => OpenRouterAPI.sendMessageStreaming(
+            userMessage, 
+            historyForAPI,
+            (chunk) => {
+              // Directly update the DOM element without re-rendering everything
+              if (streamingTextElement) {
+                const currentContent = streamingTextElement.textContent;
+                streamingTextElement.textContent = currentContent + chunk;
+              }
+            }
+          )
+        );
+        
+        // Handle cache hit
+        if (result.fromCache) {
+          console.info('AI: Response loaded from cache');
+        }
+      }
+      
+      if (result.success) {
+        // Update the message in the array
+        const conv = getCurrentConversation();
+        const lastMsg = conv.messages[conv.messages.length - 1];
+        if (lastMsg && lastMsg.isStreaming) {
+          lastMsg.isStreaming = false;
+          lastMsg.content = streamingTextElement?.textContent || '';
+        }
+        
+        // Update streaming indicator in UI
+        if (streamingTextElement) {
+          streamingTextElement.classList.remove('ai-message-streaming');
+        }
+        
+        saveConversations();
+        renderTopicsList();
+      } else {
+        showError(result.error);
+        // Remove user and assistant messages if API failed
+        const conv = getCurrentConversation();
+        conv.messages.pop(); // Remove assistant
+        conv.messages.pop(); // Remove user
+        renderMessages();
+      }
+    } catch (e) {
+      showError(getTranslation('aiError'));
+      // Remove messages on error
+      const conv = getCurrentConversation();
+      conv.messages.pop(); // Remove assistant
+      conv.messages.pop(); // Remove user
+      renderMessages();
+    }
+    
+    hideLoading();
+  }
+
+  /**
+   * Quick AI search (for search bar integration)
+   * @param {string} query - Search query
+   * @returns {Promise<string>} AI response or empty string
+   */
+  async function quickSearch(query) {
+    if (!query || !query.trim()) return '';
+    
+    const networkStatus = NetworkDetector.getStatus();
+    
+    try {
+      let result;
+      
+      if (networkStatus.isOffline) {
+        // Use offline mode
+        result = OfflineMode.getResponse(query);
+      } else {
+        // Try cache first, then API
+        result = await CacheManager.getOrFetch(
+          query,
+          () => OpenRouterAPI.quickSearch(query)
+        );
+      }
+      
+      if (result.success) {
+        return result.content;
+      }
+      console.error('AI Search error:', result.error);
+      return '';
+    } catch (e) {
+      console.error('AI Search error:', e);
+      return '';
+    }
+  }
+
+  /**
+   * Check if AI is available (API key configured)
+   * @returns {boolean}
+   */
+  function isAvailable() {
+    // API key is now handled server-side by Cloudflare Worker
+    // But we also check network status
+    return !!OpenRouterAPI && !NetworkDetector.getStatus().isOffline;
   }
   
   /**
@@ -707,7 +960,9 @@ const AIService = (function() {
    */
   function isAvailable() {
     // API key is now handled server-side by Cloudflare Worker
-    return !!OpenRouterAPI;
+    // Now also checks network status
+    const networkStatus = NetworkDetector.getStatus();
+    return !!OpenRouterAPI && !networkStatus.isOffline;
   }
   
   // Initialize on load
