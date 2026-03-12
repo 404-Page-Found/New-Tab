@@ -10,7 +10,7 @@ const OpenRouterAPI = (function() {
     // Then copy the worker URL here
     baseURL: 'https://new-tab-openrouter-proxy.lucas20220605.workers.dev',
     model: 'openrouter/free',
-    maxTokens: 1000,
+    maxTokens: 4096,
     maxRetries: 2,
     retryDelay: 1000,
     rateLimit: {
@@ -448,6 +448,7 @@ const OpenRouterAPI = (function() {
       const reader = response.body.getReader();
       const decoder = new TextDecoder();
       let fullContent = '';
+      let buffer = ''; // Buffer for incomplete SSE data
 
       // Read the stream
       while (true) {
@@ -457,29 +458,57 @@ const OpenRouterAPI = (function() {
         // Decode the chunk
         const chunk = decoder.decode(value, { stream: true });
         
-        // Parse SSE format
-        const lines = chunk.split('\n');
+        // Append to buffer
+        buffer += chunk;
+        
+        // Parse SSE format - handle multiple events in buffer
+        let lines = buffer.split('\n');
+        
+        // Keep the last potentially incomplete line in buffer
+        buffer = lines.pop() || '';
+        
         for (const line of lines) {
           if (line.startsWith('data: ')) {
-            const data = line.slice(6);
+            const data = line.slice(6).trim();
             
             // Check for [DONE] signal
             if (data === '[DONE]') {
               continue;
             }
             
-            try {
-              const parsed = JSON.parse(data);
-              const content = parsed.choices?.[0]?.delta?.content;
-              if (content) {
-                fullContent += content;
-                if (onChunk) {
-                  onChunk(content);
+            if (data) {
+              try {
+                const parsed = JSON.parse(data);
+                const content = parsed.choices?.[0]?.delta?.content;
+                if (content) {
+                  fullContent += content;
+                  if (onChunk) {
+                    onChunk(content);
+                  }
                 }
+              } catch (e) {
+                // Skip invalid JSON
               }
-            } catch (e) {
-              // Skip invalid JSON
             }
+          }
+        }
+      }
+
+      // Process any remaining data in buffer
+      if (buffer.startsWith('data: ')) {
+        const data = buffer.slice(6).trim();
+        if (data && data !== '[DONE]') {
+          try {
+            const parsed = JSON.parse(data);
+            const content = parsed.choices?.[0]?.delta?.content;
+            if (content) {
+              fullContent += content;
+              if (onChunk) {
+                onChunk(content);
+              }
+            }
+          } catch (e) {
+            // Skip invalid JSON
           }
         }
       }
