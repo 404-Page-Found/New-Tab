@@ -157,6 +157,7 @@ const OpenRouterAPI = (function() {
   function buildHeaders() {
     return {
       'Content-Type': 'application/json',
+      'Accept': 'text/event-stream',
       // No Authorization header - API key is on the server side (Cloudflare Worker)
       'HTTP-Referer': window.location.href,
       'X-Title': 'New Tab AI Assistant'
@@ -483,7 +484,11 @@ const OpenRouterAPI = (function() {
                 if (content) {
                   fullContent += content;
                   if (onChunk) {
-                    onChunk(content);
+                    try {
+                      onChunk(content);
+                    } catch (chunkError) {
+                      console.error('Error in streaming callback:', chunkError);
+                    }
                   }
                 }
               } catch (e) {
@@ -504,7 +509,11 @@ const OpenRouterAPI = (function() {
             if (content) {
               fullContent += content;
               if (onChunk) {
-                onChunk(content);
+                try {
+                  onChunk(content);
+                } catch (chunkError) {
+                  console.error('Error in streaming callback:', chunkError);
+                }
               }
             }
           } catch (e) {
