@@ -1,10 +1,14 @@
-// js/ai/openrouter.js - OpenRouter API Integration
-// Integrates with openrouter/free model
+// js/ai/openrouter.js - OpenRouter API Integration via Cloudflare Proxy
+// For security, API requests are proxied through Cloudflare Workers
+// API key is stored server-side and never exposed to the client
 
 const OpenRouterAPI = (function() {
   // Configuration
   const CONFIG = {
-    baseURL: 'https://openrouter.ai/api/v1',
+    // Cloudflare Worker URL - UPDATE THIS AFTER DEPLOYMENT
+    // Run: cd cloudflare && wrangler deploy
+    // Then copy the worker URL here
+    baseURL: 'https://new-tab-openrouter-proxy.lucas20220605.workers.dev',
     model: 'openrouter/free',
     maxTokens: 1000,
     maxRetries: 2,
@@ -18,107 +22,60 @@ const OpenRouterAPI = (function() {
   // Rate limiting state
   let requestTimestamps = [];
 
-  // Security: Salt for API key encoding
-  const SALT = 'n3w-t4b-41-2024';
-
   // Storage keys
   const STORAGE_KEYS = {
-    apiKey: 'ai_api_key_secure',
-    chatHistory: 'ai_chat_history',
-    keyInitialized: 'ai_api_key_initialized'
+    chatHistory: 'ai_chat_history'
   };
 
-  // Default API key (set once on first load)
-  const DEFAULT_API_KEY = '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';
+  // NOTE: API key is now handled server-side by Cloudflare Worker
+  // No client-side API key storage needed anymore
 
-  // Initialize API key on first use
-  function initializeAPIKey() {
-    const isInitialized = localStorage.getItem(STORAGE_KEYS.keyInitialized);
-    if (!isInitialized && DEFAULT_API_KEY) {
-      setAPIKey(DEFAULT_API_KEY);
-      localStorage.setItem(STORAGE_KEYS.keyInitialized, 'true');
-    }
-  }
+  // Initialize - no longer need to initialize API key
 
-  // Call initialization
-  initializeAPIKey();
+  // NOTE: These functions are kept for backwards compatibility but are deprecated
+  // API key is now handled server-side by Cloudflare Worker
 
-  // Storage Functions ============== Secure ==============
+  // ============== Deprecated Functions ==============
 
   /**
-   * Encode string with salt (simple obfuscation)
-   * @param {string} str - String to encode
-   * @returns {string} Encoded string
-   */
-  function encodeWithSalt(str) {
-    try {
-      return btoa(str + SALT);
-    } catch (e) {
-      console.error('Failed to encode string');
-      return '';
-    }
-  }
-
-  /**
-   * Decode string with salt
-   * @param {string} encoded - Encoded string
-   * @returns {string} Decoded string
-   */
-  function decodeWithSalt(encoded) {
-    try {
-      const decoded = atob(encoded);
-      return decoded.replace(SALT, '');
-    } catch (e) {
-      console.error('Failed to decode string');
-      return '';
-    }
-  }
-
-  /**
-   * Set API key securely
-   * @param {string} apiKey - OpenRouter API key
+   * Set API key - DEPRECATED (now handled by Cloudflare Worker)
+   * This function is kept for backwards compatibility but does nothing
+   * @deprecated
+   * @param {string} apiKey - OpenRouter API key (ignored)
+   * @returns {boolean} Always returns false
    */
   function setAPIKey(apiKey) {
-    if (!apiKey || typeof apiKey !== 'string') {
-      console.error('Invalid API key');
-      return false;
-    }
-    try {
-      localStorage.setItem(STORAGE_KEYS.apiKey, encodeWithSalt(apiKey));
-      return true;
-    } catch (e) {
-      console.error('Failed to store API key');
-      return false;
-    }
+    console.warn('API key is now handled server-side by Cloudflare Worker. This function is deprecated.');
+    return false;
   }
 
   /**
-   * Get API key (decoded)
-   * @returns {string|null} API key or null
+   * Get API key - DEPRECATED (now handled by Cloudflare Worker)
+   * @deprecated Always returns null
+   * @returns {null}
    */
   function getAPIKey() {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEYS.apiKey);
-      return stored ? decodeWithSalt(stored) : null;
-    } catch (e) {
-      console.error('Failed to retrieve API key');
-      return null;
-    }
+    console.warn('API key is now handled server-side by Cloudflare Worker.');
+    return null;
   }
 
   /**
    * Check if API key is configured
+   * Now always returns true since the worker handles authentication
    * @returns {boolean}
    */
   function hasAPIKey() {
-    return !!getAPIKey();
+    // Always return true since the worker handles the API key
+    // The worker will return an error if the key is not set server-side
+    return true;
   }
 
   /**
-   * Clear API key from storage
+   * Clear API key - DEPRECATED
+   * @deprecated
    */
   function clearAPIKey() {
-    localStorage.removeItem(STORAGE_KEYS.apiKey);
+    console.warn('API key is now handled server-side by Cloudflare Worker.');
   }
 
   // ============== Rate Limiting ==============
@@ -193,14 +150,14 @@ const OpenRouterAPI = (function() {
   // ============== API Requests ==============
 
   /**
-   * Build request headers
+   * Build request headers for Cloudflare Worker proxy
+   * No API key needed - it's handled server-side
    * @returns {Object} Headers object
    */
   function buildHeaders() {
-    const apiKey = getAPIKey();
     return {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
+      // No Authorization header - API key is on the server side (Cloudflare Worker)
       'HTTP-Referer': window.location.href,
       'X-Title': 'New Tab AI Assistant'
     };
@@ -354,7 +311,7 @@ const OpenRouterAPI = (function() {
       try {
         recordRequest();
 
-        const response = await fetch(`${CONFIG.baseURL}/chat/completions`, {
+        const response = await fetch(CONFIG.baseURL, {
           method: 'POST',
           headers: buildHeaders(),
           body: JSON.stringify(requestBody)
@@ -475,7 +432,7 @@ const OpenRouterAPI = (function() {
     try {
       recordRequest();
 
-      const response = await fetch(`${CONFIG.baseURL}/chat/completions`, {
+      const response = await fetch(CONFIG.baseURL, {
         method: 'POST',
         headers: buildHeaders(),
         body: JSON.stringify(requestBody)
