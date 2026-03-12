@@ -706,7 +706,8 @@ const AIService = (function() {
    * @returns {boolean}
    */
   function isAvailable() {
-    return OpenRouterAPI && OpenRouterAPI.hasAPIKey();
+    // API key is now handled server-side by Cloudflare Worker
+    return !!OpenRouterAPI;
   }
   
   // Initialize on load

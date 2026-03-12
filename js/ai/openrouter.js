@@ -15,103 +15,6 @@ const OpenRouterAPI = (function() {
     retryDelay: 1000
   };
 
-
-
-  // Storage keys
-  const STORAGE_KEYS = {
-    chatHistory: 'ai_chat_history'
-  };
-
-  // NOTE: API key is now handled server-side by Cloudflare Worker
-  // No client-side API key storage needed anymore
-
-  // Initialize - no longer need to initialize API key
-
-  // NOTE: These functions are kept for backwards compatibility but are deprecated
-  // API key is now handled server-side by Cloudflare Worker
-
-  // ============== Deprecated Functions ==============
-
-  /**
-   * Set API key - DEPRECATED (now handled by Cloudflare Worker)
-   * This function is kept for backwards compatibility but does nothing
-   * @deprecated
-   * @param {string} apiKey - OpenRouter API key (ignored)
-   * @returns {boolean} Always returns false
-   */
-  function setAPIKey(apiKey) {
-    console.warn('API key is now handled server-side by Cloudflare Worker. This function is deprecated.');
-    return false;
-  }
-
-  /**
-   * Get API key - DEPRECATED (now handled by Cloudflare Worker)
-   * @deprecated Always returns null
-   * @returns {null}
-   */
-  function getAPIKey() {
-    console.warn('API key is now handled server-side by Cloudflare Worker.');
-    return null;
-  }
-
-  /**
-   * Check if API key is configured
-   * Now always returns true since the worker handles authentication
-   * @returns {boolean}
-   */
-  function hasAPIKey() {
-    // Always return true since the worker handles the API key
-    // The worker will return an error if the key is not set server-side
-    return true;
-  }
-
-  /**
-   * Clear API key - DEPRECATED
-   * @deprecated
-   */
-  function clearAPIKey() {
-    console.warn('API key is now handled server-side by Cloudflare Worker.');
-  }
-
-  // ============== Chat History ==============
-
-  /**
-   * Save chat history
-   * @param {Array} messages - Array of message objects
-   */
-  function saveChatHistory(messages) {
-    try {
-      // Limit history to last 50 messages
-      const trimmed = messages.slice(-50);
-      localStorage.setItem(STORAGE_KEYS.chatHistory, JSON.stringify(trimmed));
-    } catch (e) {
-      console.error('Failed to save chat history');
-    }
-  }
-
-  /**
-   * Load chat history
-   * @returns {Array} Array of message objects
-   */
-  function loadChatHistory() {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEYS.chatHistory);
-      return stored ? JSON.parse(stored) : [];
-    } catch (e) {
-      console.error('Failed to load chat history');
-      return [];
-    }
-  }
-
-  /**
-   * Clear chat history
-   */
-  function clearChatHistory() {
-    localStorage.removeItem(STORAGE_KEYS.chatHistory);
-  }
-
-  // ============== API Requests ==============
-
   /**
    * Build request headers for Cloudflare Worker proxy
    * No API key needed - it's handled server-side
@@ -121,7 +24,6 @@ const OpenRouterAPI = (function() {
     return {
       'Content-Type': 'application/json',
       'Accept': 'text/event-stream',
-      // No Authorization header - API key is on the server side (Cloudflare Worker)
       'HTTP-Referer': window.location.href,
       'X-Title': 'New Tab AI Assistant'
     };
@@ -219,116 +121,6 @@ const OpenRouterAPI = (function() {
   }
 
   /**
-   * Send chat completion request
-   * @param {string} userMessage - User's message
-   * @param {Array} conversationHistory - Previous messages
-   * @returns {Promise<Object>} Result object
-   */
-  async function sendMessage(userMessage, conversationHistory = []) {
-    // Validate input
-    const validation = validateInput(userMessage);
-    if (!validation.valid) {
-      return { success: false, error: validation.error };
-    }
-
-    // Check API key
-    if (!hasAPIKey()) {
-      return { success: false, error: 'API key not configured' };
-    }
-
-    // Build messages array
-    const messages = [
-      { 
-        role: 'system', 
-        content: 'You are a helpful AI assistant. Provide clear, concise, and accurate responses.'
-      }
-    ];
-
-    // Add conversation history (last 10 messages)
-    const recentHistory = conversationHistory.slice(-10);
-    messages.push(...recentHistory);
-
-    // Add current user message
-    messages.push({ role: 'user', content: validation.message });
-
-    // Build request body
-    const requestBody = {
-      model: CONFIG.model,
-      messages: messages,
-      max_tokens: CONFIG.maxTokens
-    };
-    let lastError = null;
-    
-    for (let attempt = 0; attempt <= CONFIG.maxRetries; attempt++) {
-      try {
-
-        const response = await fetch(CONFIG.baseURL, {
-          method: 'POST',
-          headers: buildHeaders(),
-          body: JSON.stringify(requestBody)
-        });
-
-        // Handle non-OK responses
-        if (!response.ok) {
-          const errorInfo = await handleError(response);
-          
-          // Don't retry on auth errors
-          if (errorInfo.code === 'AUTH_ERROR' || errorInfo.code === 'FORBIDDEN') {
-            return { success: false, error: errorInfo.message, code: errorInfo.code };
-          }
-          
-          // Retry on server errors and rate limits
-          if (attempt < CONFIG.maxRetries && 
-              (response.status >= 500 || response.status === 429)) {
-            await new Promise(resolve => setTimeout(resolve, CONFIG.retryDelay * (attempt + 1)));
-            continue;
-          }
-          
-          return { success: false, error: errorInfo.message, code: errorInfo.code };
-        }
-
-        // Parse successful response
-        const data = await response.json();
-        const result = parseResponse(data);
-
-        if (!result.success) {
-          return { success: false, error: result.error };
-        }
-
-        return {
-          success: true,
-          content: result.content,
-          usage: result.usage,
-          model: result.model
-        };
-
-      } catch (e) {
-        lastError = e;
-        
-        // Network error - retry
-        if (attempt < CONFIG.maxRetries) {
-          await new Promise(resolve => setTimeout(resolve, CONFIG.retryDelay * (attempt + 1)));
-          continue;
-        }
-      }
-    }
-
-    return { 
-      success: false, 
-      error: lastError?.message || 'Network error occurred' 
-    };
-  }
-
-  /**
-   * Quick search (single message, no history)
-   * @param {string} query - Search query
-   * @returns {Promise<Object>} Result object
-   */
-  async function quickSearch(query) {
-    return sendMessage(query, []);
-  }
-
-  /**
    * Send streaming chat completion request
    * @param {string} userMessage - User's message
    * @param {Array} conversationHistory - Previous messages
@@ -340,11 +132,6 @@ const OpenRouterAPI = (function() {
     const validation = validateInput(userMessage);
     if (!validation.valid) {
       return { success: false, error: validation.error };
-    }
-
-    // Check API key
-    if (!hasAPIKey()) {
-      return { success: false, error: 'API key not configured' };
     }
 
     // Build messages array
@@ -371,7 +158,6 @@ const OpenRouterAPI = (function() {
     };
 
     try {
-
       const response = await fetch(CONFIG.baseURL, {
         method: 'POST',
         headers: buildHeaders(),
@@ -476,26 +262,24 @@ const OpenRouterAPI = (function() {
     }
   }
 
+  /**
+   * Quick search (single message, no history)
+   * @param {string} query - Search query
+   * @returns {Promise<Object>} Result object
+   */
+  async function quickSearch(query) {
+    return sendMessageStreaming(query, []);
+  }
+
   // ============== Public API ==============
 
   return {
     // Configuration
     config: CONFIG,
     
-    // Storage
-    setAPIKey,
-    getAPIKey,
-    hasAPIKey,
-    clearAPIKey,
-    saveChatHistory,
-    loadChatHistory,
-    clearChatHistory,
-    
     // API
-    sendMessage,
-    quickSearch,
     sendMessageStreaming,
-    validateInput
+    quickSearch
   };
 
 })();
