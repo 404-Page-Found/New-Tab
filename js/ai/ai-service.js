@@ -362,7 +362,7 @@ const AIService = (function() {
     const isUser = msg.role === 'user';
     const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
     const isStreaming = msg.isStreaming;
-    const content = isStreaming ? (msg.content || getTranslation('aiThinking')) : msg.content;
+    const content = isStreaming ? (msg.content || '') : msg.content;
     
     return `
       <div class="ai-message ${isUser ? 'ai-message-user' : 'ai-message-assistant'}">
