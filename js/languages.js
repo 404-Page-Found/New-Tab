@@ -193,7 +193,14 @@ const translations = {
     aiRateLimit: "Too many requests. Please wait.",
     aiClearConfirm: "Clear chat history?",
     aiAPIKeyMissing: "API key not configured",
-    aiSearchEnabled: "Enable AI search"
+    aiSearchEnabled: "Enable AI search",
+    aiNewChat: "New Chat",
+    aiConversations: "Conversations",
+    aiNoConversations: "No conversations yet",
+    aiNewConversation: "New Conversation",
+    aiDeleteConversation: "Delete conversation",
+    aiDeleteConfirm: "Delete this conversation?",
+    aiJustNow: "Just now"
   },
 
   zh: {
@@ -388,7 +395,14 @@ const translations = {
     aiRateLimit: "请求过多，请稍后再试。",
     aiClearConfirm: "清除聊天历史？",
     aiAPIKeyMissing: "API 密钥未配置",
-    aiSearchEnabled: "启用 AI 搜索"
+    aiSearchEnabled: "启用 AI 搜索",
+    aiNewChat: "新对话",
+    aiConversations: "对话列表",
+    aiNoConversations: "暂无对话记录",
+    aiNewConversation: "新对话",
+    aiDeleteConversation: "删除对话",
+    aiDeleteConfirm: "确定删除此对话？",
+    aiJustNow: "刚刚"
   }
 };
 

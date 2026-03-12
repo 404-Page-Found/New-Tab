@@ -1,16 +1,26 @@
 // js/ai/ai-service.js - AI Service Module
-// Handles chat UI, message management, and integrates with OpenRouter API
+// Handles chat UI, message management, topics/conversations, and integrates with OpenRouter API
 
 const AIService = (function() {
   // DOM Elements cache
   let elements = {};
   
   // Chat state
-  let messages = [];
+  let currentConversationId = null;
+  let conversations = [];
   let isLoading = false;
+  
+  // Storage keys
+  const STORAGE_KEYS = {
+    conversations: 'ai_conversations',
+    currentId: 'ai_current_conversation_id'
+  };
   
   // Default system prompt
   const SYSTEM_PROMPT = 'You are a helpful AI assistant. Provide clear, concise, and accurate responses.';
+  
+  // Maximum conversations to store
+  const MAX_CONVERSATIONS = 50;
   
   // ============== DOM Elements ==============
   
@@ -23,11 +33,11 @@ const AIService = (function() {
       container: document.getElementById('ai-chat-container'),
       input: document.getElementById('ai-chat-input'),
       sendBtn: document.getElementById('ai-chat-send'),
-      closeBtn: document.getElementById('ai-chat-close'),
-      clearBtn: document.getElementById('ai-chat-clear'),
       loadingIndicator: document.getElementById('ai-chat-loading'),
       errorDisplay: document.getElementById('ai-chat-error'),
-      title: document.getElementById('ai-chat-title')
+      title: document.getElementById('ai-chat-title'),
+      newChatBtn: document.getElementById('ai-new-chat-btn'),
+      topicsList: document.getElementById('ai-topics-list')
     };
   }
   
@@ -38,7 +48,188 @@ const AIService = (function() {
   function hasModal() {
     return !!document.getElementById('ai-chat-modal');
   }
+
+  // ============== Conversation Management ==============
   
+  /**
+   * Generate unique ID
+   * @returns {string}
+   */
+  function generateId() {
+    return 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+  
+  /**
+   * Create a new conversation
+   * @returns {Object} New conversation object
+   */
+  function createNewConversation() {
+    const conversation = {
+      id: generateId(),
+      title: getTranslation('aiNewConversation'),
+      messages: [],
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+    return conversation;
+  }
+  
+  /**
+   * Load conversations from storage
+   */
+  function loadConversations() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.conversations);
+      conversations = stored ? JSON.parse(stored) : [];
+      
+      // Load current conversation ID
+      const currentId = localStorage.getItem(STORAGE_KEYS.currentId);
+      
+      // Find the current conversation or create a new one
+      if (currentId && conversations.find(c => c.id === currentId)) {
+        currentConversationId = currentId;
+      } else if (conversations.length > 0) {
+        currentConversationId = conversations[0].id;
+      } else {
+        // Create initial conversation
+        const newConv = createNewConversation();
+        conversations.push(newConv);
+        currentConversationId = newConv.id;
+        saveConversations();
+      }
+    } catch (e) {
+      console.error('Failed to load conversations:', e);
+      conversations = [];
+      const newConv = createNewConversation();
+      conversations.push(newConv);
+      currentConversationId = newConv.id;
+    }
+  }
+  
+  /**
+   * Save conversations to storage
+   */
+  function saveConversations() {
+    try {
+      // Trim to max conversations
+      if (conversations.length > MAX_CONVERSATIONS) {
+        conversations = conversations.slice(-MAX_CONVERSATIONS);
+      }
+      
+      localStorage.setItem(STORAGE_KEYS.conversations, JSON.stringify(conversations));
+      localStorage.setItem(STORAGE_KEYS.currentId, currentConversationId);
+    } catch (e) {
+      console.error('Failed to save conversations:', e);
+    }
+  }
+  
+  /**
+   * Get current conversation
+   * @returns {Object}
+   */
+  function getCurrentConversation() {
+    return conversations.find(c => c.id === currentConversationId) || conversations[0];
+  }
+  
+  /**
+   * Get current messages
+   * @returns {Array}
+   */
+  function getCurrentMessages() {
+    const conv = getCurrentConversation();
+    return conv ? conv.messages : [];
+  }
+  
+  /**
+   * Add message to current conversation
+   * @param {Object} message
+   */
+  function addMessageToConversation(message) {
+    const conv = getCurrentConversation();
+    if (conv) {
+      conv.messages.push(message);
+      conv.updatedAt = Date.now();
+      
+      // Update title if this is the first user message
+      if (conv.messages.length === 1 && message.role === 'user') {
+        conv.title = message.content.substring(0, 30) + (message.content.length > 30 ? '...' : '');
+      }
+      
+      saveConversations();
+    }
+  }
+  
+  /**
+   * Create new chat
+   */
+  function createNewChat() {
+    const newConv = createNewConversation();
+    conversations.unshift(newConv);
+    currentConversationId = newConv.id;
+    saveConversations();
+    renderTopicsList();
+    renderMessages();
+    
+    // Focus input
+    if (elements.input) {
+      elements.input.focus();
+    }
+  }
+  
+  /**
+   * Switch to a conversation
+   * @param {string} conversationId
+   */
+  function switchConversation(conversationId) {
+    if (currentConversationId === conversationId) return;
+    
+    currentConversationId = conversationId;
+    saveConversations();
+    renderTopicsList();
+    renderMessages();
+  }
+  
+  /**
+   * Delete a conversation
+   * @param {string} conversationId
+   */
+  function deleteConversation(conversationId) {
+    const index = conversations.findIndex(c => c.id === conversationId);
+    if (index === -1) return;
+    
+    conversations.splice(index, 1);
+    
+    // If deleted current conversation, switch to another
+    if (currentConversationId === conversationId) {
+      if (conversations.length > 0) {
+        currentConversationId = conversations[0].id;
+      } else {
+        // Create new if all deleted
+        const newConv = createNewConversation();
+        conversations.push(newConv);
+        currentConversationId = newConv.id;
+      }
+    }
+    
+    saveConversations();
+    renderTopicsList();
+    renderMessages();
+  }
+  
+  /**
+   * Clear current conversation
+   */
+  function clearCurrentConversation() {
+    const conv = getCurrentConversation();
+    if (conv) {
+      conv.messages = [];
+      conv.title = getTranslation('aiNewConversation');
+      saveConversations();
+      renderMessages();
+      renderTopicsList();
+    }
+  }
+
   // ============== Modal Control ==============
   
   /**
@@ -52,8 +243,10 @@ const AIService = (function() {
     
     elements.modal.style.display = 'flex';
     
-    // Load chat history
-    loadChatHistory();
+    // Load conversations
+    loadConversations();
+    renderTopicsList();
+    renderMessages();
     
     // Focus input
     setTimeout(() => {
@@ -72,34 +265,93 @@ const AIService = (function() {
       elements.modal.style.display = 'none';
     }
   }
-  
-  // ============== Chat History ==============
-  
-  /**
-   * Load chat history from storage and render
-   */
-  function loadChatHistory() {
-    messages = OpenRouterAPI.loadChatHistory();
-    renderMessages();
-  }
-  
-  /**
-   * Save current messages to storage
-   */
-  function saveMessages() {
-    OpenRouterAPI.saveChatHistory(messages);
-  }
-  
-  /**
-   * Clear chat history
-   */
-  function clearChat() {
-    messages = [];
-    OpenRouterAPI.clearChatHistory();
-    renderMessages();
-  }
-  
+
   // ============== Rendering ==============
+  
+  /**
+   * Format timestamp for topic display
+   * @param {number} timestamp
+   * @returns {string}
+   */
+  function formatTopicTime(timestamp) {
+    const now = Date.now();
+    const diff = now - timestamp;
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    
+    if (minutes < 1) return getTranslation('aiJustNow');
+    if (minutes < 60) return `${minutes}m`;
+    if (hours < 24) return `${hours}h`;
+    if (days < 7) return `${days}d`;
+    
+    const date = new Date(timestamp);
+    return date.toLocaleDateString();
+  }
+  
+  /**
+   * Render topics list in sidebar
+   */
+  function renderTopicsList() {
+    if (!elements.topicsList) {
+      cacheElements();
+    }
+    if (!elements.topicsList) return;
+    
+    if (conversations.length === 0) {
+      elements.topicsList.innerHTML = `
+        <div class="ai-topics-empty">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+          </svg>
+          <p>${getTranslation('aiNoConversations')}</p>
+        </div>
+      `;
+      return;
+    }
+    
+    elements.topicsList.innerHTML = conversations.map(conv => {
+      const isActive = conv.id === currentConversationId;
+      return `
+        <div class="ai-topic-item ${isActive ? 'active' : ''}" data-id="${conv.id}">
+          <div class="ai-topic-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          </div>
+          <div class="ai-topic-info">
+            <div class="ai-topic-title">${escapeHTML(conv.title)}</div>
+            <div class="ai-topic-time">${formatTopicTime(conv.updatedAt)}</div>
+          </div>
+          <button class="ai-topic-delete" data-id="${conv.id}" title="${getTranslation('aiDeleteConversation')}">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3,6 5,6 21,6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>
+      `;
+    }).join('');
+    
+    // Add click handlers
+    elements.topicsList.querySelectorAll('.ai-topic-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        if (e.target.closest('.ai-topic-delete')) return;
+        const id = item.dataset.id;
+        switchConversation(id);
+      });
+    });
+    
+    elements.topicsList.querySelectorAll('.ai-topic-delete').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        if (confirm(getTranslation('aiDeleteConfirm'))) {
+          deleteConversation(id);
+        }
+      });
+    });
+  }
   
   /**
    * Get message HTML for a single message
@@ -148,6 +400,8 @@ const AIService = (function() {
     }
     if (!elements.container) return;
     
+    const messages = getCurrentMessages();
+    
     if (messages.length === 0) {
       elements.container.innerHTML = `
         <div class="ai-welcome">
@@ -186,11 +440,18 @@ const AIService = (function() {
       aiError: 'An error occurred',
       aiRateLimit: 'Too many requests. Please wait.',
       aiClearConfirm: 'Clear chat history?',
-      aiPlaceholder: 'Type your message...'
+      aiPlaceholder: 'Type your message...',
+      aiNewChat: 'New Chat',
+      aiConversations: 'Conversations',
+      aiNoConversations: 'No conversations yet',
+      aiNewConversation: 'New Conversation',
+      aiDeleteConversation: 'Delete conversation',
+      aiDeleteConfirm: 'Delete this conversation?',
+      aiJustNow: 'Just now'
     };
     return translations[key] || key;
   }
-  
+
   // ============== Sending Messages ==============
   
   /**
@@ -254,9 +515,10 @@ const AIService = (function() {
       content: userMessage.trim(),
       timestamp: Date.now()
     };
-    messages.push(userMsg);
+    addMessageToConversation(userMsg);
     renderMessages();
-    saveMessages();
+    renderTopicsList();
+    saveConversations();
     
     // Clear input
     if (elements.input) {
@@ -266,10 +528,11 @@ const AIService = (function() {
     // Show loading
     showLoading();
     
-    // Get conversation history for context (exclude system message)
+    // Get conversation history for context
+    const messages = getCurrentMessages();
     const historyForAPI = messages
       .filter(m => m.role !== 'system')
-      .slice(0, -1) // Exclude current message
+      .slice(0, -1)
       .map(m => ({ role: m.role, content: m.content }));
     
     // Create placeholder for streaming response
@@ -279,7 +542,7 @@ const AIService = (function() {
       timestamp: Date.now(),
       isStreaming: true
     };
-    messages.push(assistantMsg);
+    addMessageToConversation(assistantMsg);
     
     // Render and get reference to the assistant message element
     renderMessages();
@@ -305,7 +568,8 @@ const AIService = (function() {
       
       if (result.success) {
         // Update the message in the array
-        const lastMsg = messages[messages.length - 1];
+        const conv = getCurrentConversation();
+        const lastMsg = conv.messages[conv.messages.length - 1];
         if (lastMsg && lastMsg.isStreaming) {
           lastMsg.isStreaming = false;
           lastMsg.content = streamingTextElement?.textContent || '';
@@ -316,19 +580,22 @@ const AIService = (function() {
           streamingTextElement.classList.remove('ai-message-streaming');
         }
         
-        saveMessages();
+        saveConversations();
+        renderTopicsList();
       } else {
         showError(result.error);
         // Remove user and assistant messages if API failed
-        messages.pop(); // Remove assistant
-        messages.pop(); // Remove user
+        const conv = getCurrentConversation();
+        conv.messages.pop(); // Remove assistant
+        conv.messages.pop(); // Remove user
         renderMessages();
       }
     } catch (e) {
       showError(getTranslation('aiError'));
       // Remove messages on error
-      messages.pop(); // Remove assistant
-      messages.pop(); // Remove user
+      const conv = getCurrentConversation();
+      conv.messages.pop(); // Remove assistant
+      conv.messages.pop(); // Remove user
       renderMessages();
     }
     
@@ -349,7 +616,7 @@ const AIService = (function() {
       sendMessage(message);
     }
   }
-  
+
   // ============== Event Handlers ==============
   
   /**
@@ -371,18 +638,9 @@ const AIService = (function() {
       });
     }
     
-    // Close button
-    if (elements.closeBtn) {
-      elements.closeBtn.addEventListener('click', closeModal);
-    }
-    
-    // Clear button
-    if (elements.clearBtn) {
-      elements.clearBtn.addEventListener('click', () => {
-        if (confirm(getTranslation('aiClearConfirm'))) {
-          clearChat();
-        }
-      });
+    // New chat button
+    if (elements.newChatBtn) {
+      elements.newChatBtn.addEventListener('click', createNewChat);
     }
     
     // Close on outside click
@@ -395,7 +653,7 @@ const AIService = (function() {
       });
     }
   }
-  
+
   // ============== Public API ==============
   
   /**
@@ -409,8 +667,10 @@ const AIService = (function() {
     }
     
     cacheElements();
+    loadConversations();
     initEventListeners();
-    loadChatHistory();
+    renderTopicsList();
+    renderMessages();
   }
   
   /**
@@ -458,7 +718,7 @@ const AIService = (function() {
     sendMessage,
     quickSearch,
     isAvailable,
-    clearChat
+    clearChat: clearCurrentConversation
   };
   
 })();
