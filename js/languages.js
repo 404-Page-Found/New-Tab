@@ -165,7 +165,20 @@ const translations = {
     // Onboarding navigation
     previous: "Previous",
     next: "Next",
-    finish: "Finish"
+    finish: "Finish",
+
+    // AI Assistant
+    ai: "AI Assistant",
+    aiAssistant: "AI Assistant",
+    aiWelcome: "Welcome to AI Assistant",
+    aiWelcomeSubtitle: "Ask me anything!",
+    aiPlaceholder: "Type your message...",
+    aiThinking: "Thinking...",
+    aiError: "An error occurred. Please try again.",
+    aiRateLimit: "Too many requests. Please wait.",
+    aiClearConfirm: "Clear chat history?",
+    aiAPIKeyMissing: "API key not configured",
+    aiSearchEnabled: "Enable AI search"
   },
 
   zh: {
@@ -332,7 +345,20 @@ const translations = {
     // Onboarding navigation
     previous: "上一步",
     next: "下一步",
-    finish: "完成"
+    finish: "完成",
+
+    // AI Assistant
+    ai: "AI 助手",
+    aiAssistant: "AI 助手",
+    aiWelcome: "欢迎使用 AI 助手",
+    aiWelcomeSubtitle: "问我任何问题！",
+    aiPlaceholder: "输入您的消息...",
+    aiThinking: "思考中...",
+    aiError: "发生错误，请重试。",
+    aiRateLimit: "请求过多，请稍后再试。",
+    aiClearConfirm: "清除聊天历史？",
+    aiAPIKeyMissing: "API 密钥未配置",
+    aiSearchEnabled: "启用 AI 搜索"
   }
 };
 

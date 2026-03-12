@@ -439,6 +439,56 @@
     </div>
   </div>
 
+  <!-- AI Chat Modal -->
+  <div id="ai-chat-modal">
+    <div class="ai-chat-modal-content">
+      <div class="ai-chat-header">
+        <div class="ai-chat-title" id="ai-chat-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          <span data-i18n="aiAssistant">AI Assistant</span>
+        </div>
+        <div class="ai-chat-actions">
+          <button id="ai-chat-clear" class="ai-chat-action-btn" title="Clear chat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3,6 5,6 21,6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+          <button id="ai-chat-close" class="ai-chat-action-btn" title="Close">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <div class="ai-chat-container" id="ai-chat-container">
+        <!-- Messages will be rendered here -->
+      </div>
+      
+      <div class="ai-chat-loading" id="ai-chat-loading" style="display: none;">
+        <div class="ai-loading-spinner"></div>
+        <span data-i18n="aiThinking">Thinking...</span>
+      </div>
+      
+      <div class="ai-chat-error" id="ai-chat-error" style="display: none;"></div>
+      
+      <div class="ai-chat-input-container">
+        <input type="text" id="ai-chat-input" placeholder="Ask me anything..." data-i18n-placeholder="aiPlaceholder" maxlength="2000" />
+        <button id="ai-chat-send" class="ai-chat-send-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22,2 15,22 11,13 2,9 22,2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Add App Modal -->
   <div id="add-app-modal">
     <div>
@@ -529,6 +579,8 @@
 <script src="js/update-checker.js"></script>
 <script src="js/onboarding.js"></script>
 <script src="js/todo.js"></script>
+<script src="js/ai/openrouter.js"></script>
+<script src="js/ai/ai-service.js"></script>
   <!-- Motto area -->
   <div id="motto-container">
     <span id="motto-text">Loading...</span>

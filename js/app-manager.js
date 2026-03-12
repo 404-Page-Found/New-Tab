@@ -25,6 +25,7 @@ function getFavicon(url) {
 
 // Default apps
 const defaultApps = [
+  { id: 'ai-app', nameKey: 'ai', url: '#', icon: 'images/icons/ai.svg', className: 'default-app', isInternal: true },
   { id: 'feedback-app', nameKey: 'feedback', url: 'https://github.com/404-Page-Found/New-Tab/issues/new', icon: 'images/icons/feedback.svg', className: 'default-app' },
   { id: 'settings-app', nameKey: 'settings', url: '#', icon: 'images/icons/settings.svg', className: 'default-app' },
 ];
@@ -202,6 +203,21 @@ function attachSettingsAppHandler() {
       }
     };
     settingsApp.addEventListener("click", settingsApp._clickHandler);
+  }
+
+  // Attach AI app click handler
+  const aiApp = document.getElementById("ai-app");
+  if (aiApp) {
+    // Remove existing listeners to avoid duplicates
+    aiApp.removeEventListener("click", aiApp._clickHandler);
+    // Create and attach new handler
+    aiApp._clickHandler = function (e) {
+      e.preventDefault();
+      if (window.AIService && window.AIService.open) {
+        window.AIService.open();
+      }
+    };
+    aiApp.addEventListener("click", aiApp._clickHandler);
   }
 
   // Attach modal close handler (only once)
