@@ -420,6 +420,128 @@ const OpenRouterAPI = (function() {
     return sendMessage(query, []);
   }
 
+  /**
+   * Send streaming chat completion request
+   * @param {string} userMessage - User's message
+   * @param {Array} conversationHistory - Previous messages
+   * @param {Function} onChunk - Callback for each chunk received
+   * @returns {Promise<Object>} Final result object
+   */
+  async function sendMessageStreaming(userMessage, conversationHistory = [], onChunk) {
+    // Validate input
+    const validation = validateInput(userMessage);
+    if (!validation.valid) {
+      return { success: false, error: validation.error };
+    }
+
+    // Check rate limit
+    if (isRateLimited()) {
+      const resetTime = getRateLimitResetTime();
+      return {
+        success: false,
+        error: `Rate limited. Please wait ${Math.ceil(resetTime / 1000)} seconds.`,
+        retryAfter: resetTime
+      };
+    }
+
+    // Check API key
+    if (!hasAPIKey()) {
+      return { success: false, error: 'API key not configured' };
+    }
+
+    // Build messages array
+    const messages = [
+      { 
+        role: 'system', 
+        content: 'You are a helpful AI assistant. Provide clear, concise, and accurate responses.'
+      }
+    ];
+
+    // Add conversation history (last 10 messages)
+    const recentHistory = conversationHistory.slice(-10);
+    messages.push(...recentHistory);
+
+    // Add current user message
+    messages.push({ role: 'user', content: validation.message });
+
+    // Build request body with streaming enabled
+    const requestBody = {
+      model: CONFIG.model,
+      messages: messages,
+      max_tokens: CONFIG.maxTokens,
+      stream: true
+    };
+
+    try {
+      recordRequest();
+
+      const response = await fetch(`${CONFIG.baseURL}/chat/completions`, {
+        method: 'POST',
+        headers: buildHeaders(),
+        body: JSON.stringify(requestBody)
+      });
+
+      // Handle non-OK responses
+      if (!response.ok) {
+        const errorInfo = await handleError(response);
+        return { success: false, error: errorInfo.message, code: errorInfo.code };
+      }
+
+      // Get the reader for streaming
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let fullContent = '';
+
+      // Read the stream
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        // Decode the chunk
+        const chunk = decoder.decode(value, { stream: true });
+        
+        // Parse SSE format
+        const lines = chunk.split('\n');
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            
+            // Check for [DONE] signal
+            if (data === '[DONE]') {
+              continue;
+            }
+            
+            try {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices?.[0]?.delta?.content;
+              if (content) {
+                fullContent += content;
+                if (onChunk) {
+                  onChunk(content);
+                }
+              }
+            } catch (e) {
+              // Skip invalid JSON
+            }
+          }
+        }
+      }
+
+      return {
+        success: true,
+        content: fullContent,
+        usage: null,
+        model: CONFIG.model
+      };
+
+    } catch (e) {
+      return { 
+        success: false, 
+        error: e.message || 'Network error occurred' 
+      };
+    }
+  }
+
   // ============== Public API ==============
 
   return {
@@ -442,6 +564,7 @@ const OpenRouterAPI = (function() {
     // API
     sendMessage,
     quickSearch,
+    sendMessageStreaming,
     validateInput
   };
 

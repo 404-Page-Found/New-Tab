@@ -109,6 +109,8 @@ const AIService = (function() {
   function getMessageHTML(msg) {
     const isUser = msg.role === 'user';
     const time = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString() : '';
+    const isStreaming = msg.isStreaming;
+    const content = isStreaming ? (msg.content || getTranslation('aiThinking')) : msg.content;
     
     return `
       <div class="ai-message ${isUser ? 'ai-message-user' : 'ai-message-assistant'}">
@@ -119,7 +121,7 @@ const AIService = (function() {
           }
         </div>
         <div class="ai-message-content">
-          <div class="ai-message-text">${escapeHTML(msg.content)}</div>
+          <div class="ai-message-text ${isStreaming ? 'ai-message-streaming' : ''}">${escapeHTML(content)}</div>
           <div class="ai-message-time">${time}</div>
         </div>
       </div>
@@ -240,7 +242,7 @@ const AIService = (function() {
   }
   
   /**
-   * Send a message
+   * Send a message with streaming support
    * @param {string} userMessage - User's message
    */
   async function sendMessage(userMessage) {
@@ -270,28 +272,63 @@ const AIService = (function() {
       .slice(0, -1) // Exclude current message
       .map(m => ({ role: m.role, content: m.content }));
     
+    // Create placeholder for streaming response
+    const assistantMsg = {
+      role: 'assistant',
+      content: '',
+      timestamp: Date.now(),
+      isStreaming: true
+    };
+    messages.push(assistantMsg);
+    
+    // Render and get reference to the assistant message element
+    renderMessages();
+    
+    // Get the assistant message element for direct updates
+    const assistantElements = elements.container?.querySelectorAll('.ai-message-assistant');
+    const streamingElement = assistantElements ? assistantElements[assistantElements.length - 1] : null;
+    const streamingTextElement = streamingElement?.querySelector('.ai-message-text');
+    
     try {
-      const result = await OpenRouterAPI.sendMessage(userMessage, historyForAPI);
+      // Use streaming API
+      const result = await OpenRouterAPI.sendMessageStreaming(
+        userMessage, 
+        historyForAPI,
+        (chunk) => {
+          // Directly update the DOM element without re-rendering everything
+          if (streamingTextElement) {
+            const currentContent = streamingTextElement.textContent;
+            streamingTextElement.textContent = currentContent + chunk;
+          }
+        }
+      );
       
       if (result.success) {
-        // Add assistant response
-        const assistantMsg = {
-          role: 'assistant',
-          content: result.content,
-          timestamp: Date.now()
-        };
-        messages.push(assistantMsg);
+        // Update the message in the array
+        const lastMsg = messages[messages.length - 1];
+        if (lastMsg && lastMsg.isStreaming) {
+          lastMsg.isStreaming = false;
+          lastMsg.content = streamingTextElement?.textContent || '';
+        }
+        
+        // Update streaming indicator in UI
+        if (streamingTextElement) {
+          streamingTextElement.classList.remove('ai-message-streaming');
+        }
+        
         saveMessages();
-        renderMessages();
       } else {
         showError(result.error);
-        // Remove user message if API failed
-        messages.pop();
+        // Remove user and assistant messages if API failed
+        messages.pop(); // Remove assistant
+        messages.pop(); // Remove user
         renderMessages();
       }
     } catch (e) {
       showError(getTranslation('aiError'));
-      messages.pop();
+      // Remove messages on error
+      messages.pop(); // Remove assistant
+      messages.pop(); // Remove user
       renderMessages();
     }
     

@@ -4734,6 +4734,17 @@ body.light-theme .progress-dot.active {
   margin-top: 4px;
 }
 
+.ai-message-streaming::after {
+  content: '...';
+  animation: streamingDots 1.5s infinite;
+}
+
+@keyframes streamingDots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
 .ai-chat-loading {
   display: flex;
   align-items: center;
