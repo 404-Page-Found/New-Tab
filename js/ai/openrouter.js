@@ -12,15 +12,10 @@ const OpenRouterAPI = (function() {
     model: 'openrouter/free',
     maxTokens: 4096,
     maxRetries: 2,
-    retryDelay: 1000,
-    rateLimit: {
-      maxRequests: 5,
-      windowMs: 60000 // 1 minute
-    }
+    retryDelay: 1000
   };
 
-  // Rate limiting state
-  let requestTimestamps = [];
+
 
   // Storage keys
   const STORAGE_KEYS = {
@@ -76,38 +71,6 @@ const OpenRouterAPI = (function() {
    */
   function clearAPIKey() {
     console.warn('API key is now handled server-side by Cloudflare Worker.');
-  }
-
-  // ============== Rate Limiting ==============
-
-  /**
-   * Check if rate limit is exceeded
-   * @returns {boolean}
-   */
-  function isRateLimited() {
-    const now = Date.now();
-    // Remove old timestamps outside the window
-    requestTimestamps = requestTimestamps.filter(
-      ts => now - ts < CONFIG.rateLimit.windowMs
-    );
-    return requestTimestamps.length >= CONFIG.rateLimit.maxRequests;
-  }
-
-  /**
-   * Record a request timestamp
-   */
-  function recordRequest() {
-    requestTimestamps.push(Date.now());
-  }
-
-  /**
-   * Get rate limit reset time
-   * @returns {number} Milliseconds until reset
-   */
-  function getRateLimitResetTime() {
-    if (requestTimestamps.length === 0) return 0;
-    const oldestTimestamp = Math.min(...requestTimestamps);
-    return Math.max(0, CONFIG.rateLimit.windowMs - (Date.now() - oldestTimestamp));
   }
 
   // ============== Chat History ==============
@@ -268,16 +231,6 @@ const OpenRouterAPI = (function() {
       return { success: false, error: validation.error };
     }
 
-    // Check rate limit
-    if (isRateLimited()) {
-      const resetTime = getRateLimitResetTime();
-      return {
-        success: false,
-        error: `Rate limited. Please wait ${Math.ceil(resetTime / 1000)} seconds.`,
-        retryAfter: resetTime
-      };
-    }
-
     // Check API key
     if (!hasAPIKey()) {
       return { success: false, error: 'API key not configured' };
@@ -304,13 +257,10 @@ const OpenRouterAPI = (function() {
       messages: messages,
       max_tokens: CONFIG.maxTokens
     };
-
-    // Make request with retry logic
     let lastError = null;
     
     for (let attempt = 0; attempt <= CONFIG.maxRetries; attempt++) {
       try {
-        recordRequest();
 
         const response = await fetch(CONFIG.baseURL, {
           method: 'POST',
@@ -392,16 +342,6 @@ const OpenRouterAPI = (function() {
       return { success: false, error: validation.error };
     }
 
-    // Check rate limit
-    if (isRateLimited()) {
-      const resetTime = getRateLimitResetTime();
-      return {
-        success: false,
-        error: `Rate limited. Please wait ${Math.ceil(resetTime / 1000)} seconds.`,
-        retryAfter: resetTime
-      };
-    }
-
     // Check API key
     if (!hasAPIKey()) {
       return { success: false, error: 'API key not configured' };
@@ -431,7 +371,6 @@ const OpenRouterAPI = (function() {
     };
 
     try {
-      recordRequest();
 
       const response = await fetch(CONFIG.baseURL, {
         method: 'POST',
@@ -551,10 +490,6 @@ const OpenRouterAPI = (function() {
     saveChatHistory,
     loadChatHistory,
     clearChatHistory,
-    
-    // Rate limiting
-    isRateLimited,
-    getRateLimitResetTime,
     
     // API
     sendMessage,
