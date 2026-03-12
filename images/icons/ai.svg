@@ -1,13 +1,44 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
-  <path d="M12 6v6l4 2"/>
-  <circle cx="12" cy="12" r="3"/>
-  <path d="M12 2v2"/>
-  <path d="M12 20v2"/>
-  <path d="M2 12h2"/>
-  <path d="M20 12h2"/>
-  <path d="M4.93 4.93l1.41 1.41"/>
-  <path d="M17.66 17.66l1.41 1.41"/>
-  <path d="M4.93 19.07l1.41-1.41"/>
-  <path d="M17.66 6.34l1.41-1.41"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Modern AI icon - Neural network node design -->
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Central hub -->
+  <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/>
+  
+  <!-- Neural connections - Top -->
+  <line x1="12" y1="9.5" x2="12" y2="5"/>
+  <circle cx="12" cy="4" r="1.2" fill="currentColor" stroke="none"/>
+  
+  <!-- Neural connections - Top Right -->
+  <line x1="14.3" y1="10.2" x2="17" y2="7"/>
+  <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+  
+  <!-- Neural connection - Right -->
+  <line x1="14.5" y1="12" x2="19" y2="12"/>
+  <circle cx="19.5" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+  
+  <!-- Neural connection - Bottom Right -->
+  <line x1="14.3" y1="13.8" x2="17" y2="17"/>
+  <circle cx="17.5" cy="17.5" r="1.2" fill="currentColor" stroke="none"/>
+  
+  <!-- Neural connection - Bottom -->
+  <line x1="12" y1="14.5" x2="12" y2="19"/>
+  <circle cx="12" cy="20" r="1.2" fill="currentColor" stroke="none"/>
+  
+  <!-- Neural connection - Bottom Left -->
+  <line x1="9.7" y1="13.8" x2="7" y2="17"/>
+  <circle cx="6.5" cy="17.5" r="1.2" fill="currentColor" stroke="none"/>
+  
+  <!-- Neural connection - Left -->
+  <line x1="9.5" y1="12" x2="5" y2="12"/>
+  <circle cx="4.5" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+  
+  <!-- Neural connection - Top Left -->
+  <line x1="9.7" y1="10.2" x2="7" y2="7"/>
+  <circle cx="6.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+  
+  <!-- Inner spark lines -->
+  <line x1="12" y1="12" x2="12" y2="7.5" stroke-width="1"/>
+  <line x1="12" y1="12" x2="15.5" y2="12" stroke-width="1"/>
+  <line x1="12" y1="12" x2="12" y2="16.5" stroke-width="1"/>
+  <line x1="12" y1="12" x2="8.5" y2="12" stroke-width="1"/>
 </svg>
