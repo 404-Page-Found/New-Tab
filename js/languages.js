@@ -16,9 +16,24 @@ const translations = {
     noTodos: "No todos yet. Add one above!",
     noTodosHint: "Try adding due dates for better organization.",
     newAppTitle: "New App",
+    newAppDescription: "Enter a website URL to add it to your apps",
     enterUrl: "Enter website URL",
     cancel: "Cancel",
     create: "Create",
+    quickAdd: "Quick Add",
+    quickAddDesc: "Popular apps to get you started",
+
+    // URL Validation messages
+    validationPleaseEnter: "Please enter a URL or search query",
+    validationInvalidAppears: "This URL appears to be invalid. Press Enter to Create",
+    validationMissingHostname: "Invalid URL: missing hostname",
+    validationInvalidChars: "Invalid URL: hostname contains invalid characters",
+    validationTldTooShort: "Invalid URL: top-level domain too short",
+    validationIncompleteDomain: "Invalid URL: incomplete domain name",
+    validationIpOutOfRange: "Invalid URL: IP address out of range",
+    validationValid: "Valid URL",
+    validationMalformed: "Malformed URL",
+
     refreshMotto: "Refresh motto",
     copyMotto: "Copy motto",
     renameApp: "Rename",
@@ -196,9 +211,24 @@ const translations = {
     noTodos: "还没有待办事项。在上方添加一个！",
     noTodosHint: "尝试添加到期日期以更好地组织。",
     newAppTitle: "新建应用",
+    newAppDescription: "输入网站URL将其添加到您的应用",
     enterUrl: "输入网站URL",
     cancel: "取消",
     create: "创建",
+    quickAdd: "快速添加",
+    quickAddDesc: "热门应用让您快速上手",
+
+    // URL Validation messages
+    validationPleaseEnter: "请输入URL或搜索词",
+    validationInvalidAppears: "此URL似乎无效。按回车键创建",
+    validationMissingHostname: "无效URL：缺少主机名",
+    validationInvalidChars: "无效URL：主机名包含无效字符",
+    validationTldTooShort: "无效URL：顶级域名太短",
+    validationIncompleteDomain: "无效URL：域名不完整",
+    validationIpOutOfRange: "无效URL：IP地址超出范围",
+    validationValid: "有效URL",
+    validationMalformed: "格式错误的URL",
+
     refreshMotto: "刷新格言",
     copyMotto: "复制格言",
     renameApp: "重命名",
@@ -454,6 +484,15 @@ function updateDynamicTranslations() {
   // Re-render the About section so version label and last-checked text update
   if (window.initAboutSection) {
     window.initAboutSection();
+  }
+
+  // Update Add App modal if it's open
+  const addAppModal = document.getElementById('add-app-modal');
+  if (addAppModal && addAppModal.style.display !== 'none') {
+    // Trigger updatePreview to refresh validation messages
+    if (window.updateAddAppPreview) {
+      window.updateAddAppPreview();
+    }
   }
 }
 
