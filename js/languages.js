@@ -447,6 +447,15 @@ function applyLanguage(lang) {
     }
   });
 
+  // Update all elements with data-i18n-placeholder attribute
+  const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+  placeholderElements.forEach(element => {
+    const key = element.getAttribute('data-i18n-placeholder');
+    if (translations[lang] && translations[lang][key]) {
+      element.placeholder = translations[lang][key];
+    }
+  });
+
   // Update any dynamic content that might have been added after initial load
   updateDynamicTranslations();
 }
