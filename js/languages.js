@@ -54,6 +54,7 @@ const translations = {
     generalSettings: "General",
     generalSettingsDesc: "Configure basic app behavior",
     openNewTab: "Open apps in a new tab",
+    enableTodoList: "Enable todo list",
 
     // Background settings
     backgroundSettings: "Background",
@@ -255,6 +256,7 @@ const translations = {
     generalSettings: "通用",
     generalSettingsDesc: "配置基本应用行为",
     openNewTab: "在新标签页中打开应用",
+    enableTodoList: "启用待办清单",
 
     // Background settings
     backgroundSettings: "背景",
