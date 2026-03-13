@@ -16,6 +16,57 @@ const OpenRouterAPI = (function() {
   };
 
   /**
+   * Get current language
+   * @returns {string} Current language code
+   */
+  function getCurrentLanguage() {
+    if (window.i18n && window.i18n.currentLanguage) {
+      return window.i18n.currentLanguage();
+    }
+    return localStorage.getItem('language') || 'en';
+  }
+
+  /**
+   * Get translation for a key
+   * @param {string} key - Translation key
+   * @returns {string} Translated string or key
+   */
+  function getTranslation(key) {
+    if (window.i18n && window.i18n.t) {
+      return window.i18n.t(key);
+    }
+    const translations = {
+      aiError: 'An error occurred. Please try again.',
+      aiAuthError: 'Invalid or missing API key',
+      aiForbidden: 'Access forbidden',
+      aiRateLimit: 'Too many requests. Please wait.',
+      aiServerError: 'Service error. Please try again later.',
+      aiNetworkError: 'Network error occurred',
+      aiInvalidResponse: 'Invalid response format',
+      aiNoContent: 'No content in response',
+      aiMessageRequired: 'Message is required',
+      aiMessageEmpty: 'Message cannot be empty',
+      aiMessageTooLong: 'Message too long (max 2000 characters)'
+    };
+    return translations[key] || key;
+  }
+
+  /**
+   * Get language-aware system prompt
+   * @returns {string} System prompt in the user's language
+   */
+  function getSystemPrompt() {
+    const lang = getCurrentLanguage();
+    
+    const prompts = {
+      en: 'You are a helpful AI assistant. Provide clear, concise, and accurate responses.',
+      zh: '你是一个有用的AI助手。请提供清晰、简洁和准确的回复。'
+    };
+    
+    return prompts[lang] || prompts.en;
+  }
+
+  /**
    * Build request headers for Cloudflare Worker proxy
    * No API key needed - it's handled server-side
    * @returns {Object} Headers object
@@ -36,14 +87,14 @@ const OpenRouterAPI = (function() {
    */
   function validateInput(message) {
     if (!message || typeof message !== 'string') {
-      return { valid: false, error: 'Message is required' };
+      return { valid: false, error: getTranslation('aiMessageRequired') };
     }
     const trimmed = message.trim();
     if (trimmed.length === 0) {
-      return { valid: false, error: 'Message cannot be empty' };
+      return { valid: false, error: getTranslation('aiMessageEmpty') };
     }
     if (trimmed.length > 2000) {
-      return { valid: false, error: 'Message too long (max 2000 characters)' };
+      return { valid: false, error: getTranslation('aiMessageTooLong') };
     }
     return { valid: true, message: trimmed };
   }
@@ -56,12 +107,12 @@ const OpenRouterAPI = (function() {
   function parseResponse(data) {
     try {
       if (!data || !data.choices || !data.choices[0]) {
-        return { success: false, error: 'Invalid response format' };
+        return { success: false, error: getTranslation('aiInvalidResponse') };
       }
       
       const choice = data.choices[0];
       if (!choice.message || !choice.message.content) {
-        return { success: false, error: 'No content in response' };
+        return { success: false, error: getTranslation('aiNoContent') };
       }
 
       return {
@@ -71,7 +122,7 @@ const OpenRouterAPI = (function() {
         model: data.model || CONFIG.model
       };
     } catch (e) {
-      return { success: false, error: 'Failed to parse response' };
+      return { success: false, error: getTranslation('aiInvalidResponse') };
     }
   }
 
@@ -81,7 +132,7 @@ const OpenRouterAPI = (function() {
    * @returns {Object} Error information
    */
   async function handleError(response) {
-    let errorMessage = 'An unknown error occurred';
+    let errorMessage = getTranslation('aiError');
     let errorCode = 'UNKNOWN';
 
     try {
@@ -90,24 +141,24 @@ const OpenRouterAPI = (function() {
       switch (response.status) {
         case 401:
           errorCode = 'AUTH_ERROR';
-          errorMessage = 'Invalid or missing API key';
+          errorMessage = getTranslation('aiAuthError');
           break;
         case 403:
           errorCode = 'FORBIDDEN';
-          errorMessage = 'Access forbidden';
+          errorMessage = getTranslation('aiForbidden');
           break;
         case 429:
           errorCode = 'RATE_LIMIT';
           const retryAfter = response.headers.get('Retry-After');
           errorMessage = retryAfter 
             ? `Rate limited. Try again in ${retryAfter} seconds` 
-            : 'Too many requests. Please wait.';
+            : getTranslation('aiRateLimit');
           break;
         case 500:
         case 502:
         case 503:
           errorCode = 'SERVER_ERROR';
-          errorMessage = 'OpenRouter service error. Please try again later.';
+          errorMessage = getTranslation('aiServerError');
           break;
         default:
           errorCode = errorData.error?.code || 'API_ERROR';
@@ -134,11 +185,11 @@ const OpenRouterAPI = (function() {
       return { success: false, error: validation.error };
     }
 
-    // Build messages array
+    // Build messages array with language-aware system prompt
     const messages = [
       { 
         role: 'system', 
-        content: 'You are a helpful AI assistant. Provide clear, concise, and accurate responses.'
+        content: getSystemPrompt()
       }
     ];
 
@@ -257,7 +308,7 @@ const OpenRouterAPI = (function() {
     } catch (e) {
       return { 
         success: false, 
-        error: e.message || 'Network error occurred' 
+        error: getTranslation('aiNetworkError')
       };
     }
   }

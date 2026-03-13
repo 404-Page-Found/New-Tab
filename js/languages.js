@@ -200,7 +200,19 @@ const translations = {
     aiNewConversation: "New Conversation",
     aiDeleteConversation: "Delete conversation",
     aiDeleteConfirm: "Delete this conversation?",
-    aiJustNow: "Just now"
+    aiJustNow: "Just now",
+    aiOnline: "Online",
+    aiOffline: "Offline",
+    aiThinking: "Thinking...",
+    aiAuthError: "Invalid or missing API key",
+    aiForbidden: "Access forbidden",
+    aiServerError: "Service error. Please try again later.",
+    aiNetworkError: "Network error occurred",
+    aiInvalidResponse: "Invalid response format",
+    aiNoContent: "No content in response",
+    aiMessageRequired: "Message is required",
+    aiMessageEmpty: "Message cannot be empty",
+    aiMessageTooLong: "Message too long (max 2000 characters)"
   },
 
   zh: {
@@ -402,7 +414,19 @@ const translations = {
     aiNewConversation: "新对话",
     aiDeleteConversation: "删除对话",
     aiDeleteConfirm: "确定删除此对话？",
-    aiJustNow: "刚刚"
+    aiJustNow: "刚刚",
+    aiOnline: "在线",
+    aiOffline: "离线",
+    aiThinking: "思考中...",
+    aiAuthError: "API 密钥无效或未配置",
+    aiForbidden: "访问被拒绝",
+    aiServerError: "服务错误，请稍后再试。",
+    aiNetworkError: "网络错误",
+    aiInvalidResponse: "响应格式无效",
+    aiNoContent: "响应中没有内容",
+    aiMessageRequired: "消息不能为空",
+    aiMessageEmpty: "消息不能为空",
+    aiMessageTooLong: "消息太长（最多2000个字符）"
   }
 };
 
