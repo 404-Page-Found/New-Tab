@@ -427,6 +427,11 @@ function initSettings() {
   if (window.initModernColorPickers) {
     window.initModernColorPickers();
   }
+  
+  // Initialize modern font pickers
+  if (window.initModernFontPickers) {
+    window.initModernFontPickers();
+  }
 }
 
 // Initialize settings when DOM is loaded

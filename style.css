@@ -2506,10 +2506,202 @@ body.light-theme .color-hex {
   }
 }
 
+/* ==================== Modern Font Picker Styles ==================== */
+.font-swatch {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 2px solid rgba(107, 114, 128, 0.5);
+  background: rgba(31, 41, 55, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.font-swatch:hover {
+  border-color: rgba(33, 150, 243, 0.6);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  transform: translateY(-1px);
+}
+
+.font-swatch:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+  outline: none;
+}
+
+.font-swatch-preview {
+  flex: 1;
+  text-align: left;
+  font-size: 13px;
+  color: var(--settings-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.font-swatch-arrow {
+  width: 14px;
+  height: 14px;
+  color: rgba(107, 114, 128, 0.8);
+  flex-shrink: 0;
+  margin-left: 8px;
+  transition: transform 0.2s ease;
+}
+
+.font-swatch:hover .font-swatch-arrow {
+  color: #2196f3;
+}
+
+.font-picker-popup {
+  position: fixed;
+  width: 260px;
+  max-height: 280px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 3000;
+  opacity: 0;
+  transform: scale(0.95) translateY(-10px);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.font-picker-popup.visible {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+.font-picker-header {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+.font-picker-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(203, 213, 225, 0.9);
+}
+
+.font-list {
+  padding: 8px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.font-option {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  margin-bottom: 2px;
+  position: relative;
+}
+
+.font-option:last-child {
+  margin-bottom: 0;
+}
+
+.font-option:hover {
+  background: rgba(33, 150, 243, 0.1);
+  transform: translateX(2px);
+}
+
+.font-option.selected {
+  background: rgba(33, 150, 243, 0.2);
+}
+
+.font-option.selected .font-option-name {
+  color: #2196f3;
+  font-weight: 600;
+}
+
+.font-option-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgba(203, 213, 225, 0.9);
+}
+
+/* Light Theme for Font Picker */
+body.light-theme .font-swatch {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: #d1d5db;
+  color: #1f2937;
+}
+
+body.light-theme .font-swatch:hover {
+  border-color: rgba(33, 150, 243, 0.6);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
+body.light-theme .font-swatch-preview {
+  color: #1f2937;
+}
+
+body.light-theme .font-swatch-arrow {
+  color: #6b7280;
+}
+
+body.light-theme .font-picker-popup {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: #e5e7eb;
+}
+
+body.light-theme .font-picker-header {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .font-picker-title {
+  color: #1f2937;
+}
+
+body.light-theme .font-option:hover {
+  background: rgba(33, 150, 243, 0.08);
+}
+
+body.light-theme .font-option.selected {
+  background: rgba(33, 150, 243, 0.12);
+}
+
+body.light-theme .font-option.selected .font-option-name {
+  color: #1976d2;
+}
+
+body.light-theme .font-option-name {
+  color: #1f2937;
+}
+
+/* Responsive adjustments for font picker */
+@media (max-width: 400px) {
+  .font-picker-popup {
+    width: 260px;
+    max-height: 300px;
+  }
+}
+
 /* Custom Scrollbars for Modals and Popups */
 #settings-modal > div::-webkit-scrollbar,
 #add-app-modal > div::-webkit-scrollbar,
 .color-picker-popup::-webkit-scrollbar,
+.font-picker-popup::-webkit-scrollbar,
 .app-context-menu::-webkit-scrollbar {
   width: 6px;
 }
@@ -2517,6 +2709,7 @@ body.light-theme .color-hex {
 #settings-modal > div::-webkit-scrollbar-track,
 #add-app-modal > div::-webkit-scrollbar-track,
 .color-picker-popup::-webkit-scrollbar-track,
+.font-picker-popup::-webkit-scrollbar-track,
 .app-context-menu::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 3px;
@@ -2525,6 +2718,7 @@ body.light-theme .color-hex {
 #settings-modal > div::-webkit-scrollbar-thumb,
 #add-app-modal > div::-webkit-scrollbar-thumb,
 .color-picker-popup::-webkit-scrollbar-thumb,
+.font-picker-popup::-webkit-scrollbar-thumb,
 .app-context-menu::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.3);
   border-radius: 3px;
@@ -2534,6 +2728,7 @@ body.light-theme .color-hex {
 #settings-modal > div::-webkit-scrollbar-thumb:hover,
 #add-app-modal > div::-webkit-scrollbar-thumb:hover,
 .color-picker-popup::-webkit-scrollbar-thumb:hover,
+.font-picker-popup::-webkit-scrollbar-thumb:hover,
 .app-context-menu::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }
@@ -2542,6 +2737,7 @@ body.light-theme .color-hex {
 #settings-modal > div,
 #add-app-modal > div,
 .color-picker-popup,
+.font-picker-popup,
 .app-context-menu {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.3) rgba(255, 255, 255, 0.1);
@@ -2551,6 +2747,7 @@ body.light-theme .color-hex {
 body.light-theme #settings-modal > div::-webkit-scrollbar-thumb,
 body.light-theme #add-app-modal > div::-webkit-scrollbar-thumb,
 body.light-theme .color-picker-popup::-webkit-scrollbar-thumb,
+body.light-theme .font-picker-popup::-webkit-scrollbar-thumb,
 body.light-theme .app-context-menu::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.3);
 }
@@ -2558,6 +2755,7 @@ body.light-theme .app-context-menu::-webkit-scrollbar-thumb {
 body.light-theme #settings-modal > div::-webkit-scrollbar-thumb:hover,
 body.light-theme #add-app-modal > div::-webkit-scrollbar-thumb:hover,
 body.light-theme .color-picker-popup::-webkit-scrollbar-thumb:hover,
+body.light-theme .font-picker-popup::-webkit-scrollbar-thumb:hover,
 body.light-theme .app-context-menu::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.5);
 }
@@ -2565,6 +2763,7 @@ body.light-theme .app-context-menu::-webkit-scrollbar-thumb:hover {
 body.light-theme #settings-modal > div,
 body.light-theme #add-app-modal > div,
 body.light-theme .color-picker-popup,
+body.light-theme .font-picker-popup,
 body.light-theme .app-context-menu {
   scrollbar-color: rgba(0, 0, 0, 0.3) rgba(0, 0, 0, 0.1);
 }
