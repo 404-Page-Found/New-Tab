@@ -2561,7 +2561,7 @@ body.light-theme .color-hex {
   position: fixed;
   width: 260px;
   max-height: 280px;
-  background: rgba(15, 23, 42, 0.95);
+  background: var(--settings-modal-bg);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-radius: 12px;
@@ -2592,7 +2592,7 @@ body.light-theme .color-hex {
 .font-picker-title {
   font-size: 13px;
   font-weight: 600;
-  color: rgba(203, 213, 225, 0.9);
+  color: var(--settings-text-color);
 }
 
 .font-list {
@@ -2637,7 +2637,7 @@ body.light-theme .color-hex {
 .font-option-name {
   font-size: 14px;
   font-weight: 500;
-  color: rgba(203, 213, 225, 0.9);
+  color: var(--settings-text-color);
 }
 
 /* Light Theme for Font Picker */
