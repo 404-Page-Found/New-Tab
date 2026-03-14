@@ -243,7 +243,7 @@ const AIService = (function() {
     cacheElements();
     if (!elements.modal) return;
     
-    elements.modal.style.display = 'flex';
+    elements.modal.classList.add('ai-modal-open');
     
     // Load conversations
     loadConversations();
@@ -264,7 +264,7 @@ const AIService = (function() {
       cacheElements();
     }
     if (elements.modal) {
-      elements.modal.style.display = 'none';
+      elements.modal.classList.remove('ai-modal-open');
     }
   }
 

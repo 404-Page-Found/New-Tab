@@ -4768,7 +4768,8 @@ body.light-theme .progress-dot.active {
 }
 
 #ai-chat-modal {
-  display: none;
+  /* Keep display: flex always to allow transitions */
+  display: flex;
   position: fixed;
   top: 0;
   left: 0;
@@ -4779,6 +4780,15 @@ body.light-theme .progress-dot.active {
   z-index: 10000;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#ai-chat-modal.ai-modal-open {
+  /* Remove display: flex - already set above */
+  visibility: visible;
+  opacity: 1;
 }
 
 .ai-chat-modal-content {
@@ -4796,6 +4806,15 @@ body.light-theme .progress-dot.active {
     0 25px 50px -12px rgba(0, 0, 0, 0.5),
     0 0 0 1px rgba(255, 255, 255, 0.05) inset;
   overflow: hidden;
+  opacity: 0;
+  transform: scale(0.95) translateY(20px);
+  transition: opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+#ai-chat-modal.ai-modal-open .ai-chat-modal-content {
+  opacity: 1;
+  transform: scale(1) translateY(0);
 }
 
 /* Left Sidebar - Topics Navigation */
