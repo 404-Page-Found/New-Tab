@@ -4792,7 +4792,8 @@ body.light-theme .progress-dot.active {
 }
 
 .ai-chat-modal-content {
-  background: linear-gradient(145deg, rgba(30, 32, 48, 0.95), rgba(20, 22, 35, 0.98));
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 24px;
@@ -4820,8 +4821,8 @@ body.light-theme .progress-dot.active {
 /* Left Sidebar - Topics Navigation */
 .ai-chat-sidebar {
   width: 260px;
+  background: rgba(15, 23, 42, 0.6);
   min-width: 260px;
-  background: rgba(0, 0, 0, 0.3);
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
@@ -5030,8 +5031,8 @@ body.light-theme .progress-dot.active {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
+  background: rgba(15, 23, 42, 0.4);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(0, 0, 0, 0.15);
 }
 
 .ai-chat-title {
@@ -5410,6 +5411,43 @@ body.light-theme #ai-chat-container::-webkit-scrollbar-thumb {
 
 body.light-theme #ai-chat-container::-webkit-scrollbar-thumb:hover {
   background: rgba(0, 0, 0, 0.3);
+}
+
+/* AI Chat Light Theme - User message bubble override */
+body.light-theme .ai-message-user .ai-message-content {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+/* AI Chat Light Theme - Send button */
+body.light-theme .ai-chat-send-btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+}
+
+/* AI Chat Light Theme - Connection status */
+body.light-theme .ai-connection-status {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+/* AI Chat Light Theme - Loading spinner */
+body.light-theme .ai-loading-spinner {
+  border-color: rgba(99, 102, 241, 0.2);
+  border-top-color: #6366f1;
+}
+
+/* AI Chat Light Theme - Error message */
+body.light-theme .ai-chat-error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc3545;
+}
+
+/* AI Chat Light Theme - Topic delete button */
+body.light-theme .ai-topic-delete {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+body.light-theme .ai-topic-delete:hover {
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.1);
 }
 
 @media screen and (max-width: 768px) {

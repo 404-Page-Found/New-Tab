@@ -183,6 +183,8 @@ document.addEventListener("change", function (e) {
     const selectedTheme = e.target.value;
     localStorage.setItem("theme", selectedTheme);
     applyTheme();
+    // Dispatch custom event for AI chat and other components to respond
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: selectedTheme } }));
   } else if (e.target.name === "language") {
     const selectedLanguage = e.target.value;
     localStorage.setItem("language", selectedLanguage);

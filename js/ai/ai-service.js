@@ -245,6 +245,9 @@ const AIService = (function() {
     
     elements.modal.classList.add('ai-modal-open');
     
+    // Apply current theme to ensure AI modal uses global theme
+    applyThemeToAI();
+    
     // Load conversations
     loadConversations();
     renderTopicsList();
@@ -254,6 +257,32 @@ const AIService = (function() {
     setTimeout(() => {
       if (elements.input) elements.input.focus();
     }, 100);
+  }
+  
+  /**
+   * Apply global theme to AI modal elements
+   * Ensures AI chat uses the same theme as the rest of the app
+   */
+  function applyThemeToAI() {
+    const theme = loadTheme();
+    const modal = document.getElementById('ai-chat-modal');
+    if (modal) {
+      // The theme class is on body, CSS will handle the styling
+      // This function ensures any dynamic elements are updated if needed
+      if (theme === 'light') {
+        modal.classList.add('light-theme');
+      } else {
+        modal.classList.remove('light-theme');
+      }
+    }
+  }
+  
+  /**
+   * Load current theme setting
+   * @returns {string} 'dark' or 'light'
+   */
+  function loadTheme() {
+    return localStorage.getItem('theme') || 'dark';
   }
   
   /**
@@ -665,6 +694,18 @@ const AIService = (function() {
         }
       });
     }
+    
+    // Listen for theme changes to update AI modal in real-time
+    document.addEventListener('themeChanged', () => {
+      applyThemeToAI();
+    });
+    
+    // Also listen for localStorage changes (for cross-tab sync)
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'theme') {
+        applyThemeToAI();
+      }
+    });
   }
 
   // ============== Public API ==============
