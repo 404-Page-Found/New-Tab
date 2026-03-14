@@ -16,9 +16,24 @@ const translations = {
     noTodos: "No todos yet. Add one above!",
     noTodosHint: "Try adding due dates for better organization.",
     newAppTitle: "New App",
+    newAppDescription: "Enter a website URL to add it to your apps",
     enterUrl: "Enter website URL",
     cancel: "Cancel",
     create: "Create",
+    quickAdd: "Quick Add",
+    quickAddDesc: "Popular apps to get you started",
+
+    // URL Validation messages
+    validationPleaseEnter: "Please enter a URL or search query",
+    validationInvalidAppears: "This URL appears to be invalid. Press Enter to Create",
+    validationMissingHostname: "Invalid URL: missing hostname",
+    validationInvalidChars: "Invalid URL: hostname contains invalid characters",
+    validationTldTooShort: "Invalid URL: top-level domain too short",
+    validationIncompleteDomain: "Invalid URL: incomplete domain name",
+    validationIpOutOfRange: "Invalid URL: IP address out of range",
+    validationValid: "Valid URL",
+    validationMalformed: "Malformed URL",
+
     refreshMotto: "Refresh motto",
     copyMotto: "Copy motto",
     renameApp: "Rename",
@@ -39,6 +54,7 @@ const translations = {
     generalSettings: "General",
     generalSettingsDesc: "Configure basic app behavior",
     openNewTab: "Open apps in a new tab",
+    enableTodoList: "Enable todo list",
 
     // Background settings
     backgroundSettings: "Background",
@@ -165,7 +181,38 @@ const translations = {
     // Onboarding navigation
     previous: "Previous",
     next: "Next",
-    finish: "Finish"
+    finish: "Finish",
+
+    // AI Assistant
+    ai: "AI Assistant",
+    aiAssistant: "AI Assistant",
+    aiWelcome: "Welcome to AI Assistant",
+    aiWelcomeSubtitle: "Ask me anything!",
+    aiPlaceholder: "Type your message...",
+    aiError: "An error occurred. Please try again.",
+    aiRateLimit: "Too many requests. Please wait.",
+    aiClearConfirm: "Clear chat history?",
+    aiAPIKeyMissing: "API key not configured",
+    aiSearchEnabled: "Enable AI search",
+    aiNewChat: "New Chat",
+    aiConversations: "Conversations",
+    aiNoConversations: "No conversations yet",
+    aiNewConversation: "New Conversation",
+    aiDeleteConversation: "Delete conversation",
+    aiDeleteConfirm: "Delete this conversation?",
+    aiJustNow: "Just now",
+    aiOnline: "Online",
+    aiOffline: "Offline",
+    aiThinking: "Thinking...",
+    aiAuthError: "Invalid or missing API key",
+    aiForbidden: "Access forbidden",
+    aiServerError: "Service error. Please try again later.",
+    aiNetworkError: "Network error occurred",
+    aiInvalidResponse: "Invalid response format",
+    aiNoContent: "No content in response",
+    aiMessageRequired: "Message is required",
+    aiMessageEmpty: "Message cannot be empty",
+    aiMessageTooLong: "Message too long (max 2000 characters)"
   },
 
   zh: {
@@ -183,9 +230,24 @@ const translations = {
     noTodos: "还没有待办事项。在上方添加一个！",
     noTodosHint: "尝试添加到期日期以更好地组织。",
     newAppTitle: "新建应用",
+    newAppDescription: "输入网站URL将其添加到您的应用",
     enterUrl: "输入网站URL",
     cancel: "取消",
     create: "创建",
+    quickAdd: "快速添加",
+    quickAddDesc: "热门应用让您快速上手",
+
+    // URL Validation messages
+    validationPleaseEnter: "请输入URL或搜索词",
+    validationInvalidAppears: "此URL似乎无效。按回车键创建",
+    validationMissingHostname: "无效URL：缺少主机名",
+    validationInvalidChars: "无效URL：主机名包含无效字符",
+    validationTldTooShort: "无效URL：顶级域名太短",
+    validationIncompleteDomain: "无效URL：域名不完整",
+    validationIpOutOfRange: "无效URL：IP地址超出范围",
+    validationValid: "有效URL",
+    validationMalformed: "格式错误的URL",
+
     refreshMotto: "刷新格言",
     copyMotto: "复制格言",
     renameApp: "重命名",
@@ -206,6 +268,7 @@ const translations = {
     generalSettings: "通用",
     generalSettingsDesc: "配置基本应用行为",
     openNewTab: "在新标签页中打开应用",
+    enableTodoList: "启用待办清单",
 
     // Background settings
     backgroundSettings: "背景",
@@ -332,7 +395,38 @@ const translations = {
     // Onboarding navigation
     previous: "上一步",
     next: "下一步",
-    finish: "完成"
+    finish: "完成",
+
+    // AI Assistant
+    ai: "AI 助手",
+    aiAssistant: "AI 助手",
+    aiWelcome: "欢迎使用 AI 助手",
+    aiWelcomeSubtitle: "问我任何问题！",
+    aiPlaceholder: "输入您的消息...",
+    aiError: "发生错误，请重试。",
+    aiRateLimit: "请求过多，请稍后再试。",
+    aiClearConfirm: "清除聊天历史？",
+    aiAPIKeyMissing: "API 密钥未配置",
+    aiSearchEnabled: "启用 AI 搜索",
+    aiNewChat: "新对话",
+    aiConversations: "对话列表",
+    aiNoConversations: "暂无对话记录",
+    aiNewConversation: "新对话",
+    aiDeleteConversation: "删除对话",
+    aiDeleteConfirm: "确定删除此对话？",
+    aiJustNow: "刚刚",
+    aiOnline: "在线",
+    aiOffline: "离线",
+    aiThinking: "思考中...",
+    aiAuthError: "API 密钥无效或未配置",
+    aiForbidden: "访问被拒绝",
+    aiServerError: "服务错误，请稍后再试。",
+    aiNetworkError: "网络错误",
+    aiInvalidResponse: "响应格式无效",
+    aiNoContent: "响应中没有内容",
+    aiMessageRequired: "消息不能为空",
+    aiMessageEmpty: "消息不能为空",
+    aiMessageTooLong: "消息太长（最多2000个字符）"
   }
 };
 
@@ -374,6 +468,15 @@ function applyLanguage(lang) {
       } else {
         element.textContent = translation;
       }
+    }
+  });
+
+  // Update all elements with data-i18n-placeholder attribute
+  const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+  placeholderElements.forEach(element => {
+    const key = element.getAttribute('data-i18n-placeholder');
+    if (translations[lang] && translations[lang][key]) {
+      element.placeholder = translations[lang][key];
     }
   });
 
@@ -428,6 +531,15 @@ function updateDynamicTranslations() {
   // Re-render the About section so version label and last-checked text update
   if (window.initAboutSection) {
     window.initAboutSection();
+  }
+
+  // Update Add App modal if it's open
+  const addAppModal = document.getElementById('add-app-modal');
+  if (addAppModal && addAppModal.style.display !== 'none') {
+    // Trigger updatePreview to refresh validation messages
+    if (window.updateAddAppPreview) {
+      window.updateAddAppPreview();
+    }
   }
 }
 

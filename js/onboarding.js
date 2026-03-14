@@ -572,7 +572,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (attempts < maxAttempts) {
       checkTimeout = setTimeout(checkAndStart, 100);
     } else {
-      console.log('⚠️ Onboarding tour skipped - elements not ready or already completed');
+      if (onboardingTour.isCompleted()) {
+        console.log('ℹ️ Onboarding tour skipped - already completed');
+      } else {
+        console.log('⚠️ Onboarding tour skipped - required elements not visible after 5 seconds');
+      }
     }
   };
 
