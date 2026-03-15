@@ -481,10 +481,28 @@
             <span data-i18n="aiNewChat">New Chat</span>
           </button>
         </div>
+        <!-- Search and Sort Controls -->
+        <div class="ai-topics-controls">
+          <div class="ai-topics-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="ai-topics-search-input" placeholder="Search..." data-i18n-placeholder="aiSearchConversations" />
+          </div>
+          <button id="ai-topics-sort-btn" class="ai-topics-sort-btn" title="Sort">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="4" y1="6" x2="20" y2="6"></line>
+              <line x1="4" y1="12" x2="14" y2="12"></line>
+              <line x1="4" y1="18" x2="8" y2="18"></line>
+            </svg>
+          </button>
+        </div>
         <div class="ai-topics-header">
           <span data-i18n="aiConversations">Conversations</span>
+          <span id="ai-topics-count" class="ai-topics-count"></span>
         </div>
-        <div class="ai-topics-list" id="ai-topics-list">
+        <div class="ai-topics-list" id="ai-topics-list" tabindex="0">
           <!-- Topics will be rendered here -->
         </div>
       </div>

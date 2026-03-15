@@ -12,10 +12,16 @@ const AIService = (function() {
   let isLoading = false;
   let isOfflineMode = false;
   
+  // Search and sort state
+  let searchQuery = '';
+  let sortOrder = 'date-desc'; // 'date-desc', 'date-asc', 'alpha-asc', 'alpha-desc'
+  let keyboardSelectedIndex = -1;
+  
   // Storage keys
   const STORAGE_KEYS = {
     conversations: 'ai_conversations',
-    currentId: 'ai_current_conversation_id'
+    currentId: 'ai_current_conversation_id',
+    sortOrder: 'ai_sort_order'
   };
   
   // Default system prompt
@@ -39,7 +45,10 @@ const AIService = (function() {
       errorDisplay: document.getElementById('ai-chat-error'),
       title: document.getElementById('ai-chat-title'),
       newChatBtn: document.getElementById('ai-new-chat-btn'),
-      topicsList: document.getElementById('ai-topics-list')
+      topicsList: document.getElementById('ai-topics-list'),
+      topicsSearch: document.getElementById('ai-topics-search-input'),
+      topicsSortBtn: document.getElementById('ai-topics-sort-btn'),
+      topicsCount: document.getElementById('ai-topics-count')
     };
   }
   
@@ -49,6 +58,138 @@ const AIService = (function() {
    */
   function hasModal() {
     return !!document.getElementById('ai-chat-modal');
+  }
+
+  // ============== Search and Sort ==============
+  
+  /**
+   * Load sort order from storage
+   */
+  function loadSortOrder() {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.sortOrder);
+      if (stored && ['date-desc', 'date-asc', 'alpha-asc', 'alpha-desc'].includes(stored)) {
+        sortOrder = stored;
+      }
+    } catch (e) {
+      console.error('Failed to load sort order:', e);
+    }
+  }
+  
+  /**
+   * Save sort order to storage
+   */
+  function saveSortOrder() {
+    try {
+      localStorage.setItem(STORAGE_KEYS.sortOrder, sortOrder);
+    } catch (e) {
+      console.error('Failed to save sort order:', e);
+    }
+  }
+  
+  /**
+   * Get filtered and sorted conversations
+   * @returns {Array} Filtered and sorted conversations
+   */
+  function getFilteredConversations() {
+    let filtered = [...conversations];
+    
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(conv => 
+        conv.title.toLowerCase().includes(query) ||
+        conv.messages.some(msg => msg.content && msg.content.toLowerCase().includes(query))
+      );
+    }
+    
+    // Apply sort
+    filtered.sort((a, b) => {
+      switch (sortOrder) {
+        case 'date-desc':
+          return b.updatedAt - a.updatedAt;
+        case 'date-asc':
+          return a.updatedAt - b.updatedAt;
+        case 'alpha-asc':
+          return a.title.localeCompare(b.title);
+        case 'alpha-desc':
+          return b.title.localeCompare(a.title);
+        default:
+          return 0;
+      }
+    });
+    
+    return filtered;
+  }
+  
+  /**
+   * Handle search input change
+   * @param {string} query - Search query
+   */
+  function handleSearch(query) {
+    searchQuery = query;
+    keyboardSelectedIndex = -1;
+    renderTopicsList();
+  }
+  
+  /**
+   * Handle sort button click
+   */
+  function handleSortClick(e) {
+    e.stopPropagation();
+    const btn = elements.topicsSortBtn;
+    const dropdown = btn?.parentElement?.querySelector('.ai-sort-dropdown');
+    
+    // Toggle dropdown visibility
+    if (dropdown) {
+      dropdown.classList.toggle('visible');
+      btn?.classList.toggle('active');
+    }
+    
+    // Close dropdown when clicking outside
+    const closeDropdown = (event) => {
+      if (!btn?.contains(event.target) && !dropdown?.contains(event.target)) {
+        dropdown?.classList.remove('visible');
+        btn?.classList.remove('active');
+        document.removeEventListener('click', closeDropdown);
+      }
+    };
+    
+    setTimeout(() => {
+      document.addEventListener('click', closeDropdown);
+    }, 0);
+  }
+  
+  /**
+   * Handle sort option selection
+   * @param {string} newSortOrder - New sort order
+   */
+  function handleSortChange(newSortOrder) {
+    sortOrder = newSortOrder;
+    saveSortOrder();
+    keyboardSelectedIndex = -1;
+    renderTopicsList();
+    
+    // Close dropdown
+    const btn = elements.topicsSortBtn;
+    const dropdown = btn?.parentElement?.querySelector('.ai-sort-dropdown');
+    dropdown?.classList.remove('visible');
+    btn?.classList.remove('active');
+  }
+  
+  /**
+   * Get sort option translations
+   * @param {string} key - Sort key
+   * @returns {string}
+   */
+  function getSortLabel(key) {
+    const labels = {
+      'date-desc': getTranslation('aiSortNewest'),
+      'date-asc': getTranslation('aiSortOldest'),
+      'alpha-asc': getTranslation('aiSortAtoZ'),
+      'alpha-desc': getTranslation('aiSortZtoA')
+    };
+    return labels[key] || key;
   }
 
   // ============== Conversation Management ==============
@@ -329,22 +470,45 @@ const AIService = (function() {
     }
     if (!elements.topicsList) return;
     
-    if (conversations.length === 0) {
-      elements.topicsList.innerHTML = `
-        <div class="ai-topics-empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-          <p>${getTranslation('aiNoConversations')}</p>
-        </div>
-      `;
+    const filteredConversations = getFilteredConversations();
+    
+    // Update count
+    if (elements.topicsCount) {
+      const total = conversations.length;
+      const shown = filteredConversations.length;
+      elements.topicsCount.textContent = shown === total ? total : `${shown}/${total}`;
+    }
+    
+    if (filteredConversations.length === 0) {
+      if (searchQuery.trim()) {
+        elements.topicsList.innerHTML = `
+          <div class="ai-topics-no-results">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              <line x1="8" y1="11" x2="14" y2="11"></line>
+            </svg>
+            <p>${getTranslation('aiNoSearchResults')}</p>
+          </div>
+        `;
+      } else {
+        elements.topicsList.innerHTML = `
+          <div class="ai-topics-empty">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <p>${getTranslation('aiNoConversations')}</p>
+          </div>
+        `;
+      }
       return;
     }
     
-    elements.topicsList.innerHTML = conversations.map(conv => {
+    elements.topicsList.innerHTML = filteredConversations.map((conv, index) => {
       const isActive = conv.id === currentConversationId;
+      const isKeyboardSelected = index === keyboardSelectedIndex;
       return `
-        <div class="ai-topic-item ${isActive ? 'active' : ''}" data-id="${conv.id}">
+        <div class="ai-topic-item ${isActive ? 'active' : ''} ${isKeyboardSelected ? 'keyboard-selected' : ''}" data-id="${conv.id}" data-index="${index}">
           <div class="ai-topic-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -382,6 +546,14 @@ const AIService = (function() {
         }
       });
     });
+    
+    // Scroll to active item
+    if (keyboardSelectedIndex >= 0) {
+      const selectedItem = elements.topicsList.querySelector('.keyboard-selected');
+      if (selectedItem) {
+        selectedItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }
   }
   
   /**
@@ -487,6 +659,12 @@ const AIService = (function() {
       aiRateLimit: 'Too many requests. Please wait.',
       aiClearConfirm: 'Clear chat history?',
       aiPlaceholder: 'Type your message...',
+      aiSearchConversations: 'Search...',
+      aiSortNewest: 'Newest first',
+      aiSortOldest: 'Oldest first',
+      aiSortAtoZ: 'A to Z',
+      aiSortZtoA: 'Z to A',
+      aiNoSearchResults: 'No conversations found',
       aiNewChat: 'New Chat',
       aiConversations: 'Conversations',
       aiNoConversations: 'No conversations yet',
@@ -600,6 +778,32 @@ const AIService = (function() {
       elements.newChatBtn.addEventListener('click', createNewChat);
     }
     
+    // Search input
+    if (elements.topicsSearch) {
+      elements.topicsSearch.addEventListener('input', (e) => {
+        handleSearch(e.target.value);
+      });
+      
+      // Clear search on escape
+      elements.topicsSearch.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          elements.topicsSearch.value = '';
+          handleSearch('');
+          elements.topicsSearch.blur();
+        }
+      });
+    }
+    
+    // Sort button
+    if (elements.topicsSortBtn) {
+      elements.topicsSortBtn.addEventListener('click', handleSortClick);
+    }
+    
+    // Topics list keyboard navigation
+    if (elements.topicsList) {
+      elements.topicsList.addEventListener('keydown', handleTopicsKeydown);
+    }
+    
     // Close on outside click
     const modal = document.getElementById('ai-chat-modal');
     if (modal) {
@@ -622,6 +826,47 @@ const AIService = (function() {
       }
     });
   }
+  
+  /**
+   * Handle keyboard navigation in topics list
+   * @param {KeyboardEvent} e
+   */
+  function handleTopicsKeydown(e) {
+    const filteredConversations = getFilteredConversations();
+    if (filteredConversations.length === 0) return;
+    
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        keyboardSelectedIndex = Math.min(keyboardSelectedIndex + 1, filteredConversations.length - 1);
+        renderTopicsList();
+        break;
+        
+      case 'ArrowUp':
+        e.preventDefault();
+        keyboardSelectedIndex = Math.max(keyboardSelectedIndex - 1, 0);
+        renderTopicsList();
+        break;
+        
+      case 'Enter':
+        e.preventDefault();
+        if (keyboardSelectedIndex >= 0 && keyboardSelectedIndex < filteredConversations.length) {
+          const convId = filteredConversations[keyboardSelectedIndex].id;
+          switchConversation(convId);
+        }
+        break;
+        
+      case 'Delete':
+      case 'Backspace':
+        if (keyboardSelectedIndex >= 0 && keyboardSelectedIndex < filteredConversations.length) {
+          const convId = filteredConversations[keyboardSelectedIndex].id;
+          if (confirm(getTranslation('aiDeleteConfirm'))) {
+            deleteConversation(convId);
+          }
+        }
+        break;
+    }
+  }
 
   // ============== Public API ==============
   
@@ -636,11 +881,79 @@ const AIService = (function() {
     }
     
     cacheElements();
+    loadSortOrder();
     loadConversations();
     initEventListeners();
     renderTopicsList();
     renderMessages();
     initNetworkListener();
+    createSortDropdown();
+  }
+  
+  /**
+   * Create sort dropdown dynamically
+   */
+  function createSortDropdown() {
+    // Wait for the sort button to be in the DOM
+    const checkButton = () => {
+      const btn = document.getElementById('ai-topics-sort-btn');
+      if (!btn) {
+        setTimeout(checkButton, 100);
+        return;
+      }
+      
+      // Create dropdown if it doesn't exist
+      if (!btn.parentElement.querySelector('.ai-sort-dropdown')) {
+        const dropdown = document.createElement('div');
+        dropdown.className = 'ai-sort-dropdown';
+        dropdown.innerHTML = `
+          <div class="ai-sort-option ${sortOrder === 'date-desc' ? 'active' : ''}" data-sort="date-desc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <polyline points="19,12 12,19 5,12"></polyline>
+            </svg>
+            <span>${getSortLabel('date-desc')}</span>
+          </div>
+          <div class="ai-sort-option ${sortOrder === 'date-asc' ? 'active' : ''}" data-sort="date-asc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="19" x2="12" y2="5"></line>
+              <polyline points="5,12 12,5 19,12"></polyline>
+            </svg>
+            <span>${getSortLabel('date-asc')}</span>
+          </div>
+          <div class="ai-sort-option ${sortOrder === 'alpha-asc' ? 'active' : ''}" data-sort="alpha-asc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <span>${getSortLabel('alpha-asc')}</span>
+          </div>
+          <div class="ai-sort-option ${sortOrder === 'alpha-desc' ? 'active' : ''}" data-sort="alpha-desc">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <span>${getSortLabel('alpha-desc')}</span>
+          </div>
+        `;
+        
+        btn.parentElement.style.position = 'relative';
+        btn.parentElement.appendChild(dropdown);
+        
+        // Add click handlers
+        dropdown.querySelectorAll('.ai-sort-option').forEach(option => {
+          option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const newSort = option.dataset.sort;
+            handleSortChange(newSort);
+          });
+        });
+      }
+    };
+    
+    setTimeout(checkButton, 100);
   }
 
   /**
