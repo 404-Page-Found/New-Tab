@@ -543,107 +543,7 @@ const AIService = (function() {
       elements.errorDisplay.style.display = 'block';
     }
   }
-  
-  /**
-   * Send a message with streaming support
-   * @param {string} userMessage - User's message
-   */
-  async function sendMessage(userMessage) {
-    if (!userMessage || isLoading) return;
-    
-    // Add user message to chat
-    const userMsg = {
-      role: 'user',
-      content: userMessage.trim(),
-      timestamp: Date.now()
-    };
-    addMessageToConversation(userMsg);
-    renderMessages();
-    renderTopicsList();
-    saveConversations();
-    
-    // Clear input
-    if (elements.input) {
-      elements.input.value = '';
-    }
-    
-    // Show loading
-    showLoading();
-    
-    // Get conversation history for context
-    const messages = getCurrentMessages();
-    const historyForAPI = messages
-      .filter(m => m.role !== 'system')
-      .slice(0, -1)
-      .map(m => ({ role: m.role, content: m.content }));
-    
-    // Create placeholder for streaming response
-    const assistantMsg = {
-      role: 'assistant',
-      content: '',
-      timestamp: Date.now(),
-      isStreaming: true
-    };
-    addMessageToConversation(assistantMsg);
-    
-    // Render and get reference to the assistant message element
-    renderMessages();
-    
-    // Get the assistant message element for direct updates
-    const assistantElements = elements.container?.querySelectorAll('.ai-message-assistant');
-    const streamingElement = assistantElements ? assistantElements[assistantElements.length - 1] : null;
-    const streamingTextElement = streamingElement?.querySelector('.ai-message-text');
-    
-    try {
-      // Use streaming API
-      const result = await OpenRouterAPI.sendMessageStreaming(
-        userMessage, 
-        historyForAPI,
-        (chunk) => {
-          // Directly update the DOM element without re-rendering everything
-          if (streamingTextElement) {
-            const currentContent = streamingTextElement.textContent;
-            streamingTextElement.textContent = currentContent + chunk;
-          }
-        }
-      );
-      
-      if (result.success) {
-        // Update the message in the array
-        const conv = getCurrentConversation();
-        const lastMsg = conv.messages[conv.messages.length - 1];
-        if (lastMsg && lastMsg.isStreaming) {
-          lastMsg.isStreaming = false;
-          lastMsg.content = streamingTextElement?.textContent || '';
-        }
-        
-        // Update streaming indicator in UI
-        if (streamingTextElement) {
-          streamingTextElement.classList.remove('ai-message-streaming');
-        }
-        
-        saveConversations();
-        renderTopicsList();
-      } else {
-        showError(result.error);
-        // Remove user and assistant messages if API failed
-        const conv = getCurrentConversation();
-        conv.messages.pop(); // Remove assistant
-        conv.messages.pop(); // Remove user
-        renderMessages();
-      }
-    } catch (e) {
-      showError(getTranslation('aiError'));
-      // Remove messages on error
-      const conv = getCurrentConversation();
-      conv.messages.pop(); // Remove assistant
-      conv.messages.pop(); // Remove user
-      renderMessages();
-    }
-    
-    hideLoading();
-  }
-  
+
   /**
    * Handle send button click or Enter key
    */
@@ -996,38 +896,6 @@ const AIService = (function() {
    */
   function open() {
     openModal();
-  }
-  
-  /**
-   * Quick AI search (for search bar integration)
-   * @param {string} query - Search query
-   * @returns {Promise<string>} AI response or empty string
-   */
-  async function quickSearch(query) {
-    if (!query || !query.trim()) return '';
-    
-    try {
-      const result = await OpenRouterAPI.quickSearch(query);
-      if (result.success) {
-        return result.content;
-      }
-      console.error('AI Search error:', result.error);
-      return '';
-    } catch (e) {
-      console.error('AI Search error:', e);
-      return '';
-    }
-  }
-  
-  /**
-   * Check if AI is available (API key configured)
-   * @returns {boolean}
-   */
-  function isAvailable() {
-    // API key is now handled server-side by Cloudflare Worker
-    // Now also checks network status
-    const networkStatus = NetworkDetector.getStatus();
-    return !!OpenRouterAPI && !networkStatus.isOffline;
   }
   
   // Initialize on load
