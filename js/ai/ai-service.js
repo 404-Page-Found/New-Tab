@@ -400,7 +400,7 @@ const AIService = (function() {
         <div class="ai-message-avatar">
           ${isUser ? 
             '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4M12 8h.01"></path></svg>' : 
-            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path><path d="M12 6v6l4 2"></path></svg>'
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/><line x1="12" y1="9.5" x2="12" y2="5"/><circle cx="12" cy="4" r="1.2" fill="currentColor" stroke="none"/><line x1="14.3" y1="10.2" x2="17" y2="7"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/><line x1="14.5" y1="12" x2="19" y2="12"/><circle cx="19.5" cy="12" r="1.2" fill="currentColor" stroke="none"/><line x1="14.3" y1="13.8" x2="17" y2="17"/><circle cx="17.5" cy="17.5" r="1.2" fill="currentColor" stroke="none"/><line x1="12" y1="14.5" x2="12" y2="19"/><circle cx="12" cy="20" r="1.2" fill="currentColor" stroke="none"/><line x1="9.7" y1="13.8" x2="7" y2="17"/><circle cx="6.5" cy="17.5" r="1.2" fill="currentColor" stroke="none"/><line x1="9.5" y1="12" x2="5" y2="12"/><circle cx="4.5" cy="12" r="1.2" fill="currentColor" stroke="none"/><line x1="9.7" y1="10.2" x2="7" y2="7"/><circle cx="6.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>'
           }
         </div>
         <div class="ai-message-content">
@@ -437,9 +437,24 @@ const AIService = (function() {
       elements.container.innerHTML = `
         <div class="ai-welcome">
           <div class="ai-welcome-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"></path>
-              <path d="M12 6v6l4 2"></path>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/>
+              <line x1="12" y1="9.5" x2="12" y2="5"/>
+              <circle cx="12" cy="4" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="14.3" y1="10.2" x2="17" y2="7"/>
+              <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="14.5" y1="12" x2="19" y2="12"/>
+              <circle cx="19.5" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="14.3" y1="13.8" x2="17" y2="17"/>
+              <circle cx="17.5" cy="17.5" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="12" y1="14.5" x2="12" y2="19"/>
+              <circle cx="12" cy="20" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="9.7" y1="13.8" x2="7" y2="17"/>
+              <circle cx="6.5" cy="17.5" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="9.5" y1="12" x2="5" y2="12"/>
+              <circle cx="4.5" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="9.7" y1="10.2" x2="7" y2="7"/>
+              <circle cx="6.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
             </svg>
           </div>
           <div class="ai-welcome-title">${getTranslation('aiWelcome')}</div>
