@@ -898,8 +898,9 @@ const AIService = (function() {
           )
         );
         
-        // Handle cache hit
-        if (result.fromCache) {
+        // Handle cache hit - directly populate the content
+        if (result.fromCache && result.content && streamingTextElement) {
+          streamingTextElement.textContent = result.content;
           console.info('AI: Response loaded from cache');
         }
       }
@@ -910,7 +911,8 @@ const AIService = (function() {
         const lastMsg = conv.messages[conv.messages.length - 1];
         if (lastMsg && lastMsg.isStreaming) {
           lastMsg.isStreaming = false;
-          lastMsg.content = streamingTextElement?.textContent || '';
+          // Get content from streaming element or from result
+          lastMsg.content = (streamingTextElement?.textContent) || result.content || '';
         }
         
         // Update streaming indicator in UI
@@ -930,13 +932,17 @@ const AIService = (function() {
       }
     } catch (e) {
       showError(getTranslation('aiError'));
+      console.error('AI sendMessage error:', e);
       // Remove messages on error
       const conv = getCurrentConversation();
-      conv.messages.pop(); // Remove assistant
-      conv.messages.pop(); // Remove user
-      renderMessages();
+      if (conv.messages.length >= 2) {
+        conv.messages.pop(); // Remove assistant
+        conv.messages.pop(); // Remove user
+        renderMessages();
+      }
     }
     
+    // Always hide loading - ensure this runs even on errors
     hideLoading();
   }
 
