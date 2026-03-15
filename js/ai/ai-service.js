@@ -782,27 +782,18 @@ const AIService = (function() {
           }
         }
       } else {
-        // Try cache first
-        result = await CacheManager.getOrFetch(
-          userMessage,
-          () => OpenRouterAPI.sendMessageStreaming(
-            userMessage, 
-            historyForAPI,
-            (chunk) => {
-              // Directly update the DOM element without re-rendering everything
-              if (streamingTextElement) {
-                const currentContent = streamingTextElement.textContent;
-                streamingTextElement.textContent = currentContent + chunk;
-              }
+        // Direct API call - no caching
+        result = await OpenRouterAPI.sendMessageStreaming(
+          userMessage, 
+          historyForAPI,
+          (chunk) => {
+            // Directly update the DOM element without re-rendering everything
+            if (streamingTextElement) {
+              const currentContent = streamingTextElement.textContent;
+              streamingTextElement.textContent = currentContent + chunk;
             }
-          )
+          }
         );
-        
-        // Handle cache hit - directly populate the content
-        if (result.fromCache && result.content && streamingTextElement) {
-          streamingTextElement.textContent = result.content;
-          console.info('AI: Response loaded from cache');
-        }
       }
       
       if (result.success) {
@@ -863,11 +854,8 @@ const AIService = (function() {
         // Use offline mode
         result = OfflineMode.getResponse(query);
       } else {
-        // Try cache first, then API
-        result = await CacheManager.getOrFetch(
-          query,
-          () => OpenRouterAPI.quickSearch(query)
-        );
+        // Direct API call - no caching
+        result = await OpenRouterAPI.quickSearch(query);
       }
       
       if (result.success) {
