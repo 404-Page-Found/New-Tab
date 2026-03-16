@@ -12,16 +12,14 @@ const AIService = (function() {
   let isLoading = false;
   let isOfflineMode = false;
   
-  // Search and sort state
+  // Search state
   let searchQuery = '';
-  let sortOrder = 'date-desc'; // 'date-desc', 'date-asc', 'alpha-asc', 'alpha-desc'
   let keyboardSelectedIndex = -1;
   
   // Storage keys
   const STORAGE_KEYS = {
     conversations: 'ai_conversations',
-    currentId: 'ai_current_conversation_id',
-    sortOrder: 'ai_sort_order'
+    currentId: 'ai_current_conversation_id'
   };
   
   // Default system prompt
@@ -47,7 +45,6 @@ const AIService = (function() {
       newChatBtn: document.getElementById('ai-new-chat-btn'),
       topicsList: document.getElementById('ai-topics-list'),
       topicsSearch: document.getElementById('ai-topics-search-input'),
-      topicsSortBtn: document.getElementById('ai-topics-sort-btn'),
       topicsCount: document.getElementById('ai-topics-count')
     };
   }
@@ -60,36 +57,11 @@ const AIService = (function() {
     return !!document.getElementById('ai-chat-modal');
   }
 
-  // ============== Search and Sort ==============
+  // ============== Search ==============
   
   /**
-   * Load sort order from storage
-   */
-  function loadSortOrder() {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEYS.sortOrder);
-      if (stored && ['date-desc', 'date-asc', 'alpha-asc', 'alpha-desc'].includes(stored)) {
-        sortOrder = stored;
-      }
-    } catch (e) {
-      console.error('Failed to load sort order:', e);
-    }
-  }
-  
-  /**
-   * Save sort order to storage
-   */
-  function saveSortOrder() {
-    try {
-      localStorage.setItem(STORAGE_KEYS.sortOrder, sortOrder);
-    } catch (e) {
-      console.error('Failed to save sort order:', e);
-    }
-  }
-  
-  /**
-   * Get filtered and sorted conversations
-   * @returns {Array} Filtered and sorted conversations
+   * Get filtered conversations
+   * @returns {Array} Filtered conversations
    */
   function getFilteredConversations() {
     let filtered = [...conversations];
@@ -102,22 +74,6 @@ const AIService = (function() {
         conv.messages.some(msg => msg.content && msg.content.toLowerCase().includes(query))
       );
     }
-    
-    // Apply sort
-    filtered.sort((a, b) => {
-      switch (sortOrder) {
-        case 'date-desc':
-          return b.updatedAt - a.updatedAt;
-        case 'date-asc':
-          return a.updatedAt - b.updatedAt;
-        case 'alpha-asc':
-          return a.title.localeCompare(b.title);
-        case 'alpha-desc':
-          return b.title.localeCompare(a.title);
-        default:
-          return 0;
-      }
-    });
     
     return filtered;
   }
@@ -132,66 +88,6 @@ const AIService = (function() {
     renderTopicsList();
   }
   
-  /**
-   * Handle sort button click
-   */
-  function handleSortClick(e) {
-    e.stopPropagation();
-    const btn = elements.topicsSortBtn;
-    const dropdown = btn?.parentElement?.querySelector('.ai-sort-dropdown');
-    
-    // Toggle dropdown visibility
-    if (dropdown) {
-      dropdown.classList.toggle('visible');
-      btn?.classList.toggle('active');
-    }
-    
-    // Close dropdown when clicking outside
-    const closeDropdown = (event) => {
-      if (!btn?.contains(event.target) && !dropdown?.contains(event.target)) {
-        dropdown?.classList.remove('visible');
-        btn?.classList.remove('active');
-        document.removeEventListener('click', closeDropdown);
-      }
-    };
-    
-    setTimeout(() => {
-      document.addEventListener('click', closeDropdown);
-    }, 0);
-  }
-  
-  /**
-   * Handle sort option selection
-   * @param {string} newSortOrder - New sort order
-   */
-  function handleSortChange(newSortOrder) {
-    sortOrder = newSortOrder;
-    saveSortOrder();
-    keyboardSelectedIndex = -1;
-    renderTopicsList();
-    
-    // Close dropdown
-    const btn = elements.topicsSortBtn;
-    const dropdown = btn?.parentElement?.querySelector('.ai-sort-dropdown');
-    dropdown?.classList.remove('visible');
-    btn?.classList.remove('active');
-  }
-  
-  /**
-   * Get sort option translations
-   * @param {string} key - Sort key
-   * @returns {string}
-   */
-  function getSortLabel(key) {
-    const labels = {
-      'date-desc': getTranslation('aiSortNewest'),
-      'date-asc': getTranslation('aiSortOldest'),
-      'alpha-asc': getTranslation('aiSortAtoZ'),
-      'alpha-desc': getTranslation('aiSortZtoA')
-    };
-    return labels[key] || key;
-  }
-
   // ============== Conversation Management ==============
   
   /**
@@ -660,10 +556,6 @@ const AIService = (function() {
       aiClearConfirm: 'Clear chat history?',
       aiPlaceholder: 'Type your message...',
       aiSearchConversations: 'Search...',
-      aiSortNewest: 'Newest first',
-      aiSortOldest: 'Oldest first',
-      aiSortAtoZ: 'A to Z',
-      aiSortZtoA: 'Z to A',
       aiNoSearchResults: 'No conversations found',
       aiNewChat: 'New Chat',
       aiConversations: 'Conversations',
@@ -794,11 +686,6 @@ const AIService = (function() {
       });
     }
     
-    // Sort button
-    if (elements.topicsSortBtn) {
-      elements.topicsSortBtn.addEventListener('click', handleSortClick);
-    }
-    
     // Topics list keyboard navigation
     if (elements.topicsList) {
       elements.topicsList.addEventListener('keydown', handleTopicsKeydown);
@@ -881,81 +768,13 @@ const AIService = (function() {
     }
     
     cacheElements();
-    loadSortOrder();
     loadConversations();
     initEventListeners();
     renderTopicsList();
     renderMessages();
     initNetworkListener();
-    createSortDropdown();
   }
   
-  /**
-   * Create sort dropdown dynamically
-   */
-  function createSortDropdown() {
-    // Wait for the sort button to be in the DOM
-    const checkButton = () => {
-      const btn = document.getElementById('ai-topics-sort-btn');
-      if (!btn) {
-        setTimeout(checkButton, 100);
-        return;
-      }
-      
-      // Create dropdown if it doesn't exist
-      if (!btn.parentElement.querySelector('.ai-sort-dropdown')) {
-        const dropdown = document.createElement('div');
-        dropdown.className = 'ai-sort-dropdown';
-        dropdown.innerHTML = `
-          <div class="ai-sort-option ${sortOrder === 'date-desc' ? 'active' : ''}" data-sort="date-desc">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <polyline points="19,12 12,19 5,12"></polyline>
-            </svg>
-            <span>${getSortLabel('date-desc')}</span>
-          </div>
-          <div class="ai-sort-option ${sortOrder === 'date-asc' ? 'active' : ''}" data-sort="date-asc">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="19" x2="12" y2="5"></line>
-              <polyline points="5,12 12,5 19,12"></polyline>
-            </svg>
-            <span>${getSortLabel('date-asc')}</span>
-          </div>
-          <div class="ai-sort-option ${sortOrder === 'alpha-asc' ? 'active' : ''}" data-sort="alpha-asc">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-            <span>${getSortLabel('alpha-asc')}</span>
-          </div>
-          <div class="ai-sort-option ${sortOrder === 'alpha-desc' ? 'active' : ''}" data-sort="alpha-desc">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="3" y1="12" x2="21" y2="12"></line>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-            <span>${getSortLabel('alpha-desc')}</span>
-          </div>
-        `;
-        
-        btn.parentElement.style.position = 'relative';
-        btn.parentElement.appendChild(dropdown);
-        
-        // Add click handlers
-        dropdown.querySelectorAll('.ai-sort-option').forEach(option => {
-          option.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const newSort = option.dataset.sort;
-            handleSortChange(newSort);
-          });
-        });
-      }
-    };
-    
-    setTimeout(checkButton, 100);
-  }
-
   /**
    * Initialize network status listener
    */
