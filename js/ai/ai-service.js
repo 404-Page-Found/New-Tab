@@ -325,14 +325,25 @@ const AIService = (function() {
     });
     newOverlay.addEventListener('click', hideDeleteConfirm);
     
-    // Handle escape key
-    const handleEscape = (e) => {
+    // Handle keyboard events (Escape to cancel, Enter to confirm)
+    const handleKeydown = (e) => {
       if (e.key === 'Escape') {
         hideDeleteConfirm();
-        document.removeEventListener('keydown', handleEscape);
+        document.removeEventListener('keydown', handleKeydown);
+      } else if (e.key === 'Enter') {
+        // Execute callback FIRST before clearing
+        const callback = confirmDialogCallback;
+        confirmDialogCallback = null;
+        elements.confirmDialog.classList.remove('ai-confirm-open');
+        document.removeEventListener('keydown', handleKeydown);
+        
+        // Then execute the callback
+        if (callback) {
+          callback();
+        }
       }
     };
-    document.addEventListener('keydown', handleEscape);
+    document.addEventListener('keydown', handleKeydown);
   }
 
   /**
