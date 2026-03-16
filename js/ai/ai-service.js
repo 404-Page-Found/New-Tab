@@ -25,9 +25,6 @@ const AIService = (function() {
     currentId: 'ai_current_conversation_id'
   };
   
-  // Default system prompt
-  const SYSTEM_PROMPT = 'You are a helpful AI assistant. Provide clear, concise, and accurate responses.';
-  
   // Maximum conversations to store
   const MAX_CONVERSATIONS = 50;
   
