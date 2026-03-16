@@ -5136,6 +5136,7 @@ body.light-theme .ai-topic-item.keyboard-selected {
 
 .ai-topics-list {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -5168,6 +5169,7 @@ body.light-theme .ai-topic-item.keyboard-selected {
   transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .ai-topic-item:hover {
