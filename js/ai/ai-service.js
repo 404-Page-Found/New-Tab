@@ -258,20 +258,6 @@ const AIService = (function() {
     renderMessages();
   }
   
-  /**
-   * Clear current conversation
-   */
-  function clearCurrentConversation() {
-    const conv = getCurrentConversation();
-    if (conv) {
-      conv.messages = [];
-      conv.title = getTranslation('aiNewConversation');
-      saveConversations();
-      renderMessages();
-      renderTopicsList();
-    }
-  }
-
   // ============== Custom Confirm Dialog ==============
 
   /**
@@ -1134,8 +1120,7 @@ const AIService = (function() {
     close: closeModal,
     sendMessage,
     quickSearch,
-    isAvailable,
-    clearChat: clearCurrentConversation
+    isAvailable
   };
   
 })();
