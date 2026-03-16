@@ -1,0 +1,100 @@
+/* =============================================
+   App Grid & App Icon Styles
+   ============================================= */
+
+.app-grid{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 50px;
+  padding: 30px 70px;
+  width: min(1200px, calc(100% - 40px));
+  margin: 0 auto;
+}
+
+.app-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  transition: transform 0.2s;
+}
+.app-icon:hover {
+  transform: scale(1.05);
+}
+
+.icon {
+  width: var(--app-icon-size);
+  height: var(--app-icon-size);
+  background: #f0f0f0;
+  border-radius: var(--icon-radius,20px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 8px;
+}
+.icon img {
+  width: var(--app-icon-img-size);
+  height: var(--app-icon-img-size);
+}
+.app-name {
+  font-size: 12px;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000;
+  transition: opacity 0.2s ease;
+}
+
+/* Inline SVG styling for modern icons (feedback) - top-level so it applies correctly */
+.app-grid .app-icon .icon svg {
+  width: var(--app-icon-img-size);
+  height: var(--app-icon-img-size);
+  display: block;
+  color: inherit; /* allow currentColor in SVG to match .app-icon color */
+}
+
+/* Ensure strokes/dots scale nicely */
+.app-grid .app-icon .icon svg path,
+.app-grid .app-icon .icon svg circle {
+  vector-effect: non-scaling-stroke;
+}
+
+/* Remove gradient variables - icon will use currentColor to match global look */
+
+/* Icon Size Options */
+.icon-size-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.icon-size-option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.icon-size-option.reset-option {
+  order: 4;
+}
+
+/* --- Light Theme: App Grid --- */
+
+body.light-theme .app-name {
+  color: #fff;
+  text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000;
+}
+
+body.light-theme .icon {
+  background: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  border: 1px solid #f0f0f0;
+}
+
+
+
+body.light-theme .icon:hover {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,129 @@
+/* =============================================
+   Clock & Date Display Styles
+   ============================================= */
+
+.clock {
+  text-align: center;
+  font-size: 5em;
+  color: #ffffff;
+  margin-bottom: 20px;
+  font-weight: 300;
+}
+.date {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 30px;
+  font-size: 1.5em;
+}
+
+/* Modern Clock Settings */
+.clock-setting-group {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.clock-setting-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.clock-setting-group h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.clock-setting-group p {
+  margin: 0 0 16px 0;
+  font-size: 12px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.4;
+}
+
+.clock-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.clock-option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clock-option.reset-option {
+  order: 4;
+}
+
+/* Modern Date Settings */
+.date-setting-group {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.date-setting-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.date-setting-group h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.date-setting-group p {
+  margin: 0 0 16px 0;
+  font-size: 12px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.4;
+}
+
+.date-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.date-option {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.date-option.reset-option {
+  order: 4;
+}
+
+/* --- Light Theme: Clock & Date --- */
+
+body.light-theme .clock,
+body.light-theme .date {
+  color: #0a0a0a;
+  text-shadow: none;
+}
+
+body.light-theme .date-setting-group h4,
+body.light-theme .date-setting-group p {
+  color: rgba(55, 65, 81, 0.9);
+}
+
+body.light-theme .date-setting-group p {
+  color: rgba(107, 114, 128, 0.8);
+}
+
+body.light-theme .clock-setting-group h4,
+body.light-theme .clock-setting-group p {
+  color: rgba(55, 65, 81, 0.9);
+}
+
+body.light-theme .clock-setting-group p {
+  color: rgba(107, 114, 128, 0.8);
+}

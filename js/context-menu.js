@@ -14,6 +14,12 @@ renameItem.className = "context-menu-item";
 renameItem.setAttribute('data-i18n', 'renameApp');
 renameItem.textContent = "Rename";
 
+const editUrlItem = document.createElement("div");
+editUrlItem.id = "edit-url";
+editUrlItem.className = "context-menu-item";
+editUrlItem.setAttribute('data-i18n', 'editUrl');
+editUrlItem.textContent = "Edit URL";
+
 const changeThumbnailItem = document.createElement("div");
 changeThumbnailItem.id = "change-thumbnail";
 changeThumbnailItem.className = "context-menu-item";
@@ -27,12 +33,13 @@ deleteItem.setAttribute('data-i18n', 'deleteApp');
 deleteItem.textContent = "Delete";
 
 // Add hover effects
-[renameItem, changeThumbnailItem, deleteItem].forEach((item) => {
+[renameItem, editUrlItem, changeThumbnailItem, deleteItem].forEach((item) => {
   item.addEventListener("mouseenter", () => item.classList.add("hover"));
   item.addEventListener("mouseleave", () => item.classList.remove("hover"));
 });
 
 contextMenu.appendChild(renameItem);
+contextMenu.appendChild(editUrlItem);
 contextMenu.appendChild(changeThumbnailItem);
 contextMenu.appendChild(deleteItem);
 document.body.appendChild(contextMenu);
@@ -137,6 +144,25 @@ document.getElementById("delete-app").addEventListener("click", function () {
   }
   contextMenu.style.display = "none";
   document.body.classList.remove("context-menu-open");
+});
+
+// Edit URL functionality
+document.getElementById("edit-url").addEventListener("click", function () {
+  if (currentAppIndex === -1) return;
+  const order = JSON.parse(localStorage.getItem('appOrder') || 'null');
+  const id = order.filter(id => id.startsWith('custom-app-'))[currentAppIndex];
+  const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
+  const idx = apps.findIndex(app => app.id === id);
+  if (idx === -1) return;
+  const currentApp = apps[idx];
+  const newUrl = prompt("Enter new URL:", currentApp.url);
+  if (newUrl && newUrl.trim() !== "") {
+    apps[idx].url = newUrl.trim().startsWith("http") ? newUrl.trim() : "https://" + newUrl.trim();
+    localStorage.setItem("customApps", JSON.stringify(apps));
+    if (window.renderCustomApps) window.renderCustomApps();
+    location.reload();
+  }
+  contextMenu.style.display = "none";
 });
 
 // Prevent default context menu on default apps
