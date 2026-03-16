@@ -12,6 +12,9 @@ const AIService = (function() {
   let isLoading = false;
   let isOfflineMode = false;
   
+  // Confirm dialog state
+  let confirmDialogCallback = null;
+  
   // Search state
   let searchQuery = '';
   let keyboardSelectedIndex = -1;
@@ -45,7 +48,10 @@ const AIService = (function() {
       newChatBtn: document.getElementById('ai-new-chat-btn'),
       topicsList: document.getElementById('ai-topics-list'),
       topicsSearch: document.getElementById('ai-topics-search-input'),
-      topicsCount: document.getElementById('ai-topics-count')
+      topicsCount: document.getElementById('ai-topics-count'),
+      confirmDialog: document.getElementById('ai-confirm-dialog'),
+      confirmCancel: document.querySelector('.ai-confirm-cancel'),
+      confirmDelete: document.querySelector('.ai-confirm-delete')
     };
   }
   
@@ -269,6 +275,81 @@ const AIService = (function() {
     }
   }
 
+  // ============== Custom Confirm Dialog ==============
+
+  /**
+   * Show delete confirmation dialog
+   * @param {Function} onConfirm - Callback when user confirms
+   */
+  function showDeleteConfirm(onConfirm) {
+    // Cache elements if needed
+    if (!elements.confirmDialog) {
+      cacheElements();
+    }
+    
+    if (!elements.confirmDialog) return;
+    
+    // Store callback
+    confirmDialogCallback = onConfirm;
+    
+    // Show dialog with animation
+    elements.confirmDialog.classList.add('ai-confirm-open');
+    
+    // Add event listeners for buttons
+    const cancelBtn = elements.confirmDialog.querySelector('.ai-confirm-cancel');
+    const deleteBtn = elements.confirmDialog.querySelector('.ai-confirm-delete');
+    const overlay = elements.confirmDialog.querySelector('.ai-confirm-overlay');
+    
+    // Remove any existing listeners to prevent duplicates
+    const newCancelBtn = cancelBtn.cloneNode(true);
+    cancelBtn.parentNode.replaceChild(newCancelBtn, cancelBtn);
+    
+    const newDeleteBtn = deleteBtn.cloneNode(true);
+    deleteBtn.parentNode.replaceChild(newDeleteBtn, deleteBtn);
+    
+    const newOverlay = overlay.cloneNode(true);
+    overlay.parentNode.replaceChild(newOverlay, overlay);
+    
+    // Add click handlers
+    newCancelBtn.addEventListener('click', hideDeleteConfirm);
+    newDeleteBtn.addEventListener('click', () => {
+      // Execute callback FIRST before clearing
+      const callback = confirmDialogCallback;
+      confirmDialogCallback = null;
+      elements.confirmDialog.classList.remove('ai-confirm-open');
+      
+      // Then execute the callback
+      if (callback) {
+        callback();
+      }
+    });
+    newOverlay.addEventListener('click', hideDeleteConfirm);
+    
+    // Handle escape key
+    const handleEscape = (e) => {
+      if (e.key === 'Escape') {
+        hideDeleteConfirm();
+        document.removeEventListener('keydown', handleEscape);
+      }
+    };
+    document.addEventListener('keydown', handleEscape);
+  }
+
+  /**
+   * Hide delete confirmation dialog
+   */
+  function hideDeleteConfirm() {
+    if (!elements.confirmDialog) {
+      cacheElements();
+    }
+    
+    if (elements.confirmDialog) {
+      elements.confirmDialog.classList.remove('ai-confirm-open');
+    }
+    
+    confirmDialogCallback = null;
+  }
+
   // ============== Modal Control ==============
   
   /**
@@ -437,9 +518,9 @@ const AIService = (function() {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const id = btn.dataset.id;
-        if (confirm(getTranslation('aiDeleteConfirm'))) {
+        showDeleteConfirm(() => {
           deleteConversation(id);
-        }
+        });
       });
     });
     
@@ -563,6 +644,10 @@ const AIService = (function() {
       aiNewConversation: 'New Conversation',
       aiDeleteConversation: 'Delete conversation',
       aiDeleteConfirm: 'Delete this conversation?',
+      aiDeleteConfirmTitle: 'Delete Conversation?',
+      aiDeleteConfirmMessage: 'This action cannot be undone. The entire conversation will be permanently removed.',
+      aiCancel: 'Cancel',
+      aiDelete: 'Delete',
       aiJustNow: 'Just now',
       aiOnline: 'Online',
       aiOffline: 'Offline',
@@ -747,9 +832,9 @@ const AIService = (function() {
       case 'Backspace':
         if (keyboardSelectedIndex >= 0 && keyboardSelectedIndex < filteredConversations.length) {
           const convId = filteredConversations[keyboardSelectedIndex].id;
-          if (confirm(getTranslation('aiDeleteConfirm'))) {
+          showDeleteConfirm(() => {
             deleteConversation(convId);
-          }
+          });
         }
         break;
     }
