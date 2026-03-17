@@ -5817,4 +5817,279 @@ body.light-theme .ai-topic-delete:hover {
     min-height: 0;
   }
 }
+
+/* ==================== Markdown Styles ==================== */
+
+/* Markdown Headers */
+.md-header {
+  margin: 16px 0 8px 0;
+  font-weight: 600;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.md-header-1 {
+  font-size: 1.5em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.md-header-2 {
+  font-size: 1.3em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 6px;
+}
+
+.md-header-3 {
+  font-size: 1.15em;
+}
+
+.md-header-4 {
+  font-size: 1.05em;
+}
+
+.md-header-5 {
+  font-size: 1em;
+}
+
+.md-header-6 {
+  font-size: 0.95em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Markdown Paragraphs */
+.md-paragraph {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+/* Markdown Bold and Italic */
+.ai-message-assistant strong {
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.ai-message-assistant em {
+  font-style: italic;
+}
+
+.ai-message-assistant del {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Markdown Inline Code */
+.md-inline-code {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  font-size: 0.9em;
+  color: #e06c75;
+}
+
+/* Markdown Code Blocks */
+.md-code-block {
+  margin: 12px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.md-code-lang {
+  display: block;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.md-code-block pre {
+  margin: 0;
+  padding: 12px 16px;
+  overflow-x: auto;
+}
+
+.md-code-block code {
+  font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #abb2bf;
+}
+
+/* Markdown Lists */
+.md-list {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.md-list-item {
+  margin: 4px 0;
+  line-height: 1.5;
+}
+
+.md-list-ul {
+  list-style-type: disc;
+}
+
+.md-list-ol {
+  list-style-type: decimal;
+}
+
+/* Markdown Blockquotes */
+.md-blockquote {
+  margin: 12px 0;
+  padding: 8px 16px;
+  border-left: 3px solid rgba(99, 102, 241, 0.5);
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 0 8px 8px 0;
+  color: rgba(255, 255, 255, 0.85);
+  font-style: italic;
+}
+
+/* Markdown Links */
+.md-link {
+  color: #60a5fa;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.md-link:hover {
+  color: #93c5fd;
+  border-bottom-color: #93c5fd;
+}
+
+/* Markdown Images */
+.md-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 8px 0;
+}
+
+/* Markdown Horizontal Rules */
+.md-hr {
+  margin: 16px 0;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* Markdown Tables */
+.md-table-wrapper {
+  margin: 12px 0;
+  overflow-x: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.md-table-header {
+  padding: 10px 12px;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.md-table-cell {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.md-table-row:last-child .md-table-cell {
+  border-bottom: none;
+}
+
+.md-table-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* Light Theme Markdown Styles */
+body.light-theme .md-header {
+  color: #1f2937;
+}
+
+body.light-theme .md-header-1,
+body.light-theme .md-header-2 {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .md-header-6 {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+body.light-theme .ai-message-assistant strong {
+  color: #111827;
+}
+
+body.light-theme .md-inline-code {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #e53e3e;
+}
+
+body.light-theme .md-code-block {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .md-code-lang {
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+  color: rgba(0, 0, 0, 0.5);
+}
+
+body.light-theme .md-code-block code {
+  color: #374151;
+}
+
+body.light-theme .md-blockquote {
+  background: rgba(99, 102, 241, 0.08);
+  border-left-color: rgba(99, 102, 241, 0.4);
+  color: #374151;
+}
+
+body.light-theme .md-link {
+  color: #2563eb;
+}
+
+body.light-theme .md-link:hover {
+  color: #1d4ed8;
+  border-bottom-color: #1d4ed8;
+}
+
+body.light-theme .md-hr {
+  border-top-color: rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .md-table-wrapper {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .md-table-header {
+  background: rgba(0, 0, 0, 0.03);
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+  color: #1f2937;
+}
+
+body.light-theme .md-table-cell {
+  border-bottom-color: rgba(0, 0, 0, 0.05);
+}
+
+body.light-theme .md-table-row:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
  

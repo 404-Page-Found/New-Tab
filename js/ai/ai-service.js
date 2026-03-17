@@ -538,6 +538,15 @@ const AIService = (function() {
     const isStreaming = msg.isStreaming;
     const content = isStreaming ? (msg.content || '') : msg.content;
     
+    // Use markdown for assistant messages, plain text for user messages
+    let renderedContent;
+    if (isUser) {
+      renderedContent = escapeHTML(content);
+    } else {
+      // Use markdown parser for assistant messages
+      renderedContent = window.MarkdownParser ? window.MarkdownParser.parse(content) : escapeHTML(content);
+    }
+    
     return `
       <div class="ai-message ${isUser ? 'ai-message-user' : 'ai-message-assistant'}">
         <div class="ai-message-avatar">
@@ -547,7 +556,7 @@ const AIService = (function() {
           }
         </div>
         <div class="ai-message-content">
-          <div class="ai-message-text ${isStreaming ? 'ai-message-streaming' : ''}">${escapeHTML(content)}</div>
+          <div class="ai-message-text ${isStreaming ? 'ai-message-streaming' : ''}">${renderedContent}</div>
           <div class="ai-message-time">${time}</div>
         </div>
       </div>
@@ -933,6 +942,19 @@ const AIService = (function() {
   }
 
   /**
+   * Update streaming content with markdown rendering
+   * @param {HTMLElement} element - Element to update
+   * @param {string} content - Content to render
+   */
+  function updateStreamingContent(element, content) {
+    if (element && window.MarkdownParser) {
+      element.innerHTML = window.MarkdownParser.parse(content);
+    } else if (element) {
+      element.textContent = content;
+    }
+  }
+
+  /**
    * Send a message with streaming support
    * @param {string} userMessage - User's message
    */
@@ -985,6 +1007,11 @@ const AIService = (function() {
     const streamingElement = assistantElements ? assistantElements[assistantElements.length - 1] : null;
     const streamingTextElement = streamingElement?.querySelector('.ai-message-text');
     
+    // Throttling variables for markdown rendering
+    let accumulatedContent = '';
+    let lastRenderTime = 0;
+    const RENDER_THROTTLE_MS = 50; // Render markdown every 50ms
+    
     try {
       let result;
       
@@ -992,20 +1019,29 @@ const AIService = (function() {
         // Use offline mode
         result = OfflineMode.getResponse(userMessage);
         
-        // Simulate streaming for offline responses
+        // Simulate streaming for offline responses with markdown rendering
         if (result.success && result.content) {
           const content = result.content;
           const chunks = content.split('');
           
           for (let i = 0; i < chunks.length; i++) {
-            if (streamingTextElement) {
-              streamingTextElement.textContent += chunks[i];
+            accumulatedContent += chunks[i];
+            
+            // Throttled markdown rendering
+            const now = Date.now();
+            if (now - lastRenderTime >= RENDER_THROTTLE_MS || i === chunks.length - 1) {
+              updateStreamingContent(streamingTextElement, accumulatedContent);
+              lastRenderTime = now;
             }
+            
             // Small delay for effect
             if (i % 10 === 0) {
               await new Promise(resolve => setTimeout(resolve, 5));
             }
           }
+          
+          // Final render to ensure all content is displayed
+          updateStreamingContent(streamingTextElement, accumulatedContent);
         }
       } else {
         // Direct API call - no caching
@@ -1013,13 +1049,22 @@ const AIService = (function() {
           userMessage, 
           historyForAPI,
           (chunk) => {
-            // Directly update the DOM element without re-rendering everything
-            if (streamingTextElement) {
-              const currentContent = streamingTextElement.textContent;
-              streamingTextElement.textContent = currentContent + chunk;
+            // Accumulate content
+            accumulatedContent += chunk;
+            
+            // Throttled markdown rendering
+            const now = Date.now();
+            if (now - lastRenderTime >= RENDER_THROTTLE_MS) {
+              updateStreamingContent(streamingTextElement, accumulatedContent);
+              lastRenderTime = now;
             }
           }
         );
+        
+        // Final render after streaming completes
+        if (streamingTextElement && accumulatedContent) {
+          updateStreamingContent(streamingTextElement, accumulatedContent);
+        }
       }
       
       if (result.success) {
@@ -1028,8 +1073,8 @@ const AIService = (function() {
         const lastMsg = conv.messages[conv.messages.length - 1];
         if (lastMsg && lastMsg.isStreaming) {
           lastMsg.isStreaming = false;
-          // Get content from streaming element or from result
-          lastMsg.content = (streamingTextElement?.textContent) || result.content || '';
+          // Get content from accumulated content or from result
+          lastMsg.content = accumulatedContent || result.content || '';
         }
         
         // Update streaming indicator in UI
