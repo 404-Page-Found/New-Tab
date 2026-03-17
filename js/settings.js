@@ -4,16 +4,47 @@
 function loadBg() {
   return localStorage.getItem("homepageBg") || "Water Beside Forest";
 }
+
 function applyBg() {
   const bg = loadBg();
   document.body.setAttribute("data-bg", bg);
+  
+  // Update thumbnail selection
   const thumbs = document.querySelectorAll('.bg-thumb');
   for (let i = 0; i < thumbs.length; i++) {
     thumbs[i].classList.toggle('selected', thumbs[i].getAttribute('data-bg') === bg);
   }
-  const imgUrl = window._findBackgroundUrlById ? window._findBackgroundUrlById(bg) : '';
-  if (imgUrl) document.body.style.background = `url('${imgUrl}') center center/cover no-repeat fixed`;
-  else document.body.style.background = '';
+  
+  // Get background data from the map
+  const bgData = window._backgrounds ? window._backgrounds.find(b => b.id === bg) : null;
+  if (!bgData) return;
+  
+  const thumbnailEl = document.getElementById('bg-thumbnail');
+  const fullEl = document.getElementById('bg-full');
+  
+  if (!thumbnailEl || !fullEl) return;
+  
+  // Reset states
+  fullEl.classList.remove('loaded');
+  thumbnailEl.classList.remove('hidden');
+  
+  // Immediately show blurred thumbnail
+  thumbnailEl.src = bgData.thumb;
+  
+  // Start loading full resolution image
+  const fullImg = new Image();
+  fullImg.onload = function() {
+    fullEl.src = bgData.url;
+    // Small delay to ensure browser has rendered
+    requestAnimationFrame(() => {
+      fullEl.classList.add('loaded');
+      // Hide thumbnail after transition completes
+      setTimeout(() => {
+        thumbnailEl.classList.add('hidden');
+      }, 1200); // Match CSS transition duration
+    });
+  };
+  fullImg.src = bgData.url;
 }
 
 // Delegate click events for backgrounds
