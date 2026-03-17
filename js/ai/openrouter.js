@@ -176,9 +176,10 @@ const OpenRouterAPI = (function() {
    * @param {string} userMessage - User's message
    * @param {Array} conversationHistory - Previous messages
    * @param {Function} onChunk - Callback for each chunk received
+   * @param {AbortSignal} signal - Optional abort signal for cancellation
    * @returns {Promise<Object>} Final result object
    */
-  async function sendMessageStreaming(userMessage, conversationHistory = [], onChunk) {
+  async function sendMessageStreaming(userMessage, conversationHistory = [], onChunk, signal = null) {
     // Validate input
     const validation = validateInput(userMessage);
     if (!validation.valid) {
@@ -209,11 +210,18 @@ const OpenRouterAPI = (function() {
     };
 
     try {
-      const response = await fetch(CONFIG.baseURL, {
+      const fetchOptions = {
         method: 'POST',
         headers: buildHeaders(),
         body: JSON.stringify(requestBody)
-      });
+      };
+      
+      // Add abort signal if provided
+      if (signal) {
+        fetchOptions.signal = signal;
+      }
+      
+      const response = await fetch(CONFIG.baseURL, fetchOptions);
 
       // Handle non-OK responses
       if (!response.ok) {
@@ -306,6 +314,14 @@ const OpenRouterAPI = (function() {
       };
 
     } catch (e) {
+      // Check if the request was aborted
+      if (e.name === 'AbortError') {
+        return { 
+          success: false, 
+          error: 'Request cancelled',
+          aborted: true
+        };
+      }
       return { 
         success: false, 
         error: getTranslation('aiNetworkError')

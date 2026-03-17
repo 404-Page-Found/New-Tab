@@ -12,6 +12,14 @@ const AIService = (function() {
   let isLoading = false;
   let isOfflineMode = false;
   
+  // Streaming state
+  let abortController = null;
+  let isStreaming = false;
+  
+  // Scroll state
+  let isUserScrolledUp = false;
+  let scrollThreshold = 100; // pixels from bottom to consider "at bottom"
+  
   // Confirm dialog state
   let confirmDialogCallback = null;
   
@@ -39,6 +47,7 @@ const AIService = (function() {
       container: document.getElementById('ai-chat-container'),
       input: document.getElementById('ai-chat-input'),
       sendBtn: document.getElementById('ai-chat-send'),
+      stopBtn: document.getElementById('ai-chat-stop'),
       loadingIndicator: document.getElementById('ai-chat-loading'),
       errorDisplay: document.getElementById('ai-chat-error'),
       title: document.getElementById('ai-chat-title'),
@@ -48,7 +57,8 @@ const AIService = (function() {
       topicsCount: document.getElementById('ai-topics-count'),
       confirmDialog: document.getElementById('ai-confirm-dialog'),
       confirmCancel: document.querySelector('.ai-confirm-cancel'),
-      confirmDelete: document.querySelector('.ai-confirm-delete')
+      confirmDelete: document.querySelector('.ai-confirm-delete'),
+      scrollToBottomBtn: document.getElementById('ai-scroll-to-bottom')
     };
   }
   
@@ -575,6 +585,55 @@ const AIService = (function() {
   }
   
   /**
+   * Check if user is at bottom of chat
+   * @returns {boolean}
+   */
+  function isAtBottom() {
+    if (!elements.container) return true;
+    const { scrollTop, scrollHeight, clientHeight } = elements.container;
+    return scrollHeight - scrollTop - clientHeight < scrollThreshold;
+  }
+  
+  /**
+   * Scroll to bottom of chat
+   * @param {boolean} smooth - Whether to use smooth scrolling
+   */
+  function scrollToBottom(smooth = true) {
+    if (!elements.container) return;
+    elements.container.scrollTo({
+      top: elements.container.scrollHeight,
+      behavior: smooth ? 'smooth' : 'auto'
+    });
+    isUserScrolledUp = false;
+    updateScrollToBottomButton();
+  }
+  
+  /**
+   * Update scroll-to-bottom button visibility
+   */
+  function updateScrollToBottomButton() {
+    if (!elements.scrollToBottomBtn) return;
+    
+    if (isUserScrolledUp) {
+      elements.scrollToBottomBtn.classList.add('visible');
+    } else {
+      elements.scrollToBottomBtn.classList.remove('visible');
+    }
+  }
+  
+  /**
+   * Handle scroll event
+   */
+  function handleScroll() {
+    const wasScrolledUp = isUserScrolledUp;
+    isUserScrolledUp = !isAtBottom();
+    
+    if (wasScrolledUp !== isUserScrolledUp) {
+      updateScrollToBottomButton();
+    }
+  }
+  
+  /**
    * Render all messages
    */
   function renderMessages() {
@@ -613,13 +672,17 @@ const AIService = (function() {
           <div class="ai-welcome-subtitle">${getTranslation('aiWelcomeSubtitle')}</div>
         </div>
       `;
+      isUserScrolledUp = false;
+      updateScrollToBottomButton();
       return;
     }
     
     elements.container.innerHTML = messages.map(msg => getMessageHTML(msg)).join('');
     
-    // Scroll to bottom
-    elements.container.scrollTop = elements.container.scrollHeight;
+    // Smart auto-scroll: only scroll to bottom if user hasn't scrolled up
+    if (!isUserScrolledUp) {
+      scrollToBottom(false);
+    }
   }
   
   /**
@@ -674,11 +737,15 @@ const AIService = (function() {
    */
   function showLoading() {
     isLoading = true;
+    isStreaming = true;
     if (elements.loadingIndicator) {
       elements.loadingIndicator.style.display = 'flex';
     }
     if (elements.sendBtn) {
-      elements.sendBtn.disabled = true;
+      elements.sendBtn.style.display = 'none';
+    }
+    if (elements.stopBtn) {
+      elements.stopBtn.style.display = 'flex';
     }
     if (elements.input) {
       elements.input.disabled = true;
@@ -694,16 +761,49 @@ const AIService = (function() {
    */
   function hideLoading() {
     isLoading = false;
+    isStreaming = false;
+    abortController = null;
     if (elements.loadingIndicator) {
       elements.loadingIndicator.style.display = 'none';
     }
     if (elements.sendBtn) {
-      elements.sendBtn.disabled = false;
+      elements.sendBtn.style.display = 'flex';
+    }
+    if (elements.stopBtn) {
+      elements.stopBtn.style.display = 'none';
     }
     if (elements.input) {
       elements.input.disabled = false;
       elements.input.focus();
     }
+  }
+  
+  /**
+   * Stop streaming
+   */
+  function stopStreaming() {
+    if (abortController) {
+      abortController.abort();
+      abortController = null;
+    }
+    
+    // Mark the last assistant message as complete (not streaming)
+    const conv = getCurrentConversation();
+    if (conv && conv.messages.length > 0) {
+      const lastMsg = conv.messages[conv.messages.length - 1];
+      if (lastMsg && lastMsg.role === 'assistant' && lastMsg.isStreaming) {
+        lastMsg.isStreaming = false;
+        saveConversations();
+      }
+    }
+    
+    // Update UI
+    const streamingElements = elements.container?.querySelectorAll('.ai-message-streaming');
+    if (streamingElements) {
+      streamingElements.forEach(el => el.classList.remove('ai-message-streaming'));
+    }
+    
+    hideLoading();
   }
   
   /**
@@ -743,6 +843,11 @@ const AIService = (function() {
       elements.sendBtn.addEventListener('click', handleSend);
     }
     
+    // Stop button
+    if (elements.stopBtn) {
+      elements.stopBtn.addEventListener('click', stopStreaming);
+    }
+    
     // Input Enter key
     if (elements.input) {
       elements.input.addEventListener('keypress', (e) => {
@@ -751,6 +856,16 @@ const AIService = (function() {
           handleSend();
         }
       });
+    }
+    
+    // Scroll to bottom button
+    if (elements.scrollToBottomBtn) {
+      elements.scrollToBottomBtn.addEventListener('click', () => scrollToBottom(true));
+    }
+    
+    // Chat container scroll event
+    if (elements.container) {
+      elements.container.addEventListener('scroll', handleScroll);
     }
     
     // New chat button
@@ -787,6 +902,21 @@ const AIService = (function() {
           closeModal();
         }
       });
+    }
+    
+    // Reset scroll state when modal opens
+    if (elements.modal) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName === 'class') {
+            if (elements.modal.classList.contains('ai-modal-open')) {
+              isUserScrolledUp = false;
+              updateScrollToBottomButton();
+            }
+          }
+        });
+      });
+      observer.observe(elements.modal, { attributes: true });
     }
     
     // Listen for theme changes to update AI modal in real-time
@@ -983,6 +1113,9 @@ const AIService = (function() {
     // Show loading
     showLoading();
     
+    // Create new AbortController for this request
+    abortController = new AbortController();
+    
     // Get conversation history for context
     const messages = getCurrentMessages();
     const historyForAPI = messages
@@ -1025,6 +1158,11 @@ const AIService = (function() {
           const chunks = content.split('');
           
           for (let i = 0; i < chunks.length; i++) {
+            // Check if aborted
+            if (abortController === null) {
+              break;
+            }
+            
             accumulatedContent += chunks[i];
             
             // Throttled markdown rendering
@@ -1032,6 +1170,11 @@ const AIService = (function() {
             if (now - lastRenderTime >= RENDER_THROTTLE_MS || i === chunks.length - 1) {
               updateStreamingContent(streamingTextElement, accumulatedContent);
               lastRenderTime = now;
+              
+              // Smart auto-scroll during streaming
+              if (!isUserScrolledUp) {
+                scrollToBottom(false);
+              }
             }
             
             // Small delay for effect
@@ -1041,10 +1184,12 @@ const AIService = (function() {
           }
           
           // Final render to ensure all content is displayed
-          updateStreamingContent(streamingTextElement, accumulatedContent);
+          if (abortController !== null) {
+            updateStreamingContent(streamingTextElement, accumulatedContent);
+          }
         }
       } else {
-        // Direct API call - no caching
+        // Direct API call with abort signal
         result = await OpenRouterAPI.sendMessageStreaming(
           userMessage, 
           historyForAPI,
@@ -1057,12 +1202,18 @@ const AIService = (function() {
             if (now - lastRenderTime >= RENDER_THROTTLE_MS) {
               updateStreamingContent(streamingTextElement, accumulatedContent);
               lastRenderTime = now;
+              
+              // Smart auto-scroll during streaming
+              if (!isUserScrolledUp) {
+                scrollToBottom(false);
+              }
             }
-          }
+          },
+          abortController.signal
         );
         
         // Final render after streaming completes
-        if (streamingTextElement && accumulatedContent) {
+        if (streamingTextElement && accumulatedContent && !result.aborted) {
           updateStreamingContent(streamingTextElement, accumulatedContent);
         }
       }
@@ -1084,6 +1235,15 @@ const AIService = (function() {
         
         saveConversations();
         renderTopicsList();
+      } else if (result.aborted) {
+        // Request was cancelled - save what we have
+        const conv = getCurrentConversation();
+        const lastMsg = conv.messages[conv.messages.length - 1];
+        if (lastMsg && lastMsg.isStreaming) {
+          lastMsg.isStreaming = false;
+          lastMsg.content = accumulatedContent || '[Cancelled]';
+        }
+        saveConversations();
       } else {
         showError(result.error);
         // Remove user and assistant messages if API failed
@@ -1093,14 +1253,26 @@ const AIService = (function() {
         renderMessages();
       }
     } catch (e) {
-      showError(getTranslation('aiError'));
-      console.error('AI sendMessage error:', e);
-      // Remove messages on error
-      const conv = getCurrentConversation();
-      if (conv.messages.length >= 2) {
-        conv.messages.pop(); // Remove assistant
-        conv.messages.pop(); // Remove user
-        renderMessages();
+      // Check if it was an abort
+      if (e.name === 'AbortError' || abortController === null) {
+        // Request was cancelled - save what we have
+        const conv = getCurrentConversation();
+        const lastMsg = conv.messages[conv.messages.length - 1];
+        if (lastMsg && lastMsg.isStreaming) {
+          lastMsg.isStreaming = false;
+          lastMsg.content = accumulatedContent || '[Cancelled]';
+        }
+        saveConversations();
+      } else {
+        showError(getTranslation('aiError'));
+        console.error('AI sendMessage error:', e);
+        // Remove messages on error
+        const conv = getCurrentConversation();
+        if (conv.messages.length >= 2) {
+          conv.messages.pop(); // Remove assistant
+          conv.messages.pop(); // Remove user
+          renderMessages();
+        }
       }
     }
     
@@ -1164,6 +1336,7 @@ const AIService = (function() {
     open,
     close: closeModal,
     sendMessage,
+    stopStreaming,
     quickSearch,
     isAvailable
   };

@@ -213,7 +213,9 @@ const translations = {
     aiMessageRequired: "Message is required",
     aiMessageEmpty: "Message cannot be empty",
     aiMessageTooLong: "Message too long (max 2000 characters)",
-    aiSearchConversations: "Search..."
+    aiSearchConversations: "Search...",
+    aiStopStreaming: "Stop",
+    aiScrollToBottom: "Scroll to bottom"
   },
 
   zh: {
@@ -428,7 +430,9 @@ const translations = {
     aiMessageRequired: "消息不能为空",
     aiMessageEmpty: "消息不能为空",
     aiMessageTooLong: "消息太长（最多2000个字符）",
-    aiSearchConversations: "搜索..."
+    aiSearchConversations: "搜索...",
+    aiStopStreaming: "停止",
+    aiScrollToBottom: "滚动到底部"
   }
 };
 
