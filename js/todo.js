@@ -10,6 +10,15 @@ let currentFilters = {
 // DOM elements
 let elements = {};
 
+// Inline date picker state
+let inlineDatePickerState = {
+  isOpen: false,
+  todoId: null,
+  currentDate: new Date(),
+  selectedDate: null,
+  position: { top: 0, left: 0 }
+};
+
 // Edit modal state
 let editModalState = {
   currentTodoId: null,
@@ -120,9 +129,18 @@ function renderTodos() {
       <div class="todo-content">
         <p class="todo-text">${todo.text}</p>
         <div class="todo-meta">
-          ${todo.dueDate ? `<span class="todo-due-date ${isOverdue(todo.dueDate) ? 'overdue' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${formatDate(todo.dueDate)}</span>` : ''}
         </div>
       </div>
+      <div class="todo-actions">
+        <button class="todo-date-btn ${todo.dueDate ? 'has-date' : ''} ${isOverdue(todo.dueDate) ? 'overdue' : ''}" data-id="${todo.id}" title="${todo.dueDate ? 'Edit due date' : 'Add due date'}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          ${todo.dueDate ? `<span class="due-date-label">${formatDate(todo.dueDate)}</span>` : ''}
+        </button>
       <div class="todo-actions">
         <button class="todo-edit-btn" data-id="${todo.id}" title="Edit Todo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -289,6 +307,15 @@ function handleTodoListClick(event) {
     event.stopPropagation();
     const id = target.dataset.id;
     toggleTodo(id);
+    return;
+  }
+
+  // Handle date button click (inline editing)
+  const dateBtn = target.closest('.todo-date-btn');
+  if (dateBtn) {
+    event.stopPropagation();
+    const id = dateBtn.dataset.id;
+    openInlineDatePicker(id, dateBtn);
     return;
   }
 
@@ -502,6 +529,197 @@ function toggleEditCalendar() {
   }
 }
 
+// Inline Date Picker Functions
+function openInlineDatePicker(todoId, targetElement) {
+  const todo = todos.find(t => t.id === todoId);
+  if (!todo) return;
+
+  // Close any other open inline pickers
+  closeInlineDatePicker();
+
+  inlineDatePickerState.todoId = todoId;
+  inlineDatePickerState.selectedDate = todo.dueDate ? new Date(todo.dueDate) : null;
+  inlineDatePickerState.currentDate = todo.dueDate ? new Date(todo.dueDate) : new Date();
+  inlineDatePickerState.isOpen = true;
+
+  // Position the picker near the clicked element
+  const picker = document.getElementById('inline-date-picker');
+  if (picker) {
+    const rect = targetElement.getBoundingClientRect();
+    const pickerWidth = 280;
+    
+    // Calculate horizontal position (keep within viewport)
+    let left = rect.left;
+    if (left + pickerWidth > window.innerWidth - 20) {
+      left = window.innerWidth - pickerWidth - 20;
+    }
+    if (left < 20) left = 20;
+
+    // Position below the element, or above if not enough space
+    let top = rect.bottom + 8;
+    if (top + 300 > window.innerHeight - 20) {
+      top = rect.top - 300 - 8;
+    }
+    if (top < 20) top = 20;
+
+    picker.style.position = 'fixed';
+    picker.style.left = left + 'px';
+    picker.style.top = top + 'px';
+    picker.classList.add('visible');
+    
+    renderInlineCalendar();
+  }
+}
+
+function closeInlineDatePicker() {
+  inlineDatePickerState.isOpen = false;
+  inlineDatePickerState.todoId = null;
+  inlineDatePickerState.selectedDate = null;
+
+  const picker = document.getElementById('inline-date-picker');
+  if (picker) {
+    picker.classList.remove('visible');
+  }
+}
+
+function renderInlineCalendar() {
+  const monthElement = document.getElementById('inline-calendar-month');
+  const yearElement = document.getElementById('inline-calendar-year');
+  const daysContainer = document.getElementById('inline-calendar-days');
+
+  if (!monthElement || !yearElement || !daysContainer) return;
+
+  // Update month/year display
+  const monthIndex = inlineDatePickerState.currentDate.getMonth();
+  const monthKey = ['january', 'february', 'march', 'april', 'may', 'june',
+                    'july', 'august', 'september', 'october', 'november', 'december'][monthIndex];
+  const monthName = window.i18n ? window.i18n.t(monthKey) : monthKey;
+  monthElement.textContent = monthName;
+  yearElement.textContent = inlineDatePickerState.currentDate.getFullYear();
+
+  // Clear previous days
+  daysContainer.innerHTML = '';
+
+  // Get calendar data
+  const year = inlineDatePickerState.currentDate.getFullYear();
+  const month = inlineDatePickerState.currentDate.getMonth();
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const startDate = new Date(firstDay);
+  startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+  // Generate 6 weeks of days
+  for (let i = 0; i < 42; i++) {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + i);
+
+    const dayElement = document.createElement('div');
+    dayElement.className = 'calendar-day';
+    dayElement.textContent = date.getDate();
+
+    // Check if this date is in the current month
+    const isCurrentMonth = date.getMonth() === month;
+    if (!isCurrentMonth) {
+      dayElement.classList.add('other-month');
+    }
+
+    // Check if this is today
+    const today = new Date();
+    const isToday = date.toDateString() === today.toDateString();
+    if (isToday) {
+      dayElement.classList.add('today');
+    }
+
+    // Check if this is selected
+    const isSelected = inlineDatePickerState.selectedDate && date.toDateString() === inlineDatePickerState.selectedDate.toDateString();
+    if (isSelected) {
+      dayElement.classList.add('selected');
+    }
+
+    // Add click handler
+    if (isCurrentMonth) {
+      dayElement.addEventListener('click', () => selectInlineDate(date));
+    }
+
+    daysContainer.appendChild(dayElement);
+  }
+}
+
+function selectInlineDate(date) {
+  inlineDatePickerState.selectedDate = new Date(date);
+  
+  // Update the todo's due date
+  if (inlineDatePickerState.todoId) {
+    const todo = todos.find(t => t.id === inlineDatePickerState.todoId);
+    if (todo) {
+      todo.dueDate = date.toISOString().split('T')[0];
+      saveTodos(todos);
+      applyFilters();
+    }
+  }
+  
+  closeInlineDatePicker();
+}
+
+function clearInlineDate() {
+  // Clear the todo's due date
+  if (inlineDatePickerState.todoId) {
+    const todo = todos.find(t => t.id === inlineDatePickerState.todoId);
+    if (todo) {
+      todo.dueDate = null;
+      saveTodos(todos);
+      applyFilters();
+    }
+  }
+  
+  closeInlineDatePicker();
+}
+
+function selectInlineToday() {
+  selectInlineDate(new Date());
+}
+
+function navigateInlineMonth(delta) {
+  inlineDatePickerState.currentDate.setMonth(inlineDatePickerState.currentDate.getMonth() + delta);
+  renderInlineCalendar();
+}
+
+// Initialize inline date picker event listeners
+function initInlineDatePicker() {
+  const prevBtn = document.getElementById('inline-prev-month');
+  const nextBtn = document.getElementById('inline-next-month');
+  const clearBtn = document.getElementById('inline-clear-date');
+  const todayBtn = document.getElementById('inline-today-date');
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => navigateInlineMonth(-1));
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => navigateInlineMonth(1));
+  }
+  if (clearBtn) {
+    clearBtn.addEventListener('click', clearInlineDate);
+  }
+  if (todayBtn) {
+    todayBtn.addEventListener('click', selectInlineToday);
+  }
+
+  // Close inline picker when clicking outside
+  document.addEventListener('click', (e) => {
+    const picker = document.getElementById('inline-date-picker');
+    if (inlineDatePickerState.isOpen && picker && !picker.contains(e.target) && !e.target.closest('.todo-due-date')) {
+      closeInlineDatePicker();
+    }
+  });
+
+  // Prevent picker clicks from closing
+  const picker = document.getElementById('inline-date-picker');
+  if (picker) {
+    picker.addEventListener('click', (e) => e.stopPropagation());
+  }
+}
+
 // Initialize todo functionality
 function initTodo() {
   // Get DOM elements
@@ -600,6 +818,9 @@ function initTodo() {
 
   // Initial render
   applyFilters();
+  
+  // Initialize inline date picker
+  initInlineDatePicker();
 }
 
 // Custom Date Picker Functionality

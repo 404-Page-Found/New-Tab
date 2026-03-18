@@ -118,6 +118,40 @@
             <small>Try adding due dates for better organization.</small>
           </div>
         </div>
+        
+        <!-- Inline Date Picker -->
+        <div id="inline-date-picker" class="inline-date-picker">
+          <div class="inline-date-picker-header">
+            <button type="button" id="inline-prev-month" class="calendar-nav-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15,18 9,12 15,6"></polyline>
+              </svg>
+            </button>
+            <div class="calendar-title">
+              <span id="inline-calendar-month"></span>
+              <span id="inline-calendar-year"></span>
+            </div>
+            <button type="button" id="inline-next-month" class="calendar-nav-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9,18 15,12 9,6"></polyline>
+              </svg>
+            </button>
+          </div>
+          <div class="calendar-weekdays">
+            <span data-i18n="sunday">Su</span>
+            <span data-i18n="monday">Mo</span>
+            <span data-i18n="tuesday">Tu</span>
+            <span data-i18n="wednesday">We</span>
+            <span data-i18n="thursday">Th</span>
+            <span data-i18n="friday">Fr</span>
+            <span data-i18n="saturday">Sa</span>
+          </div>
+          <div id="inline-calendar-days" class="calendar-days"></div>
+          <div class="calendar-footer">
+            <button type="button" id="inline-clear-date" class="calendar-btn secondary" data-i18n="clearDate">Clear</button>
+            <button type="button" id="inline-today-date" class="calendar-btn secondary" data-i18n="todayDate">Today</button>
+          </div>
+        </div>
       </div>
     </div>
 
