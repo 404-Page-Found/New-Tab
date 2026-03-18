@@ -1224,14 +1224,14 @@ body.light-theme .drag-placeholder {
   box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
 }
 #add-app-modal button#add-app-cancel {
-  background: rgba(255, 0, 0, 0.8);
-  color: white  ;
-  box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 #add-app-modal button#add-app-cancel:hover {
-  background: rgba(255, 0, 0, 1);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.5);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
 }
 .settings-section label {
   display: flex;
@@ -5095,6 +5095,18 @@ body.light-theme .progress-dot.active {
 .todo-edit-actions button svg {
   width: 18px;
   height: 18px;
+}
+
+#todo-edit-cancel {
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  box-shadow: 0 2px 8px rgba(255, 0, 0, 0.3);
+}
+
+#todo-edit-cancel:hover {
+  background: rgba(255, 0, 0, 1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 0, 0, 0.5);
 }
 
 /* Light theme for todo edit modal */
