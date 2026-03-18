@@ -5462,6 +5462,18 @@ body.light-theme .ai-topic-item.keyboard-selected {
   background: rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   padding: 12px 16px;
+  max-width: 100%;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+  word-break: break-word;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  display: flow-root;
 }
 
 .ai-message-user .ai-message-content {
@@ -5473,6 +5485,18 @@ body.light-theme .ai-topic-item.keyboard-selected {
   font-size: 14px;
   line-height: 1.5;
   word-wrap: break-word;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: pre-wrap;
+  box-sizing: border-box;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-height: 100%;
 }
 
 .ai-message-time {
@@ -5974,6 +5998,18 @@ body.light-theme .ai-topic-delete:hover {
   font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
   font-size: 0.9em;
   color: #e06c75;
+  word-break: break-all;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  display: inline-block;
+  box-sizing: border-box;
+  hyphens: auto;
+  -webkit-hyphens: auto;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  max-height: 1.5em;
 }
 
 /* Markdown Code Blocks */
@@ -5983,6 +6019,7 @@ body.light-theme .ai-topic-delete:hover {
   overflow: hidden;
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 100%;
 }
 
 .md-code-lang {
@@ -6001,6 +6038,7 @@ body.light-theme .ai-topic-delete:hover {
   margin: 0;
   padding: 12px 16px;
   overflow-x: auto;
+  max-width: 100%;
 }
 
 .md-code-block code {
