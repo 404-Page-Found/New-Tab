@@ -70,19 +70,12 @@ function filterTodos() {
     });
   }
 
-  // Sort by due date, then by creation date
+  // Sort by order property to preserve custom order
   filtered.sort((a, b) => {
-    // Due date first
-    if (a.dueDate && b.dueDate) {
-      return new Date(a.dueDate) - new Date(b.dueDate);
-    } else if (a.dueDate) {
-      return -1;
-    } else if (b.dueDate) {
-      return 1;
-    }
-
-    // Creation date last
-    return new Date(a.createdAt) - new Date(b.createdAt);
+    // Use order property if available, otherwise fall back to creation date
+    const orderA = a.order !== undefined ? a.order : new Date(a.createdAt).getTime();
+    const orderB = b.order !== undefined ? b.order : new Date(b.createdAt).getTime();
+    return orderA - orderB;
   });
 
   filteredTodos = filtered;
@@ -157,7 +150,8 @@ function addTodo(text, dueDate = null) {
     text: text.trim(),
     completed: false,
     dueDate: dueDate,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    order: todos.length // Add order property to track position
   };
 
   todos.push(newTodo);
@@ -250,6 +244,11 @@ function handleDrop(event) {
   // Reorder the filtered todos array
   const [removed] = filteredTodos.splice(draggedIndex, 1);
   filteredTodos.splice(dropIndex, 0, removed);
+
+  // Update the order property for all todos to match the new order
+  filteredTodos.forEach((todo, index) => {
+    todo.order = index;
+  });
 
   // Update the main todos array to match the new order
   const newOrder = filteredTodos.map(todo => todo.id);
