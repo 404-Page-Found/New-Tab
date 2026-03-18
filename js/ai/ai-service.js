@@ -1078,10 +1078,31 @@ const AIService = (function() {
    */
   function updateStreamingContent(element, content) {
     if (element && window.MarkdownParser) {
+      // Use optimized markdown parser with caching
       element.innerHTML = window.MarkdownParser.parse(content);
     } else if (element) {
       element.textContent = content;
     }
+  }
+  
+  /**
+   * Clear markdown parser cache (useful for memory management)
+   */
+  function clearMarkdownCache() {
+    if (window.MarkdownParser && window.MarkdownParser.clearCache) {
+      window.MarkdownParser.clearCache();
+    }
+  }
+  
+  /**
+   * Get markdown parser cache statistics
+   * @returns {Object} Cache stats
+   */
+  function getMarkdownCacheStats() {
+    if (window.MarkdownParser && window.MarkdownParser.getCacheStats) {
+      return window.MarkdownParser.getCacheStats();
+    }
+    return { size: 0, maxSize: 0 };
   }
 
   /**

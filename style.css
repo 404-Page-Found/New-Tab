@@ -6104,7 +6104,214 @@ body.light-theme .ai-topic-delete:hover {
   background: rgba(255, 255, 255, 0.03);
 }
 
-/* Light Theme Markdown Styles */
+/* ==================== Syntax Highlighting Styles ==================== */
+
+/* Syntax highlighting - Keywords */
+.syntax-keyword {
+  color: #c678dd;
+  font-weight: 500;
+}
+
+/* Syntax highlighting - Strings */
+.syntax-string {
+  color: #98c379;
+}
+
+/* Syntax highlighting - Comments */
+.syntax-comment {
+  color: #5c6370;
+  font-style: italic;
+}
+
+/* Syntax highlighting - Numbers */
+.syntax-number {
+  color: #d19a66;
+}
+
+/* Syntax highlighting - Booleans */
+.syntax-boolean {
+  color: #56b6c2;
+}
+
+/* Syntax highlighting - Functions */
+.syntax-function {
+  color: #61afef;
+}
+
+/* Syntax highlighting - Decorators (Python) */
+.syntax-decorator {
+  color: #e5c07b;
+}
+
+/* Syntax highlighting - Variables (Bash) */
+.syntax-variable {
+  color: #e06c75;
+}
+
+/* Light theme syntax highlighting */
+body.light-theme .syntax-keyword {
+  color: #7c3aed;
+}
+
+body.light-theme .syntax-string {
+  color: #059669;
+}
+
+body.light-theme .syntax-comment {
+  color: #6b7280;
+}
+
+body.light-theme .syntax-number {
+  color: #ea580c;
+}
+
+body.light-theme .syntax-boolean {
+  color: #0891b2;
+}
+
+body.light-theme .syntax-function {
+  color: #2563eb;
+}
+
+body.light-theme .syntax-decorator {
+  color: #ca8a04;
+}
+
+body.light-theme .syntax-variable {
+  color: #dc2626;
+}
+
+/* ==================== Task List Styles ==================== */
+
+/* Task list container */
+.md-task-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+/* Task list item */
+.md-task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 8px 0;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+
+.md-task-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Task checkbox */
+.md-task-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: #6366f1;
+  cursor: default;
+}
+
+/* Task content */
+.md-task-item span {
+  flex: 1;
+  line-height: 1.5;
+}
+
+/* Checked task styling */
+.md-task-checked {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* Light theme task list */
+body.light-theme .md-task-item {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+body.light-theme .md-task-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .md-task-item input[type="checkbox"] {
+  accent-color: #6366f1;
+}
+
+/* ==================== Enhanced List Styles ==================== */
+
+/* Nested list indentation */
+.md-list .md-list {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.md-list .md-list .md-list-item {
+  margin: 2px 0;
+}
+
+/* Ordered list number styling */
+.md-list-ol {
+  counter-reset: list-counter;
+}
+
+.md-list-ol > .md-list-item {
+  counter-increment: list-counter;
+}
+
+.md-list-ol > .md-list-item::marker {
+  color: rgba(99, 102, 241, 0.8);
+  font-weight: 600;
+}
+
+/* Unordered list bullet styling */
+.md-list-ul > .md-list-item::marker {
+  color: rgba(99, 102, 241, 0.6);
+}
+
+/* Light theme list styling */
+body.light-theme .md-list-ol > .md-list-item::marker {
+  color: rgba(99, 102, 241, 0.7);
+}
+
+body.light-theme .md-list-ul > .md-list-item::marker {
+  color: rgba(99, 102, 241, 0.5);
+}
+
+/* ==================== Enhanced Code Block Styles ==================== */
+
+/* Code block with language label */
+.md-code-block {
+  position: relative;
+}
+
+.md-code-block .md-code-lang {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom-left-radius: 6px;
+  border-top-right-radius: 7px;
+}
+
+/* Code block line numbers (optional enhancement) */
+.md-code-block pre {
+  counter-reset: line;
+}
+
+.md-code-block code {
+  display: block;
+}
+
+/* ==================== Light Theme Markdown Styles ==================== */
 body.light-theme .md-header {
   color: #1f2937;
 }
