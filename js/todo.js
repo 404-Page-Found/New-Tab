@@ -10,6 +10,14 @@ let currentFilters = {
 // DOM elements
 let elements = {};
 
+// Edit modal state
+let editModalState = {
+  currentTodoId: null,
+  selectedDate: null,
+  currentDate: new Date(),
+  isOpen: false
+};
+
 // Load todos from localStorage
 function loadTodos() {
   return JSON.parse(localStorage.getItem("todos") || "[]");
@@ -296,13 +304,201 @@ function handleTodoListClick(event) {
   if (target.closest('.todo-edit-btn')) {
     event.stopPropagation();
     const id = target.closest('.todo-edit-btn').dataset.id;
-    // For now, just focus on the item (could expand to inline editing)
-    const todoItem = target.closest('.todo-item');
-    todoItem.style.transform = 'scale(1.02)';
-    setTimeout(() => {
-      todoItem.style.transform = '';
-    }, 200);
+    openEditModal(id);
     return;
+  }
+}
+
+// Edit Modal Functions
+function openEditModal(id) {
+  const todo = todos.find(t => t.id === id);
+  if (!todo) return;
+
+  editModalState.currentTodoId = id;
+  editModalState.selectedDate = todo.dueDate ? new Date(todo.dueDate) : null;
+  editModalState.currentDate = todo.dueDate ? new Date(todo.dueDate) : new Date();
+  editModalState.isOpen = true;
+
+  // Populate modal fields
+  const textInput = document.getElementById('todo-edit-text');
+  const dateText = document.getElementById('todo-edit-date-text');
+  const dateInput = document.getElementById('todo-edit-due-date');
+  const modal = document.getElementById('todo-edit-modal');
+
+  if (textInput) textInput.value = todo.text;
+  if (dateInput) dateInput.value = todo.dueDate || '';
+  if (dateText) {
+    dateText.textContent = todo.dueDate ? formatDate(todo.dueDate) : (window.i18n ? window.i18n.t('dueDate') : 'Due Date');
+  }
+
+  // Update date picker trigger appearance
+  const dateTrigger = document.getElementById('todo-edit-date-trigger');
+  if (dateTrigger) {
+    dateTrigger.classList.toggle('selected', !!todo.dueDate);
+  }
+
+  // Show modal
+  if (modal) {
+    modal.style.display = 'flex';
+    // Focus on text input
+    setTimeout(() => {
+      if (textInput) textInput.focus();
+    }, 100);
+  }
+
+  // Render edit calendar
+  renderEditCalendar();
+}
+
+function closeEditModal() {
+  editModalState.currentTodoId = null;
+  editModalState.selectedDate = null;
+  editModalState.isOpen = false;
+
+  const modal = document.getElementById('todo-edit-modal');
+  const calendar = document.getElementById('todo-edit-calendar');
+
+  if (modal) modal.style.display = 'none';
+  if (calendar) calendar.classList.remove('visible');
+}
+
+function saveEdit() {
+  if (!editModalState.currentTodoId) return;
+
+  const textInput = document.getElementById('todo-edit-text');
+  const dateInput = document.getElementById('todo-edit-due-date');
+
+  const newText = textInput ? textInput.value.trim() : '';
+  const newDueDate = dateInput ? dateInput.value || null : null;
+
+  if (!newText) {
+    // Show error or focus on text input
+    if (textInput) textInput.focus();
+    return;
+  }
+
+  editTodo(editModalState.currentTodoId, newText, null, newDueDate);
+  closeEditModal();
+}
+
+function renderEditCalendar() {
+  const monthElement = document.getElementById('todo-edit-calendar-month');
+  const yearElement = document.getElementById('todo-edit-calendar-year');
+  const daysContainer = document.getElementById('todo-edit-calendar-days');
+
+  if (!monthElement || !yearElement || !daysContainer) return;
+
+  // Update month/year display
+  const monthIndex = editModalState.currentDate.getMonth();
+  const monthKey = ['january', 'february', 'march', 'april', 'may', 'june',
+                    'july', 'august', 'september', 'october', 'november', 'december'][monthIndex];
+  const monthName = window.i18n ? window.i18n.t(monthKey) : monthKey;
+  monthElement.textContent = monthName;
+  yearElement.textContent = editModalState.currentDate.getFullYear();
+
+  // Clear previous days
+  daysContainer.innerHTML = '';
+
+  // Get calendar data
+  const year = editModalState.currentDate.getFullYear();
+  const month = editModalState.currentDate.getMonth();
+
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const startDate = new Date(firstDay);
+  startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+  // Generate 6 weeks of days
+  for (let i = 0; i < 42; i++) {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + i);
+
+    const dayElement = document.createElement('div');
+    dayElement.className = 'calendar-day';
+    dayElement.textContent = date.getDate();
+
+    // Check if this date is in the current month
+    const isCurrentMonth = date.getMonth() === month;
+    if (!isCurrentMonth) {
+      dayElement.classList.add('other-month');
+    }
+
+    // Check if this is today
+    const today = new Date();
+    const isToday = date.toDateString() === today.toDateString();
+    if (isToday) {
+      dayElement.classList.add('today');
+    }
+
+    // Check if this is selected
+    const isSelected = editModalState.selectedDate && date.toDateString() === editModalState.selectedDate.toDateString();
+    if (isSelected) {
+      dayElement.classList.add('selected');
+    }
+
+    // Add click handler
+    if (isCurrentMonth) {
+      dayElement.addEventListener('click', () => selectEditDate(date));
+    }
+
+    daysContainer.appendChild(dayElement);
+  }
+}
+
+function selectEditDate(date) {
+  editModalState.selectedDate = new Date(date);
+  
+  const dateInput = document.getElementById('todo-edit-due-date');
+  const dateText = document.getElementById('todo-edit-date-text');
+  const dateTrigger = document.getElementById('todo-edit-date-trigger');
+  const calendar = document.getElementById('todo-edit-calendar');
+
+  if (dateInput) {
+    dateInput.value = date.toISOString().split('T')[0];
+  }
+  if (dateText) {
+    dateText.textContent = formatDate(date.toISOString().split('T')[0]);
+  }
+  if (dateTrigger) {
+    dateTrigger.classList.add('selected');
+  }
+  if (calendar) {
+    calendar.classList.remove('visible');
+  }
+}
+
+function clearEditDate() {
+  editModalState.selectedDate = null;
+  
+  const dateInput = document.getElementById('todo-edit-due-date');
+  const dateText = document.getElementById('todo-edit-date-text');
+  const dateTrigger = document.getElementById('todo-edit-date-trigger');
+  const calendar = document.getElementById('todo-edit-calendar');
+
+  if (dateInput) dateInput.value = '';
+  if (dateText) {
+    dateText.textContent = window.i18n ? window.i18n.t('dueDate') : 'Due Date';
+  }
+  if (dateTrigger) dateTrigger.classList.remove('selected');
+  if (calendar) calendar.classList.remove('visible');
+}
+
+function selectEditToday() {
+  selectEditDate(new Date());
+}
+
+function navigateEditMonth(delta) {
+  editModalState.currentDate.setMonth(editModalState.currentDate.getMonth() + delta);
+  renderEditCalendar();
+}
+
+function toggleEditCalendar() {
+  const calendar = document.getElementById('todo-edit-calendar');
+  if (calendar) {
+    calendar.classList.toggle('visible');
+    if (calendar.classList.contains('visible')) {
+      renderEditCalendar();
+    }
   }
 }
 
@@ -345,6 +541,62 @@ function initTodo() {
   elements.todoList.addEventListener('dragend', handleDragEnd);
   elements.todoList.addEventListener('dragover', handleDragOver);
   elements.todoList.addEventListener('drop', handleDrop);
+
+  // Edit modal event listeners
+  const editModalClose = document.getElementById('todo-edit-close');
+  const editModalCancel = document.getElementById('todo-edit-cancel');
+  const editModalSave = document.getElementById('todo-edit-save');
+  const editDateTrigger = document.getElementById('todo-edit-date-trigger');
+  const editPrevMonth = document.getElementById('todo-edit-prev-month');
+  const editNextMonth = document.getElementById('todo-edit-next-month');
+  const editClearDate = document.getElementById('todo-edit-clear-date');
+  const editTodayDate = document.getElementById('todo-edit-today-date');
+  const editModal = document.getElementById('todo-edit-modal');
+
+  if (editModalClose) {
+    editModalClose.addEventListener('click', closeEditModal);
+  }
+  if (editModalCancel) {
+    editModalCancel.addEventListener('click', closeEditModal);
+  }
+  if (editModalSave) {
+    editModalSave.addEventListener('click', saveEdit);
+  }
+  if (editDateTrigger) {
+    editDateTrigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleEditCalendar();
+    });
+  }
+  if (editPrevMonth) {
+    editPrevMonth.addEventListener('click', () => navigateEditMonth(-1));
+  }
+  if (editNextMonth) {
+    editNextMonth.addEventListener('click', () => navigateEditMonth(1));
+  }
+  if (editClearDate) {
+    editClearDate.addEventListener('click', clearEditDate);
+  }
+  if (editTodayDate) {
+    editTodayDate.addEventListener('click', selectEditToday);
+  }
+  // Close modal when clicking outside
+  if (editModal) {
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) {
+        closeEditModal();
+      }
+    });
+  }
+  // Close edit calendar when clicking outside
+  document.addEventListener('click', (e) => {
+    const editCalendar = document.getElementById('todo-edit-calendar');
+    const editDateTriggerEl = document.getElementById('todo-edit-date-trigger');
+    if (editCalendar && editCalendar.classList.contains('visible') && 
+        !editCalendar.contains(e.target) && !editDateTriggerEl.contains(e.target)) {
+      editCalendar.classList.remove('visible');
+    }
+  });
 
   // Initial render
   applyFilters();

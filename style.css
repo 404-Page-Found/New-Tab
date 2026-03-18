@@ -4942,6 +4942,204 @@ body.light-theme .progress-dot.active {
   }
 }
 
+/* ==================== Todo Edit Modal Styles ==================== */
+#todo-edit-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 1002;
+  align-items: center;
+  justify-content: center;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+#todo-edit-modal > .todo-edit-modal-content {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 0;
+  min-width: 400px;
+  max-width: 500px;
+  max-height: var(--overlay-max-height);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: modalSlideInCenter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.todo-edit-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.todo-edit-header h3 {
+  margin: 0;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: rgba(203, 213, 225, 0.95);
+}
+
+.todo-edit-close-btn {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(203, 213, 225, 0.6);
+  transition: all 0.2s ease;
+}
+
+.todo-edit-close-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(203, 213, 225, 0.9);
+}
+
+.todo-edit-close-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.todo-edit-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.todo-edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.todo-edit-field label {
+  font-size: 0.9em;
+  font-weight: 500;
+  color: rgba(203, 213, 225, 0.8);
+}
+
+.todo-edit-field input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid rgba(107, 114, 128, 0.6);
+  border-radius: 10px;
+  background: rgba(31, 41, 55, 0.5);
+  color: white;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.todo-edit-field input[type="text"]:focus {
+  border-color: #2196f3;
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+  background: rgba(31, 41, 55, 0.7);
+}
+
+.todo-edit-date-picker {
+  position: relative;
+}
+
+.todo-edit-date-picker .date-picker-trigger {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.todo-edit-date-picker .custom-calendar {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 8px;
+  z-index: 2001;
+}
+
+.todo-edit-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding: 0 24px 24px 24px;
+}
+
+.todo-edit-actions button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95em;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.todo-edit-actions button svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Light theme for todo edit modal */
+body.light-theme #todo-edit-modal {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+body.light-theme #todo-edit-modal > .todo-edit-modal-content {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .todo-edit-header {
+  border-bottom-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .todo-edit-header h3 {
+  color: #1f2937;
+}
+
+body.light-theme .todo-edit-close-btn {
+  color: rgba(55, 65, 81, 0.6);
+}
+
+body.light-theme .todo-edit-close-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(55, 65, 81, 0.9);
+}
+
+body.light-theme .todo-edit-field label {
+  color: rgba(55, 65, 81, 0.8);
+}
+
+body.light-theme .todo-edit-field input[type="text"] {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: #1f2937;
+}
+
+body.light-theme .todo-edit-field input[type="text"]:focus {
+  border-color: #2196f3;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+}
+
 /* ==================== AI Chat Modal Styles ==================== */
 
 /* AI Chat - Connection Status */

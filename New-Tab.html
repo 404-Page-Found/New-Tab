@@ -588,6 +588,89 @@
     </div>
   </div>
 
+  <!-- Todo Edit Modal -->
+  <div id="todo-edit-modal">
+    <div class="todo-edit-modal-content">
+      <div class="todo-edit-header">
+        <h3 data-i18n="editTodo">Edit Todo</h3>
+        <button id="todo-edit-close" class="todo-edit-close-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="todo-edit-body">
+        <div class="todo-edit-field">
+          <label for="todo-edit-text" data-i18n="todoText">Todo Text</label>
+          <input type="text" id="todo-edit-text" maxlength="200" />
+        </div>
+        <div class="todo-edit-field">
+          <label for="todo-edit-due-date" data-i18n="dueDate">Due Date</label>
+          <div class="todo-edit-date-picker">
+            <button type="button" id="todo-edit-date-trigger" class="date-picker-trigger">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <span id="todo-edit-date-text" data-i18n="dueDate">Due Date</span>
+            </button>
+            <input type="hidden" id="todo-edit-due-date" />
+            <div id="todo-edit-calendar" class="custom-calendar">
+              <div class="calendar-header">
+                <button type="button" id="todo-edit-prev-month" class="calendar-nav-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15,18 9,12 15,6"></polyline>
+                  </svg>
+                </button>
+                <div class="calendar-title">
+                  <span id="todo-edit-calendar-month"></span>
+                  <span id="todo-edit-calendar-year"></span>
+                </div>
+                <button type="button" id="todo-edit-next-month" class="calendar-nav-btn">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9,18 15,12 9,6"></polyline>
+                  </svg>
+                </button>
+              </div>
+              <div class="calendar-weekdays">
+                <span data-i18n="sunday">Su</span>
+                <span data-i18n="monday">Mo</span>
+                <span data-i18n="tuesday">Tu</span>
+                <span data-i18n="wednesday">We</span>
+                <span data-i18n="thursday">Th</span>
+                <span data-i18n="friday">Fr</span>
+                <span data-i18n="saturday">Sa</span>
+              </div>
+              <div id="todo-edit-calendar-days" class="calendar-days"></div>
+              <div class="calendar-footer">
+                <button type="button" id="todo-edit-clear-date" class="calendar-btn secondary" data-i18n="clearDate">Clear</button>
+                <button type="button" id="todo-edit-today-date" class="calendar-btn secondary" data-i18n="todayDate">Today</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="todo-edit-actions">
+        <button id="todo-edit-cancel" class="btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span data-i18n="cancel">Cancel</span>
+        </button>
+        <button id="todo-edit-save" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20,6 9,17 4,12"></polyline>
+          </svg>
+          <span data-i18n="save">Save</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Add App Modal -->
   <div id="add-app-modal">
     <div>
