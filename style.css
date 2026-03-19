@@ -5617,6 +5617,54 @@ body.light-theme .ai-topic-item.keyboard-selected {
   background: rgba(239, 68, 68, 0.3);
 }
 
+/* Custom tooltip for delete button - prevents flashing when Ctrl is pressed */
+.ai-topic-tooltip {
+  position: fixed;
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: all 0.2s ease;
+  z-index: 10001;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ai-topic-tooltip.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.ai-topic-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Light theme for custom tooltip */
+body.light-theme .ai-topic-tooltip {
+  background: rgba(255, 255, 255, 0.95);
+  color: #1f2937;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .ai-topic-tooltip::after {
+  border-top-color: rgba(255, 255, 255, 0.95);
+}
+
 /* Ctrl+Click visual feedback - shows when Ctrl key is pressed */
 .ai-topic-delete.ctrl-ready {
   opacity: 1 !important;

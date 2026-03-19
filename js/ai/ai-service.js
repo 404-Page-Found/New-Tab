@@ -27,6 +27,8 @@ const AIService = (function() {
   let searchQuery = '';
   let keyboardSelectedIndex = -1;
   let isCtrlPressed = false;
+  let hoveredDeleteBtn = null;
+  let hoveredDeleteTooltip = null;
   
   // Storage keys
   const STORAGE_KEYS = {
@@ -500,7 +502,7 @@ const AIService = (function() {
             <div class="ai-topic-title">${escapeHTML(conv.title)}</div>
             <div class="ai-topic-time">${formatTopicTime(conv.updatedAt)}</div>
           </div>
-          <button class="ai-topic-delete" data-id="${conv.id}" title="${getTranslation('aiDeleteConversation')}">
+          <button class="ai-topic-delete" data-id="${conv.id}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polyline points="3,6 5,6 21,6"></polyline>
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -519,6 +521,9 @@ const AIService = (function() {
       });
     });
     
+    // Clean up any existing tooltips before creating new ones
+    document.querySelectorAll('.ai-topic-tooltip').forEach(t => t.remove());
+    
     elements.topicsList.querySelectorAll('.ai-topic-delete').forEach(btn => {
       // Handle Ctrl+Click for direct deletion without confirmation
       btn.addEventListener('click', (e) => {
@@ -536,14 +541,48 @@ const AIService = (function() {
         }
       });
       
-      // Update visual feedback when Ctrl key state changes
+      // Create custom tooltip element
+      const tooltip = document.createElement('div');
+      tooltip.className = 'ai-topic-tooltip';
+      document.body.appendChild(tooltip);
+      
+      // Mouseenter - show tooltip
       btn.addEventListener('mouseenter', () => {
+        hoveredDeleteBtn = btn;
+        hoveredDeleteTooltip = tooltip;
+        
+        // Update tooltip content based on Ctrl state
+        const message = isCtrlPressed ? getTranslation('aiDeleteImmediate') : getTranslation('aiDeleteConversation');
+        tooltip.textContent = message;
+        
+        // Position tooltip above the button
+        const btnRect = btn.getBoundingClientRect();
+        tooltip.style.left = `${btnRect.left + btnRect.width / 2}px`;
+        tooltip.style.top = `${btnRect.top - 8}px`;
+        tooltip.style.transform = 'translateX(-50%) translateY(-100%)';
+        
+        // Show tooltip
+        tooltip.classList.add('visible');
+        
+        // Update visual feedback
         updateDeleteButtonFeedback();
       });
       
+      // Mouseleave - hide tooltip
       btn.addEventListener('mouseleave', () => {
-        // Remove Ctrl feedback when leaving the button
+        if (hoveredDeleteBtn === btn) {
+          hoveredDeleteBtn = null;
+          hoveredDeleteTooltip = null;
+        }
+        tooltip.classList.remove('visible');
         btn.classList.remove('ctrl-ready');
+      });
+      
+      // Mousemove - keep tooltip positioned correctly
+      btn.addEventListener('mousemove', () => {
+        const btnRect = btn.getBoundingClientRect();
+        tooltip.style.left = `${btnRect.left + btnRect.width / 2}px`;
+        tooltip.style.top = `${btnRect.top - 8}px`;
       });
     });
     
@@ -727,7 +766,7 @@ const AIService = (function() {
       aiConversations: 'Conversations',
       aiNoConversations: 'No conversations yet',
       aiNewConversation: 'New Conversation',
-      aiDeleteConversation: 'Delete conversation',
+      aiDeleteConversation: 'CRTL + Click to delete without confirmation',
       aiDeleteConfirm: 'Delete this conversation?',
       aiDeleteConfirmTitle: 'Delete Conversation?',
       aiDeleteConfirmMessage: 'This action cannot be undone. The entire conversation will be permanently removed.',
@@ -862,10 +901,8 @@ const AIService = (function() {
     deleteButtons.forEach(btn => {
       if (isCtrlPressed) {
         btn.classList.add('ctrl-ready');
-        btn.title = getTranslation('aiDeleteImmediate');
       } else {
         btn.classList.remove('ctrl-ready');
-        btn.title = getTranslation('aiDeleteConversation');
       }
     });
   }
@@ -878,6 +915,12 @@ const AIService = (function() {
       if (e.key === 'Control' && !isCtrlPressed) {
         isCtrlPressed = true;
         updateDeleteButtonFeedback();
+        
+        // Update tooltip if hovering over a delete button
+        if (hoveredDeleteTooltip && hoveredDeleteBtn) {
+          hoveredDeleteTooltip.textContent = getTranslation('aiDeleteImmediate');
+          hoveredDeleteBtn.classList.add('ctrl-ready');
+        }
       }
     });
     
@@ -885,6 +928,12 @@ const AIService = (function() {
       if (e.key === 'Control') {
         isCtrlPressed = false;
         updateDeleteButtonFeedback();
+        
+        // Update tooltip if hovering over a delete button
+        if (hoveredDeleteTooltip && hoveredDeleteBtn) {
+          hoveredDeleteTooltip.textContent = getTranslation('aiDeleteConversation');
+          hoveredDeleteBtn.classList.remove('ctrl-ready');
+        }
       }
     });
     
@@ -892,6 +941,14 @@ const AIService = (function() {
     window.addEventListener('blur', () => {
       isCtrlPressed = false;
       updateDeleteButtonFeedback();
+      
+      // Hide tooltip if visible
+      if (hoveredDeleteTooltip) {
+        hoveredDeleteTooltip.classList.remove('visible');
+        if (hoveredDeleteBtn) {
+          hoveredDeleteBtn.classList.remove('ctrl-ready');
+        }
+      }
     });
   }
   function initEventListeners() {
