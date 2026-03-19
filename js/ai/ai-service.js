@@ -551,8 +551,8 @@ const AIService = (function() {
         hoveredDeleteBtn = btn;
         hoveredDeleteTooltip = tooltip;
         
-        // Update tooltip content based on Ctrl state
-        const message = isCtrlPressed ? getTranslation('aiDeleteImmediate') : getTranslation('aiDeleteConversation');
+        // Update tooltip content - both states use aiDeleteConversation
+        const message = getTranslation('aiDeleteConversation');
         tooltip.textContent = message;
         
         // Position tooltip above the button
@@ -766,11 +766,10 @@ const AIService = (function() {
       aiConversations: 'Conversations',
       aiNoConversations: 'No conversations yet',
       aiNewConversation: 'New Conversation',
-      aiDeleteConversation: 'CRTL + Click to delete without confirmation',
+      aiDeleteConversation: 'Ctrl+Click to delete without confirmation',
       aiDeleteConfirm: 'Delete this conversation?',
       aiDeleteConfirmTitle: 'Delete Conversation?',
       aiDeleteConfirmMessage: 'This action cannot be undone. The entire conversation will be permanently removed.',
-      aiDeleteImmediate: 'Ctrl+Click to delete immediately',
       aiCancel: 'Cancel',
       aiDelete: 'Delete',
       aiJustNow: 'Just now',
@@ -918,7 +917,7 @@ const AIService = (function() {
         
         // Update tooltip if hovering over a delete button
         if (hoveredDeleteTooltip && hoveredDeleteBtn) {
-          hoveredDeleteTooltip.textContent = getTranslation('aiDeleteImmediate');
+          hoveredDeleteTooltip.textContent = getTranslation('aiDeleteConversation');
           hoveredDeleteBtn.classList.add('ctrl-ready');
         }
       }
