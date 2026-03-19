@@ -33,13 +33,31 @@ A modern open-source new tab page for personalized browsing experience.
 | Multi-backgrounds | ![](screenshots/New-Tab_2.png) |
 
 ## 👥 Contributing
+
+### General Contributions
 Project is still in developing stage. Contributions are highly welcome! Please follow these steps:
 1. Fork the repository
 2. Create a new branch (`git checkout -b feature/your-feature`)
 3. Commit your changes (`git commit -m 'Add some feature'`)
 4. Push to the branch (`git push origin feature/your-feature`)
 5. Create a Pull Request
-(Remember to add neccessery comment.)
+(Remember to add necessary comments.)
+
+### Contributing Background Images
+Want to add more backgrounds from Pexels? We have automated tools for that!
+
+**Quick Start:**
+```bash
+npm install sharp node-fetch
+PEXELS_API_KEY='your_key' npm run update-backgrounds
+```
+
+**Detailed Guide:** See [background/tools/PEXELS_GUIDE.md](background/tools/PEXELS_GUIDE.md)
+
+**What you need:**
+- Node.js 16+ 
+- Free Pexels API key: https://www.pexels.com/api/
+- Just 3 npm commands (or 1 combined)
 
 ## 📄 License
 This project is licensed under the [MIT License](LICENSE).

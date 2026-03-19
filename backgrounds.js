@@ -76,6 +76,56 @@ const backgroundsMap = {
     thumb: 'background/thumbs/Night_Sky_-_Tree.jpeg',
     url: 'background/Night_Sky_-_Tree.jpeg',
   },
+  'Autumn leaves (Pexels)': {
+    title: 'Autumn leaves (Pexels)',
+    thumb: 'background/thumbs/Pexels_autumn_leaves_34484989.jpeg',
+    url: 'background/Pexels_autumn_leaves_34484989.jpeg',
+  },
+  'City skyline (Pexels)': {
+    title: 'City skyline (Pexels)',
+    thumb: 'background/thumbs/Pexels_city_skyline_35720257.jpeg',
+    url: 'background/Pexels_city_skyline_35720257.jpeg',
+  },
+  'Desert sand (Pexels)': {
+    title: 'Desert sand (Pexels)',
+    thumb: 'background/thumbs/Pexels_desert_sand_33935832.jpeg',
+    url: 'background/Pexels_desert_sand_33935832.jpeg',
+  },
+  'Forest trees (Pexels)': {
+    title: 'Forest trees (Pexels)',
+    thumb: 'background/thumbs/Pexels_forest_trees_18979363.jpeg',
+    url: 'background/Pexels_forest_trees_18979363.jpeg',
+  },
+  'Mountains sunset (Pexels)': {
+    title: 'Mountains sunset (Pexels)',
+    thumb: 'background/thumbs/Pexels_mountains_sunset_36491955.jpeg',
+    url: 'background/Pexels_mountains_sunset_36491955.jpeg',
+  },
+  'Nature landscape (Pexels)': {
+    title: 'Nature landscape (Pexels)',
+    thumb: 'background/thumbs/Pexels_nature_landscape_36146953.jpeg',
+    url: 'background/Pexels_nature_landscape_36146953.jpeg',
+  },
+  'Northern lights (Pexels)': {
+    title: 'Northern lights (Pexels)',
+    thumb: 'background/thumbs/Pexels_northern_lights_16747790.jpeg',
+    url: 'background/Pexels_northern_lights_16747790.jpeg',
+  },
+  'Ocean beach (Pexels)': {
+    title: 'Ocean beach (Pexels)',
+    thumb: 'background/thumbs/Pexels_ocean_beach_30363420.jpeg',
+    url: 'background/Pexels_ocean_beach_30363420.jpeg',
+  },
+  'Starry night sky (Pexels)': {
+    title: 'Starry night sky (Pexels)',
+    thumb: 'background/thumbs/Pexels_starry_night_sky_34048431.jpeg',
+    url: 'background/Pexels_starry_night_sky_34048431.jpeg',
+  },
+  'Waterfall (Pexels)': {
+    title: 'Waterfall (Pexels)',
+    thumb: 'background/thumbs/Pexels_waterfall_21624064.jpeg',
+    url: 'background/Pexels_waterfall_21624064.jpeg',
+  },
   'Photo of Starry Night': {
     title: 'Photo of Starry Night',
     thumb: 'background/thumbs/Photo_of_Starry_Night.jpeg',
@@ -97,6 +147,8 @@ const backgroundsMap = {
     url: 'background/Water_Beside_Forest.jpeg',
   },
 };
+
+
 
 // Convert map to array when needed
 const backgrounds = Object.keys(backgroundsMap).map(id => ({ id, ...backgroundsMap[id] }));
