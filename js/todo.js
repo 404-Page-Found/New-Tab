@@ -548,26 +548,55 @@ function openInlineDatePicker(todoId, targetElement) {
     const rect = targetElement.getBoundingClientRect();
     const pickerWidth = 280;
     
-    // Calculate horizontal position (keep within viewport)
-    let left = rect.left;
+    // Debug: Log detailed button position info
+    console.log('[DatePicker] Button rect:', {
+      left: Math.round(rect.left),
+      top: Math.round(rect.top),
+      right: Math.round(rect.right),
+      bottom: Math.round(rect.bottom),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height)
+    });
+    console.log('[DatePicker] Window scroll:', { scrollY: Math.round(window.scrollY), scrollX: Math.round(window.scrollX) });
+
+    // Set position first (picker is still hidden)
+    picker.style.position = 'fixed';
+    
+    // Now make visible and render calendar
+    picker.classList.add('visible');
+    renderInlineCalendar();
+    
+    // Get actual height AFTER rendering calendar content
+    const pickerHeight = picker.offsetHeight;
+    console.log('[DatePicker] Picker height after render:', pickerHeight);
+    
+    // Calculate horizontal position - center relative to the button, keep within viewport
+    let left = rect.left + (rect.width / 2) - (pickerWidth / 2);
     if (left + pickerWidth > window.innerWidth - 20) {
       left = window.innerWidth - pickerWidth - 20;
     }
     if (left < 20) left = 20;
 
-    // Position below the element, or above if not enough space
+    // Position below the button by default
     let top = rect.bottom + 8;
-    if (top + 300 > window.innerHeight - 20) {
-      top = rect.top - 300 - 8;
+    
+    // If it doesn't fit below, position above the button instead
+    if (top + pickerHeight > window.innerHeight - 20) {
+      // Position directly above the button (not full height above)
+      top = rect.top - 8;
     }
+    // Also ensure it doesn't go above viewport
     if (top < 20) top = 20;
 
-    picker.style.position = 'fixed';
+    console.log('[DatePicker] Final calculated position:', { 
+      left: Math.round(left), 
+      top: Math.round(top),
+      rectBottom: Math.round(rect.bottom),
+      pickerHeight: pickerHeight
+    });
+    
     picker.style.left = left + 'px';
     picker.style.top = top + 'px';
-    picker.classList.add('visible');
-    
-    renderInlineCalendar();
   }
 }
 
