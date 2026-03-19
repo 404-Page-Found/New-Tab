@@ -10,20 +10,9 @@ let currentFilters = {
 // DOM elements
 let elements = {};
 
-// Inline date picker state
-let inlineDatePickerState = {
-  isOpen: false,
-  todoId: null,
-  currentDate: new Date(),
-  selectedDate: null,
-  position: { top: 0, left: 0 }
-};
-
 // Edit modal state
 let editModalState = {
   currentTodoId: null,
-  selectedDate: null,
-  currentDate: new Date(),
   isOpen: false
 };
 
@@ -131,16 +120,6 @@ function renderTodos() {
         <div class="todo-meta">
         </div>
       </div>
-      <div class="todo-actions">
-        <button class="todo-date-btn ${todo.dueDate ? 'has-date' : ''} ${isOverdue(todo.dueDate) ? 'overdue' : ''}" data-id="${todo.id}" title="${todo.dueDate ? 'Edit due date' : 'Add due date'}">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-            <line x1="16" y1="2" x2="16" y2="6"></line>
-            <line x1="8" y1="2" x2="8" y2="6"></line>
-            <line x1="3" y1="10" x2="21" y2="10"></line>
-          </svg>
-          ${todo.dueDate ? `<span class="due-date-label">${formatDate(todo.dueDate)}</span>` : ''}
-        </button>
       <div class="todo-actions">
         <button class="todo-edit-btn" data-id="${todo.id}" title="Edit Todo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -310,15 +289,6 @@ function handleTodoListClick(event) {
     return;
   }
 
-  // Handle date button click (inline editing)
-  const dateBtn = target.closest('.todo-date-btn');
-  if (dateBtn) {
-    event.stopPropagation();
-    const id = dateBtn.dataset.id;
-    openInlineDatePicker(id, dateBtn);
-    return;
-  }
-
   // Handle delete button
   if (target.closest('.todo-delete-btn')) {
     event.stopPropagation();
@@ -342,27 +312,13 @@ function openEditModal(id) {
   if (!todo) return;
 
   editModalState.currentTodoId = id;
-  editModalState.selectedDate = todo.dueDate ? new Date(todo.dueDate) : null;
-  editModalState.currentDate = todo.dueDate ? new Date(todo.dueDate) : new Date();
   editModalState.isOpen = true;
 
   // Populate modal fields
   const textInput = document.getElementById('todo-edit-text');
-  const dateText = document.getElementById('todo-edit-date-text');
-  const dateInput = document.getElementById('todo-edit-due-date');
   const modal = document.getElementById('todo-edit-modal');
 
   if (textInput) textInput.value = todo.text;
-  if (dateInput) dateInput.value = todo.dueDate || '';
-  if (dateText) {
-    dateText.textContent = todo.dueDate ? formatDate(todo.dueDate) : (window.i18n ? window.i18n.t('dueDate') : 'Due Date');
-  }
-
-  // Update date picker trigger appearance
-  const dateTrigger = document.getElementById('todo-edit-date-trigger');
-  if (dateTrigger) {
-    dateTrigger.classList.toggle('selected', !!todo.dueDate);
-  }
 
   // Show modal
   if (modal) {
@@ -372,31 +328,23 @@ function openEditModal(id) {
       if (textInput) textInput.focus();
     }, 100);
   }
-
-  // Render edit calendar
-  renderEditCalendar();
 }
 
 function closeEditModal() {
   editModalState.currentTodoId = null;
-  editModalState.selectedDate = null;
   editModalState.isOpen = false;
 
   const modal = document.getElementById('todo-edit-modal');
-  const calendar = document.getElementById('todo-edit-calendar');
 
   if (modal) modal.style.display = 'none';
-  if (calendar) calendar.classList.remove('visible');
 }
 
 function saveEdit() {
   if (!editModalState.currentTodoId) return;
 
   const textInput = document.getElementById('todo-edit-text');
-  const dateInput = document.getElementById('todo-edit-due-date');
 
   const newText = textInput ? textInput.value.trim() : '';
-  const newDueDate = dateInput ? dateInput.value || null : null;
 
   if (!newText) {
     // Show error or focus on text input
@@ -404,349 +352,12 @@ function saveEdit() {
     return;
   }
 
-  editTodo(editModalState.currentTodoId, newText, null, newDueDate);
+  // Get the existing todo to preserve its due date
+  const existingTodo = todos.find(t => t.id === editModalState.currentTodoId);
+  const preservedDueDate = existingTodo ? existingTodo.dueDate : null;
+
+  editTodo(editModalState.currentTodoId, newText, null, preservedDueDate);
   closeEditModal();
-}
-
-function renderEditCalendar() {
-  const monthElement = document.getElementById('todo-edit-calendar-month');
-  const yearElement = document.getElementById('todo-edit-calendar-year');
-  const daysContainer = document.getElementById('todo-edit-calendar-days');
-
-  if (!monthElement || !yearElement || !daysContainer) return;
-
-  // Update month/year display
-  const monthIndex = editModalState.currentDate.getMonth();
-  const monthKey = ['january', 'february', 'march', 'april', 'may', 'june',
-                    'july', 'august', 'september', 'october', 'november', 'december'][monthIndex];
-  const monthName = window.i18n ? window.i18n.t(monthKey) : monthKey;
-  monthElement.textContent = monthName;
-  yearElement.textContent = editModalState.currentDate.getFullYear();
-
-  // Clear previous days
-  daysContainer.innerHTML = '';
-
-  // Get calendar data
-  const year = editModalState.currentDate.getFullYear();
-  const month = editModalState.currentDate.getMonth();
-
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const startDate = new Date(firstDay);
-  startDate.setDate(startDate.getDate() - firstDay.getDay());
-
-  // Generate 6 weeks of days
-  for (let i = 0; i < 42; i++) {
-    const date = new Date(startDate);
-    date.setDate(startDate.getDate() + i);
-
-    const dayElement = document.createElement('div');
-    dayElement.className = 'calendar-day';
-    dayElement.textContent = date.getDate();
-
-    // Check if this date is in the current month
-    const isCurrentMonth = date.getMonth() === month;
-    if (!isCurrentMonth) {
-      dayElement.classList.add('other-month');
-    }
-
-    // Check if this is today
-    const today = new Date();
-    const isToday = date.toDateString() === today.toDateString();
-    if (isToday) {
-      dayElement.classList.add('today');
-    }
-
-    // Check if this is selected
-    const isSelected = editModalState.selectedDate && date.toDateString() === editModalState.selectedDate.toDateString();
-    if (isSelected) {
-      dayElement.classList.add('selected');
-    }
-
-    // Add click handler
-    if (isCurrentMonth) {
-      dayElement.addEventListener('click', () => selectEditDate(date));
-    }
-
-    daysContainer.appendChild(dayElement);
-  }
-}
-
-function selectEditDate(date) {
-  editModalState.selectedDate = new Date(date);
-  
-  const dateInput = document.getElementById('todo-edit-due-date');
-  const dateText = document.getElementById('todo-edit-date-text');
-  const dateTrigger = document.getElementById('todo-edit-date-trigger');
-  const calendar = document.getElementById('todo-edit-calendar');
-
-  if (dateInput) {
-    dateInput.value = date.toISOString().split('T')[0];
-  }
-  if (dateText) {
-    dateText.textContent = formatDate(date.toISOString().split('T')[0]);
-  }
-  if (dateTrigger) {
-    dateTrigger.classList.add('selected');
-  }
-  if (calendar) {
-    calendar.classList.remove('visible');
-  }
-}
-
-function clearEditDate() {
-  editModalState.selectedDate = null;
-  
-  const dateInput = document.getElementById('todo-edit-due-date');
-  const dateText = document.getElementById('todo-edit-date-text');
-  const dateTrigger = document.getElementById('todo-edit-date-trigger');
-  const calendar = document.getElementById('todo-edit-calendar');
-
-  if (dateInput) dateInput.value = '';
-  if (dateText) {
-    dateText.textContent = window.i18n ? window.i18n.t('dueDate') : 'Due Date';
-  }
-  if (dateTrigger) dateTrigger.classList.remove('selected');
-  if (calendar) calendar.classList.remove('visible');
-}
-
-function selectEditToday() {
-  selectEditDate(new Date());
-}
-
-function navigateEditMonth(delta) {
-  editModalState.currentDate.setMonth(editModalState.currentDate.getMonth() + delta);
-  renderEditCalendar();
-}
-
-function toggleEditCalendar() {
-  const calendar = document.getElementById('todo-edit-calendar');
-  if (calendar) {
-    calendar.classList.toggle('visible');
-    if (calendar.classList.contains('visible')) {
-      renderEditCalendar();
-    }
-  }
-}
-
-// Inline Date Picker Functions
-function openInlineDatePicker(todoId, targetElement) {
-  const todo = todos.find(t => t.id === todoId);
-  if (!todo) return;
-
-  // Close any other open inline pickers
-  closeInlineDatePicker();
-
-  inlineDatePickerState.todoId = todoId;
-  inlineDatePickerState.selectedDate = todo.dueDate ? new Date(todo.dueDate) : null;
-  inlineDatePickerState.currentDate = todo.dueDate ? new Date(todo.dueDate) : new Date();
-  inlineDatePickerState.isOpen = true;
-
-  // Position the picker near the clicked element
-  const picker = document.getElementById('inline-date-picker');
-  if (picker) {
-    const rect = targetElement.getBoundingClientRect();
-    const pickerWidth = 280;
-    
-    // Debug: Log detailed button position info
-    console.log('[DatePicker] Button rect:', {
-      left: Math.round(rect.left),
-      top: Math.round(rect.top),
-      right: Math.round(rect.right),
-      bottom: Math.round(rect.bottom),
-      width: Math.round(rect.width),
-      height: Math.round(rect.height)
-    });
-    console.log('[DatePicker] Window scroll:', { scrollY: Math.round(window.scrollY), scrollX: Math.round(window.scrollX) });
-
-    // Set position first (picker is still hidden)
-    picker.style.position = 'fixed';
-    
-    // Now make visible and render calendar
-    picker.classList.add('visible');
-    renderInlineCalendar();
-    
-    // Get actual height AFTER rendering calendar content
-    const pickerHeight = picker.offsetHeight;
-    console.log('[DatePicker] Picker height after render:', pickerHeight);
-    
-    // Calculate horizontal position - center relative to the button, keep within viewport
-    let left = rect.left + (rect.width / 2) - (pickerWidth / 2);
-    if (left + pickerWidth > window.innerWidth - 20) {
-      left = window.innerWidth - pickerWidth - 20;
-    }
-    if (left < 20) left = 20;
-
-    // Position below the button by default
-    let top = rect.bottom + 8;
-    
-    // If it doesn't fit below, position above the button instead
-    if (top + pickerHeight > window.innerHeight - 20) {
-      // Position directly above the button (not full height above)
-      top = rect.top - 8;
-    }
-    // Also ensure it doesn't go above viewport
-    if (top < 20) top = 20;
-
-    console.log('[DatePicker] Final calculated position:', { 
-      left: Math.round(left), 
-      top: Math.round(top),
-      rectBottom: Math.round(rect.bottom),
-      pickerHeight: pickerHeight
-    });
-    
-    picker.style.left = left + 'px';
-    picker.style.top = top + 'px';
-  }
-}
-
-function closeInlineDatePicker() {
-  inlineDatePickerState.isOpen = false;
-  inlineDatePickerState.todoId = null;
-  inlineDatePickerState.selectedDate = null;
-
-  const picker = document.getElementById('inline-date-picker');
-  if (picker) {
-    picker.classList.remove('visible');
-  }
-}
-
-function renderInlineCalendar() {
-  const monthElement = document.getElementById('inline-calendar-month');
-  const yearElement = document.getElementById('inline-calendar-year');
-  const daysContainer = document.getElementById('inline-calendar-days');
-
-  if (!monthElement || !yearElement || !daysContainer) return;
-
-  // Update month/year display
-  const monthIndex = inlineDatePickerState.currentDate.getMonth();
-  const monthKey = ['january', 'february', 'march', 'april', 'may', 'june',
-                    'july', 'august', 'september', 'october', 'november', 'december'][monthIndex];
-  const monthName = window.i18n ? window.i18n.t(monthKey) : monthKey;
-  monthElement.textContent = monthName;
-  yearElement.textContent = inlineDatePickerState.currentDate.getFullYear();
-
-  // Clear previous days
-  daysContainer.innerHTML = '';
-
-  // Get calendar data
-  const year = inlineDatePickerState.currentDate.getFullYear();
-  const month = inlineDatePickerState.currentDate.getMonth();
-
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const startDate = new Date(firstDay);
-  startDate.setDate(startDate.getDate() - firstDay.getDay());
-
-  // Generate 6 weeks of days
-  for (let i = 0; i < 42; i++) {
-    const date = new Date(startDate);
-    date.setDate(startDate.getDate() + i);
-
-    const dayElement = document.createElement('div');
-    dayElement.className = 'calendar-day';
-    dayElement.textContent = date.getDate();
-
-    // Check if this date is in the current month
-    const isCurrentMonth = date.getMonth() === month;
-    if (!isCurrentMonth) {
-      dayElement.classList.add('other-month');
-    }
-
-    // Check if this is today
-    const today = new Date();
-    const isToday = date.toDateString() === today.toDateString();
-    if (isToday) {
-      dayElement.classList.add('today');
-    }
-
-    // Check if this is selected
-    const isSelected = inlineDatePickerState.selectedDate && date.toDateString() === inlineDatePickerState.selectedDate.toDateString();
-    if (isSelected) {
-      dayElement.classList.add('selected');
-    }
-
-    // Add click handler
-    if (isCurrentMonth) {
-      dayElement.addEventListener('click', () => selectInlineDate(date));
-    }
-
-    daysContainer.appendChild(dayElement);
-  }
-}
-
-function selectInlineDate(date) {
-  inlineDatePickerState.selectedDate = new Date(date);
-  
-  // Update the todo's due date
-  if (inlineDatePickerState.todoId) {
-    const todo = todos.find(t => t.id === inlineDatePickerState.todoId);
-    if (todo) {
-      todo.dueDate = date.toISOString().split('T')[0];
-      saveTodos(todos);
-      applyFilters();
-    }
-  }
-  
-  closeInlineDatePicker();
-}
-
-function clearInlineDate() {
-  // Clear the todo's due date
-  if (inlineDatePickerState.todoId) {
-    const todo = todos.find(t => t.id === inlineDatePickerState.todoId);
-    if (todo) {
-      todo.dueDate = null;
-      saveTodos(todos);
-      applyFilters();
-    }
-  }
-  
-  closeInlineDatePicker();
-}
-
-function selectInlineToday() {
-  selectInlineDate(new Date());
-}
-
-function navigateInlineMonth(delta) {
-  inlineDatePickerState.currentDate.setMonth(inlineDatePickerState.currentDate.getMonth() + delta);
-  renderInlineCalendar();
-}
-
-// Initialize inline date picker event listeners
-function initInlineDatePicker() {
-  const prevBtn = document.getElementById('inline-prev-month');
-  const nextBtn = document.getElementById('inline-next-month');
-  const clearBtn = document.getElementById('inline-clear-date');
-  const todayBtn = document.getElementById('inline-today-date');
-
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => navigateInlineMonth(-1));
-  }
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => navigateInlineMonth(1));
-  }
-  if (clearBtn) {
-    clearBtn.addEventListener('click', clearInlineDate);
-  }
-  if (todayBtn) {
-    todayBtn.addEventListener('click', selectInlineToday);
-  }
-
-  // Close inline picker when clicking outside
-  document.addEventListener('click', (e) => {
-    const picker = document.getElementById('inline-date-picker');
-    if (inlineDatePickerState.isOpen && picker && !picker.contains(e.target) && !e.target.closest('.todo-due-date')) {
-      closeInlineDatePicker();
-    }
-  });
-
-  // Prevent picker clicks from closing
-  const picker = document.getElementById('inline-date-picker');
-  if (picker) {
-    picker.addEventListener('click', (e) => e.stopPropagation());
-  }
 }
 
 // Initialize todo functionality
@@ -793,11 +404,6 @@ function initTodo() {
   const editModalClose = document.getElementById('todo-edit-close');
   const editModalCancel = document.getElementById('todo-edit-cancel');
   const editModalSave = document.getElementById('todo-edit-save');
-  const editDateTrigger = document.getElementById('todo-edit-date-trigger');
-  const editPrevMonth = document.getElementById('todo-edit-prev-month');
-  const editNextMonth = document.getElementById('todo-edit-next-month');
-  const editClearDate = document.getElementById('todo-edit-clear-date');
-  const editTodayDate = document.getElementById('todo-edit-today-date');
   const editModal = document.getElementById('todo-edit-modal');
 
   if (editModalClose) {
@@ -809,24 +415,6 @@ function initTodo() {
   if (editModalSave) {
     editModalSave.addEventListener('click', saveEdit);
   }
-  if (editDateTrigger) {
-    editDateTrigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      toggleEditCalendar();
-    });
-  }
-  if (editPrevMonth) {
-    editPrevMonth.addEventListener('click', () => navigateEditMonth(-1));
-  }
-  if (editNextMonth) {
-    editNextMonth.addEventListener('click', () => navigateEditMonth(1));
-  }
-  if (editClearDate) {
-    editClearDate.addEventListener('click', clearEditDate);
-  }
-  if (editTodayDate) {
-    editTodayDate.addEventListener('click', selectEditToday);
-  }
   // Close modal when clicking outside
   if (editModal) {
     editModal.addEventListener('click', (e) => {
@@ -835,21 +423,9 @@ function initTodo() {
       }
     });
   }
-  // Close edit calendar when clicking outside
-  document.addEventListener('click', (e) => {
-    const editCalendar = document.getElementById('todo-edit-calendar');
-    const editDateTriggerEl = document.getElementById('todo-edit-date-trigger');
-    if (editCalendar && editCalendar.classList.contains('visible') && 
-        !editCalendar.contains(e.target) && !editDateTriggerEl.contains(e.target)) {
-      editCalendar.classList.remove('visible');
-    }
-  });
 
   // Initial render
   applyFilters();
-  
-  // Initialize inline date picker
-  initInlineDatePicker();
 }
 
 // Custom Date Picker Functionality
