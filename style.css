@@ -5617,6 +5617,28 @@ body.light-theme .ai-topic-item.keyboard-selected {
   background: rgba(239, 68, 68, 0.3);
 }
 
+/* Ctrl+Click visual feedback - shows when Ctrl key is pressed */
+.ai-topic-delete.ctrl-ready {
+  opacity: 1 !important;
+  background: rgba(239, 68, 68, 0.25);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+  animation: ctrlDeletePulse 1s ease-in-out infinite;
+}
+
+.ai-topic-delete.ctrl-ready:hover {
+  background: rgba(239, 68, 68, 0.5);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+}
+
+@keyframes ctrlDeletePulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+  }
+}
+
 .ai-topic-delete svg {
   width: 14px;
   height: 14px;
@@ -6186,6 +6208,17 @@ body.light-theme .ai-topic-delete {
 body.light-theme .ai-topic-delete:hover {
   color: #dc3545;
   background: rgba(220, 53, 69, 0.1);
+}
+
+/* Light theme Ctrl+Click visual feedback */
+body.light-theme .ai-topic-delete.ctrl-ready {
+  background: rgba(220, 53, 69, 0.15);
+  box-shadow: 0 0 8px rgba(220, 53, 69, 0.3);
+}
+
+body.light-theme .ai-topic-delete.ctrl-ready:hover {
+  background: rgba(220, 53, 69, 0.25);
+  box-shadow: 0 0 12px rgba(220, 53, 69, 0.4);
 }
 
 @media screen and (max-width: 768px) {

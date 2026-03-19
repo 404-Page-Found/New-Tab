@@ -26,6 +26,7 @@ const AIService = (function() {
   // Search state
   let searchQuery = '';
   let keyboardSelectedIndex = -1;
+  let isCtrlPressed = false;
   
   // Storage keys
   const STORAGE_KEYS = {
@@ -519,12 +520,30 @@ const AIService = (function() {
     });
     
     elements.topicsList.querySelectorAll('.ai-topic-delete').forEach(btn => {
+      // Handle Ctrl+Click for direct deletion without confirmation
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         const id = btn.dataset.id;
-        showDeleteConfirm(() => {
+        
+        // If Ctrl is pressed, delete immediately without confirmation
+        if (e.ctrlKey) {
           deleteConversation(id);
-        });
+        } else {
+          // Normal click - show confirmation dialog
+          showDeleteConfirm(() => {
+            deleteConversation(id);
+          });
+        }
+      });
+      
+      // Update visual feedback when Ctrl key state changes
+      btn.addEventListener('mouseenter', () => {
+        updateDeleteButtonFeedback();
+      });
+      
+      btn.addEventListener('mouseleave', () => {
+        // Remove Ctrl feedback when leaving the button
+        btn.classList.remove('ctrl-ready');
       });
     });
     
@@ -712,6 +731,7 @@ const AIService = (function() {
       aiDeleteConfirm: 'Delete this conversation?',
       aiDeleteConfirmTitle: 'Delete Conversation?',
       aiDeleteConfirmMessage: 'This action cannot be undone. The entire conversation will be permanently removed.',
+      aiDeleteImmediate: 'Ctrl+Click to delete immediately',
       aiCancel: 'Cancel',
       aiDelete: 'Delete',
       aiJustNow: 'Just now',
@@ -835,8 +855,45 @@ const AIService = (function() {
   // ============== Event Handlers ==============
   
   /**
-   * Initialize event listeners
+   * Update delete button visual feedback based on Ctrl key state
    */
+  function updateDeleteButtonFeedback() {
+    const deleteButtons = document.querySelectorAll('.ai-topic-delete');
+    deleteButtons.forEach(btn => {
+      if (isCtrlPressed) {
+        btn.classList.add('ctrl-ready');
+        btn.title = getTranslation('aiDeleteImmediate');
+      } else {
+        btn.classList.remove('ctrl-ready');
+        btn.title = getTranslation('aiDeleteConversation');
+      }
+    });
+  }
+
+  /**
+   * Initialize Ctrl key tracking for delete shortcut
+   */
+  function initCtrlKeyTracking() {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Control' && !isCtrlPressed) {
+        isCtrlPressed = true;
+        updateDeleteButtonFeedback();
+      }
+    });
+    
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'Control') {
+        isCtrlPressed = false;
+        updateDeleteButtonFeedback();
+      }
+    });
+    
+    // Also track when focus is lost from the window
+    window.addEventListener('blur', () => {
+      isCtrlPressed = false;
+      updateDeleteButtonFeedback();
+    });
+  }
   function initEventListeners() {
     // Send button
     if (elements.sendBtn) {
@@ -988,6 +1045,7 @@ const AIService = (function() {
     cacheElements();
     loadConversations();
     initEventListeners();
+    initCtrlKeyTracking();
     renderTopicsList();
     renderMessages();
     initNetworkListener();
