@@ -163,6 +163,30 @@ body {
   background: var(--body-bg);
   min-height: 100vh;
   padding: 20px;
+  position: relative;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+.bg-image-layer {
+  position: fixed;
+  inset: 0;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+  will-change: opacity;
+  z-index: 0;
+}
+
+.bg-image-layer.is-visible {
+  opacity: 1;
 }
 
 .container {
@@ -1335,6 +1359,57 @@ body.light-theme .bg-thumb.selected {
     opacity: 1;
     transform: translateX(-50%) translateY(-50%);
   }
+}
+
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+  to {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+}
+
+@keyframes modalSlideOut {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+}
+
+@keyframes modalSlideOutCenter {
+  from {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-50%);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(calc(-50% - 20px));
+  }
+}
+
+#settings-modal.is-closing {
+  animation: modalFadeOut 0.24s ease-out forwards;
+}
+
+#settings-modal.is-closing > div {
+  animation: modalSlideOut 0.24s ease-out forwards;
+}
+
+#add-app-modal.is-closing {
+  animation: modalFadeOut 0.24s ease-out forwards;
+}
+
+#add-app-modal.is-closing > div {
+  animation: modalSlideOutCenter 0.24s ease-out forwards;
 }
 
 @keyframes menuFadeIn {

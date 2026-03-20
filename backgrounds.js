@@ -78,53 +78,53 @@ const backgroundsMap = {
   },
   'Autumn leaves (Pexels)': {
     title: 'Autumn leaves (Pexels)',
-    thumb: 'background/thumbs/Pexels_autumn_leaves_34484989.jpeg',
-    url: 'background/Pexels_autumn_leaves_34484989.jpeg',
+    thumb: 'https://images.pexels.com/photos/34484989/pexels-photo-34484989.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/34484989/pexels-photo-34484989.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
   },
   'City skyline (Pexels)': {
     title: 'City skyline (Pexels)',
-    thumb: 'background/thumbs/Pexels_city_skyline_35720257.jpeg',
-    url: 'background/Pexels_city_skyline_35720257.jpeg',
+    thumb: 'https://images.pexels.com/photos/35720257/pexels-photo-35720257.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/35720257/pexels-photo-35720257.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
   },
   'Desert sand (Pexels)': {
     title: 'Desert sand (Pexels)',
-    thumb: 'background/thumbs/Pexels_desert_sand_33935832.jpeg',
-    url: 'background/Pexels_desert_sand_33935832.jpeg',
+    thumb: 'https://images.pexels.com/photos/33935832/pexels-photo-33935832.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/33935832/pexels-photo-33935832.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
   },
   'Forest trees (Pexels)': {
     title: 'Forest trees (Pexels)',
-    thumb: 'background/thumbs/Pexels_forest_trees_18979363.jpeg',
-    url: 'background/Pexels_forest_trees_18979363.jpeg',
+    thumb: 'https://images.pexels.com/photos/18979363/pexels-photo-18979363.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/18979363/pexels-photo-18979363.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
   },
   'Mountains sunset (Pexels)': {
     title: 'Mountains sunset (Pexels)',
-    thumb: 'background/thumbs/Pexels_mountains_sunset_36491955.jpeg',
-    url: 'background/Pexels_mountains_sunset_36491955.jpeg',
+    thumb: 'https://images.pexels.com/photos/36491955/pexels-photo-36491955.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/36491955/pexels-photo-36491955.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
   },
   'Nature landscape (Pexels)': {
     title: 'Nature landscape (Pexels)',
-    thumb: 'background/thumbs/Pexels_nature_landscape_36146953.jpeg',
-    url: 'background/Pexels_nature_landscape_36146953.jpeg',
+    thumb: 'https://images.pexels.com/photos/36146953/pexels-photo-36146953.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/36146953/pexels-photo-36146953.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
   },
   'Northern lights (Pexels)': {
     title: 'Northern lights (Pexels)',
-    thumb: 'background/thumbs/Pexels_northern_lights_16747790.jpeg',
-    url: 'background/Pexels_northern_lights_16747790.jpeg',
+    thumb: 'https://images.pexels.com/photos/16747790/pexels-photo-16747790.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/16747790/pexels-photo-16747790.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
   },
   'Ocean beach (Pexels)': {
     title: 'Ocean beach (Pexels)',
-    thumb: 'background/thumbs/Pexels_ocean_beach_30363420.jpeg',
-    url: 'background/Pexels_ocean_beach_30363420.jpeg',
+    thumb: 'https://images.pexels.com/photos/30363420/pexels-photo-30363420.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/30363420/pexels-photo-30363420.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
   },
   'Starry night sky (Pexels)': {
     title: 'Starry night sky (Pexels)',
-    thumb: 'background/thumbs/Pexels_starry_night_sky_34048431.jpeg',
-    url: 'background/Pexels_starry_night_sky_34048431.jpeg',
+    thumb: 'https://images.pexels.com/photos/34048431/pexels-photo-34048431.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/34048431/pexels-photo-34048431.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
   },
   'Waterfall (Pexels)': {
     title: 'Waterfall (Pexels)',
-    thumb: 'background/thumbs/Pexels_waterfall_21624064.jpeg',
-    url: 'background/Pexels_waterfall_21624064.jpeg',
+    thumb: 'https://images.pexels.com/photos/21624064/pexels-photo-21624064.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/21624064/pexels-photo-21624064.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
   },
   'Photo of Starry Night': {
     title: 'Photo of Starry Night',
@@ -174,9 +174,13 @@ function findBackgroundUrlById(id) {
   return backgroundsMap[id] ? backgroundsMap[id].url : null;
 }
 
+function getDefaultBackgroundUrl() {
+  return backgroundsMap['Water Beside Forest'] ? backgroundsMap['Water Beside Forest'].url : '';
+}
 
 
 // Expose for other scripts (non-module global)
 window._backgrounds = backgrounds;
 window._initBackgrounds = initBackgrounds;
 window._findBackgroundUrlById = findBackgroundUrlById;
+window._getDefaultBackgroundUrl = getDefaultBackgroundUrl;

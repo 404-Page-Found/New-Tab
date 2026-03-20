@@ -44,20 +44,19 @@ Project is still in developing stage. Contributions are highly welcome! Please f
 (Remember to add necessary comments.)
 
 ### Contributing Background Images
-Want to add more backgrounds from Pexels? We have automated tools for that!
+To keep the extension lightweight, Pexels backgrounds are loaded from remote URLs instead of bundling image files.
 
-**Quick Start:**
-```bash
-npm install sharp node-fetch
-PEXELS_API_KEY='your_key' npm run update-backgrounds
+Add new entries directly in `backgrounds.js` with this shape:
+
+```js
+'Example (Pexels)': {
+  title: 'Example (Pexels)',
+  thumb: 'https://images.pexels.com/photos/<id>/pexels-photo-<id>.jpeg?auto=compress&cs=tinysrgb&w=320',
+  url: 'https://images.pexels.com/photos/<id>/pexels-photo-<id>.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+}
 ```
 
-**Detailed Guide:** See [background/tools/PEXELS_GUIDE.md](background/tools/PEXELS_GUIDE.md)
-
-**What you need:**
-- Node.js 16+ 
-- Free Pexels API key: https://www.pexels.com/api/
-- Just 3 npm commands (or 1 combined)
+Keep at least one bundled local background (`Water Beside Forest`) as fallback.
 
 ## 📄 License
 This project is licensed under the [MIT License](LICENSE).

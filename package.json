@@ -1,31 +1,14 @@
 {
   "name": "new-tab-backgrounds",
   "version": "1.0.0",
-  "description": "Tools for managing background images from Pexels",
-  "scripts": {
-    "fetch-pexels": "node background/tools/fetch_pexels_images.js",
-    "generate-thumbs": "node background/tools/thumbs_generation.js",
-    "generate-map": "node background/tools/generate_backgrounds_map.js",
-    "update-backgrounds": "npm run fetch-pexels && npm run generate-thumbs && npm run generate-map"
-  },
+  "description": "Development metadata for New-Tab",
+  "scripts": {},
   "keywords": [
     "pexels",
     "backgrounds",
     "images"
   ],
-  "optionalDependencies": {
-    "sharp": "^0.32.6"
-  },
-  "devDependencies": {
-    "node-fetch": "^2.7.0"
-  },
   "engines": {
     "node": ">=16.0.0"
-  },
-  "instructions": {
-    "quick-start": "See background/tools/PEXELS_GUIDE.md for detailed instructions",
-    "step-1": "PEXELS_API_KEY='your_key' npm run fetch-pexels",
-    "step-2": "npm install sharp && npm run generate-thumbs",
-    "step-3": "npm run generate-map"
   }
 }
