@@ -752,40 +752,9 @@ const AIService = (function() {
     if (window.i18n && window.i18n.t) {
       return window.i18n.t(key);
     }
-    const translations = {
-      aiWelcome: 'Welcome to AI Assistant',
-      aiWelcomeSubtitle: 'Ask me anything!',
-      aiThinking: 'Thinking...',
-      aiError: 'An error occurred',
-      aiRateLimit: 'Too many requests. Please wait.',
-      aiClearConfirm: 'Clear chat history?',
-      aiPlaceholder: 'Type your message...',
-      aiSearchConversations: 'Search...',
-      aiNoSearchResults: 'No conversations found',
-      aiNewChat: 'New Chat',
-      aiConversations: 'Conversations',
-      aiNoConversations: 'No conversations yet',
-      aiNewConversation: 'New Conversation',
-      aiDeleteConversation: 'Ctrl+Click to delete without confirmation',
-      aiDeleteConfirm: 'Delete this conversation?',
-      aiDeleteConfirmTitle: 'Delete Conversation?',
-      aiDeleteConfirmMessage: 'This action cannot be undone. The entire conversation will be permanently removed.',
-      aiCancel: 'Cancel',
-      aiDelete: 'Delete',
-      aiJustNow: 'Just now',
-      aiOnline: 'Online',
-      aiOffline: 'Offline',
-      aiAuthError: 'Invalid or missing API key',
-      aiForbidden: 'Access forbidden',
-      aiServerError: 'Service error. Please try again later.',
-      aiNetworkError: 'Network error occurred',
-      aiInvalidResponse: 'Invalid response format',
-      aiNoContent: 'No content in response',
-      aiMessageRequired: 'Message is required',
-      aiMessageEmpty: 'Message cannot be empty',
-      aiMessageTooLong: 'Message too long (max 2000 characters)'
-    };
-    return translations[key] || key;
+    // Fallback - should not happen if languages.js loads first
+    console.warn('i18n not available, using fallback for:', key);
+    return key;
   }
 
   // ============== Sending Messages ==============

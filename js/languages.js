@@ -194,6 +194,9 @@ const translations = {
     aiClearConfirm: "Clear chat history?",
     aiAPIKeyMissing: "API key not configured",
     aiSearchEnabled: "Enable AI search",
+    aiSearchConversations: "Search...",
+    aiDeleteConfirmTitle: "Delete Conversation?",
+    aiDeleteConfirmMessage: "This action cannot be undone. The entire conversation will be permanently removed.",
     aiNewChat: "New Chat",
     aiConversations: "Conversations",
     aiNoConversations: "No conversations yet",
@@ -213,7 +216,6 @@ const translations = {
     aiMessageRequired: "Message is required",
     aiMessageEmpty: "Message cannot be empty",
     aiMessageTooLong: "Message too long (max 2000 characters)",
-    aiSearchConversations: "Search...",
     aiStopStreaming: "Stop",
     aiScrollToBottom: "Scroll to bottom"
   },
@@ -411,6 +413,9 @@ const translations = {
     aiClearConfirm: "清除聊天历史？",
     aiAPIKeyMissing: "API 密钥未配置",
     aiSearchEnabled: "启用 AI 搜索",
+    aiSearchConversations: "搜索...",
+    aiDeleteConfirmTitle: "删除对话？",
+    aiDeleteConfirmMessage: "此操作无法撤消。整个对话将被永久删除。",
     aiNewChat: "新对话",
     aiConversations: "对话列表",
     aiNoConversations: "暂无对话记录",
@@ -430,7 +435,6 @@ const translations = {
     aiMessageRequired: "消息不能为空",
     aiMessageEmpty: "消息不能为空",
     aiMessageTooLong: "消息太长（最多2000个字符）",
-    aiSearchConversations: "搜索...",
     aiStopStreaming: "停止",
     aiScrollToBottom: "滚动到底部"
   }

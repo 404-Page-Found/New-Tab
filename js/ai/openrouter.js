@@ -35,20 +35,9 @@ const OpenRouterAPI = (function() {
     if (window.i18n && window.i18n.t) {
       return window.i18n.t(key);
     }
-    const translations = {
-      aiError: 'An error occurred. Please try again.',
-      aiAuthError: 'Invalid or missing API key',
-      aiForbidden: 'Access forbidden',
-      aiRateLimit: 'Too many requests. Please wait.',
-      aiServerError: 'Service error. Please try again later.',
-      aiNetworkError: 'Network error occurred',
-      aiInvalidResponse: 'Invalid response format',
-      aiNoContent: 'No content in response',
-      aiMessageRequired: 'Message is required',
-      aiMessageEmpty: 'Message cannot be empty',
-      aiMessageTooLong: 'Message too long (max 2000 characters)'
-    };
-    return translations[key] || key;
+    // Fallback - should not happen if languages.js loads first
+    console.warn('i18n not available, using fallback for:', key);
+    return key;
   }
 
   /**
