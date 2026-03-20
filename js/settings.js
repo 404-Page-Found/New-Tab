@@ -4,7 +4,72 @@
 function loadBg() {
   return localStorage.getItem("homepageBg") || "Water Beside Forest";
 }
-function applyBg() {
+function preloadBackgroundImage(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(url);
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
+let backgroundLayersReady = false;
+let activeBackgroundLayer = 0;
+let hasAppliedBackgroundOnce = false;
+
+function ensureBackgroundLayers() {
+  if (backgroundLayersReady) return;
+  const layerA = document.createElement('div');
+  const layerB = document.createElement('div');
+  layerA.className = 'bg-image-layer bg-image-layer-a is-visible';
+  layerB.className = 'bg-image-layer bg-image-layer-b';
+  document.body.prepend(layerA);
+  document.body.prepend(layerB);
+  backgroundLayersReady = true;
+}
+
+function getBackgroundLayers() {
+  ensureBackgroundLayers();
+  const layerA = document.querySelector('.bg-image-layer-a');
+  const layerB = document.querySelector('.bg-image-layer-b');
+  return [layerA, layerB];
+}
+
+function setBackgroundLayer(url) {
+  const layers = getBackgroundLayers();
+  const currentLayer = layers[activeBackgroundLayer];
+  const nextLayerIndex = activeBackgroundLayer === 0 ? 1 : 0;
+  const nextLayer = layers[nextLayerIndex];
+  if (!currentLayer || !nextLayer) return;
+
+  nextLayer.style.backgroundImage = `url("${url}")`;
+  if (!hasAppliedBackgroundOnce) {
+    nextLayer.style.opacity = '1';
+    currentLayer.style.opacity = '0';
+    nextLayer.classList.add('is-visible');
+    currentLayer.classList.remove('is-visible');
+    activeBackgroundLayer = nextLayerIndex;
+    hasAppliedBackgroundOnce = true;
+    return;
+  }
+
+  nextLayer.style.transition = 'none';
+  nextLayer.style.opacity = '0';
+  void nextLayer.offsetWidth;
+
+  requestAnimationFrame(() => {
+    nextLayer.style.transition = '';
+    nextLayer.classList.add('is-visible');
+    currentLayer.classList.remove('is-visible');
+    nextLayer.style.opacity = '1';
+    currentLayer.style.opacity = '0';
+    activeBackgroundLayer = nextLayerIndex;
+  });
+}
+
+let applyBgRequestId = 0;
+async function applyBg() {
+  const requestId = ++applyBgRequestId;
   const bg = loadBg();
   document.body.setAttribute("data-bg", bg);
   const thumbs = document.querySelectorAll('.bg-thumb');
@@ -12,8 +77,24 @@ function applyBg() {
     thumbs[i].classList.toggle('selected', thumbs[i].getAttribute('data-bg') === bg);
   }
   const imgUrl = window._findBackgroundUrlById ? window._findBackgroundUrlById(bg) : '';
-  if (imgUrl) document.body.style.background = `url('${imgUrl}') center center/cover no-repeat fixed`;
-  else document.body.style.background = '';
+  if (!imgUrl) {
+    return;
+  }
+
+  try {
+    await preloadBackgroundImage(imgUrl);
+    if (requestId !== applyBgRequestId) return;
+    setBackgroundLayer(imgUrl);
+  } catch (error) {
+    const fallbackUrl = window._getDefaultBackgroundUrl ? window._getDefaultBackgroundUrl() : '';
+    if (!fallbackUrl || requestId !== applyBgRequestId) return;
+    localStorage.setItem('homepageBg', 'Water Beside Forest');
+    document.body.setAttribute("data-bg", 'Water Beside Forest');
+    for (let i = 0; i < thumbs.length; i++) {
+      thumbs[i].classList.toggle('selected', thumbs[i].getAttribute('data-bg') === 'Water Beside Forest');
+    }
+    setBackgroundLayer(fallbackUrl);
+  }
 }
 
 // Delegate click events for backgrounds
@@ -397,10 +478,7 @@ function initAboutSection() {
     if (restartOnboardingBtn && window.onboardingTour) {
       restartOnboardingBtn.addEventListener('click', function() {
         // Close settings modal first
-        const settingsModal = document.getElementById('settings-modal');
-        if (settingsModal) {
-          settingsModal.style.display = 'none';
-        }
+        if (window.closeSettingsModal) window.closeSettingsModal();
         // Reset and start onboarding tour
         window.onboardingTour.reset();
         window.onboardingTour.start();

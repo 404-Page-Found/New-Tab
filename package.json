@@ -1,0 +1,14 @@
+{
+  "name": "new-tab-backgrounds",
+  "version": "1.0.0",
+  "description": "Development metadata for New-Tab",
+  "scripts": {},
+  "keywords": [
+    "pexels",
+    "backgrounds",
+    "images"
+  ],
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

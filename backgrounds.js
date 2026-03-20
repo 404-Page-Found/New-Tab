@@ -76,6 +76,56 @@ const backgroundsMap = {
     thumb: 'background/thumbs/Night_Sky_-_Tree.jpeg',
     url: 'background/Night_Sky_-_Tree.jpeg',
   },
+  'Autumn leaves (Pexels)': {
+    title: 'Autumn leaves (Pexels)',
+    thumb: 'https://images.pexels.com/photos/34484989/pexels-photo-34484989.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/34484989/pexels-photo-34484989.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+  },
+  'City skyline (Pexels)': {
+    title: 'City skyline (Pexels)',
+    thumb: 'https://images.pexels.com/photos/35720257/pexels-photo-35720257.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/35720257/pexels-photo-35720257.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+  },
+  'Desert sand (Pexels)': {
+    title: 'Desert sand (Pexels)',
+    thumb: 'https://images.pexels.com/photos/33935832/pexels-photo-33935832.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/33935832/pexels-photo-33935832.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+  },
+  'Forest trees (Pexels)': {
+    title: 'Forest trees (Pexels)',
+    thumb: 'https://images.pexels.com/photos/18979363/pexels-photo-18979363.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/18979363/pexels-photo-18979363.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+  },
+  'Mountains sunset (Pexels)': {
+    title: 'Mountains sunset (Pexels)',
+    thumb: 'https://images.pexels.com/photos/36491955/pexels-photo-36491955.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/36491955/pexels-photo-36491955.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+  },
+  'Nature landscape (Pexels)': {
+    title: 'Nature landscape (Pexels)',
+    thumb: 'https://images.pexels.com/photos/36146953/pexels-photo-36146953.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/36146953/pexels-photo-36146953.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+  },
+  'Northern lights (Pexels)': {
+    title: 'Northern lights (Pexels)',
+    thumb: 'https://images.pexels.com/photos/16747790/pexels-photo-16747790.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/16747790/pexels-photo-16747790.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+  },
+  'Ocean beach (Pexels)': {
+    title: 'Ocean beach (Pexels)',
+    thumb: 'https://images.pexels.com/photos/30363420/pexels-photo-30363420.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/30363420/pexels-photo-30363420.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+  },
+  'Starry night sky (Pexels)': {
+    title: 'Starry night sky (Pexels)',
+    thumb: 'https://images.pexels.com/photos/34048431/pexels-photo-34048431.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/34048431/pexels-photo-34048431.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+  },
+  'Waterfall (Pexels)': {
+    title: 'Waterfall (Pexels)',
+    thumb: 'https://images.pexels.com/photos/21624064/pexels-photo-21624064.jpeg?auto=compress&cs=tinysrgb&w=320',
+    url: 'https://images.pexels.com/photos/21624064/pexels-photo-21624064.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+  },
   'Photo of Starry Night': {
     title: 'Photo of Starry Night',
     thumb: 'background/thumbs/Photo_of_Starry_Night.jpeg',
@@ -97,6 +147,8 @@ const backgroundsMap = {
     url: 'background/Water_Beside_Forest.jpeg',
   },
 };
+
+
 
 // Convert map to array when needed
 const backgrounds = Object.keys(backgroundsMap).map(id => ({ id, ...backgroundsMap[id] }));
@@ -122,9 +174,13 @@ function findBackgroundUrlById(id) {
   return backgroundsMap[id] ? backgroundsMap[id].url : null;
 }
 
+function getDefaultBackgroundUrl() {
+  return backgroundsMap['Water Beside Forest'] ? backgroundsMap['Water Beside Forest'].url : '';
+}
 
 
 // Expose for other scripts (non-module global)
 window._backgrounds = backgrounds;
 window._initBackgrounds = initBackgrounds;
 window._findBackgroundUrlById = findBackgroundUrlById;
+window._getDefaultBackgroundUrl = getDefaultBackgroundUrl;

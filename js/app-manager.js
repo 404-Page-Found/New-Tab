@@ -180,6 +180,60 @@ applyCurvature();
 
 // Attach settings app click handler
 function attachSettingsAppHandler() {
+  function openSettingsModal(settingsModal) {
+    if (!settingsModal) return;
+    if (settingsModal._closeTimer) {
+      clearTimeout(settingsModal._closeTimer);
+      settingsModal._closeTimer = null;
+    }
+    settingsModal.classList.remove('is-closing');
+    settingsModal.style.display = 'flex';
+    const panel = settingsModal.firstElementChild;
+    settingsModal.style.animation = 'none';
+    settingsModal.style.opacity = '0';
+    if (panel) {
+      panel.style.animation = 'none';
+      panel.style.opacity = '0';
+      panel.style.transform = 'translateX(-50%) translateY(-20px)';
+    }
+    void settingsModal.offsetWidth;
+    settingsModal.style.transition = 'opacity 0.24s ease-out';
+    settingsModal.style.opacity = '1';
+    if (panel) {
+      panel.style.transition = 'opacity 0.24s ease-out, transform 0.24s ease-out';
+      panel.style.opacity = '1';
+      panel.style.transform = 'translateX(-50%) translateY(0)';
+    }
+  }
+
+  function closeSettingsModal(settingsModal) {
+    if (!settingsModal) return;
+    const panel = settingsModal.firstElementChild;
+    settingsModal.classList.add('is-closing');
+    settingsModal.style.transition = 'opacity 0.24s ease-out';
+    settingsModal.style.opacity = '0';
+    if (panel) {
+      panel.style.transition = 'opacity 0.24s ease-out, transform 0.24s ease-out';
+      panel.style.opacity = '0';
+      panel.style.transform = 'translateX(-50%) translateY(-20px)';
+    }
+    if (settingsModal._closeTimer) clearTimeout(settingsModal._closeTimer);
+    settingsModal._closeTimer = setTimeout(() => {
+      settingsModal.style.display = 'none';
+      settingsModal.classList.remove('is-closing');
+      settingsModal.style.transition = '';
+      settingsModal.style.opacity = '';
+      settingsModal.style.animation = '';
+      if (panel) {
+        panel.style.transition = '';
+        panel.style.opacity = '';
+        panel.style.transform = '';
+        panel.style.animation = '';
+      }
+      settingsModal._closeTimer = null;
+    }, 240);
+  }
+
   const settingsApp = document.getElementById("settings-app");
   if (settingsApp) {
     // Remove existing listeners to avoid duplicates
@@ -188,9 +242,7 @@ function attachSettingsAppHandler() {
     settingsApp._clickHandler = function (e) {
       e.preventDefault();
       const settingsModal = document.getElementById("settings-modal");
-      if (settingsModal) {
-        settingsModal.style.display = "flex";
-      }
+      openSettingsModal(settingsModal);
     };
     settingsApp.addEventListener("click", settingsApp._clickHandler);
   }
@@ -198,9 +250,10 @@ function attachSettingsAppHandler() {
   // Attach modal close handler (only once)
   const settingsModal = document.getElementById("settings-modal");
   if (settingsModal && !settingsModal._closeHandlerAttached) {
+    window.closeSettingsModal = () => closeSettingsModal(settingsModal);
     settingsModal._closeHandlerAttached = true;
     settingsModal.addEventListener("click", function (e) {
-      if (e.target === settingsModal) settingsModal.style.display = "none";
+      if (e.target === settingsModal) closeSettingsModal(settingsModal);
     });
   }
 }

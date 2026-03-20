@@ -33,13 +33,30 @@ A modern open-source new tab page for personalized browsing experience.
 | Multi-backgrounds | ![](screenshots/New-Tab_2.png) |
 
 ## 👥 Contributing
+
+### General Contributions
 Project is still in developing stage. Contributions are highly welcome! Please follow these steps:
 1. Fork the repository
 2. Create a new branch (`git checkout -b feature/your-feature`)
 3. Commit your changes (`git commit -m 'Add some feature'`)
 4. Push to the branch (`git push origin feature/your-feature`)
 5. Create a Pull Request
-(Remember to add neccessery comment.)
+(Remember to add necessary comments.)
+
+### Contributing Background Images
+To keep the extension lightweight, Pexels backgrounds are loaded from remote URLs instead of bundling image files.
+
+Add new entries directly in `backgrounds.js` with this shape:
+
+```js
+'Example (Pexels)': {
+  title: 'Example (Pexels)',
+  thumb: 'https://images.pexels.com/photos/<id>/pexels-photo-<id>.jpeg?auto=compress&cs=tinysrgb&w=320',
+  url: 'https://images.pexels.com/photos/<id>/pexels-photo-<id>.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1920&h=1080',
+}
+```
+
+Keep at least one bundled local background (`Water Beside Forest`) as fallback.
 
 ## 📄 License
 This project is licensed under the [MIT License](LICENSE).
