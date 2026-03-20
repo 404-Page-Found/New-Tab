@@ -76,24 +76,49 @@ function filterTodos() {
     });
   }
 
-  // Sort by order property to preserve custom order
+  // Sort: incomplete items first (by order), then completed items (by completion time)
   filtered.sort((a, b) => {
-    // Use order property if available, otherwise fall back to creation date
-    const orderA = a.order !== undefined ? a.order : new Date(a.createdAt).getTime();
-    const orderB = b.order !== undefined ? b.order : new Date(b.createdAt).getTime();
-    return orderA - orderB;
+    // If both are incomplete, sort by order (original position)
+    if (!a.completed && !b.completed) {
+      const orderA = a.order !== undefined ? a.order : new Date(a.createdAt).getTime();
+      const orderB = b.order !== undefined ? b.order : new Date(b.createdAt).getTime();
+      return orderA - orderB;
+    }
+    
+    // If both are completed, sort by completion time (chronological)
+    if (a.completed && b.completed) {
+      const timeA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
+      const timeB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
+      return timeA - timeB;
+    }
+    
+    // Incomplete items come first
+    if (!a.completed && b.completed) return -1;
+    if (a.completed && !b.completed) return 1;
+    
+    return 0;
   });
 
   filteredTodos = filtered;
   return filtered;
 }
 
-// Render the todo list
+// Render the todo list with FLIP animation for smooth reordering
 function renderTodos() {
   const todoList = elements.todoList;
   const emptyState = elements.emptyState;
 
   if (!todoList || !emptyState) return;
+
+  // Get existing element positions (First step of FLIP)
+  const existingItems = {};
+  todoList.querySelectorAll('.todo-item').forEach(item => {
+    const rect = item.getBoundingClientRect();
+    existingItems[item.dataset.id] = {
+      top: rect.top,
+      left: rect.left
+    };
+  });
 
   // Clear existing list
   todoList.innerHTML = '';
@@ -138,11 +163,37 @@ function renderTodos() {
       </div>
     `;
 
-    // Add animation delay
+    // Add animation delay for new items
     li.style.animationDelay = `${index * 0.05}s`;
     li.setAttribute('data-animation', 'enter');
 
     todoList.appendChild(li);
+  });
+
+  // Apply FLIP animation for reordering
+  requestAnimationFrame(() => {
+    todoList.querySelectorAll('.todo-item').forEach(item => {
+      const id = item.dataset.id;
+      if (existingItems[id]) {
+        const newRect = item.getBoundingClientRect();
+        const oldPos = existingItems[id];
+        const deltaY = oldPos.top - newRect.top;
+        const deltaX = oldPos.left - newRect.left;
+
+        // If position changed, apply flip animation
+        if (deltaY !== 0 || deltaX !== 0) {
+          // Invert: move item back to original position
+          item.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+          item.style.transition = 'none';
+
+          // Play: animate to new position
+          requestAnimationFrame(() => {
+            item.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            item.style.transform = '';
+          });
+        }
+      }
+    });
   });
 }
 
@@ -154,6 +205,7 @@ function addTodo(text, dueDate = null) {
     id: generateTodoId(),
     text: text.trim(),
     completed: false,
+    completedAt: null, // Track when todo was completed
     dueDate: dueDate,
     createdAt: new Date().toISOString(),
     order: todos.length // Add order property to track position
@@ -163,6 +215,24 @@ function addTodo(text, dueDate = null) {
   saveTodos(todos);
   applyFilters();
   clearInputs();
+}
+
+// Migrate existing todos to have completedAt property
+function migrateTodos() {
+  let needsMigration = false;
+  
+  todos.forEach(todo => {
+    if (todo.completedAt === undefined) {
+      // For existing completed todos without completedAt,
+      // use createdAt as a fallback (they were completed before this feature)
+      todo.completedAt = todo.completed ? todo.createdAt : null;
+      needsMigration = true;
+    }
+  });
+  
+  if (needsMigration) {
+    saveTodos(todos);
+  }
 }
 
 // Edit a todo
@@ -182,6 +252,14 @@ function toggleTodo(id) {
   const todo = todos.find(t => t.id === id);
   if (todo) {
     todo.completed = !todo.completed;
+    
+    // Track completion time for sorting
+    if (todo.completed) {
+      todo.completedAt = new Date().toISOString();
+    } else {
+      todo.completedAt = null;
+    }
+    
     saveTodos(todos);
     applyFilters();
   }
@@ -381,6 +459,9 @@ function initTodo() {
 
   // Load todos
   todos = loadTodos();
+  
+  // Migrate existing todos to have completedAt property
+  migrateTodos();
 
   // Event listeners
   elements.addTodoBtn.addEventListener('click', handleAddTodo);
