@@ -615,6 +615,9 @@ const AIService = (function() {
       renderedContent = window.MarkdownParser ? window.MarkdownParser.parse(content) : escapeHTML(content);
     }
     
+    // Store plain text content for copying (strip HTML tags)
+    const plainTextContent = content.replace(/<[^>]*>/g, '').trim();
+    
     return `
       <div class="ai-message ${isUser ? 'ai-message-user' : 'ai-message-assistant'}">
         <div class="ai-message-avatar">
@@ -625,7 +628,16 @@ const AIService = (function() {
         </div>
         <div class="ai-message-content">
           <div class="ai-message-text ${isStreaming ? 'ai-message-streaming' : ''}">${renderedContent}</div>
-          <div class="ai-message-time">${time}</div>
+          <div class="ai-message-meta">
+            <div class="ai-message-time">${time}</div>
+            <button class="ai-message-copy" data-content="${escapeHTML(plainTextContent)}" aria-label="Copy message" tabindex="0">
+              <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span class="copy-text">Copy</span>
+            </button>
+          </div>
         </div>
       </div>
     `;
@@ -737,10 +749,169 @@ const AIService = (function() {
     
     elements.container.innerHTML = messages.map(msg => getMessageHTML(msg)).join('');
     
+    // Add copy button event listeners
+    initCopyButtons();
+    
     // Smart auto-scroll: only scroll to bottom if user hasn't scrolled up
     if (!isUserScrolledUp) {
       scrollToBottom(false);
     }
+  }
+
+  /**
+   * Initialize copy button functionality
+   * Handles click, keyboard events, and visual feedback
+   */
+  function initCopyButtons() {
+    const copyButtons = elements.container?.querySelectorAll('.ai-message-copy');
+    if (!copyButtons) return;
+    
+    copyButtons.forEach(btn => {
+      // Remove any existing listeners to prevent duplicates
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+      
+      // Click handler
+      newBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleCopyClick(newBtn);
+      });
+      
+      // Keyboard handler (Enter and Space)
+      newBtn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          e.stopPropagation();
+          handleCopyClick(newBtn);
+        }
+      });
+    });
+  }
+
+  /**
+   * Handle copy button click
+   * @param {HTMLElement} btn - The copy button element
+   */
+  async function handleCopyClick(btn) {
+    const content = btn.dataset.content;
+    if (!content) return;
+    
+    const copyIcon = btn.querySelector('.copy-icon');
+    const copyText = btn.querySelector('.copy-text');
+    const originalText = copyText?.textContent || 'Copy';
+    
+    try {
+      // Try modern Clipboard API first
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(content);
+      } else {
+        // Fallback for older browsers
+        await fallbackCopyText(content);
+      }
+      
+      // Show success feedback
+      showCopyFeedback(btn, true);
+      
+    } catch (err) {
+      console.error('Copy failed:', err);
+      // Show error feedback
+      showCopyFeedback(btn, false);
+      
+      // Show error notification
+      showCopyError();
+    }
+  }
+
+  /**
+   * Fallback copy method for older browsers
+   * @param {string} text - Text to copy
+   * @returns {Promise<void>}
+   */
+  function fallbackCopyText(text) {
+    return new Promise((resolve, reject) => {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (successful) {
+          resolve();
+        } else {
+          reject(new Error('Fallback copy failed'));
+        }
+      } catch (err) {
+        document.body.removeChild(textArea);
+        reject(err);
+      }
+    });
+  }
+
+  /**
+   * Show visual feedback for copy action
+   * @param {HTMLElement} btn - The copy button
+   * @param {boolean} success - Whether copy was successful
+   */
+  function showCopyFeedback(btn, success) {
+    const copyIcon = btn.querySelector('.copy-icon');
+    const copyText = btn.querySelector('.copy-text');
+    const originalText = copyText?.textContent || 'Copy';
+    
+    if (success) {
+      // Change to checkmark icon
+      if (copyIcon) {
+        copyIcon.innerHTML = '<polyline points="20,6 9,17 4,12"></polyline>';
+      }
+      if (copyText) {
+        copyText.textContent = 'Copied!';
+      }
+      btn.classList.add('copy-success');
+    } else {
+      // Show error state
+      if (copyText) {
+        copyText.textContent = 'Failed';
+      }
+      btn.classList.add('copy-error');
+    }
+    
+    // Revert after 2 seconds
+    setTimeout(() => {
+      if (copyIcon) {
+        copyIcon.innerHTML = '<rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>';
+      }
+      if (copyText) {
+        copyText.textContent = originalText;
+      }
+      btn.classList.remove('copy-success', 'copy-error');
+    }, 2000);
+  }
+
+  /**
+   * Show error notification when copy fails
+   */
+  function showCopyError() {
+    // Create or reuse a notification element
+    let notification = document.querySelector('.ai-copy-error-notification');
+    
+    if (!notification) {
+      notification = document.createElement('div');
+      notification.className = 'ai-copy-error-notification';
+      document.body.appendChild(notification);
+    }
+    
+    notification.textContent = 'Failed to copy text. Please select and copy manually.';
+    notification.classList.add('visible');
+    
+    // Hide after 3 seconds
+    setTimeout(() => {
+      notification.classList.remove('visible');
+    }, 3000);
   }
   
   /**
@@ -821,6 +992,18 @@ const AIService = (function() {
       if (lastMsg && lastMsg.role === 'assistant' && lastMsg.isStreaming) {
         lastMsg.isStreaming = false;
         saveConversations();
+        
+        // Update copy button's data-content with the current content
+        const assistantElements = elements.container?.querySelectorAll('.ai-message-assistant');
+        if (assistantElements) {
+          const lastAssistantElement = assistantElements[assistantElements.length - 1];
+          if (lastAssistantElement && lastMsg.content) {
+            const copyBtn = lastAssistantElement.querySelector('.ai-message-copy');
+            if (copyBtn) {
+              copyBtn.dataset.content = lastMsg.content.replace(/<[^>]*>/g, '').trim();
+            }
+          }
+        }
       }
     }
     
@@ -1337,6 +1520,14 @@ const AIService = (function() {
           streamingTextElement.classList.remove('ai-message-streaming');
         }
         
+        // Update copy button's data-content with the final content
+        if (streamingElement) {
+          const copyBtn = streamingElement.querySelector('.ai-message-copy');
+          if (copyBtn && accumulatedContent) {
+            copyBtn.dataset.content = accumulatedContent.replace(/<[^>]*>/g, '').trim();
+          }
+        }
+        
         saveConversations();
         renderTopicsList();
       } else if (result.aborted) {
@@ -1347,6 +1538,15 @@ const AIService = (function() {
           lastMsg.isStreaming = false;
           lastMsg.content = accumulatedContent || '[Cancelled]';
         }
+        
+        // Update copy button's data-content with the final content
+        if (streamingElement && accumulatedContent) {
+          const copyBtn = streamingElement.querySelector('.ai-message-copy');
+          if (copyBtn) {
+            copyBtn.dataset.content = accumulatedContent.replace(/<[^>]*>/g, '').trim();
+          }
+        }
+        
         saveConversations();
       } else {
         showError(result.error);
