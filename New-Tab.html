@@ -185,7 +185,22 @@
             </div>
           </section>
           <section class="settings-section" data-section="background" style="display: none">
-            <div class="bg-thumbnails" id="bg-thumbnails"></div>
+            <!-- Static Backgrounds -->
+            <div class="bg-subsection" id="bg-static-section">
+              <h4 class="bg-subsection-header" data-i18n="background">Background</h4>
+              <p class="bg-subsection-desc" data-i18n="backgroundSettingsDesc">Choose your background image</p>
+              <div class="bg-thumbnails" id="bg-thumbnails-static"></div>
+            </div>
+            
+            <!-- Live Backgrounds -->
+            <div class="bg-subsection" id="bg-live-section">
+              <h4 class="bg-subsection-header" data-i18n="liveBackground">Live Background</h4>
+              <p class="bg-subsection-desc" data-i18n="liveBackgroundSettingsDesc">Choose an animated background video</p>
+              <div class="bg-thumbnails" id="bg-thumbnails-live"></div>
+            </div>
+            
+            <!-- Legacy container for backward compatibility -->
+            <div class="bg-thumbnails hidden" id="bg-thumbnails"></div>
           </section>
           <section class="settings-section" data-section="apps" style="display: none">
             <div class="apps-setting-group">

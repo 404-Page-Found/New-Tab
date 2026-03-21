@@ -1268,6 +1268,48 @@ body.light-theme .drag-placeholder {
 .bg-thumb.selected {
   border: 2px solid #2196f3;
 }
+
+/* Subsection headers */
+.bg-subsection-header {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+  margin-bottom: 4px;
+  margin-top: 24px;
+}
+
+.bg-subsection-header:first-child {
+  margin-top: 0;
+}
+
+.bg-subsection-desc {
+  font-size: 13px;
+  color: rgba(107, 114, 128, 0.8);
+  margin-bottom: 16px;
+  margin-top: 0;
+}
+
+/* Video thumbnail indicator */
+.bg-thumb-video {
+  position: relative;
+}
+
+.bg-thumb-video::after {
+  content: '▶';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 16px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* Hidden utility class */
+.hidden {
+  display: none !important;
+}
 #add-app-modal {
   display: none;
   position: fixed;
@@ -2214,6 +2256,10 @@ body.light-theme .bg-thumb {
 body.light-theme .bg-thumb:selected,
 body.light-theme .bg-thumb.selected {
   border-color: #2196f3;
+}
+
+body.light-theme .bg-subsection-desc {
+  color: rgba(107, 114, 128, 0.8);
 }
 
 

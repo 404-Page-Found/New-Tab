@@ -59,6 +59,9 @@ const translations = {
     // Background settings
     backgroundSettings: "Background",
     backgroundSettingsDesc: "Choose your background image",
+    liveBackground: "Live Background",
+    liveBackgroundSettings: "Live Background",
+    liveBackgroundSettingsDesc: "Choose an animated background video",
 
     // Apps settings
     appsSettings: "Apps",
@@ -278,6 +281,9 @@ const translations = {
     // Background settings
     backgroundSettings: "背景",
     backgroundSettingsDesc: "选择您的背景图片",
+    liveBackground: "动态背景",
+    liveBackgroundSettings: "动态背景",
+    liveBackgroundSettingsDesc: "选择动态背景视频",
 
     // Apps settings
     appsSettings: "应用",
@@ -541,6 +547,25 @@ function updateDynamicTranslations() {
   // Re-render the About section so version label and last-checked text update
   if (window.initAboutSection) {
     window.initAboutSection();
+  }
+
+  // Update background section headers if they exist
+  const bgStaticHeader = document.querySelector('#bg-static-section .bg-subsection-header');
+  const bgLiveHeader = document.querySelector('#bg-live-section .bg-subsection-header');
+  const bgStaticDesc = document.querySelector('#bg-static-section .bg-subsection-desc');
+  const bgLiveDesc = document.querySelector('#bg-live-section .bg-subsection-desc');
+  
+  if (bgStaticHeader) {
+    bgStaticHeader.textContent = translations[currentLanguage].background || 'Background';
+  }
+  if (bgLiveHeader) {
+    bgLiveHeader.textContent = translations[currentLanguage].liveBackground || 'Live Background';
+  }
+  if (bgStaticDesc) {
+    bgStaticDesc.textContent = translations[currentLanguage].backgroundSettingsDesc || 'Choose your background image';
+  }
+  if (bgLiveDesc) {
+    bgLiveDesc.textContent = translations[currentLanguage].liveBackgroundSettingsDesc || 'Choose an animated background video';
   }
 
   // Update Add App modal if it's open

@@ -485,6 +485,10 @@ if (settingsMenu) {
       if (section === 'background' && !backgroundsInitialized) {
         backgroundsInitialized = true;
         if (window._initBackgrounds) window._initBackgrounds();
+        if (window._initStaticBackgrounds) window._initStaticBackgrounds();
+        if (window._initLiveBackgrounds) window._initLiveBackgrounds();
+        // Apply background selection after loading
+        applyBg();
       }
       // No special logic needed for 'about' tab, just show the section
     });
