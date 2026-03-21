@@ -96,6 +96,13 @@ const backgroundsMap = {
     thumb: 'background/thumbs/Water_Beside_Forest.jpeg',
     url: 'background/Water_Beside_Forest.jpeg',
   },
+  // Live Video Background
+  'Tyndall - Morning Light': {
+    title: 'Tyndall - Morning Light',
+    thumb: 'background/thumbs/Night_Sky_-_Tree.jpeg', // Placeholder thumbnail - replace with actual video thumbnail
+    url: 'background/live_background/Tyndall-Morning Light.mp4',
+    type: 'video'
+  },
 };
 
 // Convert map to array when needed

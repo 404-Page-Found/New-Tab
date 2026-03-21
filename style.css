@@ -721,6 +721,122 @@ body.light-theme .btn-secondary:hover {
   opacity: 0;
 }
 
+/* Video background element */
+.background-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 1.2s ease-in;
+  /* Prevent video from affecting layout */
+  transform: none !important;
+  /* Hardware acceleration for smooth scaling */
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  /* Ensure video renders above any background color */
+  background-color: transparent;
+}
+
+/* Video is active/playing */
+.background-video.active {
+  opacity: 1;
+}
+
+/* Video loading state */
+.background-video.loading {
+  opacity: 0;
+}
+
+/* Video ready state */
+.background-video.ready {
+  opacity: 1;
+}
+
+/* Video aspect ratio container - helps maintain proportions */
+.background-video-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Fallback for browsers that don't support video */
+.background-container.video-fallback .background-video {
+  display: none;
+}
+
+/* Video playback error fallback */
+.background-container.video-error .background-video {
+  display: none;
+}
+
+/* Responsive video adjustments for different screen sizes */
+@media screen and (max-width: 768px) {
+  .background-video {
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .background-video {
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+/* Landscape orientation adjustments for mobile */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .background-video {
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+/* Portrait orientation adjustments for mobile */
+@media screen and (orientation: portrait) {
+  .background-video {
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+/* High DPI displays - ensure sharp rendering */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .background-video {
+    /* Ensure hardware acceleration is active */
+    will-change: transform, opacity;
+  }
+}
+
+/* Reduced motion preference - disable animations */
+@media (prefers-reduced-motion: reduce) {
+  .background-video {
+    transition: none;
+    animation: none;
+  }
+}
+
+/* Ensure video doesn't interfere with interactions */
+.background-video {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Hide video when not in use */
+.background-video.hidden {
+  display: none;
+}
+
 body {
   background: var(--body-bg);
   min-height: 100vh;

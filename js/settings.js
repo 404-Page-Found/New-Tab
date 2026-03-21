@@ -5,6 +5,91 @@ function loadBg() {
   return localStorage.getItem("homepageBg") || "Water Beside Forest";
 }
 
+// Check if browser supports video
+function supportsVideo() {
+  const video = document.createElement('video');
+  return !!(video.canPlayType && video.canPlayType('video/mp4').replace('no', ''));
+}
+
+// Check if browser supports HTML5 video element
+function supportsVideoElement() {
+  return !!(document.createElement('video').play);
+}
+
+// Video background resize handler - ensures video scales properly on window resize
+function initVideoResizeHandler() {
+  const videoEl = document.getElementById('bg-video');
+  if (!videoEl) return;
+
+  let resizeTimeout;
+  
+  // Debounced resize handler
+  function handleResize() {
+    // Video element automatically scales with object-fit: cover
+    // This handler can be used for any custom adjustments if needed
+    const container = document.getElementById('background-container');
+    if (container && videoEl) {
+      // Force video to maintain proper scaling
+      videoEl.style.width = '100%';
+      videoEl.style.height = '100%';
+    }
+  }
+
+  // Listen for window resize events
+  window.addEventListener('resize', function() {
+    // Debounce resize events
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(handleResize, 100);
+  });
+
+  // Listen for orientation change on mobile devices
+  window.addEventListener('orientationchange', function() {
+    // Short delay to allow orientation to complete
+    setTimeout(handleResize, 200);
+  });
+
+  // Also handle resize when video is loaded (for better mobile support)
+  videoEl.addEventListener('loadedmetadata', handleResize);
+  videoEl.addEventListener('resize', handleResize);
+}
+
+// Initialize video resize handler when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initVideoResizeHandler);
+} else {
+  initVideoResizeHandler();
+}
+
+// Video visibility handler - pause video when page is hidden to save resources
+function initVideoVisibilityHandler() {
+  const videoEl = document.getElementById('bg-video');
+  if (!videoEl) return;
+
+  // Pause video when page is hidden
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      // Page is hidden - pause video
+      if (!videoEl.paused) {
+        videoEl.dataset.wasPlaying = 'true';
+        videoEl.pause();
+      }
+    } else {
+      // Page is visible again - resume video if it was playing
+      if (videoEl.dataset.wasPlaying === 'true' && videoEl.paused) {
+        videoEl.play();
+        videoEl.dataset.wasPlaying = 'false';
+      }
+    }
+  });
+}
+
+// Initialize visibility handler when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initVideoVisibilityHandler);
+} else {
+  initVideoVisibilityHandler();
+}
+
 function applyBg() {
   const bg = loadBg();
   document.body.setAttribute("data-bg", bg);
@@ -21,9 +106,109 @@ function applyBg() {
   
   const thumbnailEl = document.getElementById('bg-thumbnail');
   const fullEl = document.getElementById('bg-full');
+  const videoEl = document.getElementById('bg-video');
+  const containerEl = document.getElementById('background-container');
   
   if (!thumbnailEl || !fullEl) return;
   
+  // Handle video background
+  if (bgData.type === 'video') {
+    // Reset image states
+    fullEl.classList.remove('loaded');
+    thumbnailEl.classList.remove('hidden');
+    fullEl.src = '';
+    
+    // Check video support - both canPlayType and HTML5 video element support
+    if (!supportsVideo() || !supportsVideoElement()) {
+      // Fallback: use thumbnail as background for unsupported browsers
+      containerEl.classList.add('video-fallback');
+      thumbnailEl.src = bgData.thumb;
+      // Still load the full image as fallback
+      const fullImg = new Image();
+      fullImg.onload = function() {
+        fullEl.src = bgData.thumb;
+        requestAnimationFrame(() => {
+          fullEl.classList.add('loaded');
+          setTimeout(() => {
+            thumbnailEl.classList.add('hidden');
+          }, 1200);
+        });
+      };
+      fullImg.src = bgData.thumb;
+      return;
+    }
+    
+    // Remove fallback class and setup video
+    containerEl.classList.remove('video-fallback');
+    containerEl.classList.remove('video-error');
+    
+    if (videoEl) {
+      // Reset video element state
+      videoEl.classList.remove('hidden');
+      videoEl.classList.remove('active', 'ready');
+      
+      // Hide image elements while video plays
+      thumbnailEl.classList.add('hidden');
+      fullEl.classList.remove('loaded');
+      fullEl.src = '';
+      
+      // Set video source
+      videoEl.querySelector('source').src = bgData.url;
+      videoEl.load();
+      
+      // Show video when ready
+      videoEl.classList.add('loading');
+      videoEl.classList.remove('active');
+      
+      // Video can play through - show it
+      videoEl.oncanplaythrough = function() {
+        videoEl.classList.remove('loading');
+        videoEl.classList.add('active');
+        videoEl.classList.add('ready');
+      };
+      
+      // Video loaded metadata - ensure proper sizing
+      videoEl.onloadedmetadata = function() {
+        // Force video to maintain proper scaling after metadata loads
+        videoEl.style.width = '100%';
+        videoEl.style.height = '100%';
+      };
+      
+      // Video playback error - fallback to thumbnail
+      videoEl.onerror = function() {
+        console.warn('Video background failed to load, falling back to image');
+        containerEl.classList.add('video-error');
+        videoEl.classList.add('hidden');
+        thumbnailEl.classList.remove('hidden');
+        thumbnailEl.src = bgData.thumb;
+        const fullImg = new Image();
+        fullImg.onload = function() {
+          fullEl.src = bgData.thumb;
+          requestAnimationFrame(() => {
+            fullEl.classList.add('loaded');
+          });
+        };
+        fullImg.src = bgData.thumb;
+      };
+      
+      // Handle video abort (user navigated away, etc.)
+      videoEl.onabort = function() {
+        console.warn('Video background playback aborted');
+      };
+    }
+    return;
+  }
+  
+  // Reset video element for image backgrounds
+  if (videoEl) {
+    videoEl.classList.remove('active', 'loading');
+    videoEl.classList.add('hidden');
+    videoEl.pause();
+    videoEl.querySelector('source').src = '';
+  }
+  containerEl && containerEl.classList.remove('video-fallback');
+  
+  // Handle image background (original logic)
   // Reset states
   fullEl.classList.remove('loaded');
   thumbnailEl.classList.remove('hidden');
