@@ -99,7 +99,7 @@ const backgroundsMap = {
   // Live Video Background
   'Tyndall - Morning Light': {
     title: 'Tyndall - Morning Light',
-    thumb: 'background/thumbs/Night_Sky_-_Tree.jpeg', // Placeholder thumbnail - replace with actual video thumbnail
+    thumb: 'background/thumbs/Tyndall-Morning_Light.jpeg', // Actual video thumbnail
     url: 'background/live_background/Tyndall-Morning Light.mp4',
     type: 'video'
   },
