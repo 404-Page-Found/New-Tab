@@ -147,8 +147,13 @@ function applyBg() {
       videoEl.classList.remove('hidden');
       videoEl.classList.remove('active', 'ready');
       
-      // Hide image elements while video plays
-      thumbnailEl.classList.add('hidden');
+      // Keep thumbnail visible while video loads (placeholder)
+      // This matches the image background behavior - show blurred thumbnail first
+      thumbnailEl.classList.remove('hidden');
+      
+      // Set thumbnail source for placeholder (show blurred version while video loads)
+      thumbnailEl.src = bgData.thumb;
+      
       fullEl.classList.remove('loaded');
       fullEl.src = '';
       
@@ -156,15 +161,25 @@ function applyBg() {
       videoEl.querySelector('source').src = bgData.url;
       videoEl.load();
       
-      // Show video when ready
+      // Set initial state - video starts hidden (opacity: 0)
       videoEl.classList.add('loading');
       videoEl.classList.remove('active');
       
-      // Video can play through - show it
+      // Video can play through - fade it in
       videoEl.oncanplaythrough = function() {
+        // Remove loading class - video is now ready to show
         videoEl.classList.remove('loading');
+        
+        // Add active class to trigger CSS fade-in transition
+        // The .background-video.active CSS rule sets opacity: 1
+        // with transition: opacity 1.2s ease-in
         videoEl.classList.add('active');
         videoEl.classList.add('ready');
+        
+        // After fade-in transition completes, hide the thumbnail
+        setTimeout(() => {
+          thumbnailEl.classList.add('hidden');
+        }, 1200); // Match CSS transition duration (1.2s)
       };
       
       // Video loaded metadata - ensure proper sizing
