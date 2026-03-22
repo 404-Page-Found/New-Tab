@@ -165,21 +165,62 @@ function applyBg() {
       videoEl.classList.add('loading');
       videoEl.classList.remove('active');
       
-      // Video can play through - fade it in
-      videoEl.oncanplaythrough = function() {
+      // Start playing immediately while fading in - mimics image loading behavior
+      // This ensures the video starts playback right away without waiting for full buffer
+      const startVideoPlayback = function() {
+        const playPromise = videoEl.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            // Auto-play was prevented, but that's okay for background video
+            console.warn('Video auto-play prevented:', error);
+          });
+        }
+      };
+      
+      // Helper to trigger crossfade between thumbnail and video
+      const triggerCrossfade = function() {
+        // Start video playback immediately
+        startVideoPlayback();
+        
         // Remove loading class - video is now ready to show
         videoEl.classList.remove('loading');
         
-        // Add active class to trigger CSS fade-in transition
-        // The .background-video.active CSS rule sets opacity: 1
-        // with transition: opacity 1.2s ease-in
+        // Add active class to trigger video fade-in (2s ease-in-out)
         videoEl.classList.add('active');
         videoEl.classList.add('ready');
         
-        // After fade-in transition completes, hide the thumbnail
+        // Start thumbnail blur-to-clear animation at the same time as video fade-in
+        // This creates a smooth blur-to-clear effect while video fades in
+        // The thumbnail will fade out (opacity 0) while clearing blur (blur 0px)
+        thumbnailEl.classList.add('clearing');
+        
+        // After crossfade completes, fully hide the thumbnail
+        // Use 3000ms to ensure video is fully visible before hiding thumbnail
+        // This matches the 2.5s opacity transition in CSS
         setTimeout(() => {
           thumbnailEl.classList.add('hidden');
-        }, 1200); // Match CSS transition duration (1.2s)
+          thumbnailEl.classList.remove('clearing');
+        }, 3000); // Match CSS opacity transition duration
+      };
+      
+      // Video can play through - trigger crossfade
+      videoEl.oncanplaythrough = function() {
+        triggerCrossfade();
+      };
+      
+      // Fallback: if canplaythrough takes too long, trigger on loadeddata
+      videoEl.onloadeddata = function() {
+        // Only trigger if active class hasn't been added yet
+        if (!videoEl.classList.contains('active')) {
+          triggerCrossfade();
+        }
+      };
+      
+      // Additional fallback: ensure crossfade happens after video starts playing
+      videoEl.onplaying = function() {
+        if (!videoEl.classList.contains('active')) {
+          triggerCrossfade();
+        }
       };
       
       // Video loaded metadata - ensure proper sizing
