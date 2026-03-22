@@ -308,7 +308,7 @@ class OnboardingTour {
     });
 
     // Handle positioning
-    if (step.target) {
+    if (step.target && step.target !== 'body') {
       const targetElement = document.querySelector(step.target);
       if (targetElement) {
         console.log('🎯 Positioning tooltip for target:', step.target);
@@ -320,8 +320,8 @@ class OnboardingTour {
         console.warn('⚠️ Target element not found:', step.target);
       }
     } else {
-      // Center positioned tooltips
-      console.log('🎯 Centering tooltip (no target)');
+      // Center positioned tooltips (including body targets)
+      console.log('🎯 Centering tooltip (no target or body target)');
       tooltip.style.position = 'fixed';
       tooltip.style.top = '50%';
       tooltip.style.left = '50%';
