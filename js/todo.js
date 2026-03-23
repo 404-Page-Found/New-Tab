@@ -350,19 +350,6 @@ function updateFilterCounts() {
 }
 
 // Quick actions
-function markAllComplete() {
-  const pendingTodos = todos.filter(t => !t.completed);
-  if (pendingTodos.length === 0) return;
-  
-  pendingTodos.forEach(todo => {
-    todo.completed = true;
-    todo.completedAt = new Date().toISOString();
-  });
-  
-  saveTodos(todos);
-  applyFilters();
-}
-
 function clearCompleted() {
   const completedTodos = todos.filter(t => t.completed);
   if (completedTodos.length === 0) return;
@@ -578,12 +565,8 @@ function initTodo() {
   }
   
   // Quick action buttons
-  const markAllCompleteBtn = document.getElementById('mark-all-complete');
   const clearCompletedBtn = document.getElementById('clear-completed');
   
-  if (markAllCompleteBtn) {
-    markAllCompleteBtn.addEventListener('click', markAllComplete);
-  }
   if (clearCompletedBtn) {
     clearCompletedBtn.addEventListener('click', clearCompleted);
   }

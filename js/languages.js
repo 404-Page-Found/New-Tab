@@ -164,8 +164,7 @@ const translations = {
     filterPending: "Pending",
     filterCompleted: "Completed",
     filterOverdue: "Overdue",
-    markAllComplete: "Mark all complete",
-    clearCompleted: "Clear completed",
+    clearCompletedText: "Clear Completed",
     emptyStateTitle: "No todos yet. Add one above!",
     emptyStateDesc: "Try adding due dates for better organization.",
 
@@ -396,8 +395,7 @@ const translations = {
     filterPending: "待处理",
     filterCompleted: "已完成",
     filterOverdue: "已逾期",
-    markAllComplete: "全部标记完成",
-    clearCompleted: "清除已完成",
+    clearCompletedText: "清除已完成",
     emptyStateTitle: "还没有待办事项。在上方添加一个！",
     emptyStateDesc: "尝试添加到期日期以更好地组织。",
 
@@ -550,12 +548,13 @@ function updateDynamicTranslations() {
   if (filterCompleted) filterCompleted.childNodes[0].textContent = translations[currentLanguage].filterCompleted + ' ';
   if (filterOverdue) filterOverdue.childNodes[0].textContent = translations[currentLanguage].filterOverdue + ' ';
   
-  // Update quick action button titles
-  const markAllCompleteBtn = document.getElementById('mark-all-complete');
+  // Update quick action button text
   const clearCompletedBtn = document.getElementById('clear-completed');
   
-  if (markAllCompleteBtn) markAllCompleteBtn.title = translations[currentLanguage].markAllComplete;
-  if (clearCompletedBtn) clearCompletedBtn.title = translations[currentLanguage].clearCompleted;
+  if (clearCompletedBtn) {
+    const span = clearCompletedBtn.querySelector('span');
+    if (span) span.textContent = translations[currentLanguage].clearCompletedText;
+  }
 
   // Re-render apps to update default app names
   if (window.renderCustomApps) {
