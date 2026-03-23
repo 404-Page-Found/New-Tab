@@ -268,6 +268,7 @@ function applyBg() {
   // Reset states
   fullEl.classList.remove('loaded');
   thumbnailEl.classList.remove('hidden');
+  thumbnailEl.classList.remove('clearing');
   
   // Immediately show blurred thumbnail
   thumbnailEl.src = bgData.thumb;
@@ -279,10 +280,17 @@ function applyBg() {
     // Small delay to ensure browser has rendered
     requestAnimationFrame(() => {
       fullEl.classList.add('loaded');
-      // Hide thumbnail after transition completes
+      
+      // Add clearing class to animate blur-to-clear while fading out
+      // This creates a smooth blur-to-clear effect while full image fades in
+      thumbnailEl.classList.add('clearing');
+      
+      // After crossfade completes, fully hide the thumbnail
+      // Use 2500ms to match the CSS clearing transition duration (2.5s opacity)
       setTimeout(() => {
         thumbnailEl.classList.add('hidden');
-      }, 1200); // Match CSS transition duration
+        thumbnailEl.classList.remove('clearing');
+      }, 2500); // Match CSS clearing transition duration
     });
   };
   fullImg.src = bgData.url;
