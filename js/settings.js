@@ -4,16 +4,288 @@
 function loadBg() {
   return localStorage.getItem("homepageBg") || "Water Beside Forest";
 }
+
+// Check if browser supports video
+function supportsVideo() {
+  const video = document.createElement('video');
+  return !!(video.canPlayType && video.canPlayType('video/mp4').replace('no', ''));
+}
+
+// Check if browser supports HTML5 video element
+function supportsVideoElement() {
+  return !!(document.createElement('video').play);
+}
+
+// Video background resize handler - ensures video scales properly on window resize
+function initVideoResizeHandler() {
+  const videoEl = document.getElementById('bg-video');
+  if (!videoEl) return;
+
+  let resizeTimeout;
+  
+  // Debounced resize handler
+  function handleResize() {
+    // Video element automatically scales with object-fit: cover
+    // This handler can be used for any custom adjustments if needed
+    const container = document.getElementById('background-container');
+    if (container && videoEl) {
+      // Force video to maintain proper scaling
+      videoEl.style.width = '100%';
+      videoEl.style.height = '100%';
+    }
+  }
+
+  // Listen for window resize events
+  window.addEventListener('resize', function() {
+    // Debounce resize events
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(handleResize, 100);
+  });
+
+  // Listen for orientation change on mobile devices
+  window.addEventListener('orientationchange', function() {
+    // Short delay to allow orientation to complete
+    setTimeout(handleResize, 200);
+  });
+
+  // Also handle resize when video is loaded (for better mobile support)
+  videoEl.addEventListener('loadedmetadata', handleResize);
+  videoEl.addEventListener('resize', handleResize);
+}
+
+// Initialize video resize handler when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initVideoResizeHandler);
+} else {
+  initVideoResizeHandler();
+}
+
+// Video visibility handler - pause video when page is hidden to save resources
+function initVideoVisibilityHandler() {
+  const videoEl = document.getElementById('bg-video');
+  if (!videoEl) return;
+
+  // Pause video when page is hidden
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      // Page is hidden - pause video
+      if (!videoEl.paused) {
+        videoEl.dataset.wasPlaying = 'true';
+        videoEl.pause();
+      }
+    } else {
+      // Page is visible again - resume video if it was playing
+      if (videoEl.dataset.wasPlaying === 'true' && videoEl.paused) {
+        videoEl.play();
+        videoEl.dataset.wasPlaying = 'false';
+      }
+    }
+  });
+}
+
+// Initialize visibility handler when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initVideoVisibilityHandler);
+} else {
+  initVideoVisibilityHandler();
+}
+
 function applyBg() {
   const bg = loadBg();
   document.body.setAttribute("data-bg", bg);
+  
+  // Update thumbnail selection
   const thumbs = document.querySelectorAll('.bg-thumb');
   for (let i = 0; i < thumbs.length; i++) {
     thumbs[i].classList.toggle('selected', thumbs[i].getAttribute('data-bg') === bg);
   }
-  const imgUrl = window._findBackgroundUrlById ? window._findBackgroundUrlById(bg) : '';
-  if (imgUrl) document.body.style.background = `url('${imgUrl}') center center/cover no-repeat fixed`;
-  else document.body.style.background = '';
+  
+  // Get background data from the map
+  const bgData = window._backgrounds ? window._backgrounds.find(b => b.id === bg) : null;
+  if (!bgData) return;
+  
+  const thumbnailEl = document.getElementById('bg-thumbnail');
+  const fullEl = document.getElementById('bg-full');
+  const videoEl = document.getElementById('bg-video');
+  const containerEl = document.getElementById('background-container');
+  
+  if (!thumbnailEl || !fullEl) return;
+  
+  // Handle video background
+  if (bgData.type === 'video') {
+    // Reset image states
+    fullEl.classList.remove('loaded');
+    thumbnailEl.classList.remove('hidden');
+    fullEl.src = '';
+    
+    // Check video support - both canPlayType and HTML5 video element support
+    if (!supportsVideo() || !supportsVideoElement()) {
+      // Fallback: use thumbnail as background for unsupported browsers
+      containerEl.classList.add('video-fallback');
+      thumbnailEl.src = bgData.thumb;
+      // Still load the full image as fallback
+      const fullImg = new Image();
+      fullImg.onload = function() {
+        fullEl.src = bgData.thumb;
+        requestAnimationFrame(() => {
+          fullEl.classList.add('loaded');
+          setTimeout(() => {
+            thumbnailEl.classList.add('hidden');
+          }, 1200);
+        });
+      };
+      fullImg.src = bgData.thumb;
+      return;
+    }
+    
+    // Remove fallback class and setup video
+    containerEl.classList.remove('video-fallback');
+    containerEl.classList.remove('video-error');
+    
+    if (videoEl) {
+      // Reset video element state
+      videoEl.classList.remove('hidden');
+      videoEl.classList.remove('active', 'ready');
+      
+      // Keep thumbnail visible while video loads (placeholder)
+      // This matches the image background behavior - show blurred thumbnail first
+      thumbnailEl.classList.remove('hidden');
+      
+      // Set thumbnail source for placeholder (show blurred version while video loads)
+      thumbnailEl.src = bgData.thumb;
+      
+      fullEl.classList.remove('loaded');
+      fullEl.src = '';
+      
+      // Set video source
+      videoEl.querySelector('source').src = bgData.url;
+      videoEl.load();
+      
+      // Set initial state - video starts hidden (opacity: 0)
+      videoEl.classList.add('loading');
+      videoEl.classList.remove('active');
+      
+      // Start playing immediately while fading in - mimics image loading behavior
+      // This ensures the video starts playback right away without waiting for full buffer
+      const startVideoPlayback = function() {
+        const playPromise = videoEl.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            // Auto-play was prevented, but that's okay for background video
+            console.warn('Video auto-play prevented:', error);
+          });
+        }
+      };
+      
+      // Helper to trigger crossfade between thumbnail and video
+      const triggerCrossfade = function() {
+        // Start video playback immediately
+        startVideoPlayback();
+        
+        // Remove loading class - video is now ready to show
+        videoEl.classList.remove('loading');
+        
+        // Add active class to trigger video fade-in (2s ease-in-out)
+        videoEl.classList.add('active');
+        videoEl.classList.add('ready');
+        
+        // Start thumbnail blur-to-clear animation at the same time as video fade-in
+        // This creates a smooth blur-to-clear effect while video fades in
+        // The thumbnail will fade out (opacity 0) while clearing blur (blur 0px)
+        thumbnailEl.classList.add('clearing');
+        
+        // After crossfade completes, fully hide the thumbnail
+        // Use 3000ms to ensure video is fully visible before hiding thumbnail
+        // This matches the 2.5s opacity transition in CSS
+        setTimeout(() => {
+          thumbnailEl.classList.add('hidden');
+          thumbnailEl.classList.remove('clearing');
+        }, 3000); // Match CSS opacity transition duration
+      };
+      
+      // Video can play through - trigger crossfade
+      videoEl.oncanplaythrough = function() {
+        triggerCrossfade();
+      };
+      
+      // Fallback: if canplaythrough takes too long, trigger on loadeddata
+      videoEl.onloadeddata = function() {
+        // Only trigger if active class hasn't been added yet
+        if (!videoEl.classList.contains('active')) {
+          triggerCrossfade();
+        }
+      };
+      
+      // Additional fallback: ensure crossfade happens after video starts playing
+      videoEl.onplaying = function() {
+        if (!videoEl.classList.contains('active')) {
+          triggerCrossfade();
+        }
+      };
+      
+      // Video loaded metadata - ensure proper sizing
+      videoEl.onloadedmetadata = function() {
+        // Force video to maintain proper scaling after metadata loads
+        videoEl.style.width = '100%';
+        videoEl.style.height = '100%';
+      };
+      
+      // Video playback error - fallback to thumbnail
+      videoEl.onerror = function() {
+        console.warn('Video background failed to load, falling back to image');
+        containerEl.classList.add('video-error');
+        videoEl.classList.add('hidden');
+        thumbnailEl.classList.remove('hidden');
+        thumbnailEl.src = bgData.thumb;
+        const fullImg = new Image();
+        fullImg.onload = function() {
+          fullEl.src = bgData.thumb;
+          requestAnimationFrame(() => {
+            fullEl.classList.add('loaded');
+          });
+        };
+        fullImg.src = bgData.thumb;
+      };
+      
+      // Handle video abort (user navigated away, etc.)
+      videoEl.onabort = function() {
+        console.warn('Video background playback aborted');
+      };
+    }
+    return;
+  }
+  
+  // Reset video element for image backgrounds
+  if (videoEl) {
+    videoEl.classList.remove('active', 'loading');
+    videoEl.classList.add('hidden');
+    videoEl.pause();
+    videoEl.querySelector('source').src = '';
+  }
+  containerEl && containerEl.classList.remove('video-fallback');
+  
+  // Handle image background (original logic)
+  // Reset states
+  fullEl.classList.remove('loaded');
+  thumbnailEl.classList.remove('hidden');
+  
+  // Immediately show blurred thumbnail
+  thumbnailEl.src = bgData.thumb;
+  
+  // Start loading full resolution image
+  const fullImg = new Image();
+  fullImg.onload = function() {
+    fullEl.src = bgData.url;
+    // Small delay to ensure browser has rendered
+    requestAnimationFrame(() => {
+      fullEl.classList.add('loaded');
+      // Hide thumbnail after transition completes
+      setTimeout(() => {
+        thumbnailEl.classList.add('hidden');
+      }, 1200); // Match CSS transition duration
+    });
+  };
+  fullImg.src = bgData.url;
 }
 
 // Delegate click events for backgrounds
@@ -183,6 +455,8 @@ document.addEventListener("change", function (e) {
     const selectedTheme = e.target.value;
     localStorage.setItem("theme", selectedTheme);
     applyTheme();
+    // Dispatch custom event for AI chat and other components to respond
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: selectedTheme } }));
   } else if (e.target.name === "language") {
     const selectedLanguage = e.target.value;
     localStorage.setItem("language", selectedLanguage);
@@ -252,6 +526,10 @@ if (settingsMenu) {
       if (section === 'background' && !backgroundsInitialized) {
         backgroundsInitialized = true;
         if (window._initBackgrounds) window._initBackgrounds();
+        if (window._initStaticBackgrounds) window._initStaticBackgrounds();
+        if (window._initLiveBackgrounds) window._initLiveBackgrounds();
+        // Apply background selection after loading
+        applyBg();
       }
       // No special logic needed for 'about' tab, just show the section
     });
@@ -296,7 +574,7 @@ function initAboutSection() {
             <div class="setting-content">
               <label data-i18n="project">${t('project')}</label>
               <div style="font-size: 16px; font-weight: 600; color: var(--settings-text-color); margin-bottom: 4px;">New-Tab</div>
-              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">Version v${currentVersion}</div>
+              <div style="font-size: 14px; color: rgba(107, 114, 128, 0.8);">${t('versionLabel')} v${currentVersion}</div>
             </div>
           </div>
 
@@ -384,11 +662,12 @@ function initAboutSection() {
 
     if (manualCheckButton && window.updateChecker) {
       manualCheckButton.addEventListener('click', async function() {
+        const tBtn = window.i18n ? window.i18n.t : (key => key);
         this.disabled = true;
-        this.textContent = 'Checking...';
+        this.textContent = tBtn('checking');
         await updateChecker.manualCheck();
         this.disabled = false;
-        this.textContent = 'Check for Updates Now';
+        this.textContent = tBtn('checkNow');
         // Refresh the about section after manual check
         setTimeout(() => initAboutSection(), 100);
       });
@@ -409,6 +688,9 @@ function initAboutSection() {
   }
 }
 
+// Expose initAboutSection globally so language changes can re-render it
+window.initAboutSection = initAboutSection;
+
 function initSettings() {
   // Apply initial settings
   applyBg();
@@ -422,6 +704,11 @@ function initSettings() {
   // Initialize modern color pickers
   if (window.initModernColorPickers) {
     window.initModernColorPickers();
+  }
+  
+  // Initialize modern font pickers
+  if (window.initModernFontPickers) {
+    window.initModernFontPickers();
   }
 }
 

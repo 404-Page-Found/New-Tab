@@ -13,16 +13,27 @@ const translations = {
     addTodo: "Add Todo",
     bing: "Bing",
     google: "Google",
-    selectAll: "Select All",
-    complete: "Complete",
-    delete: "Delete",
-    selectedCount: "selected",
     noTodos: "No todos yet. Add one above!",
     noTodosHint: "Try adding due dates for better organization.",
     newAppTitle: "New App",
+    newAppDescription: "Enter a website URL to add it to your apps",
     enterUrl: "Enter website URL",
     cancel: "Cancel",
     create: "Create",
+    quickAdd: "Quick Add",
+    quickAddDesc: "Popular apps to get you started",
+
+    // URL Validation messages
+    validationPleaseEnter: "Please enter a URL or search query",
+    validationInvalidAppears: "This URL appears to be invalid. Press Enter to Create",
+    validationMissingHostname: "Invalid URL: missing hostname",
+    validationInvalidChars: "Invalid URL: hostname contains invalid characters",
+    validationTldTooShort: "Invalid URL: top-level domain too short",
+    validationIncompleteDomain: "Invalid URL: incomplete domain name",
+    validationIpOutOfRange: "Invalid URL: IP address out of range",
+    validationValid: "Valid URL",
+    validationMalformed: "Malformed URL",
+
     refreshMotto: "Refresh motto",
     copyMotto: "Copy motto",
     renameApp: "Rename",
@@ -43,10 +54,14 @@ const translations = {
     generalSettings: "General",
     generalSettingsDesc: "Configure basic app behavior",
     openNewTab: "Open apps in a new tab",
+    enableTodoList: "Enable todo list",
 
     // Background settings
     backgroundSettings: "Background",
     backgroundSettingsDesc: "Choose your background image",
+    liveBackground: "Live Background",
+    liveBackgroundSettings: "Live Background",
+    liveBackgroundSettingsDesc: "Choose an animated background video",
 
     // Apps settings
     appsSettings: "Apps",
@@ -103,6 +118,15 @@ const translations = {
     updateStatus: "Update checker not loaded",
     checkNow: "Check for Updates Now",
     updateDesc: "Checks for new versions from GitHub releases once per day when enabled.",
+    versionLabel: "Version",
+    updateChecksDisabled: "Update checks disabled",
+    neverChecked: "Never checked for updates",
+    lastCheckedLessThanHour: "Last checked: less than an hour ago",
+    lastCheckedHoursAgo: "Last checked: {n} hour ago",
+    lastCheckedHoursAgoPlural: "Last checked: {n} hours ago",
+    lastCheckedDaysAgo: "Last checked: {n} day ago",
+    lastCheckedDaysAgoPlural: "Last checked: {n} days ago",
+    checking: "Checking...",
 
     // Calendar
     clear: "Clear",
@@ -133,7 +157,70 @@ const translations = {
 
     // Todo date picker
     clearDate: "Clear",
-    todayDate: "Today"
+    todayDate: "Today",
+
+    // Onboarding
+    onboardingLanguageTitle: "Choose Your Language 🌐",
+    onboardingLanguageContent: "Select your preferred language for the interface. You can change this later in Settings.",
+    onboardingThemeTitle: "Choose Your Theme 🌙",
+    onboardingThemeContent: "Select your preferred interface theme. You can switch between dark and light modes anytime in Settings.",
+    onboardingWelcomeTitle: "Welcome to New-Tab! 🎉",
+    onboardingWelcomeContent: "Let's take a quick tour of the features to help you get started with personalizing your new tab page.",
+    onboardingClockTitle: "Clock & Date Display",
+    onboardingClockContent: "Your current time and date are displayed here. You can customize the appearance in Settings.",
+    onboardingSearchTitle: "Smart Search",
+    onboardingSearchContent: "Search the web directly from your new tab. Click the search icon to switch between different search engines.",
+    onboardingAppsTitle: "App Shortcuts",
+    onboardingAppsContent: "Add your favorite websites as quick-launch icons. Drag and drop to reorder them.",
+    onboardingBackgroundTitle: "Beautiful Backgrounds",
+    onboardingBackgroundContent: "Choose from stunning built-in backgrounds or upload your own. Access this in Settings > Background.",
+    onboardingMottoTitle: "Daily Inspiration",
+    onboardingMottoContent: "Enjoy a new motivational quote each day. Click the refresh button to get a random quote or the copy button to copy it.",
+    onboardingSettingsTitle: "Customization Center",
+    onboardingSettingsContent: "Click the gear icon to access extensive customization options for themes, styling, and more.",
+    onboardingCompleteTitle: "You're All Set! ✨",
+    onboardingCompleteContent: "You now know the basics of New-Tab. Explore the settings to make it truly yours. You can always restart this tour from Settings > About.",
+
+    // Onboarding navigation
+    previous: "Previous",
+    next: "Next",
+    finish: "Finish",
+
+    // AI Assistant
+    ai: "AI Assistant",
+    aiAssistant: "AI Assistant",
+    aiWelcome: "Welcome to AI Assistant",
+    aiWelcomeSubtitle: "Ask me anything!",
+    aiPlaceholder: "Type your message...",
+    aiError: "An error occurred. Please try again.",
+    aiRateLimit: "Too many requests. Please wait.",
+    aiClearConfirm: "Clear chat history?",
+    aiAPIKeyMissing: "API key not configured",
+    aiSearchEnabled: "Enable AI search",
+    aiSearchConversations: "Search...",
+    aiDeleteConfirmTitle: "Delete Conversation?",
+    aiDeleteConfirmMessage: "This action cannot be undone. The entire conversation will be permanently removed.",
+    aiNewChat: "New Chat",
+    aiConversations: "Conversations",
+    aiNoConversations: "No conversations yet",
+    aiNewConversation: "New Conversation",
+    aiDeleteConversation: "Ctrl+Click to delete without confirmation",
+    aiDeleteConfirm: "Delete this conversation?",
+    aiJustNow: "Just now",
+    aiOnline: "Online",
+    aiOffline: "Offline",
+    aiThinking: "Thinking...",
+    aiAuthError: "Invalid or missing API key",
+    aiForbidden: "Access forbidden",
+    aiServerError: "Service error. Please try again later.",
+    aiNetworkError: "Network error occurred",
+    aiInvalidResponse: "Invalid response format",
+    aiNoContent: "No content in response",
+    aiMessageRequired: "Message is required",
+    aiMessageEmpty: "Message cannot be empty",
+    aiMessageTooLong: "Message too long (max 2000 characters)",
+    aiStopStreaming: "Stop",
+    aiScrollToBottom: "Scroll to bottom"
   },
 
   zh: {
@@ -148,16 +235,27 @@ const translations = {
     addTodo: "添加待办",
     bing: "必应",
     google: "谷歌",
-    selectAll: "全选",
-    complete: "完成",
-    delete: "删除",
-    selectedCount: "已选中",
     noTodos: "还没有待办事项。在上方添加一个！",
     noTodosHint: "尝试添加到期日期以更好地组织。",
     newAppTitle: "新建应用",
+    newAppDescription: "输入网站URL将其添加到您的应用",
     enterUrl: "输入网站URL",
     cancel: "取消",
     create: "创建",
+    quickAdd: "快速添加",
+    quickAddDesc: "热门应用让您快速上手",
+
+    // URL Validation messages
+    validationPleaseEnter: "请输入URL或搜索词",
+    validationInvalidAppears: "此URL似乎无效。按回车键创建",
+    validationMissingHostname: "无效URL：缺少主机名",
+    validationInvalidChars: "无效URL：主机名包含无效字符",
+    validationTldTooShort: "无效URL：顶级域名太短",
+    validationIncompleteDomain: "无效URL：域名不完整",
+    validationIpOutOfRange: "无效URL：IP地址超出范围",
+    validationValid: "有效URL",
+    validationMalformed: "格式错误的URL",
+
     refreshMotto: "刷新格言",
     copyMotto: "复制格言",
     renameApp: "重命名",
@@ -178,10 +276,14 @@ const translations = {
     generalSettings: "通用",
     generalSettingsDesc: "配置基本应用行为",
     openNewTab: "在新标签页中打开应用",
+    enableTodoList: "启用待办清单",
 
     // Background settings
     backgroundSettings: "背景",
     backgroundSettingsDesc: "选择您的背景图片",
+    liveBackground: "动态背景",
+    liveBackgroundSettings: "动态背景",
+    liveBackgroundSettingsDesc: "选择动态背景视频",
 
     // Apps settings
     appsSettings: "应用",
@@ -238,6 +340,15 @@ const translations = {
     updateStatus: "更新检查器未加载",
     checkNow: "立即检查更新",
     updateDesc: "启用后，每天从 GitHub releases 检查新版本一次。",
+    versionLabel: "版本",
+    updateChecksDisabled: "更新检查已禁用",
+    neverChecked: "从未检查更新",
+    lastCheckedLessThanHour: "上次检查：不到一小时前",
+    lastCheckedHoursAgo: "上次检查：{n} 小时前",
+    lastCheckedHoursAgoPlural: "上次检查：{n} 小时前",
+    lastCheckedDaysAgo: "上次检查：{n} 天前",
+    lastCheckedDaysAgoPlural: "上次检查：{n} 天前",
+    checking: "检查中...",
 
     // Calendar
     clear: "清除",
@@ -268,7 +379,70 @@ const translations = {
 
     // Todo date picker
     clearDate: "清除",
-    todayDate: "今天"
+    todayDate: "今天",
+
+    // Onboarding
+    onboardingLanguageTitle: "选择您的语言 🌐",
+    onboardingLanguageContent: "为界面选择您偏好的语言。您可以稍后在设置中更改此选项。",
+    onboardingThemeTitle: "选择您的主题 🌙",
+    onboardingThemeContent: "选择您偏好的界面主题。您可以随时在设置中在深色和浅色模式之间切换。",
+    onboardingWelcomeTitle: "欢迎使用 New-Tab！🎉",
+    onboardingWelcomeContent: "让我们快速浏览一下功能，帮助您开始个性化新标签页。",
+    onboardingClockTitle: "时钟和日期显示",
+    onboardingClockContent: "此处显示您当前的日期和时间。您可以在设置中自定义外观。",
+    onboardingSearchTitle: "智能搜索",
+    onboardingSearchContent: "直接从新标签页搜索网络。点击搜索图标可在不同的搜索引擎之间切换。",
+    onboardingAppsTitle: "应用快捷方式",
+    onboardingAppsContent: "将您最喜爱的网站添加为快速启动图标。拖拽重新排序。",
+    onboardingBackgroundTitle: "美丽的背景",
+    onboardingBackgroundContent: "从令人惊叹的内置背景中选择，或上传您自己的背景。在设置 > 背景中访问此功能。",
+    onboardingMottoTitle: "每日灵感",
+    onboardingMottoContent: "每天享受新的励志语录。点击刷新按钮获取随机语录或点击复制按钮复制它。",
+    onboardingSettingsTitle: "自定义中心",
+    onboardingSettingsContent: "点击齿轮图标访问主题、样式等方面的广泛自定义选项。",
+    onboardingCompleteTitle: "您已准备就绪！✨",
+    onboardingCompleteContent: "您现在知道了 New-Tab 的基础知识。探索设置以使其真正属于您。您可以随时从设置 > 关于中重新启动此之旅。",
+
+    // Onboarding navigation
+    previous: "上一步",
+    next: "下一步",
+    finish: "完成",
+
+    // AI Assistant
+    ai: "AI 助手",
+    aiAssistant: "AI 助手",
+    aiWelcome: "欢迎使用 AI 助手",
+    aiWelcomeSubtitle: "问我任何问题！",
+    aiPlaceholder: "输入您的消息...",
+    aiError: "发生错误，请重试。",
+    aiRateLimit: "请求过多，请稍后再试。",
+    aiClearConfirm: "清除聊天历史？",
+    aiAPIKeyMissing: "API 密钥未配置",
+    aiSearchEnabled: "启用 AI 搜索",
+    aiSearchConversations: "搜索...",
+    aiDeleteConfirmTitle: "删除对话？",
+    aiDeleteConfirmMessage: "此操作无法撤消。整个对话将被永久删除。",
+    aiNewChat: "新对话",
+    aiConversations: "对话列表",
+    aiNoConversations: "暂无对话记录",
+    aiNewConversation: "新对话",
+    aiDeleteConversation: "Ctrl+点击直接删除",
+    aiDeleteConfirm: "确定删除此对话？",
+    aiJustNow: "刚刚",
+    aiOnline: "在线",
+    aiOffline: "离线",
+    aiThinking: "思考中...",
+    aiAuthError: "API 密钥无效或未配置",
+    aiForbidden: "访问被拒绝",
+    aiServerError: "服务错误，请稍后再试。",
+    aiNetworkError: "网络错误",
+    aiInvalidResponse: "响应格式无效",
+    aiNoContent: "响应中没有内容",
+    aiMessageRequired: "消息不能为空",
+    aiMessageEmpty: "消息不能为空",
+    aiMessageTooLong: "消息太长（最多2000个字符）",
+    aiStopStreaming: "停止",
+    aiScrollToBottom: "滚动到底部"
   }
 };
 
@@ -313,6 +487,15 @@ function applyLanguage(lang) {
     }
   });
 
+  // Update all elements with data-i18n-placeholder attribute
+  const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
+  placeholderElements.forEach(element => {
+    const key = element.getAttribute('data-i18n-placeholder');
+    if (translations[lang] && translations[lang][key]) {
+      element.placeholder = translations[lang][key];
+    }
+  });
+
   // Update any dynamic content that might have been added after initial load
   updateDynamicTranslations();
 }
@@ -334,23 +517,6 @@ function updateDynamicTranslations() {
   const emptyStateSmall = document.querySelector('.empty-state small');
   if (emptyStateSmall) {
     emptyStateSmall.textContent = translations[currentLanguage].noTodosHint;
-  }
-
-  // Update bulk actions
-  const selectAllBtn = document.getElementById('select-all-btn');
-  if (selectAllBtn) selectAllBtn.textContent = translations[currentLanguage].selectAll;
-
-  const completeSelectedBtn = document.getElementById('complete-selected-btn');
-  if (completeSelectedBtn) completeSelectedBtn.textContent = translations[currentLanguage].complete;
-
-  const deleteSelectedBtn = document.getElementById('delete-selected-btn');
-  if (deleteSelectedBtn) deleteSelectedBtn.textContent = translations[currentLanguage].delete;
-
-  // Update selected count text
-  const selectedCount = document.getElementById('selected-count');
-  if (selectedCount) {
-    const count = selectedCount.textContent.split(' ')[0];
-    selectedCount.textContent = `${count} ${translations[currentLanguage].selectedCount}`;
   }
 
   // Re-render apps to update default app names
@@ -376,6 +542,39 @@ function updateDynamicTranslations() {
   // Update motto to match new language
   if (window.displayDailyMotto) {
     window.displayDailyMotto();
+  }
+
+  // Re-render the About section so version label and last-checked text update
+  if (window.initAboutSection) {
+    window.initAboutSection();
+  }
+
+  // Update background section headers if they exist
+  const bgStaticHeader = document.querySelector('#bg-static-section .bg-subsection-header');
+  const bgLiveHeader = document.querySelector('#bg-live-section .bg-subsection-header');
+  const bgStaticDesc = document.querySelector('#bg-static-section .bg-subsection-desc');
+  const bgLiveDesc = document.querySelector('#bg-live-section .bg-subsection-desc');
+  
+  if (bgStaticHeader) {
+    bgStaticHeader.textContent = translations[currentLanguage].background || 'Background';
+  }
+  if (bgLiveHeader) {
+    bgLiveHeader.textContent = translations[currentLanguage].liveBackground || 'Live Background';
+  }
+  if (bgStaticDesc) {
+    bgStaticDesc.textContent = translations[currentLanguage].backgroundSettingsDesc || 'Choose your background image';
+  }
+  if (bgLiveDesc) {
+    bgLiveDesc.textContent = translations[currentLanguage].liveBackgroundSettingsDesc || 'Choose an animated background video';
+  }
+
+  // Update Add App modal if it's open
+  const addAppModal = document.getElementById('add-app-modal');
+  if (addAppModal && addAppModal.style.display !== 'none') {
+    // Trigger updatePreview to refresh validation messages
+    if (window.updateAddAppPreview) {
+      window.updateAddAppPreview();
+    }
   }
 }
 

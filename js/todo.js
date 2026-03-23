@@ -3,13 +3,18 @@
 // State management
 let todos = [];
 let filteredTodos = [];
-let selectedTodos = new Set();
 let currentFilters = {
   status: 'all'
 };
 
 // DOM elements
 let elements = {};
+
+// Edit modal state
+let editModalState = {
+  currentTodoId: null,
+  isOpen: false
+};
 
 // Load todos from localStorage
 function loadTodos() {
@@ -50,26 +55,6 @@ function isOverdue(dateString) {
   return dueDate < today;
 }
 
-// Progress calculation
-function updateProgress() {
-  const total = todos.length;
-  const completed = todos.filter(todo => todo.completed).length;
-  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
-
-  // Update progress ring
-  const progressRing = elements.progressRing;
-  const progressText = elements.progressText;
-  if (progressRing && progressText) {
-    const circle = progressRing.querySelector('circle:last-child');
-    const radius = 16;
-    const circumference = 2 * Math.PI * radius;
-    const offset = circumference - (percentage / 100) * circumference;
-
-    circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = offset;
-    progressText.textContent = `${percentage}%`;
-  }
-}
 
 // Filtering and sorting
 function filterTodos() {
@@ -91,31 +76,49 @@ function filterTodos() {
     });
   }
 
-  // Sort by due date, then by creation date
+  // Sort: incomplete items first (by order), then completed items (by completion time)
   filtered.sort((a, b) => {
-    // Due date first
-    if (a.dueDate && b.dueDate) {
-      return new Date(a.dueDate) - new Date(b.dueDate);
-    } else if (a.dueDate) {
-      return -1;
-    } else if (b.dueDate) {
-      return 1;
+    // If both are incomplete, sort by order (original position)
+    if (!a.completed && !b.completed) {
+      const orderA = a.order !== undefined ? a.order : new Date(a.createdAt).getTime();
+      const orderB = b.order !== undefined ? b.order : new Date(b.createdAt).getTime();
+      return orderA - orderB;
     }
-
-    // Creation date last
-    return new Date(a.createdAt) - new Date(b.createdAt);
+    
+    // If both are completed, sort by completion time (chronological)
+    if (a.completed && b.completed) {
+      const timeA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
+      const timeB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
+      return timeA - timeB;
+    }
+    
+    // Incomplete items come first
+    if (!a.completed && b.completed) return -1;
+    if (a.completed && !b.completed) return 1;
+    
+    return 0;
   });
 
   filteredTodos = filtered;
   return filtered;
 }
 
-// Render the todo list
+// Render the todo list with FLIP animation for smooth reordering
 function renderTodos() {
   const todoList = elements.todoList;
   const emptyState = elements.emptyState;
 
   if (!todoList || !emptyState) return;
+
+  // Get existing element positions (First step of FLIP)
+  const existingItems = {};
+  todoList.querySelectorAll('.todo-item').forEach(item => {
+    const rect = item.getBoundingClientRect();
+    existingItems[item.dataset.id] = {
+      top: rect.top,
+      left: rect.left
+    };
+  });
 
   // Clear existing list
   todoList.innerHTML = '';
@@ -123,7 +126,6 @@ function renderTodos() {
   // Show/hide empty state
   if (filteredTodos.length === 0) {
     emptyState.style.display = 'flex';
-    updateBulkActionsVisibility();
     return;
   }
 
@@ -136,15 +138,11 @@ function renderTodos() {
     li.dataset.id = todo.id;
     li.draggable = true;
 
-    const isSelected = selectedTodos.has(todo.id);
-
     li.innerHTML = `
-      <input type="checkbox" class="todo-bulk-checkbox" ${isSelected ? 'checked' : ''} data-id="${todo.id}">
       <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-id="${todo.id}">
       <div class="todo-content">
         <p class="todo-text">${todo.text}</p>
         <div class="todo-meta">
-          ${todo.dueDate ? `<span class="todo-due-date ${isOverdue(todo.dueDate) ? 'overdue' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${formatDate(todo.dueDate)}</span>` : ''}
         </div>
       </div>
       <div class="todo-actions">
@@ -165,29 +163,38 @@ function renderTodos() {
       </div>
     `;
 
-    // Add animation delay
+    // Add animation delay for new items
     li.style.animationDelay = `${index * 0.05}s`;
     li.setAttribute('data-animation', 'enter');
 
     todoList.appendChild(li);
   });
 
-  updateBulkActionsVisibility();
-}
+  // Apply FLIP animation for reordering
+  requestAnimationFrame(() => {
+    todoList.querySelectorAll('.todo-item').forEach(item => {
+      const id = item.dataset.id;
+      if (existingItems[id]) {
+        const newRect = item.getBoundingClientRect();
+        const oldPos = existingItems[id];
+        const deltaY = oldPos.top - newRect.top;
+        const deltaX = oldPos.left - newRect.left;
 
-// Update bulk actions visibility
-function updateBulkActionsVisibility() {
-  const bulkActions = elements.bulkActions;
-  const selectedCount = elements.selectedCount;
+        // If position changed, apply flip animation
+        if (deltaY !== 0 || deltaX !== 0) {
+          // Invert: move item back to original position
+          item.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+          item.style.transition = 'none';
 
-  if (!bulkActions || !selectedCount) return;
-
-  if (selectedTodos.size > 0) {
-    bulkActions.style.display = 'flex';
-    selectedCount.textContent = `${selectedTodos.size} selected`;
-  } else {
-    bulkActions.style.display = 'none';
-  }
+          // Play: animate to new position
+          requestAnimationFrame(() => {
+            item.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            item.style.transform = '';
+          });
+        }
+      }
+    });
+  });
 }
 
 // Add a new todo
@@ -198,14 +205,34 @@ function addTodo(text, dueDate = null) {
     id: generateTodoId(),
     text: text.trim(),
     completed: false,
+    completedAt: null, // Track when todo was completed
     dueDate: dueDate,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    order: todos.length // Add order property to track position
   };
 
   todos.push(newTodo);
   saveTodos(todos);
   applyFilters();
   clearInputs();
+}
+
+// Migrate existing todos to have completedAt property
+function migrateTodos() {
+  let needsMigration = false;
+  
+  todos.forEach(todo => {
+    if (todo.completedAt === undefined) {
+      // For existing completed todos without completedAt,
+      // use createdAt as a fallback (they were completed before this feature)
+      todo.completedAt = todo.completed ? todo.createdAt : null;
+      needsMigration = true;
+    }
+  });
+  
+  if (needsMigration) {
+    saveTodos(todos);
+  }
 }
 
 // Edit a todo
@@ -225,6 +252,14 @@ function toggleTodo(id) {
   const todo = todos.find(t => t.id === id);
   if (todo) {
     todo.completed = !todo.completed;
+    
+    // Track completion time for sorting
+    if (todo.completed) {
+      todo.completedAt = new Date().toISOString();
+    } else {
+      todo.completedAt = null;
+    }
+    
     saveTodos(todos);
     applyFilters();
   }
@@ -233,40 +268,6 @@ function toggleTodo(id) {
 // Delete a todo
 function deleteTodo(id) {
   todos = todos.filter(t => t.id !== id);
-  selectedTodos.delete(id);
-  saveTodos(todos);
-  applyFilters();
-}
-
-// Bulk operations
-function toggleTodoSelection(id) {
-  if (selectedTodos.has(id)) {
-    selectedTodos.delete(id);
-  } else {
-    selectedTodos.add(id);
-  }
-  renderTodos();
-}
-
-function selectAllTodos() {
-  filteredTodos.forEach(todo => selectedTodos.add(todo.id));
-  renderTodos();
-}
-
-function completeSelectedTodos() {
-  todos.forEach(todo => {
-    if (selectedTodos.has(todo.id)) {
-      todo.completed = true;
-    }
-  });
-  selectedTodos.clear();
-  saveTodos(todos);
-  applyFilters();
-}
-
-function deleteSelectedTodos() {
-  todos = todos.filter(todo => !selectedTodos.has(todo.id));
-  selectedTodos.clear();
   saveTodos(todos);
   applyFilters();
 }
@@ -275,7 +276,6 @@ function deleteSelectedTodos() {
 function applyFilters() {
   filterTodos();
   renderTodos();
-  updateProgress();
 }
 
 function updateFilters() {
@@ -328,6 +328,11 @@ function handleDrop(event) {
   const [removed] = filteredTodos.splice(draggedIndex, 1);
   filteredTodos.splice(dropIndex, 0, removed);
 
+  // Update the order property for all todos to match the new order
+  filteredTodos.forEach((todo, index) => {
+    todo.order = index;
+  });
+
   // Update the main todos array to match the new order
   const newOrder = filteredTodos.map(todo => todo.id);
   todos.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
@@ -362,14 +367,6 @@ function handleTodoListClick(event) {
     return;
   }
 
-  // Handle bulk checkbox
-  if (target.classList.contains('todo-bulk-checkbox')) {
-    event.stopPropagation();
-    const id = target.dataset.id;
-    toggleTodoSelection(id);
-    return;
-  }
-
   // Handle delete button
   if (target.closest('.todo-delete-btn')) {
     event.stopPropagation();
@@ -382,14 +379,63 @@ function handleTodoListClick(event) {
   if (target.closest('.todo-edit-btn')) {
     event.stopPropagation();
     const id = target.closest('.todo-edit-btn').dataset.id;
-    // For now, just focus on the item (could expand to inline editing)
-    const todoItem = target.closest('.todo-item');
-    todoItem.style.transform = 'scale(1.02)';
-    setTimeout(() => {
-      todoItem.style.transform = '';
-    }, 200);
+    openEditModal(id);
     return;
   }
+}
+
+// Edit Modal Functions
+function openEditModal(id) {
+  const todo = todos.find(t => t.id === id);
+  if (!todo) return;
+
+  editModalState.currentTodoId = id;
+  editModalState.isOpen = true;
+
+  // Populate modal fields
+  const textInput = document.getElementById('todo-edit-text');
+  const modal = document.getElementById('todo-edit-modal');
+
+  if (textInput) textInput.value = todo.text;
+
+  // Show modal
+  if (modal) {
+    modal.style.display = 'flex';
+    // Focus on text input
+    setTimeout(() => {
+      if (textInput) textInput.focus();
+    }, 100);
+  }
+}
+
+function closeEditModal() {
+  editModalState.currentTodoId = null;
+  editModalState.isOpen = false;
+
+  const modal = document.getElementById('todo-edit-modal');
+
+  if (modal) modal.style.display = 'none';
+}
+
+function saveEdit() {
+  if (!editModalState.currentTodoId) return;
+
+  const textInput = document.getElementById('todo-edit-text');
+
+  const newText = textInput ? textInput.value.trim() : '';
+
+  if (!newText) {
+    // Show error or focus on text input
+    if (textInput) textInput.focus();
+    return;
+  }
+
+  // Get the existing todo to preserve its due date
+  const existingTodo = todos.find(t => t.id === editModalState.currentTodoId);
+  const preservedDueDate = existingTodo ? existingTodo.dueDate : null;
+
+  editTodo(editModalState.currentTodoId, newText, null, preservedDueDate);
+  closeEditModal();
 }
 
 // Initialize todo functionality
@@ -401,14 +447,7 @@ function initTodo() {
     addTodoBtn: document.getElementById('add-todo-btn'),
     todoList: document.getElementById('todo-list'),
     emptyState: document.getElementById('empty-state'),
-    filterStatus: document.getElementById('filter-status'),
-    bulkActions: document.getElementById('bulk-actions'),
-    selectedCount: document.getElementById('selected-count'),
-    selectAllBtn: document.getElementById('select-all-btn'),
-    completeSelectedBtn: document.getElementById('complete-selected-btn'),
-    deleteSelectedBtn: document.getElementById('delete-selected-btn'),
-    progressRing: document.querySelector('.progress-ring-circle'),
-    progressText: document.querySelector('.progress-text')
+    filterStatus: document.getElementById('filter-status')
   };
 
   // Check if all elements exist
@@ -420,6 +459,9 @@ function initTodo() {
 
   // Load todos
   todos = loadTodos();
+  
+  // Migrate existing todos to have completedAt property
+  migrateTodos();
 
   // Event listeners
   elements.addTodoBtn.addEventListener('click', handleAddTodo);
@@ -428,17 +470,6 @@ function initTodo() {
   // Filter listeners
   if (elements.filterStatus) {
     elements.filterStatus.addEventListener('change', updateFilters);
-  }
-
-  // Bulk action listeners
-  if (elements.selectAllBtn) {
-    elements.selectAllBtn.addEventListener('click', selectAllTodos);
-  }
-  if (elements.completeSelectedBtn) {
-    elements.completeSelectedBtn.addEventListener('click', completeSelectedTodos);
-  }
-  if (elements.deleteSelectedBtn) {
-    elements.deleteSelectedBtn.addEventListener('click', deleteSelectedTodos);
   }
 
   // Todo list event delegation
@@ -450,9 +481,32 @@ function initTodo() {
   elements.todoList.addEventListener('dragover', handleDragOver);
   elements.todoList.addEventListener('drop', handleDrop);
 
+  // Edit modal event listeners
+  const editModalClose = document.getElementById('todo-edit-close');
+  const editModalCancel = document.getElementById('todo-edit-cancel');
+  const editModalSave = document.getElementById('todo-edit-save');
+  const editModal = document.getElementById('todo-edit-modal');
+
+  if (editModalClose) {
+    editModalClose.addEventListener('click', closeEditModal);
+  }
+  if (editModalCancel) {
+    editModalCancel.addEventListener('click', closeEditModal);
+  }
+  if (editModalSave) {
+    editModalSave.addEventListener('click', saveEdit);
+  }
+  // Close modal when clicking outside
+  if (editModal) {
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) {
+        closeEditModal();
+      }
+    });
+  }
+
   // Initial render
   applyFilters();
-  updateProgress();
 }
 
 // Custom Date Picker Functionality
