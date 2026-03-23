@@ -158,6 +158,16 @@ const translations = {
     // Todo date picker
     clearDate: "Clear",
     todayDate: "Today",
+    
+    // Todo filters
+    filterAll: "All",
+    filterPending: "Pending",
+    filterCompleted: "Completed",
+    filterOverdue: "Overdue",
+    markAllComplete: "Mark all complete",
+    clearCompleted: "Clear completed",
+    emptyStateTitle: "No todos yet. Add one above!",
+    emptyStateDesc: "Try adding due dates for better organization.",
 
     // Onboarding
     onboardingLanguageTitle: "Choose Your Language 🌐",
@@ -380,6 +390,16 @@ const translations = {
     // Todo date picker
     clearDate: "清除",
     todayDate: "今天",
+    
+    // Todo filters
+    filterAll: "全部",
+    filterPending: "待处理",
+    filterCompleted: "已完成",
+    filterOverdue: "已逾期",
+    markAllComplete: "全部标记完成",
+    clearCompleted: "清除已完成",
+    emptyStateTitle: "还没有待办事项。在上方添加一个！",
+    emptyStateDesc: "尝试添加到期日期以更好地组织。",
 
     // Onboarding
     onboardingLanguageTitle: "选择您的语言 🌐",
@@ -511,13 +531,31 @@ function updateDynamicTranslations() {
   // Update empty state messages
   const emptyStateP = document.querySelector('.empty-state p');
   if (emptyStateP) {
-    emptyStateP.textContent = translations[currentLanguage].noTodos;
+    emptyStateP.textContent = translations[currentLanguage].emptyStateTitle;
   }
 
   const emptyStateSmall = document.querySelector('.empty-state small');
   if (emptyStateSmall) {
-    emptyStateSmall.textContent = translations[currentLanguage].noTodosHint;
+    emptyStateSmall.textContent = translations[currentLanguage].emptyStateDesc;
   }
+  
+  // Update filter pills
+  const filterAll = document.querySelector('.filter-pill[data-filter="all"]');
+  const filterPending = document.querySelector('.filter-pill[data-filter="pending"]');
+  const filterCompleted = document.querySelector('.filter-pill[data-filter="completed"]');
+  const filterOverdue = document.querySelector('.filter-pill[data-filter="overdue"]');
+  
+  if (filterAll) filterAll.childNodes[0].textContent = translations[currentLanguage].filterAll + ' ';
+  if (filterPending) filterPending.childNodes[0].textContent = translations[currentLanguage].filterPending + ' ';
+  if (filterCompleted) filterCompleted.childNodes[0].textContent = translations[currentLanguage].filterCompleted + ' ';
+  if (filterOverdue) filterOverdue.childNodes[0].textContent = translations[currentLanguage].filterOverdue + ' ';
+  
+  // Update quick action button titles
+  const markAllCompleteBtn = document.getElementById('mark-all-complete');
+  const clearCompletedBtn = document.getElementById('clear-completed');
+  
+  if (markAllCompleteBtn) markAllCompleteBtn.title = translations[currentLanguage].markAllComplete;
+  if (clearCompletedBtn) clearCompletedBtn.title = translations[currentLanguage].clearCompleted;
 
   // Re-render apps to update default app names
   if (window.renderCustomApps) {

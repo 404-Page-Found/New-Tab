@@ -43,7 +43,17 @@
       <!-- Todo List Section -->
       <div class="todo-section">
       <div class="todo-header">
-          <h3 class="todo-title" data-i18n="todoList">Todo List</h3>
+          <div class="todo-header-left">
+            <h3 class="todo-title" data-i18n="todoList">Todo List</h3>
+            <span class="todo-count" id="todo-count"></span>
+          </div>
+          <div class="todo-progress-ring" id="todo-progress-ring">
+            <svg viewBox="0 0 36 36">
+              <path class="progress-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="progress-ring-fill" id="progress-ring-fill" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <span class="progress-text" id="progress-text">0%</span>
+          </div>
         </div>
 
         <div class="todo-controls">
@@ -102,6 +112,37 @@
           </div>
 
           <div class="todo-filters">
+            <div class="filter-pills">
+              <button class="filter-pill active" data-filter="all" data-i18n="filterAll">
+                All
+                <span class="filter-badge" id="badge-all">0</span>
+              </button>
+              <button class="filter-pill" data-filter="pending" data-i18n="filterPending">
+                Pending
+                <span class="filter-badge" id="badge-pending">0</span>
+              </button>
+              <button class="filter-pill" data-filter="completed" data-i18n="filterCompleted">
+                Completed
+                <span class="filter-badge" id="badge-completed">0</span>
+              </button>
+              <button class="filter-pill" data-filter="overdue" data-i18n="filterOverdue">
+                Overdue
+                <span class="filter-badge" id="badge-overdue">0</span>
+              </button>
+            </div>
+            <div class="quick-actions">
+              <button class="quick-action-btn" id="mark-all-complete" title="Mark all complete" data-i18n-title="markAllComplete">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20,6 9,17 4,12"></polyline>
+                </svg>
+              </button>
+              <button class="quick-action-btn danger" id="clear-completed" title="Clear completed" data-i18n-title="clearCompleted">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3,6 5,6 21,6"></polyline>
+                  <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"></path>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -117,8 +158,8 @@
                 <polyline points="10,9 9,9 8,9"></polyline>
               </svg>
             </div>
-            <p>No todos yet. Add one above!</p>
-            <small>Try adding due dates for better organization.</small>
+            <p data-i18n="emptyStateTitle">No todos yet. Add one above!</p>
+            <small data-i18n="emptyStateDesc">Try adding due dates for better organization.</small>
           </div>
         </div>
         

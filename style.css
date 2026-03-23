@@ -4536,6 +4536,7 @@ body.light-theme .delete-preview-name {
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  position: relative;
 }
 
 .todo-header {
@@ -4543,6 +4544,74 @@ body.light-theme .delete-preview-name {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+}
+
+.todo-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.todo-count {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Progress Ring */
+.todo-progress-ring {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  cursor: default;
+}
+
+.todo-progress-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 3;
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke: #2196f3;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+body.light-theme .progress-ring-bg {
+  stroke: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .progress-text {
+  color: #1f2937;
+}
+
+body.light-theme .todo-count {
+  background: rgba(33, 150, 243, 0.15);
+  color: #1976d2;
 }
 
 .todo-title {
@@ -4987,6 +5056,143 @@ body.light-theme .calendar-btn.secondary:hover {
   gap: 16px;
 }
 
+/* Filter Pills */
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.filter-pill:hover {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.filter-pill.active {
+  background: rgba(33, 150, 243, 0.25);
+  border-color: rgba(33, 150, 243, 0.5);
+  color: #2196f3;
+  font-weight: 600;
+}
+
+.filter-badge {
+  background: rgba(255, 255, 255, 0.15);
+  color: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.filter-pill.active .filter-badge {
+  background: rgba(33, 150, 243, 0.3);
+  color: #2196f3;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.quick-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quick-action-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.quick-action-btn:hover {
+  background: rgba(33, 150, 243, 0.2);
+  border-color: rgba(33, 150, 243, 0.4);
+  color: #2196f3;
+  transform: translateY(-2px);
+}
+
+.quick-action-btn.danger:hover {
+  background: rgba(255, 82, 82, 0.2);
+  border-color: rgba(255, 82, 82, 0.4);
+  color: #ff5252;
+}
+
+/* Light theme for filters */
+body.light-theme .filter-pill {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgba(31, 41, 55, 0.7);
+}
+
+body.light-theme .filter-pill:hover {
+  background: rgba(33, 150, 243, 0.1);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #1976d2;
+}
+
+body.light-theme .filter-pill.active {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.4);
+  color: #1976d2;
+}
+
+body.light-theme .filter-badge {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .filter-pill.active .filter-badge {
+  background: rgba(33, 150, 243, 0.2);
+  color: #1976d2;
+}
+
+body.light-theme .quick-action-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgba(31, 41, 55, 0.7);
+}
+
+body.light-theme .quick-action-btn:hover {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #1976d2;
+}
+
+body.light-theme .quick-action-btn.danger:hover {
+  background: rgba(220, 53, 69, 0.15);
+  border-color: rgba(220, 53, 69, 0.3);
+  color: #dc3545;
+}
+
 .filter-group {
   display: flex;
   gap: 12px;
@@ -5295,17 +5501,18 @@ body.light-theme .calendar-btn.secondary:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
   text-align: center;
   color: rgba(255, 255, 255, 0.6);
   animation: fadeIn 0.5s ease;
 }
 
 .empty-icon {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 16px;
-  opacity: 0.5;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+  opacity: 0.4;
+  animation: emptyIconFloat 3s ease-in-out infinite;
 }
 
 .empty-icon svg {
@@ -5313,16 +5520,27 @@ body.light-theme .calendar-btn.secondary:hover {
   height: 100%;
 }
 
+@keyframes emptyIconFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 .empty-state p {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .empty-state small {
   font-size: 14px;
-  opacity: 0.7;
-  max-width: 300px;
+  opacity: 0.6;
+  max-width: 280px;
+  line-height: 1.5;
 }
 
 /* Animations */
@@ -5528,6 +5746,26 @@ body.light-theme .empty-icon {
     flex-direction: column;
     gap: 16px;
     text-align: center;
+  }
+  
+  .todo-header-left {
+    justify-content: center;
+  }
+  
+  .todo-progress-ring {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+  
+  .filter-pills {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .quick-actions {
+    width: 100%;
+    justify-content: center;
   }
 
   .todo-input-container {

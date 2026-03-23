@@ -7,6 +7,9 @@ let currentFilters = {
   status: 'all'
 };
 
+// Animation config
+const STAGGER_DELAY = 0.05; // seconds between each item
+
 // DOM elements
 let elements = {};
 
@@ -131,18 +134,32 @@ function renderTodos() {
 
   emptyState.style.display = 'none';
 
-  // Render each todo
+  // Render each todo with staggered animation
   filteredTodos.forEach((todo, index) => {
     const li = document.createElement('li');
     li.className = `todo-item ${todo.completed ? 'completed' : ''} ${todo.dueDate && isOverdue(todo.dueDate) ? 'overdue' : ''}`;
     li.dataset.id = todo.id;
     li.draggable = true;
 
+    // Format due date if exists
+    const dueDateHtml = todo.dueDate ? `
+      <div class="todo-due-date ${isOverdue(todo.dueDate) ? 'overdue' : ''}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span class="due-date-text">${formatDate(todo.dueDate)}</span>
+      </div>
+    ` : '';
+
     li.innerHTML = `
       <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-id="${todo.id}">
       <div class="todo-content">
         <p class="todo-text">${todo.text}</p>
         <div class="todo-meta">
+          ${dueDateHtml}
         </div>
       </div>
       <div class="todo-actions">
@@ -163,8 +180,8 @@ function renderTodos() {
       </div>
     `;
 
-    // Add animation delay for new items
-    li.style.animationDelay = `${index * 0.05}s`;
+    // Add staggered animation delay
+    li.style.animationDelay = `${index * STAGGER_DELAY}s`;
     li.setAttribute('data-animation', 'enter');
 
     todoList.appendChild(li);
@@ -276,10 +293,91 @@ function deleteTodo(id) {
 function applyFilters() {
   filterTodos();
   renderTodos();
+  updateFilterUI();
+  updateProgressRing();
+  updateFilterCounts();
 }
 
 function updateFilters() {
   currentFilters.status = elements.filterStatus?.value || 'all';
+  applyFilters();
+}
+
+// Update filter pill UI
+function updateFilterUI() {
+  const pills = document.querySelectorAll('.filter-pill');
+  pills.forEach(pill => {
+    const filter = pill.dataset.filter;
+    pill.classList.toggle('active', filter === currentFilters.status);
+  });
+}
+
+// Update progress ring
+function updateProgressRing() {
+  const total = todos.length;
+  const completed = todos.filter(t => t.completed).length;
+  const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
+  
+  const fill = document.getElementById('progress-ring-fill');
+  const text = document.getElementById('progress-text');
+  
+  if (fill) {
+    fill.setAttribute('stroke-dasharray', `${percentage}, 100`);
+  }
+  if (text) {
+    text.textContent = `${percentage}%`;
+  }
+}
+
+// Update filter badge counts
+function updateFilterCounts() {
+  const all = todos.length;
+  const pending = todos.filter(t => !t.completed).length;
+  const completed = todos.filter(t => t.completed).length;
+  const overdue = todos.filter(t => !t.completed && t.dueDate && isOverdue(t.dueDate)).length;
+  
+  const badgeAll = document.getElementById('badge-all');
+  const badgePending = document.getElementById('badge-pending');
+  const badgeCompleted = document.getElementById('badge-completed');
+  const badgeOverdue = document.getElementById('badge-overdue');
+  const todoCount = document.getElementById('todo-count');
+  
+  if (badgeAll) badgeAll.textContent = all;
+  if (badgePending) badgePending.textContent = pending;
+  if (badgeCompleted) badgeCompleted.textContent = completed;
+  if (badgeOverdue) badgeOverdue.textContent = overdue;
+  if (todoCount) todoCount.textContent = all > 0 ? `${completed}/${all}` : '';
+}
+
+// Quick actions
+function markAllComplete() {
+  const pendingTodos = todos.filter(t => !t.completed);
+  if (pendingTodos.length === 0) return;
+  
+  pendingTodos.forEach(todo => {
+    todo.completed = true;
+    todo.completedAt = new Date().toISOString();
+  });
+  
+  saveTodos(todos);
+  applyFilters();
+}
+
+function clearCompleted() {
+  const completedTodos = todos.filter(t => t.completed);
+  if (completedTodos.length === 0) return;
+  
+  todos = todos.filter(t => !t.completed);
+  saveTodos(todos);
+  applyFilters();
+}
+
+// Handle filter pill clicks
+function handleFilterPillClick(event) {
+  const pill = event.target.closest('.filter-pill');
+  if (!pill) return;
+  
+  currentFilters.status = pill.dataset.filter;
   applyFilters();
 }
 
@@ -447,7 +545,8 @@ function initTodo() {
     addTodoBtn: document.getElementById('add-todo-btn'),
     todoList: document.getElementById('todo-list'),
     emptyState: document.getElementById('empty-state'),
-    filterStatus: document.getElementById('filter-status')
+    filterStatus: document.getElementById('filter-status'),
+    todoFilters: document.querySelector('.todo-filters')
   };
 
   // Check if all elements exist
@@ -467,9 +566,26 @@ function initTodo() {
   elements.addTodoBtn.addEventListener('click', handleAddTodo);
   elements.todoInput.addEventListener('keypress', handleKeyPress);
 
-  // Filter listeners
+  // Filter listeners - pill style
+  const filterPills = document.querySelectorAll('.filter-pill');
+  filterPills.forEach(pill => {
+    pill.addEventListener('click', handleFilterPillClick);
+  });
+  
+  // Keep legacy dropdown support
   if (elements.filterStatus) {
     elements.filterStatus.addEventListener('change', updateFilters);
+  }
+  
+  // Quick action buttons
+  const markAllCompleteBtn = document.getElementById('mark-all-complete');
+  const clearCompletedBtn = document.getElementById('clear-completed');
+  
+  if (markAllCompleteBtn) {
+    markAllCompleteBtn.addEventListener('click', markAllComplete);
+  }
+  if (clearCompletedBtn) {
+    clearCompletedBtn.addEventListener('click', clearCompleted);
   }
 
   // Todo list event delegation
@@ -507,6 +623,10 @@ function initTodo() {
 
   // Initial render
   applyFilters();
+  
+  // Initialize progress ring and counts
+  updateProgressRing();
+  updateFilterCounts();
 }
 
 // Custom Date Picker Functionality
