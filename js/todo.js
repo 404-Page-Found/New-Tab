@@ -229,6 +229,11 @@ function renderTodos() {
 function addTodo(text, dueDate = null) {
   if (!text.trim()) return;
 
+  // Find the maximum order value among existing todos
+  const maxOrder = todos.reduce((max, todo) => {
+    return todo.order !== undefined ? Math.max(max, todo.order) : max;
+  }, -1);
+
   const newTodo = {
     id: generateTodoId(),
     text: text.trim(),
@@ -236,7 +241,7 @@ function addTodo(text, dueDate = null) {
     completedAt: null, // Track when todo was completed
     dueDate: dueDate,
     createdAt: new Date().toISOString(),
-    order: todos.length // Add order property to track position
+    order: maxOrder + 1 // Add order property to track position (always at the end)
   };
 
   todos.push(newTodo);
