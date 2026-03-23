@@ -365,9 +365,66 @@ function clearCompleted() {
   const completedTodos = todos.filter(t => t.completed);
   if (completedTodos.length === 0) return;
   
-  todos = todos.filter(t => !t.completed);
-  saveTodos(todos);
-  applyFilters();
+  // Show confirmation dialog
+  showClearCompletedDialog();
+}
+
+// Show clear completed confirmation dialog
+function showClearCompletedDialog() {
+  const dialog = document.getElementById('clear-completed-dialog');
+  const confirmBtn = document.getElementById('clear-completed-confirm');
+  const cancelBtn = dialog?.querySelector('.ai-confirm-cancel');
+  const overlay = dialog?.querySelector('.ai-confirm-overlay');
+  
+  if (!dialog) return;
+  
+  // Show the dialog
+  dialog.classList.add('ai-confirm-open');
+  
+  // Update message with count
+  const completedCount = todos.filter(t => t.completed).length;
+  const messageEl = dialog.querySelector('.ai-confirm-message');
+  if (messageEl && window.i18n) {
+    const message = window.i18n.t('clearCompletedConfirmMessage');
+    messageEl.textContent = message;
+  }
+  
+  // Handle confirm button click
+  const handleConfirm = () => {
+    // Actually clear the completed todos
+    todos = todos.filter(t => !t.completed);
+    saveTodos(todos);
+    applyFilters();
+    hideClearCompletedDialog();
+    
+    // Remove event listeners
+    confirmBtn?.removeEventListener('click', handleConfirm);
+    cancelBtn?.removeEventListener('click', handleCancel);
+    overlay?.removeEventListener('click', handleCancel);
+  };
+  
+  // Handle cancel button click
+  const handleCancel = () => {
+    hideClearCompletedDialog();
+    
+    // Remove event listeners
+    confirmBtn?.removeEventListener('click', handleConfirm);
+    cancelBtn?.removeEventListener('click', handleCancel);
+    overlay?.removeEventListener('click', handleCancel);
+  };
+  
+  // Add event listeners
+  confirmBtn?.addEventListener('click', handleConfirm);
+  cancelBtn?.addEventListener('click', handleCancel);
+  overlay?.addEventListener('click', handleCancel);
+}
+
+// Hide clear completed confirmation dialog
+function hideClearCompletedDialog() {
+  const dialog = document.getElementById('clear-completed-dialog');
+  if (dialog) {
+    dialog.classList.remove('ai-confirm-open');
+  }
 }
 
 // Handle filter pill clicks

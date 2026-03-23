@@ -2226,6 +2226,16 @@ body.light-theme .settings-section button:hover {
   }
 }
 
+/* Screen overlay version - centered on screen */
+.ai-confirm-dialog.screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+}
+
 /* Light theme for delete confirmation */
 body.light-theme .ai-confirm-content {
   background: rgba(255, 255, 255, 0.98);

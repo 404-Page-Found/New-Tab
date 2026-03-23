@@ -165,6 +165,9 @@ const translations = {
     filterCompleted: "Completed",
     filterOverdue: "Overdue",
     clearCompletedText: "Clear Completed",
+    clearCompletedConfirmTitle: "Clear Completed Todos?",
+    clearCompletedConfirmMessage: "This will permanently remove all completed todos. This action cannot be undone.",
+    clearCompletedConfirmButton: "Clear Completed",
     emptyStateTitle: "No todos yet. Add one above!",
     emptyStateDesc: "Try adding due dates for better organization.",
 
@@ -396,6 +399,9 @@ const translations = {
     filterCompleted: "已完成",
     filterOverdue: "已逾期",
     clearCompletedText: "清除已完成",
+    clearCompletedConfirmTitle: "清除已完成的待办事项？",
+    clearCompletedConfirmMessage: "这将永久删除所有已完成的待办事项。此操作无法撤消。",
+    clearCompletedConfirmButton: "清除已完成",
     emptyStateTitle: "还没有待办事项。在上方添加一个！",
     emptyStateDesc: "尝试添加到期日期以更好地组织。",
 
@@ -554,6 +560,20 @@ function updateDynamicTranslations() {
   if (clearCompletedBtn) {
     const span = clearCompletedBtn.querySelector('span');
     if (span) span.textContent = translations[currentLanguage].clearCompletedText;
+  }
+
+  // Update clear completed confirmation dialog
+  const clearCompletedDialog = document.getElementById('clear-completed-dialog');
+  if (clearCompletedDialog) {
+    const titleEl = clearCompletedDialog.querySelector('.ai-confirm-title');
+    const messageEl = clearCompletedDialog.querySelector('.ai-confirm-message');
+    const confirmBtn = clearCompletedDialog.querySelector('.ai-confirm-delete');
+    const cancelBtn = clearCompletedDialog.querySelector('.ai-confirm-cancel');
+    
+    if (titleEl) titleEl.textContent = translations[currentLanguage].clearCompletedConfirmTitle;
+    if (messageEl) messageEl.textContent = translations[currentLanguage].clearCompletedConfirmMessage;
+    if (confirmBtn) confirmBtn.textContent = translations[currentLanguage].clearCompletedConfirmButton;
+    if (cancelBtn) cancelBtn.textContent = translations[currentLanguage].cancel;
   }
 
   // Re-render apps to update default app names
