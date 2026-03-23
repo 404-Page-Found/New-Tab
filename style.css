@@ -1864,18 +1864,61 @@ body.light-theme .date {
 }
 
 body.light-theme #motto-container {
-  color: #333;
-  background: rgba(255, 255, 255, 1.0);
-  border: 1px solid #e1e5e9;
+  color: #1f2937;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme #motto-text {
+  color: #374151;
+}
+
+body.light-theme #refresh-motto-btn {
+  color: #4b5563;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme #refresh-motto-btn:hover {
+  background: rgba(33, 150, 243, 0.12);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #1976d2;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+}
+
+body.light-theme #refresh-motto-btn:active {
+  background: rgba(33, 150, 243, 0.18);
+  transform: scale(0.96) translateY(0);
+}
+
+body.light-theme #refresh-motto-btn:focus-visible {
+  outline: 2px solid #2196f3;
+  outline-offset: 2px;
 }
 
 body.light-theme #copy-motto-btn {
-  color: #333;
-  opacity: 0.7;
+  color: #4b5563;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  opacity: 1;
 }
 
 body.light-theme #copy-motto-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(33, 150, 243, 0.12);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #1976d2;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+}
+
+body.light-theme #copy-motto-btn:active {
+  background: rgba(33, 150, 243, 0.18);
+  transform: scale(0.96) translateY(0);
+}
+
+body.light-theme #copy-motto-btn:focus-visible {
+  outline: 2px solid #2196f3;
+  outline-offset: 2px;
 }
 
 body.light-theme .footer-left,
