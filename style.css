@@ -5279,17 +5279,66 @@ body.light-theme .quick-action-btn.danger {
   overflow: hidden;
 }
 
-.todo-item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: #2196f3;
-  border-radius: 0 4px 4px 0;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+/* New circular bullet styling */
+.todo-bullet {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.todo-bullet:hover {
+  transform: scale(1.15);
+}
+
+.todo-bullet svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* Unchecked state - empty circle */
+.todo-bullet .bullet-unchecked {
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease;
+}
+
+.todo-bullet:hover .bullet-unchecked {
+  color: #2196f3;
+}
+
+/* Checked state - filled circle with checkmark */
+.todo-bullet .bullet-checked {
+  color: #4caf50;
+  animation: bulletCheckPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes bulletCheckPop {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Light theme bullet styles */
+body.light-theme .todo-bullet .bullet-unchecked {
+  color: rgba(31, 41, 55, 0.4);
+}
+
+body.light-theme .todo-bullet:hover .bullet-unchecked {
+  color: #1976d2;
+}
+
+body.light-theme .todo-bullet .bullet-checked {
+  color: #16a34a;
 }
 
 .todo-item:hover {
@@ -5298,18 +5347,11 @@ body.light-theme .quick-action-btn.danger {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
-.todo-item:hover::before {
-  opacity: 1;
-}
+/* Removed old todo-item:hover::before as it used the old bar */
 
 .todo-item.completed {
   opacity: 0.7;
   background: rgba(33, 150, 243, 0.05);
-}
-
-.todo-item.completed::before {
-  background: #4caf50;
-  opacity: 1;
 }
 
 .todo-item.overdue {
@@ -5317,12 +5359,7 @@ body.light-theme .quick-action-btn.danger {
   background: rgba(255, 82, 82, 0.05);
 }
 
-.todo-item.overdue::before {
-  background: #ff5252;
-  opacity: 1;
-}
-
-
+/* Removed old todo-item.completed::before and todo-item.overdue::before as they used the old bar */
 
 .todo-item.selected {
   background: rgba(33, 150, 243, 0.15);
@@ -5331,15 +5368,7 @@ body.light-theme .quick-action-btn.danger {
 }
 
 .todo-checkbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  accent-color: #2196f3;
-  transition: transform 0.2s ease;
-}
-
-.todo-checkbox:hover {
-  transform: scale(1.1);
+  display: none; /* Old checkbox hidden - using new bullet instead */
 }
 
 .todo-content {

@@ -155,7 +155,18 @@ function renderTodos() {
     ` : '';
 
     li.innerHTML = `
-      <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-id="${todo.id}">
+      <div class="todo-bullet" data-id="${todo.id}">
+        ${todo.completed ? `
+          <svg viewBox="0 0 24 24" fill="none" class="bullet-checked">
+            <circle cx="12" cy="12" r="10" fill="currentColor"/>
+            <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        ` : `
+          <svg viewBox="0 0 24 24" fill="none" class="bullet-unchecked">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+        `}
+      </div>
       <div class="todo-content">
         <p class="todo-text">${todo.text}</p>
         <div class="todo-meta">
@@ -444,10 +455,11 @@ function handleAddTodo() {
 function handleTodoListClick(event) {
   const target = event.target;
 
-  // Handle checkbox toggle
-  if (target.classList.contains('todo-checkbox')) {
+  // Handle bullet click (new circular bullet)
+  const bullet = target.closest('.todo-bullet');
+  if (bullet) {
     event.stopPropagation();
-    const id = target.dataset.id;
+    const id = bullet.dataset.id;
     toggleTodo(id);
     return;
   }
