@@ -10,6 +10,22 @@ class OnboardingTour {
     this.completed = this.isCompleted();
   }
 
+  // Check if an element is visible (not hidden by CSS)
+  isElementVisible(element) {
+    if (!element) return false;
+    
+    const rect = element.getBoundingClientRect();
+    const style = window.getComputedStyle(element);
+    
+    return (
+      rect.width > 0 &&
+      rect.height > 0 &&
+      style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      style.opacity !== '0'
+    );
+  }
+
   // Check if onboarding has been completed
   isCompleted() {
     return localStorage.getItem('onboardingCompleted') === 'true';
@@ -307,15 +323,34 @@ class OnboardingTour {
       dot.classList.toggle('active', i === this.currentStep);
     });
 
+    // Handle special actions BEFORE positioning
+    if (step.action) {
+      this.handleAction(step.action, step);
+    }
+
     // Handle positioning
     if (step.target && step.target !== 'body') {
       const targetElement = document.querySelector(step.target);
       if (targetElement) {
         console.log('🎯 Positioning tooltip for target:', step.target);
-        this.positionTooltip(tooltip, targetElement, step.position);
-        this.createSpotlight(spotlight, targetElement);
-        tooltip.style.opacity = '1';
-        spotlight.style.opacity = '1';
+        
+        // Check if target element is visible before positioning
+        const isVisible = this.isElementVisible(targetElement);
+        
+        if (isVisible) {
+          this.positionTooltip(tooltip, targetElement, step.position);
+          this.createSpotlight(spotlight, targetElement);
+          tooltip.style.opacity = '1';
+          spotlight.style.opacity = '1';
+        } else {
+          console.log('⚠️ Target element not visible, using center positioning');
+          // Fallback to center positioning when target is not visible
+          tooltip.style.position = 'fixed';
+          tooltip.style.top = '50%';
+          tooltip.style.left = '50%';
+          tooltip.style.transform = 'translate(-50%, -50%)';
+          spotlight.style.opacity = '0';
+        }
       } else {
         console.warn('⚠️ Target element not found:', step.target);
       }
@@ -343,11 +378,6 @@ class OnboardingTour {
     const finishText = window.i18n ? window.i18n.t('finish') : 'Finish';
     nextBtn.textContent = this.currentStep === this.steps.length - 1 ? finishText : nextText;
     prevBtn.textContent = prevText;
-
-    // Handle special actions
-    if (step.action) {
-      this.handleAction(step.action);
-    }
 
     console.log('✅ Step display completed');
   }
@@ -425,16 +455,30 @@ class OnboardingTour {
   }
 
   // Handle special actions for certain steps
-  handleAction(action) {
+  handleAction(action, step) {
     switch (action) {
       case 'open-settings':
-        // Wait for settings modal to open
-        const checkSettingsOpen = setInterval(() => {
-          if (document.getElementById('settings-modal').style.display !== 'none') {
-            clearInterval(checkSettingsOpen);
-            setTimeout(() => this.nextStep(), 1000);
-          }
-        }, 100);
+        // Ensure settings modal is visible before positioning
+        const settingsModal = document.getElementById('settings-modal');
+        if (settingsModal) {
+          settingsModal.style.display = 'flex';
+          
+          // Wait for next animation frame to ensure the modal is rendered
+          requestAnimationFrame(() => {
+            // Check if element is now visible and re-render if needed
+            const tooltip = this.overlay.querySelector('.onboarding-tooltip');
+            const spotlight = this.overlay.querySelector('.onboarding-spotlight');
+            const targetElement = document.querySelector(step.target);
+            
+            if (targetElement && this.isElementVisible(targetElement)) {
+              // Re-position the tooltip now that modal is visible
+              this.positionTooltip(tooltip, targetElement, step.position);
+              this.createSpotlight(spotlight, targetElement);
+              tooltip.style.opacity = '1';
+              spotlight.style.opacity = '1';
+            }
+          });
+        }
         break;
       case 'add-app':
         // This step doesn't require specific action
