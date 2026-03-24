@@ -5808,11 +5808,25 @@ body.light-theme .todo-date-btn.overdue:hover {
 }
 
 body.light-theme .todo-edit-btn:hover {
-  background: rgba(33, 150, 243, 0.1);
+  background: rgba(33, 150, 243, 0.25);
 }
 
 body.light-theme .todo-delete-btn:hover {
-  background: rgba(220, 53, 69, 0.1);
+  background: rgba(220, 53, 69, 0.25);
+}
+
+/* Light theme - make todo actions always visible (not hidden until hover) */
+body.light-theme .todo-actions {
+  opacity: 1;
+}
+
+/* Light theme - visible button colors (non-hover state) */
+body.light-theme .todo-edit-btn {
+  color: rgba(55, 65, 81, 0.6);
+}
+
+body.light-theme .todo-delete-btn {
+  color: rgba(55, 65, 81, 0.5);
 }
 
 body.light-theme .empty-state {
