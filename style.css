@@ -4672,6 +4672,7 @@ body.light-theme .todo-count {
   color: #ffffff;
   text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000;
   margin: 0;
+  margin-left: 4px;
 }
 
 
