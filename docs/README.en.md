@@ -26,13 +26,7 @@ A modern open-source new tab page for personalized browsing experience.
 | Multi-backgrounds | ![](../screenshots/New-Tab_2.png) |
 
 ## 👥 Contributing
-Project is still in developing stage. Contributions are highly welcome! Please follow these steps:
-1. Fork the repository
-2. Create a new branch (`git checkout -b feature/your-feature`)
-3. Commit your changes (`git commit -m 'Add some feature'`)
-4. Push to the branch (`git push origin feature/your-feature`)
-5. Create a Pull Request
-(Remember to add neccessery comment.)
+Project is still in developing stage. Contributions are highly welcome! Please follow the steps in our [Contributing Guide](CONTRIBUTING.en.md).
 
 ## 📄 License
 This project is licensed under the [MIT License](LICENSE).
