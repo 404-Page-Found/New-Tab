@@ -354,20 +354,23 @@ const MarkdownParser = (function() {
           content: taskMatch[2]
         });
       } else if (unorderedMatch && !taskMatch) {
+        // Non-task unordered list item - close any open task list and let parseLists handle it
         if (inList) {
           result.push(buildTaskList(listItems));
           inList = false;
           listItems = [];
         }
-        result.push(line);
+        // Don't push the line - let parseLists handle it
       } else if (orderedMatch) {
+        // Ordered list item - close any open task list and let parseLists handle it
         if (inList) {
           result.push(buildTaskList(listItems));
           inList = false;
           listItems = [];
         }
-        result.push(line);
+        // Don't push the line - let parseLists handle it
       } else {
+        // Not a list item - close any open task list and push the line
         if (inList) {
           result.push(buildTaskList(listItems));
           inList = false;

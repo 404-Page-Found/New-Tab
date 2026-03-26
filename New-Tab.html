@@ -43,7 +43,17 @@
       <!-- Todo List Section -->
       <div class="todo-section">
       <div class="todo-header">
-          <h3 class="todo-title" data-i18n="todoList">Todo List</h3>
+          <div class="todo-header-left">
+            <h3 class="todo-title" data-i18n="todoList">Todo List</h3>
+            <span class="todo-count" id="todo-count"></span>
+          </div>
+          <div class="todo-progress-ring" id="todo-progress-ring">
+            <svg viewBox="0 0 36 36">
+              <path class="progress-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="progress-ring-fill" id="progress-ring-fill" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <span class="progress-text" id="progress-text">0%</span>
+          </div>
         </div>
 
         <div class="todo-controls">
@@ -102,6 +112,33 @@
           </div>
 
           <div class="todo-filters">
+            <div class="filter-pills">
+              <button class="filter-pill active" data-filter="all" data-i18n="filterAll">
+                All
+                <span class="filter-badge" id="badge-all">0</span>
+              </button>
+              <button class="filter-pill" data-filter="pending" data-i18n="filterPending">
+                Pending
+                <span class="filter-badge" id="badge-pending">0</span>
+              </button>
+              <button class="filter-pill" data-filter="completed" data-i18n="filterCompleted">
+                Completed
+                <span class="filter-badge" id="badge-completed">0</span>
+              </button>
+              <button class="filter-pill" data-filter="overdue" data-i18n="filterOverdue">
+                Overdue
+                <span class="filter-badge" id="badge-overdue">0</span>
+              </button>
+            </div>
+            <div class="quick-actions">
+              <button class="quick-action-btn danger" id="clear-completed">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3,6 5,6 21,6"></polyline>
+                  <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"></path>
+                </svg>
+                <span data-i18n="clearCompletedText">Clear Completed</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -117,13 +154,34 @@
                 <polyline points="10,9 9,9 8,9"></polyline>
               </svg>
             </div>
-            <p>No todos yet. Add one above!</p>
-            <small>Try adding due dates for better organization.</small>
+            <p data-i18n="emptyStateTitle">No todos yet. Add one above!</p>
+            <small data-i18n="emptyStateDesc">Try adding due dates for better organization.</small>
           </div>
         </div>
-        
+
       </div>
     </div>
+
+  <!-- Clear Completed Confirmation Dialog (Screen Overlay) -->
+  <div id="clear-completed-dialog" class="ai-confirm-dialog screen-overlay">
+    <div class="ai-confirm-overlay"></div>
+    <div class="ai-confirm-content">
+      <div class="ai-confirm-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3,6 5,6 21,6"></polyline>
+          <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+      </div>
+      <h3 class="ai-confirm-title" data-i18n="clearCompletedConfirmTitle">Clear Completed Todos?</h3>
+      <p class="ai-confirm-message" data-i18n="clearCompletedConfirmMessage">This will permanently remove all completed todos. This action cannot be undone.</p>
+      <div class="ai-confirm-actions">
+        <button class="ai-confirm-cancel" data-i18n="cancel">Cancel</button>
+        <button class="ai-confirm-delete" id="clear-completed-confirm" data-i18n="clearCompletedConfirmButton">Clear Completed</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Settings Modal -->
   <div id="settings-modal">
@@ -890,7 +948,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-miterlimit="10" d="M17.605 7.705A7.9 7.9 0 0 0 12 5.382a7.93 7.93 0 0 0-7.929 7.929A7.94 7.94 0 0 0 12 21.25a7.94 7.94 0 0 0 7.929-7.94"/><path stroke-linejoin="round" d="m16.88 2.75l.95 3.858a1.33 1.33 0 0 1-.97 1.609l-3.869.948"/></g></svg>
       </button>
       <button id="copy-motto-btn" aria-label="Copy motto">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 512 512"><rect width="336" height="336" x="128" y="128" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" rx="57" ry="57"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="m383.5 128l.5-24a56.16 56.16 0 0 0-56-56H112a64.19 64.19 0 0 0-64 64v216a56.16 56.16 0 0 0 56 56h24"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 512 512"><rect width="336" height="336" x="128" y="128" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" rx="57" ry="57"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="m383.5 128l.5-24a56.16 56.16 0 0 0-56-56H112a64.19 64.19 0 0 0-64 64v216a56.16 56.16 0 0 0 56 56h24"/></svg>
       </button>
     </div>
   </div>

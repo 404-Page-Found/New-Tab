@@ -9,19 +9,6 @@ const saveAppOrder = order => localStorage.setItem('appOrder', JSON.stringify(or
 function loadCustomApps() {
   return JSON.parse(localStorage.getItem("customApps") || "[]");
 }
-function saveCustomApps(apps) {
-  localStorage.setItem("customApps", JSON.stringify(apps));
-}
-
-// Get favicon URL from website URL
-function getFavicon(url) {
-  try {
-    const u = new URL(url.startsWith("http") ? url : "https://" + url);
-    return u.origin + "/favicon.ico";
-  } catch {
-    return "";
-  }
-}
 
 // Default apps
 const defaultApps = [

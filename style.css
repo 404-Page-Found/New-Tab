@@ -43,7 +43,7 @@
 }
 
 .motto-btn {
-  backdrop-filter: blur(6px);
+  background: rgb(200, 200, 200);
   border: 1.5px solid rgba(0, 0, 0, 0.08);
   cursor: pointer;
   font-size: 1.1em;
@@ -77,8 +77,9 @@
 }
 
 #copy-motto-btn {
+  color: #343232;
   background: rgb(200, 200, 200);
-  padding: 2px 4px;
+  padding: 2px 5px;
   border: none;
   border-radius: 8px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1864,18 +1865,59 @@ body.light-theme .date {
 }
 
 body.light-theme #motto-container {
-  color: #333;
-  background: rgba(255, 255, 255, 1.0);
-  border: 1px solid #e1e5e9;
+  color: #1f2937;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme #motto-text {
+  color: #374151;
+}
+
+body.light-theme #refresh-motto-btn {
+  color: #4b5563;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+body.light-theme #refresh-motto-btn:hover {
+  background: rgba(33, 150, 243, 0.12);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #1976d2;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+}
+
+body.light-theme #refresh-motto-btn:active {
+  background: rgba(33, 150, 243, 0.18);
+  transform: scale(0.96) translateY(0);
+}
+
+body.light-theme #refresh-motto-btn:focus-visible {
+  outline: 2px solid #2196f3;
+  outline-offset: 2px;
 }
 
 body.light-theme #copy-motto-btn {
-  color: #333;
-  opacity: 0.7;
+  color: #4b5563;
+  background: rgba(255, 255, 255, 0.95);
+  opacity: 1;
 }
 
 body.light-theme #copy-motto-btn:hover {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(33, 150, 243, 0.12);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #1976d2;
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
+}
+
+body.light-theme #copy-motto-btn:active {
+  background: rgba(33, 150, 243, 0.18);
+  transform: scale(0.96) translateY(0);
+}
+
+body.light-theme #copy-motto-btn:focus-visible {
+  outline: 2px solid #2196f3;
+  outline-offset: 2px;
 }
 
 body.light-theme .footer-left,
@@ -2224,6 +2266,16 @@ body.light-theme .settings-section button:hover {
     opacity: 1;
     transform: scale(1) translateY(0);
   }
+}
+
+/* Screen overlay version - centered on screen */
+.ai-confirm-dialog.screen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
 }
 
 /* Light theme for delete confirmation */
@@ -4529,20 +4581,89 @@ body.light-theme .delete-preview-name {
 /* Modern Todo List Styles */
 .todo-section {
   max-width: var(--todo-list-width);
-  margin: 30px auto 150px;
-  padding: 24px;
+  margin: 10px auto 40px;
+  padding: 10px;
   background: rgba(255, 255, 255, 0.02);
-  border-radius: 16px;
+  border-radius: 12px;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .todo-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
+}
+
+.todo-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.todo-count {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 12px;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Progress Ring */
+.todo-progress-ring {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  cursor: default;
+}
+
+.todo-progress-ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 3;
+}
+
+.progress-ring-fill {
+  fill: none;
+  stroke: #2196f3;
+  stroke-width: 3;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+body.light-theme .progress-ring-bg {
+  stroke: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .progress-text {
+  color: #1f2937;
+}
+
+body.light-theme .todo-count {
+  background: rgba(33, 150, 243, 0.15);
+  color: #1976d2;
 }
 
 .todo-title {
@@ -4551,20 +4672,21 @@ body.light-theme .delete-preview-name {
   color: #ffffff;
   text-shadow: 0 0 2px #000, 0 0 2px #000, 0 0 2px #000, 0 0 2px #000;
   margin: 0;
+  margin-left: 4px;
 }
 
 
 .todo-controls {
-  margin-bottom: 24px;
+  margin-bottom: 12px;
 }
 
 .todo-input-container {
   display: flex;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 10px;
+  margin-bottom: 12px;
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 12px 20px;
+  border-radius: 14px;
+  padding: 10px 16px;
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -4987,6 +5109,150 @@ body.light-theme .calendar-btn.secondary:hover {
   gap: 16px;
 }
 
+/* Filter Pills */
+.filter-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.filter-pill:hover {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.filter-pill.active {
+  background: rgba(33, 150, 243, 0.25);
+  border-color: rgba(33, 150, 243, 0.5);
+  color: #2196f3;
+  font-weight: 600;
+}
+
+.filter-badge {
+  background: rgba(255, 255, 255, 0.15);
+  color: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.filter-pill.active .filter-badge {
+  background: rgba(33, 150, 243, 0.3);
+  color: #2196f3;
+}
+
+/* Quick Actions */
+.quick-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.quick-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quick-action-btn svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.quick-action-btn:hover {
+  background: rgba(33, 150, 243, 0.2);
+  border-color: rgba(33, 150, 243, 0.4);
+  color: #2196f3;
+  transform: translateY(-2px);
+}
+
+.quick-action-btn.danger:hover {
+  background: rgba(255, 82, 82, 0.2);
+  border-color: rgba(255, 82, 82, 0.4);
+  color: #ff5252;
+}
+
+/* Light theme for filters */
+body.light-theme .filter-pill {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgba(31, 41, 55, 0.7);
+}
+
+body.light-theme .filter-pill:hover {
+  background: rgba(33, 150, 243, 0.1);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #1976d2;
+}
+
+body.light-theme .filter-pill.active {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.4);
+  color: #1976d2;
+}
+
+body.light-theme .filter-badge {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+body.light-theme .filter-pill.active .filter-badge {
+  background: rgba(33, 150, 243, 0.2);
+  color: #1976d2;
+}
+
+body.light-theme .quick-action-btn {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+  color: rgba(31, 41, 55, 0.7);
+}
+
+body.light-theme .quick-action-btn:hover {
+  background: rgba(33, 150, 243, 0.15);
+  border-color: rgba(33, 150, 243, 0.3);
+  color: #1976d2;
+}
+
+body.light-theme .quick-action-btn.danger:hover {
+  background: rgba(220, 53, 69, 0.15);
+  border-color: rgba(220, 53, 69, 0.3);
+  color: #dc3545;
+}
+
+body.light-theme .quick-action-btn.danger {
+  color: #dc3545;
+}
+
 .filter-group {
   display: flex;
   gap: 12px;
@@ -5039,7 +5305,7 @@ body.light-theme .calendar-btn.secondary:hover {
 
 .todo-list-container {
   position: relative;
-  min-height: 200px;
+  min-height: 80px;
 }
 
 .todo-list {
@@ -5048,16 +5314,16 @@ body.light-theme .calendar-btn.secondary:hover {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .todo-item {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 20px;
+  gap: 12px;
+  padding: 10px 14px;
   background: rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
+  border-radius: 12px;
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -5066,17 +5332,66 @@ body.light-theme .calendar-btn.secondary:hover {
   overflow: hidden;
 }
 
-.todo-item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 4px;
-  background: #2196f3;
-  border-radius: 0 4px 4px 0;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+/* New circular bullet styling */
+.todo-bullet {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.todo-bullet:hover {
+  transform: scale(1.15);
+}
+
+.todo-bullet svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Unchecked state - empty circle */
+.todo-bullet .bullet-unchecked {
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease;
+}
+
+.todo-bullet:hover .bullet-unchecked {
+  color: #2196f3;
+}
+
+/* Checked state - filled circle with checkmark */
+.todo-bullet .bullet-checked {
+  color: #4caf50;
+  animation: bulletCheckPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes bulletCheckPop {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Light theme bullet styles */
+body.light-theme .todo-bullet .bullet-unchecked {
+  color: rgba(31, 41, 55, 0.4);
+}
+
+body.light-theme .todo-bullet:hover .bullet-unchecked {
+  color: #1976d2;
+}
+
+body.light-theme .todo-bullet .bullet-checked {
+  color: #16a34a;
 }
 
 .todo-item:hover {
@@ -5085,18 +5400,11 @@ body.light-theme .calendar-btn.secondary:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
-.todo-item:hover::before {
-  opacity: 1;
-}
+/* Removed old todo-item:hover::before as it used the old bar */
 
 .todo-item.completed {
   opacity: 0.7;
   background: rgba(33, 150, 243, 0.05);
-}
-
-.todo-item.completed::before {
-  background: #4caf50;
-  opacity: 1;
 }
 
 .todo-item.overdue {
@@ -5104,12 +5412,7 @@ body.light-theme .calendar-btn.secondary:hover {
   background: rgba(255, 82, 82, 0.05);
 }
 
-.todo-item.overdue::before {
-  background: #ff5252;
-  opacity: 1;
-}
-
-
+/* Removed old todo-item.completed::before and todo-item.overdue::before as they used the old bar */
 
 .todo-item.selected {
   background: rgba(33, 150, 243, 0.15);
@@ -5118,15 +5421,7 @@ body.light-theme .calendar-btn.secondary:hover {
 }
 
 .todo-checkbox {
-  width: 20px;
-  height: 20px;
-  cursor: pointer;
-  accent-color: #2196f3;
-  transition: transform 0.2s ease;
-}
-
-.todo-checkbox:hover {
-  transform: scale(1.1);
+  display: none; /* Old checkbox hidden - using new bullet instead */
 }
 
 .todo-content {
@@ -5295,17 +5590,18 @@ body.light-theme .calendar-btn.secondary:hover {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
   text-align: center;
   color: rgba(255, 255, 255, 0.6);
   animation: fadeIn 0.5s ease;
 }
 
 .empty-icon {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 16px;
-  opacity: 0.5;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 20px;
+  opacity: 0.4;
+  animation: emptyIconFloat 3s ease-in-out infinite;
 }
 
 .empty-icon svg {
@@ -5313,16 +5609,27 @@ body.light-theme .calendar-btn.secondary:hover {
   height: 100%;
 }
 
+@keyframes emptyIconFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
 .empty-state p {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .empty-state small {
   font-size: 14px;
-  opacity: 0.7;
-  max-width: 300px;
+  opacity: 0.6;
+  max-width: 280px;
+  line-height: 1.5;
 }
 
 /* Animations */
@@ -5375,8 +5682,8 @@ body.light-theme .calendar-btn.secondary:hover {
 
 /* Light theme adjustments */
 body.light-theme .todo-section {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(0, 0, 0, 0.08);
 }
 
 body.light-theme .todo-title {
@@ -5502,11 +5809,25 @@ body.light-theme .todo-date-btn.overdue:hover {
 }
 
 body.light-theme .todo-edit-btn:hover {
-  background: rgba(33, 150, 243, 0.1);
+  background: rgba(33, 150, 243, 0.25);
 }
 
 body.light-theme .todo-delete-btn:hover {
-  background: rgba(220, 53, 69, 0.1);
+  background: rgba(220, 53, 69, 0.25);
+}
+
+/* Light theme - make todo actions always visible (not hidden until hover) */
+body.light-theme .todo-actions {
+  opacity: 1;
+}
+
+/* Light theme - visible button colors (non-hover state) */
+body.light-theme .todo-edit-btn {
+  color: rgba(55, 65, 81, 0.6);
+}
+
+body.light-theme .todo-delete-btn {
+  color: rgba(55, 65, 81, 0.5);
 }
 
 body.light-theme .empty-state {
@@ -5520,14 +5841,34 @@ body.light-theme .empty-icon {
 /* Mobile responsive */
 @media (max-width: 768px) {
   .todo-section {
-    padding: 20px;
-    margin: 20px auto 30px;
+    padding: 12px;
+    margin: 10px auto 30px;
   }
 
   .todo-header {
     flex-direction: column;
     gap: 16px;
     text-align: center;
+  }
+  
+  .todo-header-left {
+    justify-content: center;
+  }
+  
+  .todo-progress-ring {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+  
+  .filter-pills {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .quick-actions {
+    width: 100%;
+    justify-content: center;
   }
 
   .todo-input-container {
@@ -5567,8 +5908,8 @@ body.light-theme .empty-icon {
   }
 
   .todo-item {
-    padding: 14px 16px;
-    gap: 12px;
+    padding: 10px 12px;
+    gap: 10px;
   }
 
   .todo-meta {
@@ -5598,7 +5939,7 @@ body.light-theme .empty-icon {
 
 @media (max-width: 480px) {
   .todo-section {
-    padding: 16px;
+    padding: 10px;
   }
 
   .todo-input-container {

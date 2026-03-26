@@ -26,13 +26,7 @@
 | 多背景支持 | ![](../screenshots/New-Tab_2.png) |
 
 ## 👥 贡献指南
-项目仍处于开发阶段。欢迎大家贡献代码！请按以下步骤操作：
-1. Fork 本仓库
-2. 创建新分支 (`git checkout -b feature/your-feature`)
-3. 提交更改 (`git commit -m '添加新功能'`)
-4. 推送分支 (`git push origin feature/your-feature`)
-5. 创建 Pull Request
-(记得添加必要的注释)
+项目仍处于开发阶段。欢迎大家贡献代码！请参考我们的 [贡献指南](CONTRIBUTING.zh-CN.md)。
 
 ## 📄 许可协议
 本项目基于 [MIT 许可协议](../LICENSE)。

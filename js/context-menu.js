@@ -128,7 +128,6 @@ document.addEventListener('DOMContentLoaded', function() {
           apps[window.renameAppIdx].name = newName;
           localStorage.setItem("customApps", JSON.stringify(apps));
           if (window.renderCustomApps) window.renderCustomApps();
-          location.reload();
         }
       }
       renameModal.style.display = 'none';
@@ -225,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
           apps[window.thumbnailAppIdx].icon = newIcon;
           localStorage.setItem("customApps", JSON.stringify(apps));
           if (window.renderCustomApps) window.renderCustomApps();
-          location.reload();
         }
       }
       thumbnailModal.style.display = 'none';
@@ -309,7 +307,6 @@ document.addEventListener('DOMContentLoaded', function() {
           localStorage.setItem('appOrder', JSON.stringify(order));
           
           if (window.renderCustomApps) window.renderCustomApps();
-          location.reload();
         }
       }
       deleteModal.style.display = 'none';

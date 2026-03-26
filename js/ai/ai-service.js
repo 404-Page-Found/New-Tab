@@ -378,9 +378,34 @@ const AIService = (function() {
     renderTopicsList();
     renderMessages();
     
+    // DIAGNOSTIC LOGGING: Log state when modal opens
+    console.log('[AI Debug] openModal called - State:', {
+      isLoading,
+      isStreaming,
+      hasAbortController: abortController !== null
+    });
+    
+    // If there's an ongoing request, update UI to show loading state
+    if (isLoading || isStreaming) {
+      console.log('[AI Debug] openModal - Request in progress, updating UI');
+      // Update UI to show loading state
+      if (elements.loadingIndicator) {
+        elements.loadingIndicator.style.display = 'flex';
+      }
+      if (elements.sendBtn) {
+        elements.sendBtn.style.display = 'none';
+      }
+      if (elements.stopBtn) {
+        elements.stopBtn.style.display = 'flex';
+      }
+      if (elements.input) {
+        elements.input.disabled = true;
+      }
+    }
+    
     // Focus input
     setTimeout(() => {
-      if (elements.input) elements.input.focus();
+      if (elements.input && !isLoading) elements.input.focus();
     }, 100);
   }
   
@@ -420,6 +445,17 @@ const AIService = (function() {
     if (elements.modal) {
       elements.modal.classList.remove('ai-modal-open');
     }
+    
+    // DIAGNOSTIC LOGGING: Log state when modal closes
+    console.log('[AI Debug] closeModal called - State:', {
+      isLoading,
+      isStreaming,
+      hasAbortController: abortController !== null
+    });
+    
+    // NOTE: Streaming continues in background - don't stop it
+    // The request will complete and update the conversation
+    // When modal reopens, it will show the completed response
   }
 
   // ============== Rendering ==============
@@ -1376,7 +1412,22 @@ const AIService = (function() {
    * @param {string} userMessage - User's message
    */
   async function sendMessage(userMessage) {
-    if (!userMessage || isLoading) return;
+    // DIAGNOSTIC LOGGING: Log when sendMessage is called and its state
+    console.log('[AI Debug] sendMessage called - State:', {
+      hasMessage: !!userMessage,
+      isLoading,
+      isStreaming,
+      hasAbortController: abortController !== null
+    });
+    
+    if (!userMessage || isLoading) {
+      console.log('[AI Debug] sendMessage returning early - isLoading:', isLoading);
+      // Show error message if request is in progress
+      if (isLoading) {
+        showError(getTranslation('aiRequestInProgress') || 'A request is already in progress. Please wait for it to complete.');
+      }
+      return;
+    }
     
     // Check if we should use offline mode
     const networkStatus = NetworkDetector.getStatus();

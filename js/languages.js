@@ -158,6 +158,18 @@ const translations = {
     // Todo date picker
     clearDate: "Clear",
     todayDate: "Today",
+    
+    // Todo filters
+    filterAll: "All",
+    filterPending: "Pending",
+    filterCompleted: "Completed",
+    filterOverdue: "Overdue",
+    clearCompletedText: "Clear Completed",
+    clearCompletedConfirmTitle: "Clear Completed Todos?",
+    clearCompletedConfirmMessage: "This will permanently remove all completed todos. This action cannot be undone.",
+    clearCompletedConfirmButton: "Clear Completed",
+    emptyStateTitle: "No todos yet. Add one above!",
+    emptyStateDesc: "Try adding due dates for better organization.",
 
     // Onboarding
     onboardingLanguageTitle: "Choose Your Language 🌐",
@@ -194,6 +206,7 @@ const translations = {
     aiPlaceholder: "Type your message...",
     aiError: "An error occurred. Please try again.",
     aiRateLimit: "Too many requests. Please wait.",
+    aiRequestInProgress: "A request is already in progress. Please wait for it to complete.",
     aiClearConfirm: "Clear chat history?",
     aiAPIKeyMissing: "API key not configured",
     aiSearchEnabled: "Enable AI search",
@@ -380,6 +393,18 @@ const translations = {
     // Todo date picker
     clearDate: "清除",
     todayDate: "今天",
+    
+    // Todo filters
+    filterAll: "全部",
+    filterPending: "待处理",
+    filterCompleted: "已完成",
+    filterOverdue: "已逾期",
+    clearCompletedText: "清除已完成",
+    clearCompletedConfirmTitle: "清除已完成的待办事项？",
+    clearCompletedConfirmMessage: "这将永久删除所有已完成的待办事项。此操作无法撤消。",
+    clearCompletedConfirmButton: "清除已完成",
+    emptyStateTitle: "还没有待办事项。在上方添加一个！",
+    emptyStateDesc: "尝试添加到期日期以更好地组织。",
 
     // Onboarding
     onboardingLanguageTitle: "选择您的语言 🌐",
@@ -416,6 +441,7 @@ const translations = {
     aiPlaceholder: "输入您的消息...",
     aiError: "发生错误，请重试。",
     aiRateLimit: "请求过多，请稍后再试。",
+    aiRequestInProgress: "请求正在进行中，请等待完成。",
     aiClearConfirm: "清除聊天历史？",
     aiAPIKeyMissing: "API 密钥未配置",
     aiSearchEnabled: "启用 AI 搜索",
@@ -511,12 +537,45 @@ function updateDynamicTranslations() {
   // Update empty state messages
   const emptyStateP = document.querySelector('.empty-state p');
   if (emptyStateP) {
-    emptyStateP.textContent = translations[currentLanguage].noTodos;
+    emptyStateP.textContent = translations[currentLanguage].emptyStateTitle;
   }
 
   const emptyStateSmall = document.querySelector('.empty-state small');
   if (emptyStateSmall) {
-    emptyStateSmall.textContent = translations[currentLanguage].noTodosHint;
+    emptyStateSmall.textContent = translations[currentLanguage].emptyStateDesc;
+  }
+  
+  // Update filter pills
+  const filterAll = document.querySelector('.filter-pill[data-filter="all"]');
+  const filterPending = document.querySelector('.filter-pill[data-filter="pending"]');
+  const filterCompleted = document.querySelector('.filter-pill[data-filter="completed"]');
+  const filterOverdue = document.querySelector('.filter-pill[data-filter="overdue"]');
+  
+  if (filterAll) filterAll.childNodes[0].textContent = translations[currentLanguage].filterAll + ' ';
+  if (filterPending) filterPending.childNodes[0].textContent = translations[currentLanguage].filterPending + ' ';
+  if (filterCompleted) filterCompleted.childNodes[0].textContent = translations[currentLanguage].filterCompleted + ' ';
+  if (filterOverdue) filterOverdue.childNodes[0].textContent = translations[currentLanguage].filterOverdue + ' ';
+  
+  // Update quick action button text
+  const clearCompletedBtn = document.getElementById('clear-completed');
+  
+  if (clearCompletedBtn) {
+    const span = clearCompletedBtn.querySelector('span');
+    if (span) span.textContent = translations[currentLanguage].clearCompletedText;
+  }
+
+  // Update clear completed confirmation dialog
+  const clearCompletedDialog = document.getElementById('clear-completed-dialog');
+  if (clearCompletedDialog) {
+    const titleEl = clearCompletedDialog.querySelector('.ai-confirm-title');
+    const messageEl = clearCompletedDialog.querySelector('.ai-confirm-message');
+    const confirmBtn = clearCompletedDialog.querySelector('.ai-confirm-delete');
+    const cancelBtn = clearCompletedDialog.querySelector('.ai-confirm-cancel');
+    
+    if (titleEl) titleEl.textContent = translations[currentLanguage].clearCompletedConfirmTitle;
+    if (messageEl) messageEl.textContent = translations[currentLanguage].clearCompletedConfirmMessage;
+    if (confirmBtn) confirmBtn.textContent = translations[currentLanguage].clearCompletedConfirmButton;
+    if (cancelBtn) cancelBtn.textContent = translations[currentLanguage].cancel;
   }
 
   // Re-render apps to update default app names
