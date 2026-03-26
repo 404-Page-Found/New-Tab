@@ -203,9 +203,12 @@
   function handleDragStart(e, target) {
     dragState.sourceId = target.id;
     dragState.sourceElement = target;
-    
-    target.classList.add('dragging');
-    target.style.opacity = '0.5';
+
+    // Use requestAnimationFrame so the browser captures the drag image
+    // before we apply the faded/shrunken style
+    requestAnimationFrame(() => {
+      target.classList.add('dragging');
+    });
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', target.id);
     
@@ -232,12 +235,10 @@
   // Drag end handler
   function handleDragEnd(e, target) {
     target.classList.remove('dragging');
-    target.style.opacity = '1';
-    
+
     // Clean up any remaining drag-over classes
     getDraggableIcons().forEach(icon => {
       icon.classList.remove('drag-over');
-      icon.style.opacity = '1';
     });
     
     // Remove placeholder
@@ -334,6 +335,17 @@
     if (typeof window.renderAllApps === 'function') {
       window.renderAllApps();
     }
+
+    // Apply bounce landing animation to the moved icon
+    requestAnimationFrame(() => {
+      const movedEl = document.getElementById(sourceId);
+      if (movedEl) {
+        movedEl.classList.add('drag-drop-landed');
+        movedEl.addEventListener('animationend', () => {
+          movedEl.classList.remove('drag-drop-landed');
+        }, { once: true });
+      }
+    });
 
     // Clear placeholder & state (dragend will also run, but be safe)
     removePlaceholder();
