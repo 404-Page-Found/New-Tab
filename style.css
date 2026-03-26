@@ -1028,26 +1028,55 @@ body {
 
 /* Drag and Drop Visual Feedback */
 .app-icon.dragging {
-  opacity: 0.5;
-  transform: scale(0.95);
+  opacity: 0.3;
+  transform: scale(0.92);
+  transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .app-icon.drag-over {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 .app-icon.drag-over .icon {
-  box-shadow: 0 8px 24px rgba(33, 150, 243, 0.4), 0 0 0 3px rgba(33, 150, 243, 0.3);
-  border: 2px solid #2196f3;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 8px 32px rgba(33, 150, 243, 0.25),
+    0 0 0 2px rgba(33, 150, 243, 0.35),
+    inset 0 0 20px rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Light theme drag-over glass effect */
+body.light-theme .app-icon.drag-over .icon {
+  background: rgba(33, 150, 243, 0.06);
+  box-shadow:
+    0 8px 32px rgba(33, 150, 243, 0.15),
+    0 0 0 2px rgba(33, 150, 243, 0.3),
+    inset 0 0 20px rgba(33, 150, 243, 0.04);
+  border: 1.5px solid rgba(33, 150, 243, 0.2);
+}
+
+/* Bounce landing animation after drop */
+.app-icon.drag-drop-landed {
+  animation: dropBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes dropBounce {
+  0%   { transform: scale(0.82); }
+  60%  { transform: scale(1.08); }
+  100% { transform: scale(1); }
 }
 
 /* Touch device: don't scale on hover when dragging */
 .app-icon.dragging:hover {
-  transform: scale(0.95);
+  transform: scale(0.92);
 }
 
 .app-icon.drag-over:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 /* Drag Placeholder - shows where item will be dropped */
