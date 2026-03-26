@@ -1,8 +1,12 @@
 # Contributing to New Tab
 
-Thank you for your interest in contributing to the New Tab project!
+**Available Languages**:  
+[![English](https://img.shields.io/badge/English-blue)](docs/CONTRIBUTING.en.md)
+[![简体中文](https://img.shields.io/badge/简体中文-blue)](docs/CONTRIBUTING.zh-CN.md)
 
 ## 👥 Contributing
+
+Thank you for your interest in contributing to the New Tab project!
 
 Project is still in developing stage. Contributions are highly welcome!
 
