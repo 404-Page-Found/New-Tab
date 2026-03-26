@@ -5361,6 +5361,12 @@ body.light-theme .quick-action-btn.danger {
   overflow: hidden;
 }
 
+/* Due date positioned between content and actions */
+.todo-item .todo-due-date {
+  flex-shrink: 0;
+  margin-right: 4px;
+}
+
 /* New circular bullet styling */
 .todo-bullet {
   flex-shrink: 0;

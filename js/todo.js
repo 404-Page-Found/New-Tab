@@ -169,10 +169,8 @@ function renderTodos() {
       </div>
       <div class="todo-content">
         <p class="todo-text">${todo.text}</p>
-        <div class="todo-meta">
-          ${dueDateHtml}
-        </div>
       </div>
+      ${dueDateHtml}
       <div class="todo-actions">
         <button class="todo-edit-btn" data-id="${todo.id}" title="Edit Todo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
