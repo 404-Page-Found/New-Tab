@@ -141,18 +141,18 @@ function renderTodos() {
     li.dataset.id = todo.id;
     li.draggable = true;
 
-    // Format due date if exists
-    const dueDateHtml = todo.dueDate ? `
-      <div class="todo-due-date ${isOverdue(todo.dueDate) ? 'overdue' : ''}">
+    // Format due date if exists - make it clickable for inline editing
+    const dueDateHtml = `
+      <div class="todo-due-date clickable ${todo.dueDate ? (isOverdue(todo.dueDate) ? 'overdue' : '') : 'empty'}" data-todo-id="${todo.id}">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
           <line x1="16" y1="2" x2="16" y2="6"></line>
           <line x1="8" y1="2" x2="8" y2="6"></line>
           <line x1="3" y1="10" x2="21" y2="10"></line>
         </svg>
-        <span class="due-date-text">${formatDate(todo.dueDate)}</span>
+        <span class="due-date-text">${todo.dueDate ? formatDate(todo.dueDate) : 'Set date'}</span>
       </div>
-    ` : '';
+    `;
 
     li.innerHTML = `
       <div class="todo-bullet" data-id="${todo.id}">
@@ -541,6 +541,368 @@ function handleTodoListClick(event) {
   }
 }
 
+// Handle due date click for inline editing
+function handleDueDateClick(event) {
+  const dueDateElement = event.target.closest('.todo-due-date.clickable');
+  if (!dueDateElement) return;
+  
+  event.stopPropagation();
+  const todoId = dueDateElement.dataset.todoId;
+  if (!todoId) return;
+  
+  // Show inline date picker for this todo
+  showInlineDatePicker(todoId, dueDateElement);
+}
+
+// Show inline date picker for a specific todo
+function showInlineDatePicker(todoId, dueDateElement) {
+  // Close any existing inline date pickers
+  closeAllInlineDatePickers();
+  
+  const todo = todos.find(t => t.id === todoId);
+  if (!todo) return;
+  
+  // Create inline date picker container
+  const pickerContainer = document.createElement('div');
+  pickerContainer.className = 'inline-date-picker';
+  pickerContainer.dataset.todoId = todoId;
+  
+  // Create calendar HTML
+  const currentDate = todo.dueDate ? new Date(todo.dueDate) : new Date();
+  const calendarHtml = createCalendarHtml(currentDate, todo.dueDate);
+  
+  pickerContainer.innerHTML = calendarHtml;
+  
+  // Append to body to avoid overflow clipping from parent containers
+  document.body.appendChild(pickerContainer);
+  
+  // Position the picker relative to the due date element
+  positionPickerRelativeToElement(pickerContainer, dueDateElement);
+  
+  // Add event listeners for the inline picker
+  setupInlinePickerListeners(pickerContainer, todoId, dueDateElement);
+  
+  // Show the picker with animation
+  requestAnimationFrame(() => {
+    pickerContainer.classList.add('visible');
+  });
+}
+
+// Position picker relative to a target element
+function positionPickerRelativeToElement(picker, targetElement) {
+  const rect = targetElement.getBoundingClientRect();
+  const pickerWidth = picker.offsetWidth || 280;
+  const pickerHeight = picker.offsetHeight || 320;
+  
+  // Position below the target element
+  let top = rect.bottom + 8;
+  let left = rect.left;
+  
+  // Adjust if picker would go off-screen right
+  if (left + pickerWidth > window.innerWidth - 16) {
+    left = window.innerWidth - pickerWidth - 16;
+  }
+  
+  // Adjust if picker would go off-screen bottom
+  if (top + pickerHeight > window.innerHeight - 16) {
+    top = rect.top - pickerHeight - 8;
+  }
+  
+  picker.style.position = 'fixed';
+  picker.style.top = `${top}px`;
+  picker.style.left = `${left}px`;
+}
+
+// Create calendar HTML for inline picker
+function createCalendarHtml(currentDate, selectedDateString) {
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const selectedDate = selectedDateString ? new Date(selectedDateString) : null;
+  
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+  
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const startDate = new Date(firstDay);
+  startDate.setDate(startDate.getDate() - firstDay.getDay());
+  
+  let daysHtml = '';
+  const today = new Date();
+  
+  for (let i = 0; i < 42; i++) {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + i);
+    
+    const isCurrentMonth = date.getMonth() === month;
+    const isToday = date.toDateString() === today.toDateString();
+    const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
+    
+    let classes = 'calendar-day';
+    if (!isCurrentMonth) classes += ' other-month';
+    if (isToday) classes += ' today';
+    if (isSelected) classes += ' selected';
+    
+    daysHtml += `<div class="${classes}" data-date="${date.toISOString()}">${date.getDate()}</div>`;
+  }
+  
+  return `
+    <div class="inline-calendar-header">
+      <button type="button" class="inline-prev-month" aria-label="Previous month">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+      </button>
+      <div class="inline-calendar-title">
+        <span class="inline-calendar-month">${monthNames[month]}</span>
+        <span class="inline-calendar-year">${year}</span>
+      </div>
+      <button type="button" class="inline-next-month" aria-label="Next month">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </button>
+    </div>
+    <div class="inline-calendar-weekdays">
+      <span>Su</span>
+      <span>Mo</span>
+      <span>Tu</span>
+      <span>We</span>
+      <span>Th</span>
+      <span>Fr</span>
+      <span>Sa</span>
+    </div>
+    <div class="inline-calendar-days">
+      ${daysHtml}
+    </div>
+    <div class="inline-calendar-footer">
+      <button type="button" class="inline-clear-date">Clear</button>
+      <button type="button" class="inline-today-date">Today</button>
+    </div>
+  `;
+}
+
+// Setup event listeners for inline date picker
+function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
+  const todo = todos.find(t => t.id === todoId);
+  if (!todo) return;
+  
+  let currentDate = todo.dueDate ? new Date(todo.dueDate) : new Date();
+  
+  // Navigation buttons
+  const prevBtn = pickerContainer.querySelector('.inline-prev-month');
+  const nextBtn = pickerContainer.querySelector('.inline-next-month');
+  
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      updateInlineCalendar(pickerContainer, currentDate, todo.dueDate);
+    });
+  }
+  
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      updateInlineCalendar(pickerContainer, currentDate, todo.dueDate);
+    });
+  }
+  
+  // Day click handlers
+  const daysContainer = pickerContainer.querySelector('.inline-calendar-days');
+  if (daysContainer) {
+    daysContainer.addEventListener('click', (e) => {
+      const dayElement = e.target.closest('.calendar-day');
+      if (!dayElement || dayElement.classList.contains('other-month')) return;
+      
+      e.stopPropagation();
+      const selectedDate = new Date(dayElement.dataset.date);
+      updateTodoDueDate(todoId, selectedDate, dueDateElement);
+      closeInlineDatePicker(pickerContainer);
+    });
+  }
+  
+  // Footer buttons
+  const clearBtn = pickerContainer.querySelector('.inline-clear-date');
+  const todayBtn = pickerContainer.querySelector('.inline-today-date');
+  
+  if (clearBtn) {
+    clearBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      updateTodoDueDate(todoId, null, dueDateElement);
+      closeInlineDatePicker(pickerContainer);
+    });
+  }
+  
+  if (todayBtn) {
+    todayBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      updateTodoDueDate(todoId, new Date(), dueDateElement);
+      closeInlineDatePicker(pickerContainer);
+    });
+  }
+  
+  // Click outside to close
+  const handleOutsideClick = (e) => {
+    if (!pickerContainer.contains(e.target) && !dueDateElement.contains(e.target)) {
+      closeInlineDatePicker(pickerContainer);
+    }
+  };
+  
+  // Reposition picker on window resize
+  const handleResize = () => {
+    positionPickerRelativeToElement(pickerContainer, dueDateElement);
+  };
+  
+  // Reposition picker on scroll
+  const handleScroll = () => {
+    positionPickerRelativeToElement(pickerContainer, dueDateElement);
+  };
+  
+  // Store references for cleanup
+  pickerContainer._handleOutsideClick = handleOutsideClick;
+  pickerContainer._handleResize = handleResize;
+  pickerContainer._handleScroll = handleScroll;
+  
+  // Delay adding the listener to prevent immediate closure
+  setTimeout(() => {
+    document.addEventListener('click', handleOutsideClick);
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleScroll, true);
+  }, 100);
+}
+
+// Update inline calendar display
+function updateInlineCalendar(pickerContainer, currentDate, selectedDateString) {
+  const calendarHtml = createCalendarHtml(currentDate, selectedDateString);
+  pickerContainer.innerHTML = calendarHtml;
+  
+  // Re-setup event listeners for the updated calendar
+  const todoId = pickerContainer.dataset.todoId;
+  const dueDateElement = pickerContainer.parentElement;
+  setupInlinePickerListeners(pickerContainer, todoId, dueDateElement);
+}
+
+// Update todo due date with visual feedback
+function updateTodoDueDate(todoId, newDate, dueDateElement) {
+  const todo = todos.find(t => t.id === todoId);
+  if (!todo) return;
+  
+  const oldDate = todo.dueDate;
+  todo.dueDate = newDate ? newDate.toISOString().split('T')[0] : null;
+  
+  // Save to localStorage
+  saveTodos(todos);
+  
+  // Update the display with visual feedback
+  updateDueDateDisplay(dueDateElement, todo.dueDate);
+  
+  // Show visual feedback
+  showDateUpdateFeedback(dueDateElement, oldDate, todo.dueDate);
+  
+  // Update filter counts and progress
+  updateFilterCounts();
+  updateProgressRing();
+}
+
+// Update due date display
+function updateDueDateDisplay(dueDateElement, dueDate) {
+  const textElement = dueDateElement.querySelector('.due-date-text');
+  if (!textElement) return;
+  
+  if (dueDate) {
+    textElement.textContent = formatDate(dueDate);
+    dueDateElement.classList.remove('empty');
+    dueDateElement.classList.toggle('overdue', isOverdue(dueDate));
+  } else {
+    textElement.textContent = 'Set date';
+    dueDateElement.classList.add('empty');
+    dueDateElement.classList.remove('overdue');
+  }
+}
+
+// Show visual feedback for date update
+function showDateUpdateFeedback(dueDateElement, oldDate, newDate) {
+  // Add a brief highlight animation
+  dueDateElement.style.transition = 'background-color 0.3s ease, transform 0.2s ease';
+  dueDateElement.style.backgroundColor = 'rgba(33, 150, 243, 0.3)';
+  dueDateElement.style.transform = 'scale(1.05)';
+  
+  setTimeout(() => {
+    dueDateElement.style.backgroundColor = '';
+    dueDateElement.style.transform = '';
+  }, 300);
+  
+  // Show a toast notification
+  const message = newDate
+    ? `Due date updated to ${formatDate(newDate)}`
+    : 'Due date cleared';
+  showToast(message);
+}
+
+// Show toast notification
+function showToast(message) {
+  // Remove existing toast if any
+  const existingToast = document.querySelector('.toast-notification');
+  if (existingToast) {
+    existingToast.remove();
+  }
+  
+  const toast = document.createElement('div');
+  toast.className = 'toast-notification';
+  toast.textContent = message;
+  
+  document.body.appendChild(toast);
+  
+  // Trigger animation
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+  });
+  
+  // Remove after 2 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 2000);
+}
+
+// Close inline date picker
+function closeInlineDatePicker(pickerContainer) {
+  if (!pickerContainer || !pickerContainer.parentNode) return;
+  
+  pickerContainer.classList.remove('visible');
+  
+  // Clean up event listeners
+  const handleOutsideClick = pickerContainer._handleOutsideClick;
+  const handleResize = pickerContainer._handleResize;
+  const handleScroll = pickerContainer._handleScroll;
+  
+  if (handleOutsideClick) {
+    document.removeEventListener('click', handleOutsideClick);
+  }
+  if (handleResize) {
+    window.removeEventListener('resize', handleResize);
+  }
+  if (handleScroll) {
+    window.removeEventListener('scroll', handleScroll, true);
+  }
+  
+  setTimeout(() => {
+    if (pickerContainer.parentNode) {
+      pickerContainer.remove();
+    }
+  }, 200);
+}
+
+// Close all inline date pickers
+function closeAllInlineDatePickers() {
+  const pickers = document.querySelectorAll('.inline-date-picker');
+  pickers.forEach(picker => closeInlineDatePicker(picker));
+}
+
 // Edit Modal Functions
 function openEditModal(id) {
   const todo = todos.find(t => t.id === id);
@@ -645,6 +1007,9 @@ function initTodo() {
 
   // Todo list event delegation
   elements.todoList.addEventListener('click', handleTodoListClick);
+
+  // Due date click handler for inline editing
+  elements.todoList.addEventListener('click', handleDueDateClick);
 
   // Drag and drop
   elements.todoList.addEventListener('dragstart', handleDragStart);

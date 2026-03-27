@@ -5528,6 +5528,341 @@ body.light-theme .todo-bullet .bullet-checked {
   white-space: nowrap;
 }
 
+/* Inline Date Picker Styles */
+.inline-date-picker {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background: rgba(0, 0, 0, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  padding: 16px;
+  z-index: 2000;
+  min-width: 280px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px) scale(0.95);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.inline-date-picker.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+.inline-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.inline-prev-month,
+.inline-next-month {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.inline-prev-month:hover,
+.inline-next-month:hover {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+  transform: scale(1.1);
+}
+
+.inline-prev-month svg,
+.inline-next-month svg {
+  width: 16px;
+  height: 16px;
+}
+
+.inline-calendar-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.inline-calendar-month,
+.inline-calendar-year {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.inline-calendar-month {
+  font-size: 16px;
+}
+
+.inline-calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.inline-calendar-weekdays span {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 8px 4px;
+}
+
+.inline-calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.inline-calendar-days .calendar-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.inline-calendar-days .calendar-day:hover {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+  transform: scale(1.1);
+}
+
+.inline-calendar-days .calendar-day.selected {
+  background: #2196f3;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.inline-calendar-days .calendar-day.selected::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border: 2px solid rgba(33, 150, 243, 0.5);
+  border-radius: 10px;
+}
+
+.inline-calendar-days .calendar-day.today {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+  font-weight: 600;
+}
+
+.inline-calendar-days .calendar-day.today.selected {
+  background: #2196f3;
+  color: #ffffff;
+}
+
+.inline-calendar-days .calendar-day.other-month {
+  color: rgba(255, 255, 255, 0.3);
+  cursor: default;
+}
+
+.inline-calendar-days .calendar-day.other-month:hover {
+  background: none;
+  transform: none;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.inline-calendar-footer {
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+.inline-clear-date,
+.inline-today-date {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.inline-clear-date {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.inline-clear-date:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.inline-today-date {
+  background: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+  border: 1px solid rgba(33, 150, 243, 0.3);
+}
+
+.inline-today-date:hover {
+  background: rgba(33, 150, 243, 0.3);
+  border-color: rgba(33, 150, 243, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Toast Notification Styles */
+.toast-notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 4000;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.toast-notification.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Light theme adjustments for inline date picker */
+body.light-theme .inline-date-picker {
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .inline-prev-month,
+body.light-theme .inline-next-month {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1f2937;
+}
+
+body.light-theme .inline-prev-month:hover,
+body.light-theme .inline-next-month:hover {
+  background: rgba(33, 150, 243, 0.15);
+  color: #2196f3;
+}
+
+body.light-theme .inline-calendar-month,
+body.light-theme .inline-calendar-year {
+  color: #1f2937;
+}
+
+body.light-theme .inline-calendar-weekdays span {
+  color: rgba(31, 41, 55, 0.6);
+}
+
+body.light-theme .inline-calendar-days .calendar-day {
+  color: #1f2937;
+}
+
+body.light-theme .inline-calendar-days .calendar-day:hover {
+  background: rgba(33, 150, 243, 0.15);
+}
+
+body.light-theme .inline-calendar-days .calendar-day.today {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+}
+
+body.light-theme .inline-calendar-days .calendar-day.other-month {
+  color: rgba(31, 41, 55, 0.3);
+}
+
+body.light-theme .inline-clear-date {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1f2937;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .inline-clear-date:hover {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+body.light-theme .inline-today-date {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+  border-color: rgba(33, 150, 243, 0.2);
+}
+
+body.light-theme .inline-today-date:hover {
+  background: rgba(33, 150, 243, 0.2);
+  border-color: rgba(33, 150, 243, 0.4);
+}
+
+/* Light theme for toast notification */
+body.light-theme .toast-notification {
+  background: rgba(255, 255, 255, 0.95);
+  color: #1f2937;
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobile responsive adjustments for inline date picker */
+@media (max-width: 768px) {
+  .inline-date-picker {
+    min-width: 260px;
+    padding: 12px;
+  }
+  
+  .inline-calendar-days {
+    gap: 2px;
+  }
+  
+  .inline-calendar-days .calendar-day {
+    font-size: 13px;
+    padding: 8px 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .inline-date-picker {
+    min-width: 240px;
+    padding: 10px;
+  }
+  
+  .inline-calendar-header {
+    margin-bottom: 12px;
+  }
+  
+  .inline-calendar-days {
+    margin-bottom: 12px;
+  }
+}
+
 /* Todo date button (inline date picker trigger) */
 .todo-date-btn {
   display: flex;
