@@ -4825,16 +4825,19 @@ body.light-theme .todo-count {
   padding: 16px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px) scale(0.95);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 2000;
   min-width: 280px;
+  /* Disable all transitions for instant display */
+  transition: none !important;
+  animation: none !important;
 }
 
 .custom-calendar.visible {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0) scale(1);
+  /* Ensure no animation on visibility change */
+  transition: none !important;
+  animation: none !important;
 }
 
 .calendar-header {
@@ -5545,14 +5548,17 @@ body.light-theme .todo-bullet .bullet-checked {
   min-width: 280px;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px) scale(0.95);
-  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  /* Disable all transitions for instant display */
+  transition: none !important;
+  animation: none !important;
 }
 
 .inline-date-picker.visible {
   opacity: 1;
   visibility: visible;
-  transform: translateY(0) scale(1);
+  /* Ensure no animation on visibility change */
+  transition: none !important;
+  animation: none !important;
 }
 
 .inline-calendar-header {
