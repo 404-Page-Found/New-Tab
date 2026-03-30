@@ -1032,6 +1032,21 @@ function initTodo() {
   if (editModalSave) {
     editModalSave.addEventListener('click', saveEdit);
   }
+
+  // Keyboard shortcuts for edit modal
+  const editTextInput = document.getElementById('todo-edit-text');
+  if (editTextInput) {
+    editTextInput.addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        saveEdit();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        closeEditModal();
+      }
+    });
+  }
+
   // Close modal when clicking outside
   if (editModal) {
     editModal.addEventListener('click', (e) => {
