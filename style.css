@@ -6675,7 +6675,17 @@ body.light-theme .todo-edit-field input[type="text"]:focus {
 }
 
 
-body.light-theme .ai-topics-search input::placeholder {
+body.light-theme .ai-topics-search {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .ai-topics-search:focus-within {
+  background: rgba(0, 0, 0, 0.06);
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+body.light-theme .ai-topics-search svg {
   color: rgba(0, 0, 0, 0.4);
 }
 
