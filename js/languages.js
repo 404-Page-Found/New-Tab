@@ -59,6 +59,9 @@ const translations = {
     // Background settings
     backgroundSettings: "Background",
     backgroundSettingsDesc: "Choose your background image",
+    liveBackground: "Live Background",
+    liveBackgroundSettings: "Live Background",
+    liveBackgroundSettingsDesc: "Choose an animated background video",
 
     // Apps settings
     appsSettings: "Apps",
@@ -155,6 +158,18 @@ const translations = {
     // Todo date picker
     clearDate: "Clear",
     todayDate: "Today",
+    
+    // Todo filters
+    filterAll: "All",
+    filterPending: "Pending",
+    filterCompleted: "Completed",
+    filterOverdue: "Overdue",
+    clearCompletedText: "Clear Completed",
+    clearCompletedConfirmTitle: "Clear Completed Todos?",
+    clearCompletedConfirmMessage: "This will permanently remove all completed todos. This action cannot be undone.",
+    clearCompletedConfirmButton: "Clear Completed",
+    emptyStateTitle: "No todos yet. Add one above!",
+    emptyStateDesc: "Try adding due dates for better organization.",
 
     // Onboarding
     onboardingLanguageTitle: "Choose Your Language 🌐",
@@ -191,14 +206,18 @@ const translations = {
     aiPlaceholder: "Type your message...",
     aiError: "An error occurred. Please try again.",
     aiRateLimit: "Too many requests. Please wait.",
+    aiRequestInProgress: "A request is already in progress. Please wait for it to complete.",
     aiClearConfirm: "Clear chat history?",
     aiAPIKeyMissing: "API key not configured",
     aiSearchEnabled: "Enable AI search",
+    aiSearchConversations: "Search...",
+    aiDeleteConfirmTitle: "Delete Conversation?",
+    aiDeleteConfirmMessage: "This action cannot be undone. The entire conversation will be permanently removed.",
     aiNewChat: "New Chat",
     aiConversations: "Conversations",
     aiNoConversations: "No conversations yet",
     aiNewConversation: "New Conversation",
-    aiDeleteConversation: "Delete conversation",
+    aiDeleteConversation: "Ctrl+Click to delete without confirmation",
     aiDeleteConfirm: "Delete this conversation?",
     aiJustNow: "Just now",
     aiOnline: "Online",
@@ -212,7 +231,9 @@ const translations = {
     aiNoContent: "No content in response",
     aiMessageRequired: "Message is required",
     aiMessageEmpty: "Message cannot be empty",
-    aiMessageTooLong: "Message too long (max 2000 characters)"
+    aiMessageTooLong: "Message too long (max 2000 characters)",
+    aiStopStreaming: "Stop",
+    aiScrollToBottom: "Scroll to bottom"
   },
 
   zh: {
@@ -273,6 +294,9 @@ const translations = {
     // Background settings
     backgroundSettings: "背景",
     backgroundSettingsDesc: "选择您的背景图片",
+    liveBackground: "动态背景",
+    liveBackgroundSettings: "动态背景",
+    liveBackgroundSettingsDesc: "选择动态背景视频",
 
     // Apps settings
     appsSettings: "应用",
@@ -369,6 +393,18 @@ const translations = {
     // Todo date picker
     clearDate: "清除",
     todayDate: "今天",
+    
+    // Todo filters
+    filterAll: "全部",
+    filterPending: "待处理",
+    filterCompleted: "已完成",
+    filterOverdue: "已逾期",
+    clearCompletedText: "清除已完成",
+    clearCompletedConfirmTitle: "清除已完成的待办事项？",
+    clearCompletedConfirmMessage: "这将永久删除所有已完成的待办事项。此操作无法撤消。",
+    clearCompletedConfirmButton: "清除已完成",
+    emptyStateTitle: "还没有待办事项。在上方添加一个！",
+    emptyStateDesc: "尝试添加到期日期以更好地组织。",
 
     // Onboarding
     onboardingLanguageTitle: "选择您的语言 🌐",
@@ -405,14 +441,18 @@ const translations = {
     aiPlaceholder: "输入您的消息...",
     aiError: "发生错误，请重试。",
     aiRateLimit: "请求过多，请稍后再试。",
+    aiRequestInProgress: "请求正在进行中，请等待完成。",
     aiClearConfirm: "清除聊天历史？",
     aiAPIKeyMissing: "API 密钥未配置",
     aiSearchEnabled: "启用 AI 搜索",
+    aiSearchConversations: "搜索...",
+    aiDeleteConfirmTitle: "删除对话？",
+    aiDeleteConfirmMessage: "此操作无法撤消。整个对话将被永久删除。",
     aiNewChat: "新对话",
     aiConversations: "对话列表",
     aiNoConversations: "暂无对话记录",
     aiNewConversation: "新对话",
-    aiDeleteConversation: "删除对话",
+    aiDeleteConversation: "Ctrl+点击直接删除",
     aiDeleteConfirm: "确定删除此对话？",
     aiJustNow: "刚刚",
     aiOnline: "在线",
@@ -426,7 +466,9 @@ const translations = {
     aiNoContent: "响应中没有内容",
     aiMessageRequired: "消息不能为空",
     aiMessageEmpty: "消息不能为空",
-    aiMessageTooLong: "消息太长（最多2000个字符）"
+    aiMessageTooLong: "消息太长（最多2000个字符）",
+    aiStopStreaming: "停止",
+    aiScrollToBottom: "滚动到底部"
   }
 };
 
@@ -495,12 +537,45 @@ function updateDynamicTranslations() {
   // Update empty state messages
   const emptyStateP = document.querySelector('.empty-state p');
   if (emptyStateP) {
-    emptyStateP.textContent = translations[currentLanguage].noTodos;
+    emptyStateP.textContent = translations[currentLanguage].emptyStateTitle;
   }
 
   const emptyStateSmall = document.querySelector('.empty-state small');
   if (emptyStateSmall) {
-    emptyStateSmall.textContent = translations[currentLanguage].noTodosHint;
+    emptyStateSmall.textContent = translations[currentLanguage].emptyStateDesc;
+  }
+  
+  // Update filter pills
+  const filterAll = document.querySelector('.filter-pill[data-filter="all"]');
+  const filterPending = document.querySelector('.filter-pill[data-filter="pending"]');
+  const filterCompleted = document.querySelector('.filter-pill[data-filter="completed"]');
+  const filterOverdue = document.querySelector('.filter-pill[data-filter="overdue"]');
+  
+  if (filterAll) filterAll.childNodes[0].textContent = translations[currentLanguage].filterAll + ' ';
+  if (filterPending) filterPending.childNodes[0].textContent = translations[currentLanguage].filterPending + ' ';
+  if (filterCompleted) filterCompleted.childNodes[0].textContent = translations[currentLanguage].filterCompleted + ' ';
+  if (filterOverdue) filterOverdue.childNodes[0].textContent = translations[currentLanguage].filterOverdue + ' ';
+  
+  // Update quick action button text
+  const clearCompletedBtn = document.getElementById('clear-completed');
+  
+  if (clearCompletedBtn) {
+    const span = clearCompletedBtn.querySelector('span');
+    if (span) span.textContent = translations[currentLanguage].clearCompletedText;
+  }
+
+  // Update clear completed confirmation dialog
+  const clearCompletedDialog = document.getElementById('clear-completed-dialog');
+  if (clearCompletedDialog) {
+    const titleEl = clearCompletedDialog.querySelector('.ai-confirm-title');
+    const messageEl = clearCompletedDialog.querySelector('.ai-confirm-message');
+    const confirmBtn = clearCompletedDialog.querySelector('.ai-confirm-delete');
+    const cancelBtn = clearCompletedDialog.querySelector('.ai-confirm-cancel');
+    
+    if (titleEl) titleEl.textContent = translations[currentLanguage].clearCompletedConfirmTitle;
+    if (messageEl) messageEl.textContent = translations[currentLanguage].clearCompletedConfirmMessage;
+    if (confirmBtn) confirmBtn.textContent = translations[currentLanguage].clearCompletedConfirmButton;
+    if (cancelBtn) cancelBtn.textContent = translations[currentLanguage].cancel;
   }
 
   // Re-render apps to update default app names
@@ -531,6 +606,25 @@ function updateDynamicTranslations() {
   // Re-render the About section so version label and last-checked text update
   if (window.initAboutSection) {
     window.initAboutSection();
+  }
+
+  // Update background section headers if they exist
+  const bgStaticHeader = document.querySelector('#bg-static-section .bg-subsection-header');
+  const bgLiveHeader = document.querySelector('#bg-live-section .bg-subsection-header');
+  const bgStaticDesc = document.querySelector('#bg-static-section .bg-subsection-desc');
+  const bgLiveDesc = document.querySelector('#bg-live-section .bg-subsection-desc');
+  
+  if (bgStaticHeader) {
+    bgStaticHeader.textContent = translations[currentLanguage].background || 'Background';
+  }
+  if (bgLiveHeader) {
+    bgLiveHeader.textContent = translations[currentLanguage].liveBackground || 'Live Background';
+  }
+  if (bgStaticDesc) {
+    bgStaticDesc.textContent = translations[currentLanguage].backgroundSettingsDesc || 'Choose your background image';
+  }
+  if (bgLiveDesc) {
+    bgLiveDesc.textContent = translations[currentLanguage].liveBackgroundSettingsDesc || 'Choose an animated background video';
   }
 
   // Update Add App modal if it's open

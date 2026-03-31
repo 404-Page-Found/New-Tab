@@ -35,20 +35,9 @@ const OpenRouterAPI = (function() {
     if (window.i18n && window.i18n.t) {
       return window.i18n.t(key);
     }
-    const translations = {
-      aiError: 'An error occurred. Please try again.',
-      aiAuthError: 'Invalid or missing API key',
-      aiForbidden: 'Access forbidden',
-      aiRateLimit: 'Too many requests. Please wait.',
-      aiServerError: 'Service error. Please try again later.',
-      aiNetworkError: 'Network error occurred',
-      aiInvalidResponse: 'Invalid response format',
-      aiNoContent: 'No content in response',
-      aiMessageRequired: 'Message is required',
-      aiMessageEmpty: 'Message cannot be empty',
-      aiMessageTooLong: 'Message too long (max 2000 characters)'
-    };
-    return translations[key] || key;
+    // Fallback - should not happen if languages.js loads first
+    console.warn('i18n not available, using fallback for:', key);
+    return key;
   }
 
   /**
@@ -176,9 +165,10 @@ const OpenRouterAPI = (function() {
    * @param {string} userMessage - User's message
    * @param {Array} conversationHistory - Previous messages
    * @param {Function} onChunk - Callback for each chunk received
+   * @param {AbortSignal} signal - Optional abort signal for cancellation
    * @returns {Promise<Object>} Final result object
    */
-  async function sendMessageStreaming(userMessage, conversationHistory = [], onChunk) {
+  async function sendMessageStreaming(userMessage, conversationHistory = [], onChunk, signal = null) {
     // Validate input
     const validation = validateInput(userMessage);
     if (!validation.valid) {
@@ -209,11 +199,18 @@ const OpenRouterAPI = (function() {
     };
 
     try {
-      const response = await fetch(CONFIG.baseURL, {
+      const fetchOptions = {
         method: 'POST',
         headers: buildHeaders(),
         body: JSON.stringify(requestBody)
-      });
+      };
+      
+      // Add abort signal if provided
+      if (signal) {
+        fetchOptions.signal = signal;
+      }
+      
+      const response = await fetch(CONFIG.baseURL, fetchOptions);
 
       // Handle non-OK responses
       if (!response.ok) {
@@ -306,6 +303,14 @@ const OpenRouterAPI = (function() {
       };
 
     } catch (e) {
+      // Check if the request was aborted
+      if (e.name === 'AbortError') {
+        return { 
+          success: false, 
+          error: 'Request cancelled',
+          aborted: true
+        };
+      }
       return { 
         success: false, 
         error: getTranslation('aiNetworkError')

@@ -96,10 +96,35 @@ const backgroundsMap = {
     thumb: 'background/thumbs/Water_Beside_Forest.jpeg',
     url: 'background/Water_Beside_Forest.jpeg',
   },
+  // Live Video Background
+  'Tyndall - Morning Light': {
+    title: 'Tyndall - Morning Light',
+    thumb: 'background/thumbs/Tyndall-Morning_Light.jpeg', // Actual video thumbnail
+    url: 'background/live_background/Tyndall-Morning Light.mp4',
+    type: 'video'
+  },
 };
 
 // Convert map to array when needed
 const backgrounds = Object.keys(backgroundsMap).map(id => ({ id, ...backgroundsMap[id] }));
+
+// Separate backgrounds by type
+const staticBackgrounds = backgrounds.filter(bg => bg.type !== 'video');
+const videoBackgrounds = backgrounds.filter(bg => bg.type === 'video');
+
+// Helper functions
+function isVideoBackground(id) {
+  const bg = backgroundsMap[id];
+  return bg && bg.type === 'video';
+}
+
+function getStaticBackgrounds() {
+  return staticBackgrounds;
+}
+
+function getVideoBackgrounds() {
+  return videoBackgrounds;
+}
 
 function initBackgrounds() {
   const container = document.getElementById('bg-thumbnails');
@@ -107,7 +132,43 @@ function initBackgrounds() {
   container.innerHTML = '';
   backgrounds.forEach((bg) => {
     const img = document.createElement('img');
+    img.className = 'bg-thumb' + (bg.type === 'video' ? ' bg-thumb-video' : '');
+    img.setAttribute('data-bg', bg.id);
+    img.src = bg.thumb;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.title = bg.title;
+    img.alt = bg.title;
+    container.appendChild(img);
+  });
+}
+
+// Initialize static backgrounds section
+function initStaticBackgrounds() {
+  const container = document.getElementById('bg-thumbnails-static');
+  if (!container) return;
+  container.innerHTML = '';
+  staticBackgrounds.forEach((bg) => {
+    const img = document.createElement('img');
     img.className = 'bg-thumb';
+    img.setAttribute('data-bg', bg.id);
+    img.src = bg.thumb;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.title = bg.title;
+    img.alt = bg.title;
+    container.appendChild(img);
+  });
+}
+
+// Initialize live backgrounds section
+function initLiveBackgrounds() {
+  const container = document.getElementById('bg-thumbnails-live');
+  if (!container) return;
+  container.innerHTML = '';
+  videoBackgrounds.forEach((bg) => {
+    const img = document.createElement('img');
+    img.className = 'bg-thumb bg-thumb-video';
     img.setAttribute('data-bg', bg.id);
     img.src = bg.thumb;
     img.loading = 'lazy';
@@ -127,4 +188,9 @@ function findBackgroundUrlById(id) {
 // Expose for other scripts (non-module global)
 window._backgrounds = backgrounds;
 window._initBackgrounds = initBackgrounds;
+window._initStaticBackgrounds = initStaticBackgrounds;
+window._initLiveBackgrounds = initLiveBackgrounds;
 window._findBackgroundUrlById = findBackgroundUrlById;
+window._isVideoBackground = isVideoBackground;
+window._getStaticBackgrounds = getStaticBackgrounds;
+window._getVideoBackgrounds = getVideoBackgrounds;

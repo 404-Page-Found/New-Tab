@@ -7,8 +7,17 @@ let currentFilters = {
   status: 'all'
 };
 
+// Animation config
+const STAGGER_DELAY = 0.05; // seconds between each item
+
 // DOM elements
 let elements = {};
+
+// Edit modal state
+let editModalState = {
+  currentTodoId: null,
+  isOpen: false
+};
 
 // Load todos from localStorage
 function loadTodos() {
@@ -70,31 +79,49 @@ function filterTodos() {
     });
   }
 
-  // Sort by due date, then by creation date
+  // Sort: incomplete items first (by order), then completed items (by completion time)
   filtered.sort((a, b) => {
-    // Due date first
-    if (a.dueDate && b.dueDate) {
-      return new Date(a.dueDate) - new Date(b.dueDate);
-    } else if (a.dueDate) {
-      return -1;
-    } else if (b.dueDate) {
-      return 1;
+    // If both are incomplete, sort by order (original position)
+    if (!a.completed && !b.completed) {
+      const orderA = a.order !== undefined ? a.order : new Date(a.createdAt).getTime();
+      const orderB = b.order !== undefined ? b.order : new Date(b.createdAt).getTime();
+      return orderA - orderB;
     }
-
-    // Creation date last
-    return new Date(a.createdAt) - new Date(b.createdAt);
+    
+    // If both are completed, sort by completion time (chronological)
+    if (a.completed && b.completed) {
+      const timeA = a.completedAt ? new Date(a.completedAt).getTime() : 0;
+      const timeB = b.completedAt ? new Date(b.completedAt).getTime() : 0;
+      return timeA - timeB;
+    }
+    
+    // Incomplete items come first
+    if (!a.completed && b.completed) return -1;
+    if (a.completed && !b.completed) return 1;
+    
+    return 0;
   });
 
   filteredTodos = filtered;
   return filtered;
 }
 
-// Render the todo list
+// Render the todo list with FLIP animation for smooth reordering
 function renderTodos() {
   const todoList = elements.todoList;
   const emptyState = elements.emptyState;
 
   if (!todoList || !emptyState) return;
+
+  // Get existing element positions (First step of FLIP)
+  const existingItems = {};
+  todoList.querySelectorAll('.todo-item').forEach(item => {
+    const rect = item.getBoundingClientRect();
+    existingItems[item.dataset.id] = {
+      top: rect.top,
+      left: rect.left
+    };
+  });
 
   // Clear existing list
   todoList.innerHTML = '';
@@ -107,21 +134,43 @@ function renderTodos() {
 
   emptyState.style.display = 'none';
 
-  // Render each todo
+  // Render each todo with staggered animation
   filteredTodos.forEach((todo, index) => {
     const li = document.createElement('li');
     li.className = `todo-item ${todo.completed ? 'completed' : ''} ${todo.dueDate && isOverdue(todo.dueDate) ? 'overdue' : ''}`;
     li.dataset.id = todo.id;
     li.draggable = true;
 
+    // Format due date if exists - make it clickable for inline editing
+    const dueDateHtml = `
+      <div class="todo-due-date clickable ${todo.dueDate ? (isOverdue(todo.dueDate) ? 'overdue' : '') : 'empty'}" data-todo-id="${todo.id}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+          <line x1="16" y1="2" x2="16" y2="6"></line>
+          <line x1="8" y1="2" x2="8" y2="6"></line>
+          <line x1="3" y1="10" x2="21" y2="10"></line>
+        </svg>
+        <span class="due-date-text">${todo.dueDate ? formatDate(todo.dueDate) : 'Set date'}</span>
+      </div>
+    `;
+
     li.innerHTML = `
-      <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''} data-id="${todo.id}">
+      <div class="todo-bullet" data-id="${todo.id}">
+        ${todo.completed ? `
+          <svg viewBox="0 0 24 24" fill="none" class="bullet-checked">
+            <circle cx="12" cy="12" r="10" fill="currentColor"/>
+            <path d="M9 12l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        ` : `
+          <svg viewBox="0 0 24 24" fill="none" class="bullet-unchecked">
+            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+        `}
+      </div>
       <div class="todo-content">
         <p class="todo-text">${todo.text}</p>
-        <div class="todo-meta">
-          ${todo.dueDate ? `<span class="todo-due-date ${isOverdue(todo.dueDate) ? 'overdue' : ''}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>${formatDate(todo.dueDate)}</span>` : ''}
-        </div>
       </div>
+      ${dueDateHtml}
       <div class="todo-actions">
         <button class="todo-edit-btn" data-id="${todo.id}" title="Edit Todo">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -140,11 +189,37 @@ function renderTodos() {
       </div>
     `;
 
-    // Add animation delay
-    li.style.animationDelay = `${index * 0.05}s`;
+    // Add staggered animation delay
+    li.style.animationDelay = `${index * STAGGER_DELAY}s`;
     li.setAttribute('data-animation', 'enter');
 
     todoList.appendChild(li);
+  });
+
+  // Apply FLIP animation for reordering
+  requestAnimationFrame(() => {
+    todoList.querySelectorAll('.todo-item').forEach(item => {
+      const id = item.dataset.id;
+      if (existingItems[id]) {
+        const newRect = item.getBoundingClientRect();
+        const oldPos = existingItems[id];
+        const deltaY = oldPos.top - newRect.top;
+        const deltaX = oldPos.left - newRect.left;
+
+        // If position changed, apply flip animation
+        if (deltaY !== 0 || deltaX !== 0) {
+          // Invert: move item back to original position
+          item.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+          item.style.transition = 'none';
+
+          // Play: animate to new position
+          requestAnimationFrame(() => {
+            item.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            item.style.transform = '';
+          });
+        }
+      }
+    });
   });
 }
 
@@ -152,18 +227,43 @@ function renderTodos() {
 function addTodo(text, dueDate = null) {
   if (!text.trim()) return;
 
+  // Find the maximum order value among existing todos
+  const maxOrder = todos.reduce((max, todo) => {
+    return todo.order !== undefined ? Math.max(max, todo.order) : max;
+  }, -1);
+
   const newTodo = {
     id: generateTodoId(),
     text: text.trim(),
     completed: false,
+    completedAt: null, // Track when todo was completed
     dueDate: dueDate,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    order: maxOrder + 1 // Add order property to track position (always at the end)
   };
 
   todos.push(newTodo);
   saveTodos(todos);
   applyFilters();
   clearInputs();
+}
+
+// Migrate existing todos to have completedAt property
+function migrateTodos() {
+  let needsMigration = false;
+  
+  todos.forEach(todo => {
+    if (todo.completedAt === undefined) {
+      // For existing completed todos without completedAt,
+      // use createdAt as a fallback (they were completed before this feature)
+      todo.completedAt = todo.completed ? todo.createdAt : null;
+      needsMigration = true;
+    }
+  });
+  
+  if (needsMigration) {
+    saveTodos(todos);
+  }
 }
 
 // Edit a todo
@@ -183,6 +283,14 @@ function toggleTodo(id) {
   const todo = todos.find(t => t.id === id);
   if (todo) {
     todo.completed = !todo.completed;
+    
+    // Track completion time for sorting
+    if (todo.completed) {
+      todo.completedAt = new Date().toISOString();
+    } else {
+      todo.completedAt = null;
+    }
+    
     saveTodos(todos);
     applyFilters();
   }
@@ -199,10 +307,135 @@ function deleteTodo(id) {
 function applyFilters() {
   filterTodos();
   renderTodos();
+  updateFilterUI();
+  updateProgressRing();
+  updateFilterCounts();
 }
 
 function updateFilters() {
   currentFilters.status = elements.filterStatus?.value || 'all';
+  applyFilters();
+}
+
+// Update filter pill UI
+function updateFilterUI() {
+  const pills = document.querySelectorAll('.filter-pill');
+  pills.forEach(pill => {
+    const filter = pill.dataset.filter;
+    pill.classList.toggle('active', filter === currentFilters.status);
+  });
+}
+
+// Update progress ring
+function updateProgressRing() {
+  const total = todos.length;
+  const completed = todos.filter(t => t.completed).length;
+  const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
+  
+  const fill = document.getElementById('progress-ring-fill');
+  const text = document.getElementById('progress-text');
+  
+  if (fill) {
+    fill.setAttribute('stroke-dasharray', `${percentage}, 100`);
+  }
+  if (text) {
+    text.textContent = `${percentage}%`;
+  }
+}
+
+// Update filter badge counts
+function updateFilterCounts() {
+  const all = todos.length;
+  const pending = todos.filter(t => !t.completed).length;
+  const completed = todos.filter(t => t.completed).length;
+  const overdue = todos.filter(t => !t.completed && t.dueDate && isOverdue(t.dueDate)).length;
+  
+  const badgeAll = document.getElementById('badge-all');
+  const badgePending = document.getElementById('badge-pending');
+  const badgeCompleted = document.getElementById('badge-completed');
+  const badgeOverdue = document.getElementById('badge-overdue');
+  const todoCount = document.getElementById('todo-count');
+  
+  if (badgeAll) badgeAll.textContent = all;
+  if (badgePending) badgePending.textContent = pending;
+  if (badgeCompleted) badgeCompleted.textContent = completed;
+  if (badgeOverdue) badgeOverdue.textContent = overdue;
+  if (todoCount) todoCount.textContent = all > 0 ? `${completed}/${all}` : '';
+}
+
+// Quick actions
+function clearCompleted() {
+  const completedTodos = todos.filter(t => t.completed);
+  if (completedTodos.length === 0) return;
+  
+  // Show confirmation dialog
+  showClearCompletedDialog();
+}
+
+// Show clear completed confirmation dialog
+function showClearCompletedDialog() {
+  const dialog = document.getElementById('clear-completed-dialog');
+  const confirmBtn = document.getElementById('clear-completed-confirm');
+  const cancelBtn = dialog?.querySelector('.ai-confirm-cancel');
+  const overlay = dialog?.querySelector('.ai-confirm-overlay');
+  
+  if (!dialog) return;
+  
+  // Show the dialog
+  dialog.classList.add('ai-confirm-open');
+  
+  // Update message with count
+  const completedCount = todos.filter(t => t.completed).length;
+  const messageEl = dialog.querySelector('.ai-confirm-message');
+  if (messageEl && window.i18n) {
+    const message = window.i18n.t('clearCompletedConfirmMessage');
+    messageEl.textContent = message;
+  }
+  
+  // Handle confirm button click
+  const handleConfirm = () => {
+    // Actually clear the completed todos
+    todos = todos.filter(t => !t.completed);
+    saveTodos(todos);
+    applyFilters();
+    hideClearCompletedDialog();
+    
+    // Remove event listeners
+    confirmBtn?.removeEventListener('click', handleConfirm);
+    cancelBtn?.removeEventListener('click', handleCancel);
+    overlay?.removeEventListener('click', handleCancel);
+  };
+  
+  // Handle cancel button click
+  const handleCancel = () => {
+    hideClearCompletedDialog();
+    
+    // Remove event listeners
+    confirmBtn?.removeEventListener('click', handleConfirm);
+    cancelBtn?.removeEventListener('click', handleCancel);
+    overlay?.removeEventListener('click', handleCancel);
+  };
+  
+  // Add event listeners
+  confirmBtn?.addEventListener('click', handleConfirm);
+  cancelBtn?.addEventListener('click', handleCancel);
+  overlay?.addEventListener('click', handleCancel);
+}
+
+// Hide clear completed confirmation dialog
+function hideClearCompletedDialog() {
+  const dialog = document.getElementById('clear-completed-dialog');
+  if (dialog) {
+    dialog.classList.remove('ai-confirm-open');
+  }
+}
+
+// Handle filter pill clicks
+function handleFilterPillClick(event) {
+  const pill = event.target.closest('.filter-pill');
+  if (!pill) return;
+  
+  currentFilters.status = pill.dataset.filter;
   applyFilters();
 }
 
@@ -251,6 +484,11 @@ function handleDrop(event) {
   const [removed] = filteredTodos.splice(draggedIndex, 1);
   filteredTodos.splice(dropIndex, 0, removed);
 
+  // Update the order property for all todos to match the new order
+  filteredTodos.forEach((todo, index) => {
+    todo.order = index;
+  });
+
   // Update the main todos array to match the new order
   const newOrder = filteredTodos.map(todo => todo.id);
   todos.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
@@ -277,10 +515,11 @@ function handleAddTodo() {
 function handleTodoListClick(event) {
   const target = event.target;
 
-  // Handle checkbox toggle
-  if (target.classList.contains('todo-checkbox')) {
+  // Handle bullet click (new circular bullet)
+  const bullet = target.closest('.todo-bullet');
+  if (bullet) {
     event.stopPropagation();
-    const id = target.dataset.id;
+    const id = bullet.dataset.id;
     toggleTodo(id);
     return;
   }
@@ -297,14 +536,425 @@ function handleTodoListClick(event) {
   if (target.closest('.todo-edit-btn')) {
     event.stopPropagation();
     const id = target.closest('.todo-edit-btn').dataset.id;
-    // For now, just focus on the item (could expand to inline editing)
-    const todoItem = target.closest('.todo-item');
-    todoItem.style.transform = 'scale(1.02)';
-    setTimeout(() => {
-      todoItem.style.transform = '';
-    }, 200);
+    openEditModal(id);
     return;
   }
+}
+
+// Handle due date click for inline editing
+function handleDueDateClick(event) {
+  const dueDateElement = event.target.closest('.todo-due-date.clickable');
+  if (!dueDateElement) return;
+  
+  event.stopPropagation();
+  const todoId = dueDateElement.dataset.todoId;
+  if (!todoId) return;
+  
+  // Show inline date picker for this todo
+  showInlineDatePicker(todoId, dueDateElement);
+}
+
+// Show inline date picker for a specific todo
+function showInlineDatePicker(todoId, dueDateElement) {
+  // Close any existing inline date pickers
+  closeAllInlineDatePickers();
+  
+  const todo = todos.find(t => t.id === todoId);
+  if (!todo) return;
+  
+  // Create inline date picker container
+  const pickerContainer = document.createElement('div');
+  pickerContainer.className = 'inline-date-picker';
+  pickerContainer.dataset.todoId = todoId;
+  
+  // Create calendar HTML
+  const currentDate = todo.dueDate ? new Date(todo.dueDate) : new Date();
+  const calendarHtml = createCalendarHtml(currentDate, todo.dueDate);
+  
+  pickerContainer.innerHTML = calendarHtml;
+  
+  // Append to body to avoid overflow clipping from parent containers
+  document.body.appendChild(pickerContainer);
+  
+  // Position the picker relative to the due date element
+  positionPickerRelativeToElement(pickerContainer, dueDateElement);
+  
+  // Add event listeners for the inline picker
+  setupInlinePickerListeners(pickerContainer, todoId, dueDateElement);
+  
+  // Show the picker with animation
+  requestAnimationFrame(() => {
+    pickerContainer.classList.add('visible');
+  });
+}
+
+// Position picker relative to a target element
+function positionPickerRelativeToElement(picker, targetElement) {
+  const rect = targetElement.getBoundingClientRect();
+  const pickerWidth = picker.offsetWidth || 280;
+  const pickerHeight = picker.offsetHeight || 320;
+  
+  // Position below the target element
+  let top = rect.bottom + 8;
+  let left = rect.left;
+  
+  // Adjust if picker would go off-screen right
+  if (left + pickerWidth > window.innerWidth - 16) {
+    left = window.innerWidth - pickerWidth - 16;
+  }
+  
+  // Adjust if picker would go off-screen bottom
+  if (top + pickerHeight > window.innerHeight - 16) {
+    top = rect.top - pickerHeight - 8;
+  }
+  
+  picker.style.position = 'fixed';
+  picker.style.top = `${top}px`;
+  picker.style.left = `${left}px`;
+}
+
+// Create calendar HTML for inline picker
+function createCalendarHtml(currentDate, selectedDateString) {
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const selectedDate = selectedDateString ? new Date(selectedDateString) : null;
+  
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+  
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const startDate = new Date(firstDay);
+  startDate.setDate(startDate.getDate() - firstDay.getDay());
+  
+  let daysHtml = '';
+  const today = new Date();
+  
+  for (let i = 0; i < 42; i++) {
+    const date = new Date(startDate);
+    date.setDate(startDate.getDate() + i);
+    
+    const isCurrentMonth = date.getMonth() === month;
+    const isToday = date.toDateString() === today.toDateString();
+    const isSelected = selectedDate && date.toDateString() === selectedDate.toDateString();
+    
+    let classes = 'calendar-day';
+    if (!isCurrentMonth) classes += ' other-month';
+    if (isToday) classes += ' today';
+    if (isSelected) classes += ' selected';
+    
+    daysHtml += `<div class="${classes}" data-date="${date.toISOString()}">${date.getDate()}</div>`;
+  }
+  
+  return `
+    <div class="inline-calendar-header">
+      <button type="button" class="inline-prev-month" aria-label="Previous month">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+      </button>
+      <div class="inline-calendar-title">
+        <span class="inline-calendar-month">${monthNames[month]}</span>
+        <span class="inline-calendar-year">${year}</span>
+      </div>
+      <button type="button" class="inline-next-month" aria-label="Next month">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </button>
+    </div>
+    <div class="inline-calendar-weekdays">
+      <span>Su</span>
+      <span>Mo</span>
+      <span>Tu</span>
+      <span>We</span>
+      <span>Th</span>
+      <span>Fr</span>
+      <span>Sa</span>
+    </div>
+    <div class="inline-calendar-days">
+      ${daysHtml}
+    </div>
+    <div class="inline-calendar-footer">
+      <button type="button" class="inline-clear-date">Clear</button>
+      <button type="button" class="inline-today-date">Today</button>
+    </div>
+  `;
+}
+
+// Setup event listeners for inline date picker
+function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
+  const todo = todos.find(t => t.id === todoId);
+  if (!todo) return;
+  
+  let currentDate = todo.dueDate ? new Date(todo.dueDate) : new Date();
+  
+  // Navigation buttons
+  const prevBtn = pickerContainer.querySelector('.inline-prev-month');
+  const nextBtn = pickerContainer.querySelector('.inline-next-month');
+  
+  if (prevBtn) {
+    prevBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      updateInlineCalendar(pickerContainer, currentDate, todo.dueDate);
+    });
+  }
+  
+  if (nextBtn) {
+    nextBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      updateInlineCalendar(pickerContainer, currentDate, todo.dueDate);
+    });
+  }
+  
+  // Day click handlers
+  const daysContainer = pickerContainer.querySelector('.inline-calendar-days');
+  if (daysContainer) {
+    daysContainer.addEventListener('click', (e) => {
+      const dayElement = e.target.closest('.calendar-day');
+      if (!dayElement || dayElement.classList.contains('other-month')) return;
+      
+      e.stopPropagation();
+      const selectedDate = new Date(dayElement.dataset.date);
+      updateTodoDueDate(todoId, selectedDate, dueDateElement);
+      closeInlineDatePicker(pickerContainer);
+    });
+  }
+  
+  // Footer buttons
+  const clearBtn = pickerContainer.querySelector('.inline-clear-date');
+  const todayBtn = pickerContainer.querySelector('.inline-today-date');
+  
+  if (clearBtn) {
+    clearBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      updateTodoDueDate(todoId, null, dueDateElement);
+      closeInlineDatePicker(pickerContainer);
+    });
+  }
+  
+  if (todayBtn) {
+    todayBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      updateTodoDueDate(todoId, new Date(), dueDateElement);
+      closeInlineDatePicker(pickerContainer);
+    });
+  }
+  
+  // Click outside to close
+  const handleOutsideClick = (e) => {
+    if (!pickerContainer.contains(e.target) && !dueDateElement.contains(e.target)) {
+      closeInlineDatePicker(pickerContainer);
+    }
+  };
+  
+  // Reposition picker on window resize
+  const handleResize = () => {
+    positionPickerRelativeToElement(pickerContainer, dueDateElement);
+  };
+  
+  // Reposition picker on scroll
+  const handleScroll = () => {
+    positionPickerRelativeToElement(pickerContainer, dueDateElement);
+  };
+  
+  // Store references for cleanup
+  pickerContainer._handleOutsideClick = handleOutsideClick;
+  pickerContainer._handleResize = handleResize;
+  pickerContainer._handleScroll = handleScroll;
+  
+  // Delay adding the listener to prevent immediate closure
+  setTimeout(() => {
+    document.addEventListener('click', handleOutsideClick);
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleScroll, true);
+  }, 100);
+}
+
+// Update inline calendar display
+function updateInlineCalendar(pickerContainer, currentDate, selectedDateString) {
+  const calendarHtml = createCalendarHtml(currentDate, selectedDateString);
+  pickerContainer.innerHTML = calendarHtml;
+  
+  // Re-setup event listeners for the updated calendar
+  const todoId = pickerContainer.dataset.todoId;
+  const dueDateElement = pickerContainer.parentElement;
+  setupInlinePickerListeners(pickerContainer, todoId, dueDateElement);
+}
+
+// Update todo due date with visual feedback
+function updateTodoDueDate(todoId, newDate, dueDateElement) {
+  const todo = todos.find(t => t.id === todoId);
+  if (!todo) return;
+  
+  const oldDate = todo.dueDate;
+  todo.dueDate = newDate ? newDate.toISOString().split('T')[0] : null;
+  
+  // Save to localStorage
+  saveTodos(todos);
+  
+  // Update the display with visual feedback
+  updateDueDateDisplay(dueDateElement, todo.dueDate);
+  
+  // Show visual feedback
+  showDateUpdateFeedback(dueDateElement, oldDate, todo.dueDate);
+  
+  // Update filter counts and progress
+  updateFilterCounts();
+  updateProgressRing();
+}
+
+// Update due date display
+function updateDueDateDisplay(dueDateElement, dueDate) {
+  const textElement = dueDateElement.querySelector('.due-date-text');
+  if (!textElement) return;
+  
+  if (dueDate) {
+    textElement.textContent = formatDate(dueDate);
+    dueDateElement.classList.remove('empty');
+    dueDateElement.classList.toggle('overdue', isOverdue(dueDate));
+  } else {
+    textElement.textContent = 'Set date';
+    dueDateElement.classList.add('empty');
+    dueDateElement.classList.remove('overdue');
+  }
+}
+
+// Show visual feedback for date update
+function showDateUpdateFeedback(dueDateElement, oldDate, newDate) {
+  // Add a brief highlight animation
+  dueDateElement.style.transition = 'background-color 0.3s ease, transform 0.2s ease';
+  dueDateElement.style.backgroundColor = 'rgba(33, 150, 243, 0.3)';
+  dueDateElement.style.transform = 'scale(1.05)';
+  
+  setTimeout(() => {
+    dueDateElement.style.backgroundColor = '';
+    dueDateElement.style.transform = '';
+  }, 300);
+  
+  // Show a toast notification
+  const message = newDate
+    ? `Due date updated to ${formatDate(newDate)}`
+    : 'Due date cleared';
+  showToast(message);
+}
+
+// Show toast notification
+function showToast(message) {
+  // Remove existing toast if any
+  const existingToast = document.querySelector('.toast-notification');
+  if (existingToast) {
+    existingToast.remove();
+  }
+  
+  const toast = document.createElement('div');
+  toast.className = 'toast-notification';
+  toast.textContent = message;
+  
+  document.body.appendChild(toast);
+  
+  // Trigger animation
+  requestAnimationFrame(() => {
+    toast.classList.add('show');
+  });
+  
+  // Remove after 2 seconds
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 2000);
+}
+
+// Close inline date picker
+function closeInlineDatePicker(pickerContainer) {
+  if (!pickerContainer || !pickerContainer.parentNode) return;
+  
+  pickerContainer.classList.remove('visible');
+  
+  // Clean up event listeners
+  const handleOutsideClick = pickerContainer._handleOutsideClick;
+  const handleResize = pickerContainer._handleResize;
+  const handleScroll = pickerContainer._handleScroll;
+  
+  if (handleOutsideClick) {
+    document.removeEventListener('click', handleOutsideClick);
+  }
+  if (handleResize) {
+    window.removeEventListener('resize', handleResize);
+  }
+  if (handleScroll) {
+    window.removeEventListener('scroll', handleScroll, true);
+  }
+  
+  setTimeout(() => {
+    if (pickerContainer.parentNode) {
+      pickerContainer.remove();
+    }
+  }, 200);
+}
+
+// Close all inline date pickers
+function closeAllInlineDatePickers() {
+  const pickers = document.querySelectorAll('.inline-date-picker');
+  pickers.forEach(picker => closeInlineDatePicker(picker));
+}
+
+// Edit Modal Functions
+function openEditModal(id) {
+  const todo = todos.find(t => t.id === id);
+  if (!todo) return;
+
+  editModalState.currentTodoId = id;
+  editModalState.isOpen = true;
+
+  // Populate modal fields
+  const textInput = document.getElementById('todo-edit-text');
+  const modal = document.getElementById('todo-edit-modal');
+
+  if (textInput) textInput.value = todo.text;
+
+  // Show modal
+  if (modal) {
+    modal.style.display = 'flex';
+    // Focus on text input
+    setTimeout(() => {
+      if (textInput) textInput.focus();
+    }, 100);
+  }
+}
+
+function closeEditModal() {
+  editModalState.currentTodoId = null;
+  editModalState.isOpen = false;
+
+  const modal = document.getElementById('todo-edit-modal');
+
+  if (modal) modal.style.display = 'none';
+}
+
+function saveEdit() {
+  if (!editModalState.currentTodoId) return;
+
+  const textInput = document.getElementById('todo-edit-text');
+
+  const newText = textInput ? textInput.value.trim() : '';
+
+  if (!newText) {
+    // Show error or focus on text input
+    if (textInput) textInput.focus();
+    return;
+  }
+
+  // Get the existing todo to preserve its due date
+  const existingTodo = todos.find(t => t.id === editModalState.currentTodoId);
+  const preservedDueDate = existingTodo ? existingTodo.dueDate : null;
+
+  editTodo(editModalState.currentTodoId, newText, null, preservedDueDate);
+  closeEditModal();
 }
 
 // Initialize todo functionality
@@ -316,7 +966,8 @@ function initTodo() {
     addTodoBtn: document.getElementById('add-todo-btn'),
     todoList: document.getElementById('todo-list'),
     emptyState: document.getElementById('empty-state'),
-    filterStatus: document.getElementById('filter-status')
+    filterStatus: document.getElementById('filter-status'),
+    todoFilters: document.querySelector('.todo-filters')
   };
 
   // Check if all elements exist
@@ -328,18 +979,37 @@ function initTodo() {
 
   // Load todos
   todos = loadTodos();
+  
+  // Migrate existing todos to have completedAt property
+  migrateTodos();
 
   // Event listeners
   elements.addTodoBtn.addEventListener('click', handleAddTodo);
   elements.todoInput.addEventListener('keypress', handleKeyPress);
 
-  // Filter listeners
+  // Filter listeners - pill style
+  const filterPills = document.querySelectorAll('.filter-pill');
+  filterPills.forEach(pill => {
+    pill.addEventListener('click', handleFilterPillClick);
+  });
+  
+  // Keep legacy dropdown support
   if (elements.filterStatus) {
     elements.filterStatus.addEventListener('change', updateFilters);
+  }
+  
+  // Quick action buttons
+  const clearCompletedBtn = document.getElementById('clear-completed');
+  
+  if (clearCompletedBtn) {
+    clearCompletedBtn.addEventListener('click', clearCompleted);
   }
 
   // Todo list event delegation
   elements.todoList.addEventListener('click', handleTodoListClick);
+
+  // Due date click handler for inline editing
+  elements.todoList.addEventListener('click', handleDueDateClick);
 
   // Drag and drop
   elements.todoList.addEventListener('dragstart', handleDragStart);
@@ -347,8 +1017,36 @@ function initTodo() {
   elements.todoList.addEventListener('dragover', handleDragOver);
   elements.todoList.addEventListener('drop', handleDrop);
 
+  // Edit modal event listeners
+  const editModalClose = document.getElementById('todo-edit-close');
+  const editModalCancel = document.getElementById('todo-edit-cancel');
+  const editModalSave = document.getElementById('todo-edit-save');
+  const editModal = document.getElementById('todo-edit-modal');
+
+  if (editModalClose) {
+    editModalClose.addEventListener('click', closeEditModal);
+  }
+  if (editModalCancel) {
+    editModalCancel.addEventListener('click', closeEditModal);
+  }
+  if (editModalSave) {
+    editModalSave.addEventListener('click', saveEdit);
+  }
+  // Close modal when clicking outside
+  if (editModal) {
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) {
+        closeEditModal();
+      }
+    });
+  }
+
   // Initial render
   applyFilters();
+  
+  // Initialize progress ring and counts
+  updateProgressRing();
+  updateFilterCounts();
 }
 
 // Custom Date Picker Functionality

@@ -157,8 +157,8 @@ function updatePreview() {
     validationMessage.classList.toggle('undetectable', validation.status === 'undetectable');
   }
   
-  // Enable/disable confirm button
-  addAppConfirm.disabled = !isValid;
+  // Enable confirm button when there's text input (allow even invalid URLs)
+  addAppConfirm.disabled = !url;
 }
 
 // Open modal
@@ -227,8 +227,6 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
       e.preventDefault();
       const url = this.value.trim();
       if (!url) return;
-      const validation = validateUrl(url);
-      if (validation.status !== 'valid') return;
       addAppFromInput(url);
     }
   });
@@ -238,8 +236,6 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
     addAppConfirm.addEventListener("click", function () {
       const url = addAppUrlInput.value.trim();
       if (!url) return;
-      const validation = validateUrl(url);
-      if (validation.status !== 'valid') return;
       addAppFromInput(url);
     });
   }

@@ -9,22 +9,24 @@
   <script src="motto.js"></script>
   <script src="backgrounds.js"></script>
   <script src="js/version.js"></script>
-</head>
+  </head>
 <body>
-  <!-- Corner Buttons (Settings & Feedback) -->
-  <div class="corner-buttons">
-    <button class="corner-btn settings-btn" id="settings-btn" title="Settings">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="3"></circle>
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-      </svg>
-    </button>
-    <a href="https://github.com/404-Page-Found/New-Tab/issues/new" target="_blank" rel="noopener noreferrer" class="corner-btn feedback-btn" id="feedback-btn" title="Feedback">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-      </svg>
-    </a>
+  <!-- Background Container -->
+  <div class="background-container" id="background-container">
+    <video class="background-video" id="bg-video" autoplay muted loop playsinline>
+      <source src="" type="video/mp4">
+    </video>
+    <img class="background-thumbnail" id="bg-thumbnail" src="" alt="">
+    <img class="background-full" id="bg-full" src="" alt="">
   </div>
+  
+  <div class="container">
+      <div id="clock" class="clock"></div>
+      <div id="date" class="date"></div>
+      <div class="search-bar">
+        <div class="search-engines"></div>
+        <input type="text" placeholder="{{searchPlaceholder}}" data-i18n="searchPlaceholder" autofocus />
+      </div>
 
   <div class="container">
     <div id="clock" class="clock"></div>
@@ -92,7 +94,17 @@
       <!-- Todo List Section -->
       <div class="todo-section">
       <div class="todo-header">
-          <h3 class="todo-title" data-i18n="todoList">Todo List</h3>
+          <div class="todo-header-left">
+            <h3 class="todo-title" data-i18n="todoList">Todo List</h3>
+            <span class="todo-count" id="todo-count"></span>
+          </div>
+          <div class="todo-progress-ring" id="todo-progress-ring">
+            <svg viewBox="0 0 36 36">
+              <path class="progress-ring-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="progress-ring-fill" id="progress-ring-fill" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <span class="progress-text" id="progress-text">0%</span>
+          </div>
         </div>
 
         <div class="todo-controls">
@@ -177,25 +189,77 @@
             <button id="delete-selected-btn" class="bulk-btn danger">Delete</button>
             <span id="selected-count">0 selected</span>
           <div class="todo-filters">
+            <div class="filter-pills">
+              <button class="filter-pill active" data-filter="all" data-i18n="filterAll">
+                All
+                <span class="filter-badge" id="badge-all">0</span>
+              </button>
+              <button class="filter-pill" data-filter="pending" data-i18n="filterPending">
+                Pending
+                <span class="filter-badge" id="badge-pending">0</span>
+              </button>
+              <button class="filter-pill" data-filter="completed" data-i18n="filterCompleted">
+                Completed
+                <span class="filter-badge" id="badge-completed">0</span>
+              </button>
+              <button class="filter-pill" data-filter="overdue" data-i18n="filterOverdue">
+                Overdue
+                <span class="filter-badge" id="badge-overdue">0</span>
+              </button>
+            </div>
+            <div class="quick-actions">
+              <button class="quick-action-btn danger" id="clear-completed">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="3,6 5,6 21,6"></polyline>
+                  <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"></path>
+                </svg>
+                <span data-i18n="clearCompletedText">Clear Completed</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="todo-list-container">
-        <ul id="todo-list" class="todo-list"></ul>
-        <div class="empty-state" id="empty-state">
-          <div class="empty-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-              <polyline points="14,2 14,8 20,8"></polyline>
-              <line x1="16" y1="13" x2="8" y2="13"></line>
-              <line x1="16" y1="17" x2="8" y2="17"></line>
-              <polyline points="10,9 9,9 8,9"></polyline>
-            </svg>
+        <div class="todo-list-container">
+          <ul id="todo-list" class="todo-list"></ul>
+          <div class="empty-state" id="empty-state">
+            <div class="empty-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14,2 14,8 20,8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10,9 9,9 8,9"></polyline>
+              </svg>
+            </div>
+            <p data-i18n="emptyStateTitle">No todos yet. Add one above!</p>
+            <small data-i18n="emptyStateDesc">Try adding due dates for better organization.</small>
           </div>
           <p>No todos yet. Add one above!</p>
           <small>Try adding due dates for better organization.</small>
         </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear Completed Confirmation Dialog (Screen Overlay) -->
+  <div id="clear-completed-dialog" class="ai-confirm-dialog screen-overlay">
+    <div class="ai-confirm-overlay"></div>
+    <div class="ai-confirm-content">
+      <div class="ai-confirm-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3,6 5,6 21,6"></polyline>
+          <path d="M19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"></path>
+          <line x1="10" y1="11" x2="10" y2="17"></line>
+          <line x1="14" y1="11" x2="14" y2="17"></line>
+        </svg>
+      </div>
+      <h3 class="ai-confirm-title" data-i18n="clearCompletedConfirmTitle">Clear Completed Todos?</h3>
+      <p class="ai-confirm-message" data-i18n="clearCompletedConfirmMessage">This will permanently remove all completed todos. This action cannot be undone.</p>
+      <div class="ai-confirm-actions">
+        <button class="ai-confirm-cancel" data-i18n="cancel">Cancel</button>
+        <button class="ai-confirm-delete" id="clear-completed-confirm" data-i18n="clearCompletedConfirmButton">Clear Completed</button>
       </div>
     </div>
   </div>
@@ -260,7 +324,22 @@
             </div>
           </section>
           <section class="settings-section" data-section="background" style="display: none">
-            <div class="bg-thumbnails" id="bg-thumbnails"></div>
+            <!-- Static Backgrounds -->
+            <div class="bg-subsection" id="bg-static-section">
+              <h4 class="bg-subsection-header" data-i18n="background">Background</h4>
+              <p class="bg-subsection-desc" data-i18n="backgroundSettingsDesc">Choose your background image</p>
+              <div class="bg-thumbnails" id="bg-thumbnails-static"></div>
+            </div>
+            
+            <!-- Live Backgrounds -->
+            <div class="bg-subsection" id="bg-live-section">
+              <h4 class="bg-subsection-header" data-i18n="liveBackground">Live Background</h4>
+              <p class="bg-subsection-desc" data-i18n="liveBackgroundSettingsDesc">Choose an animated background video</p>
+              <div class="bg-thumbnails" id="bg-thumbnails-live"></div>
+            </div>
+            
+            <!-- Legacy container for backward compatibility -->
+            <div class="bg-thumbnails hidden" id="bg-thumbnails"></div>
           </section>
           <section class="settings-section" data-section="apps" style="display: none">
             <div class="apps-setting-group">
@@ -566,10 +645,21 @@
             <span data-i18n="aiNewChat">New Chat</span>
           </button>
         </div>
+        <!-- Search Controls -->
+        <div class="ai-topics-controls">
+          <div class="ai-topics-search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="ai-topics-search-input" placeholder="Search..." data-i18n-placeholder="aiSearchConversations" />
+          </div>
+        </div>
         <div class="ai-topics-header">
           <span data-i18n="aiConversations">Conversations</span>
+          <span id="ai-topics-count" class="ai-topics-count"></span>
         </div>
-        <div class="ai-topics-list" id="ai-topics-list">
+        <div class="ai-topics-list" id="ai-topics-list" tabindex="0">
           <!-- Topics will be rendered here -->
         </div>
       </div>
@@ -578,9 +668,24 @@
       <div class="ai-chat-main">
         <div class="ai-chat-header">
           <div class="ai-chat-title" id="ai-chat-title">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
-              <path d="M12 6v6l4 2"/>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/>
+              <line x1="12" y1="9.5" x2="12" y2="5"/>
+              <circle cx="12" cy="4" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="14.3" y1="10.2" x2="17" y2="7"/>
+              <circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="14.5" y1="12" x2="19" y2="12"/>
+              <circle cx="19.5" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="14.3" y1="13.8" x2="17" y2="17"/>
+              <circle cx="17.5" cy="17.5" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="12" y1="14.5" x2="12" y2="19"/>
+              <circle cx="12" cy="20" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="9.7" y1="13.8" x2="7" y2="17"/>
+              <circle cx="6.5" cy="17.5" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="9.5" y1="12" x2="5" y2="12"/>
+              <circle cx="4.5" cy="12" r="1.2" fill="currentColor" stroke="none"/>
+              <line x1="9.7" y1="10.2" x2="7" y2="7"/>
+              <circle cx="6.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/>
             </svg>
             <span data-i18n="aiAssistant">AI Assistant</span>
           </div>
@@ -604,7 +709,75 @@
               <polygon points="22,2 15,22 11,13 2,9 22,2"></polygon>
             </svg>
           </button>
+          <button id="ai-chat-stop" class="ai-chat-stop-btn" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="6" y="6" width="12" height="12" rx="2"></rect>
+            </svg>
+          </button>
         </div>
+        
+        <!-- Scroll to bottom button -->
+        <button id="ai-scroll-to-bottom" class="ai-scroll-to-bottom-btn" title="Scroll to bottom">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6,9 12,15 18,9"></polyline>
+          </svg>
+        </button>
+        
+        <!-- Custom Delete Confirmation Dialog -->
+        <div id="ai-confirm-dialog" class="ai-confirm-dialog">
+          <div class="ai-confirm-overlay"></div>
+          <div class="ai-confirm-content">
+            <div class="ai-confirm-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <h3 class="ai-confirm-title" data-i18n="aiDeleteConfirmTitle">Delete Conversation?</h3>
+            <p class="ai-confirm-message" data-i18n="aiDeleteConfirmMessage">This action cannot be undone. The entire conversation will be permanently removed.</p>
+            <div class="ai-confirm-actions">
+              <button class="ai-confirm-cancel" data-i18n="aiCancel">Cancel</button>
+              <button class="ai-confirm-delete" data-i18n="aiDelete">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Todo Edit Modal -->
+  <div id="todo-edit-modal">
+    <div class="todo-edit-modal-content">
+      <div class="todo-edit-header">
+        <h3 data-i18n="editTodo">Edit Todo</h3>
+        <button id="todo-edit-close" class="todo-edit-close-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="todo-edit-body">
+        <div class="todo-edit-field">
+          <label for="todo-edit-text" data-i18n="todoText">Todo Text</label>
+          <input type="text" id="todo-edit-text" maxlength="200" />
+        </div>
+      </div>
+      <div class="todo-edit-actions">
+        <button id="todo-edit-cancel" class="btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span data-i18n="cancel">Cancel</span>
+        </button>
+        <button id="todo-edit-save" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20,6 9,17 4,12"></polyline>
+          </svg>
+          <span data-i18n="save">Save</span>
+        </button>
       </div>
     </div>
   </div>
@@ -685,19 +858,148 @@
     </div>
   </div>
 
-  <script src="js/utils.js"></script>
-  <script src="js/main.js"></script>
-  <script src="js/app-manager.js"></script>
-  <script src="js/search-engine.js"></script>
-  <script src="js/drag-drop.js"></script>
-  <script src="js/add-app.js"></script>
-  <script src="js/color-picker.js"></script>
-  <script src="js/languages.js"></script>
-  <script src="js/settings.js"></script>
-  <script src="js/context-menu.js"></script>
-  <script src="js/update-checker.js"></script>
-  <script src="js/onboarding.js"></script>
-  <script src="js/todo.js"></script>
+  <!-- Rename App Modal -->
+  <div id="rename-app-modal">
+    <div class="rename-app-modal-content">
+      <div class="rename-app-header">
+        <div class="rename-app-header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+          </svg>
+        </div>
+        <div class="rename-app-header-text">
+          <h3 data-i18n="renameAppTitle">Rename App</h3>
+          <p data-i18n="renameAppDescription">Enter a new name for this app</p>
+        </div>
+      </div>
+      <div class="rename-app-input-wrapper">
+        <input id="rename-app-input" type="text" placeholder="App name" data-i18n-placeholder="enterAppName" maxlength="50" />
+      </div>
+      <div class="rename-app-actions">
+        <button id="rename-app-cancel" class="btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span data-i18n="cancel">Cancel</span>
+        </button>
+        <button id="rename-app-confirm" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20,6 9,17 4,12"></polyline>
+          </svg>
+          <span data-i18n="save">Save</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Thumbnail Modal -->
+  <div id="thumbnail-app-modal">
+    <div class="thumbnail-app-modal-content">
+      <div class="thumbnail-app-header">
+        <div class="thumbnail-app-header-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21,15 16,10 5,21"></polyline>
+          </svg>
+        </div>
+        <div class="thumbnail-app-header-text">
+          <h3 data-i18n="changeThumbnailTitle">Change Thumbnail</h3>
+          <p data-i18n="changeThumbnailDescription">Enter an image URL for the app icon</p>
+        </div>
+      </div>
+      <div class="thumbnail-app-input-wrapper">
+        <div class="thumbnail-app-input-container">
+          <div class="thumbnail-app-input-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          </div>
+          <input id="thumbnail-app-input" type="text" placeholder="https://example.com/icon.png" data-i18n-placeholder="enterIconUrl" />
+        </div>
+      </div>
+      <div class="thumbnail-app-preview" id="thumbnail-app-preview">
+        <div class="thumbnail-app-preview-icon" id="thumbnail-preview-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21,15 16,10 5,21"></polyline>
+          </svg>
+        </div>
+        <div class="thumbnail-app-preview-info">
+          <span class="thumbnail-preview-name" id="thumbnail-preview-name">App Name</span>
+        </div>
+      </div>
+      <div class="thumbnail-app-actions">
+        <button id="thumbnail-app-cancel" class="btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span data-i18n="cancel">Cancel</span>
+        </button>
+        <button id="thumbnail-app-confirm" class="btn-primary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20,6 9,17 4,12"></polyline>
+          </svg>
+          <span data-i18n="save">Save</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete App Confirmation Modal -->
+  <div id="delete-app-modal">
+    <div class="delete-app-modal-content">
+      <div class="delete-app-header">
+        <div class="delete-app-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="15" y1="9" x2="9" y2="15"></line>
+            <line x1="9" y1="9" x2="15" y2="15"></line>
+          </svg>
+        </div>
+        <div class="delete-app-header-text">
+          <h3 data-i18n="deleteAppTitle">Delete App?</h3>
+          <p data-i18n="deleteAppMessage">This app will be permanently removed from your list.</p>
+        </div>
+      </div>
+      <div class="delete-app-preview" id="delete-app-preview">
+        <div class="delete-app-preview-icon" id="delete-preview-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21,15 16,10 5,21"></polyline>
+          </svg>
+        </div>
+        <div class="delete-app-preview-info">
+          <span class="delete-preview-name" id="delete-preview-name">App Name</span>
+        </div>
+      </div>
+      <div class="delete-app-actions">
+        <button id="delete-app-cancel" class="btn-secondary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+          <span data-i18n="cancel">Cancel</span>
+        </button>
+        <button id="delete-app-confirm" class="btn-danger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3,6 5,6 21,6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            <line x1="10" y1="11" x2="10" y2="17"></line>
+            <line x1="14" y1="11" x2="14" y2="17"></line>
+          </svg>
+          <span data-i18n="delete">Delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
 
 <script src="js/utils.js"></script>
 <script src="js/main.js"></script>
@@ -717,6 +1019,7 @@
 <script src="js/ai/cache-manager.js"></script>
 <script src="js/ai/offline-mode.js"></script>
 <script src="js/ai/openrouter.js"></script>
+<script src="js/ai/markdown-parser.js"></script>
 <script src="js/ai/ai-service.js"></script>
   <!-- Motto area -->
   <div id="motto-container">
@@ -726,7 +1029,7 @@
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.5"><path stroke-miterlimit="10" d="M17.605 7.705A7.9 7.9 0 0 0 12 5.382a7.93 7.93 0 0 0-7.929 7.929A7.94 7.94 0 0 0 12 21.25a7.94 7.94 0 0 0 7.929-7.94"/><path stroke-linejoin="round" d="m16.88 2.75l.95 3.858a1.33 1.33 0 0 1-.97 1.609l-3.869.948"/></g></svg>
       </button>
       <button id="copy-motto-btn" aria-label="Copy motto">
-        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 512 512"><rect width="336" height="336" x="128" y="128" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" rx="57" ry="57"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="m383.5 128l.5-24a56.16 56.16 0 0 0-56-56H112a64.19 64.19 0 0 0-64 64v216a56.16 56.16 0 0 0 56 56h24"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 512 512"><rect width="336" height="336" x="128" y="128" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="32" rx="57" ry="57"/><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="32" d="m383.5 128l.5-24a56.16 56.16 0 0 0-56-56H112a64.19 64.19 0 0 0-64 64v216a56.16 56.16 0 0 0 56 56h24"/></svg>
       </button>
     </div>
   </div>
