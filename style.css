@@ -1,3 +1,36 @@
+/* =============================================
+   Main Stylesheet - Import Hub
+   =============================================
+   This file imports all CSS modules organized
+   by concern. Each component has its own file
+   including its light-theme overrides and
+   responsive styles.
+   ============================================= */
+
+/* Base: Reset, Variables, Body */
+@import url('css/base.css');
+
+/* Animations: All @keyframes */
+@import url('css/animations.css');
+
+/* Theme Overrides */
+@import url('css/themes/light.css');
+
+/* Components */
+@import url('css/components/clock.css');
+@import url('css/components/search-bar.css');
+@import url('css/components/app-grid.css');
+@import url('css/components/motto.css');
+@import url('css/components/settings.css');
+@import url('css/components/add-app-modal.css');
+@import url('css/components/corner-buttons.css');
+@import url('css/components/context-menu.css');
+@import url('css/components/color-picker.css');
+@import url('css/components/notifications.css');
+@import url('css/components/language.css');
+@import url('css/components/todo.css');
+@import url('css/components/onboarding.css');
+@import url('css/components/scrollbars.css');
 /* Disable browser default tooltips while preserving interactivity */
 *[title] {
   /* Use empty title to prevent tooltips without blocking pointer events */

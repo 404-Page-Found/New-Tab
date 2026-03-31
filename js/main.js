@@ -147,6 +147,19 @@ function setupCopyMotto() {
 // Make displayDailyMotto globally accessible for language switching
 window.displayDailyMotto = displayDailyMotto;
 
+// Set the motto and button functionality
+// Use readyState check since scripts may load after DOMContentLoaded has fired
+if (document.readyState === 'loading') {
+  document.addEventListener("DOMContentLoaded", () => {
+    displayDailyMotto();
+    setupRefreshMotto();
+    setupCopyMotto();
+  });
+} else {
+  displayDailyMotto();
+  setupRefreshMotto();
+  setupCopyMotto();
+}
 // Hide footer-left / footer-right when they overlap with the motto container
 function checkFooterOverlap() {
   const motto = document.getElementById("motto-container");
