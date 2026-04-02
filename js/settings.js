@@ -93,13 +93,19 @@ if (document.readyState === 'loading') {
 function applyBg() {
   const bg = loadBg();
   document.body.setAttribute("data-bg", bg);
-  
+
   // Update thumbnail selection
   const thumbs = document.querySelectorAll('.bg-thumb');
   for (let i = 0; i < thumbs.length; i++) {
     thumbs[i].classList.toggle('selected', thumbs[i].getAttribute('data-bg') === bg);
   }
-  
+
+  // Handle custom backgrounds (stored in IndexedDB)
+  if (window._customBackgrounds && window._customBackgrounds.isCustom(bg)) {
+    window._customBackgrounds.apply(bg);
+    return;
+  }
+
   // Get background data from the map
   const bgData = window._backgrounds ? window._backgrounds.find(b => b.id === bg) : null;
   if (!bgData) return;
@@ -536,6 +542,8 @@ if (settingsMenu) {
         if (window._initBackgrounds) window._initBackgrounds();
         if (window._initStaticBackgrounds) window._initStaticBackgrounds();
         if (window._initLiveBackgrounds) window._initLiveBackgrounds();
+        // Render custom backgrounds
+        if (window._customBackgrounds) window._customBackgrounds.render();
         // Apply background selection after loading
         applyBg();
       }

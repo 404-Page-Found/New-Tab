@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="style.css" />
   <script src="motto.js"></script>
   <script src="backgrounds.js"></script>
+  <script src="js/custom-backgrounds.js"></script>
   <script src="js/version.js"></script>
   </head>
 <body>
@@ -247,16 +248,24 @@
             <div class="bg-subsection" id="bg-static-section">
               <h4 class="bg-subsection-header" data-i18n="background">Background</h4>
               <p class="bg-subsection-desc" data-i18n="backgroundSettingsDesc">Choose your background image</p>
-              <div class="bg-thumbnails" id="bg-thumbnails-static"></div>
+              <div class="bg-thumbnails" id="bg-thumbnails-static">
+                <button class="upload-bg-btn" data-upload-type="image" title="Upload Background">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+              </div>
             </div>
-            
+
             <!-- Live Backgrounds -->
             <div class="bg-subsection" id="bg-live-section">
               <h4 class="bg-subsection-header" data-i18n="liveBackground">Live Background</h4>
               <p class="bg-subsection-desc" data-i18n="liveBackgroundSettingsDesc">Choose an animated background video</p>
-              <div class="bg-thumbnails" id="bg-thumbnails-live"></div>
+              <div class="bg-thumbnails" id="bg-thumbnails-live">
+                <button class="upload-bg-btn" data-upload-type="video" title="Upload Live Background">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                </button>
+              </div>
             </div>
-            
+
             <!-- Legacy container for backward compatibility -->
             <div class="bg-thumbnails hidden" id="bg-thumbnails"></div>
           </section>

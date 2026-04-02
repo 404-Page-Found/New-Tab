@@ -147,7 +147,8 @@ function initBackgrounds() {
 function initStaticBackgrounds() {
   const container = document.getElementById('bg-thumbnails-static');
   if (!container) return;
-  container.innerHTML = '';
+  // Remove existing thumbnails but preserve upload button
+  container.querySelectorAll('.bg-thumb').forEach(el => el.remove());
   staticBackgrounds.forEach((bg) => {
     const img = document.createElement('img');
     img.className = 'bg-thumb';
@@ -157,7 +158,13 @@ function initStaticBackgrounds() {
     img.decoding = 'async';
     img.title = bg.title;
     img.alt = bg.title;
-    container.appendChild(img);
+    // Insert before upload button if it exists
+    const uploadBtn = container.querySelector('.upload-bg-btn');
+    if (uploadBtn) {
+      container.insertBefore(img, uploadBtn);
+    } else {
+      container.appendChild(img);
+    }
   });
 }
 
@@ -165,7 +172,8 @@ function initStaticBackgrounds() {
 function initLiveBackgrounds() {
   const container = document.getElementById('bg-thumbnails-live');
   if (!container) return;
-  container.innerHTML = '';
+  // Remove existing thumbnails but preserve upload button
+  container.querySelectorAll('.bg-thumb').forEach(el => el.remove());
   videoBackgrounds.forEach((bg) => {
     const img = document.createElement('img');
     img.className = 'bg-thumb bg-thumb-video';
@@ -175,7 +183,13 @@ function initLiveBackgrounds() {
     img.decoding = 'async';
     img.title = bg.title;
     img.alt = bg.title;
-    container.appendChild(img);
+    // Insert before upload button if it exists
+    const uploadBtn = container.querySelector('.upload-bg-btn');
+    if (uploadBtn) {
+      container.insertBefore(img, uploadBtn);
+    } else {
+      container.appendChild(img);
+    }
   });
 }
 

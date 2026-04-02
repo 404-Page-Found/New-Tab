@@ -1379,6 +1379,90 @@ body.light-theme .drag-placeholder {
   pointer-events: none;
 }
 
+/* Custom background upload button */
+.upload-bg-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  border: 2px dashed rgba(33, 150, 243, 0.4) !important;
+  background: rgba(33, 150, 243, 0.08) !important;
+  color: rgba(33, 150, 243, 0.7) !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  box-shadow: none !important;
+  transform: none !important;
+  font-weight: unset !important;
+  font-size: unset !important;
+}
+
+.upload-bg-btn:hover {
+  border-color: rgba(33, 150, 243, 0.7) !important;
+  background: rgba(33, 150, 243, 0.15) !important;
+  color: #2196f3 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.upload-bg-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.8;
+}
+
+/* Custom background thumbnail wrapper */
+.custom-bg-thumb-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-bg-thumb-wrapper .bg-thumb {
+  display: block;
+}
+
+.custom-bg-delete-btn {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none !important;
+  background: rgba(33, 150, 243, 0.9) !important;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 2;
+  box-shadow: none !important;
+  transform: none !important;
+  font-weight: unset !important;
+  font-size: unset !important;
+}
+
+.custom-bg-thumb-wrapper:hover .custom-bg-delete-btn {
+  opacity: 1;
+}
+
+.custom-bg-delete-btn:hover {
+  background: #2196f3 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+.custom-bg-delete-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
 /* Hidden utility class */
 .hidden {
   display: none !important;
@@ -2391,6 +2475,18 @@ body.light-theme .bg-thumb.selected {
 
 body.light-theme .bg-subsection-desc {
   color: rgba(107, 114, 128, 0.8);
+}
+
+body.light-theme .upload-bg-btn {
+  border-color: rgba(33, 150, 243, 0.3) !important;
+  background: rgba(33, 150, 243, 0.05) !important;
+  color: rgba(33, 150, 243, 0.5) !important;
+}
+
+body.light-theme .upload-bg-btn:hover {
+  background: rgba(33, 150, 243, 0.12) !important;
+  border-color: rgba(33, 150, 243, 0.55) !important;
+  color: #2196f3 !important;
 }
 
 /* Modern Context Menu Styles */

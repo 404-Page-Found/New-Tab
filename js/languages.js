@@ -62,6 +62,8 @@ const translations = {
     liveBackground: "Live Background",
     liveBackgroundSettings: "Live Background",
     liveBackgroundSettingsDesc: "Choose an animated background video",
+    uploadBackground: "Upload Background",
+    uploadLiveBackground: "Upload Live Background",
 
     // Apps settings
     appsSettings: "Apps",
@@ -297,6 +299,8 @@ const translations = {
     liveBackground: "动态背景",
     liveBackgroundSettings: "动态背景",
     liveBackgroundSettingsDesc: "选择动态背景视频",
+    uploadBackground: "上传背景图片",
+    uploadLiveBackground: "上传动态背景",
 
     // Apps settings
     appsSettings: "应用",
@@ -625,6 +629,16 @@ function updateDynamicTranslations() {
   }
   if (bgLiveDesc) {
     bgLiveDesc.textContent = translations[currentLanguage].liveBackgroundSettingsDesc || 'Choose an animated background video';
+  }
+
+  // Update upload button titles
+  const uploadBgBtn = document.querySelector('.upload-bg-btn[data-upload-type="image"]');
+  const uploadLiveBtn = document.querySelector('.upload-bg-btn[data-upload-type="video"]');
+  if (uploadBgBtn) {
+    uploadBgBtn.title = translations[currentLanguage].uploadBackground || 'Upload Background';
+  }
+  if (uploadLiveBtn) {
+    uploadLiveBtn.title = translations[currentLanguage].uploadLiveBackground || 'Upload Live Background';
   }
 
   // Update Add App modal if it's open
