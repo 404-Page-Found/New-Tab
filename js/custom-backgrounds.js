@@ -509,9 +509,15 @@
       deleteCustomBackground(bgId).then(function () {
         revokeBlobUrl(bgId);
 
-        // If the deleted background was active, reset to default
+        // If the deleted background was active, reset to a random built-in background
         if (currentBg === bgId) {
-          localStorage.setItem('homepageBg', 'Water Beside Forest');
+          var builtInBackgrounds = window._backgrounds || [];
+          if (builtInBackgrounds.length > 0) {
+            var randomBg = builtInBackgrounds[Math.floor(Math.random() * builtInBackgrounds.length)];
+            localStorage.setItem('homepageBg', randomBg.id);
+          } else {
+            localStorage.setItem('homepageBg', 'Water Beside Forest');
+          }
           applyBg();
         }
 
