@@ -5678,11 +5678,10 @@ body.light-theme .quick-action-btn.danger {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.2s ease;
 }
 
-.todo-bullet:hover {
-  transform: scale(1.15);
+.todo-bullet:hover .bullet-unchecked {
+  color: #2196f3;
 }
 
 .todo-bullet svg {
@@ -5733,7 +5732,6 @@ body.light-theme .todo-bullet .bullet-checked {
 
 .todo-item:hover {
   background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px) scale(1.01);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
