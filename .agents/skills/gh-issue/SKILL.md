@@ -1,5 +1,5 @@
 ---
-name: gh-create-edit-issue
+name: gh-issue
 description: Create and edit GitHub issues
 ---
 

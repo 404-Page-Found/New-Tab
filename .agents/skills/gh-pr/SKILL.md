@@ -1,5 +1,5 @@
 ---
-name: gh-create-edit-pr
+name: gh-pr
 description: Create and manage GitHub pull requests
 ---
 
