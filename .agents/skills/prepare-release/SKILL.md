@@ -3,16 +3,34 @@ name: prepare-release
 description: Prepare and manage releases
 ---
 
-Release workflow tools:
-- `github_merge_pull_request` - Merge release PR (commit_title, commit_message, merge_method)
-- `github_list_commits` - List commits to verify CHANGELOG
-- `github_list_pull_requests` - Check merged PRs for release notes
-- `github_get_pull_request_files` - Review changes in release PR
-- `github_create_pull_request` - Create release branch PR
+## Available Tools
 
-For creating GitHub releases, use the GitHub MCP server or CLI with:
+| Tool | Purpose |
+|------|---------|
+| `github_list_pull_requests` | List merged PRs for release notes |
+| `github_list_commits` | Verify CHANGELOG entries |
+| `github_get_pull_request_files` | Review changes in release PR |
+| `github_merge_pull_request` | Merge release PR |
+| `github_create_pull_request` | Create release branch PR |
+
+## Creating a Release
+
+Use GitHub CLI to create releases:
 ```bash
-gh release create <tag> [flags]
+gh release create <tag> --title "<title>" --notes "<notes>"
 ```
 
-Typical workflow: 1) Review merged PRs, 2) Update changelog, 3) Create/release PR, 4) Merge, 5) Create git tag
+## Workflow
+
+1. **Review merged PRs** - List merged PRs since last release
+2. **Update CHANGELOG** - Add entries for each significant change
+3. **Create release PR** - Branch from main, include CHANGELOG updates
+4. **Review changes** - Verify files changed match expectations
+5. **Merge PR** - Use squash merge for clean history
+6. **Create tag** - Tag the release commit
+
+## Tips
+
+- Use semantic versioning (e.g., v1.2.0)
+- Include breaking changes in release notes
+- Reference PR numbers in CHANGELOG for context
