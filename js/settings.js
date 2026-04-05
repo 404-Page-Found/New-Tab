@@ -164,7 +164,9 @@ function applyBg() {
       fullEl.src = '';
       
       // Set video source
-      videoEl.querySelector('source').src = bgData.url;
+      const sourceEl = videoEl.querySelector('source');
+      sourceEl.src = bgData.url;
+      sourceEl.type = 'video/mp4';
       videoEl.load();
       
       // Set initial state - video starts hidden (opacity: 0)
@@ -184,7 +186,11 @@ function applyBg() {
       };
       
       // Helper to trigger crossfade between thumbnail and video
+      let crossfadeTriggered = false;
       const triggerCrossfade = function() {
+        if (crossfadeTriggered) return;
+        crossfadeTriggered = true;
+        
         // Start video playback immediately
         startVideoPlayback();
         
@@ -210,34 +216,31 @@ function applyBg() {
       };
       
       // Video can play through - trigger crossfade
-      videoEl.oncanplaythrough = function() {
-        triggerCrossfade();
-      };
+      videoEl.addEventListener('canplaythrough', triggerCrossfade, { once: true });
       
       // Fallback: if canplaythrough takes too long, trigger on loadeddata
-      videoEl.onloadeddata = function() {
-        // Only trigger if active class hasn't been added yet
-        if (!videoEl.classList.contains('active')) {
+      videoEl.addEventListener('loadeddata', function() {
+        if (!crossfadeTriggered) {
           triggerCrossfade();
         }
-      };
+      }, { once: true });
       
       // Additional fallback: ensure crossfade happens after video starts playing
-      videoEl.onplaying = function() {
-        if (!videoEl.classList.contains('active')) {
+      videoEl.addEventListener('playing', function() {
+        if (!crossfadeTriggered) {
           triggerCrossfade();
         }
-      };
+      }, { once: true });
       
       // Video loaded metadata - ensure proper sizing
-      videoEl.onloadedmetadata = function() {
+      videoEl.addEventListener('loadedmetadata', function() {
         // Force video to maintain proper scaling after metadata loads
         videoEl.style.width = '100%';
         videoEl.style.height = '100%';
-      };
+      }, { once: true });
       
       // Video playback error - fallback to thumbnail
-      videoEl.onerror = function() {
+      videoEl.addEventListener('error', function() {
         console.warn('Video background failed to load, falling back to image');
         containerEl.classList.add('video-error');
         videoEl.classList.add('hidden');
@@ -251,12 +254,21 @@ function applyBg() {
           });
         };
         fullImg.src = bgData.thumb;
-      };
+      });
       
-      // Handle video abort (user navigated away, etc.)
-      videoEl.onabort = function() {
-        console.warn('Video background playback aborted');
-      };
+      // Handle visibility change to pause/resume video for better performance
+      videoEl.addEventListener('pause', function() {
+        if (!document.hidden && videoEl.classList.contains('active')) {
+          videoEl.play().catch(() => {});
+        }
+      });
+      
+      // Resume playback when tab becomes visible
+      document.addEventListener('visibilitychange', function() {
+        if (!document.hidden && videoEl.classList.contains('active') && videoEl.paused) {
+          videoEl.play().catch(() => {});
+        }
+      });
     }
     return;
   }

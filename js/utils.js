@@ -154,6 +154,131 @@ function normalizeUrl(input) {
   return null;
 }
 
+// Icon caching utilities
+const iconCache = {
+  // Fetch an icon and convert to data URL
+  async fetchIconAsDataUrl(iconUrl) {
+    if (!iconUrl || typeof iconUrl !== 'string' || (!iconUrl.startsWith('http') && !iconUrl.startsWith('data:'))) {
+      return null;
+    }
+    try {
+      const response = await fetch(iconUrl);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.warn('Failed to fetch icon:', iconUrl, error);
+      return null;
+    }
+  },
+
+  // Save icon to localStorage cache
+  saveIconToCache(iconUrl, dataUrl) {
+    if (!dataUrl) return false;
+    try {
+      const cacheKey = `iconCache_${btoa(encodeURIComponent(iconUrl))}`;
+      const cacheEntry = {
+        url: iconUrl,
+        dataUrl: dataUrl,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(cacheEntry));
+      return true;
+    } catch (error) {
+      if (error.name === 'QuotaExceededError') {
+        console.warn('localStorage quota exceeded, cannot cache icon');
+      } else {
+        console.warn('Failed to cache icon:', error);
+      }
+      return false;
+    }
+  },
+
+  // Load icon from cache
+  loadIconFromCache(iconUrl) {
+    try {
+      const cacheKey = `iconCache_${btoa(encodeURIComponent(iconUrl))}`;
+      const cached = localStorage.getItem(cacheKey);
+      if (!cached) return null;
+
+      const entry = JSON.parse(cached);
+      // Check if cache is stale (older than 7 days)
+      const oneWeek = 7 * 24 * 60 * 60 * 1000;
+      if (Date.now() - entry.timestamp > oneWeek) {
+        localStorage.removeItem(cacheKey);
+        return null;
+      }
+      return entry.dataUrl;
+    } catch (error) {
+      console.warn('Failed to load cached icon:', error);
+      return null;
+    }
+  },
+
+  // Get icon URL with caching
+  async getIconWithCache(iconUrl) {
+    // Check cache first
+    const cached = this.loadIconFromCache(iconUrl);
+    if (cached) return cached;
+
+    // Fetch and cache
+    const dataUrl = await this.fetchIconAsDataUrl(iconUrl);
+    if (dataUrl) {
+      this.saveIconToCache(iconUrl, dataUrl);
+    }
+    return dataUrl || iconUrl; // Return original URL if caching fails
+  },
+
+  // Check if we're offline
+  isOffline() {
+    return !navigator.onLine;
+  },
+
+  // Get icon URL with offline support
+  async getIconUrl(iconUrl) {
+    // If offline, try cache
+    if (this.isOffline()) {
+      const cached = this.loadIconFromCache(iconUrl);
+      return cached || iconUrl; // Return cached or original
+    }
+
+    // Online: use cache with network fallback
+    return this.getIconWithCache(iconUrl);
+  },
+
+  // Cache icons for existing apps
+  async cacheExistingAppIcons() {
+    try {
+      const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
+      const promises = apps.map(async (app) => {
+        if (app.icon && !app.cachedIcon) {
+          try {
+            const cachedIcon = await this.getIconWithCache(app.icon);
+            if (cachedIcon && cachedIcon !== app.icon) {
+              app.cachedIcon = cachedIcon;
+            }
+          } catch (error) {
+            console.warn(`Failed to cache icon for ${app.name}:`, error);
+          }
+        }
+        return app;
+      });
+
+      const updatedApps = await Promise.all(promises);
+      localStorage.setItem("customApps", JSON.stringify(updatedApps));
+      return updatedApps;
+    } catch (error) {
+      console.warn('Failed to cache existing app icons:', error);
+      return [];
+    }
+  }
+};
+
 // Page Visibility Manager - handles background tab optimizations
 const visibilityManager = {
   isVisible: !document.hidden,
@@ -245,3 +370,4 @@ window.isValidUrl = isValidUrl;
 window.isMalformedUrl = isMalformedUrl;
 window.isSearchQuery = isSearchQuery;
 window.normalizeUrl = normalizeUrl;
+window.iconCache = iconCache;
