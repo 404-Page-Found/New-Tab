@@ -1225,8 +1225,8 @@ body.light-theme .drag-placeholder {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   z-index: 1000;
-  align-items: flex-start;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
   animation: modalFadeIn 0.3s ease-out;
 }
 #settings-modal > div {
@@ -1241,10 +1241,8 @@ body.light-theme .drag-placeholder {
   min-height: auto;
   max-height: var(--overlay-max-height);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  position: fixed;
-  top: 100px;
-  left: 50%;
-  transform: translateX(-50%) translateY(-10px);
+  position: relative;
+  left: auto;
   right: auto;
   display: flex;
   flex-direction: column;
@@ -2676,11 +2674,11 @@ body.light-theme .upload-bg-btn:hover {
 @keyframes modalSlideIn {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(-30px);
+    transform: translateY(-30px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 }
 
@@ -4108,13 +4106,16 @@ body.light-theme .update-settings-group .setting-btn:hover {
   #settings-modal {
     align-items: flex-start;
     padding-top: 20px;
+    justify-content: flex-start;
   }
 
   #settings-modal > div {
     width: 95%;
     max-height: 85vh;
-    top: 30px;
-    transform: translateX(-50%);
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
   }
 
   .settings-body {
