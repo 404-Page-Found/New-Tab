@@ -27,11 +27,23 @@ function renderDefaultAppsList() {
       </div>
       <span class="quick-add-name">${app.name}</span>
     `;
-    btn.addEventListener("click", function () {
+    btn.addEventListener("click", async function () {
       if (existingNames.has(app.name)) return;
       const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
       const id = 'custom-app-' + Date.now() + '-' + Math.floor(Math.random()*100000);
-      apps.push({ id, url: app.url, name: app.name, icon: app.icon });
+      const appData = { id, url: app.url, name: app.name, icon: app.icon };
+
+      // Cache the icon if available
+      if (app.icon && window.iconCache) {
+        try {
+          const cachedIcon = await window.iconCache.getIconWithCache(app.icon);
+          appData.cachedIcon = cachedIcon;
+        } catch (error) {
+          console.warn('Failed to cache icon:', error);
+        }
+      }
+
+      apps.push(appData);
       localStorage.setItem("customApps", JSON.stringify(apps));
       let order = JSON.parse(localStorage.getItem('appOrder') || 'null');
       if (!order) order = [];
@@ -196,17 +208,29 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
   }
 
   // Add app from input
-  const addAppFromInput = (url) => {
+  const addAppFromInput = async (url) => {
     let name = extractAppName(url);
     const icon = getFaviconUrl(url);
     const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
     const id = 'custom-app-' + Date.now() + '-' + Math.floor(Math.random()*100000);
-    apps.push({
+    const appData = {
       id,
       url: url.startsWith("http") ? url : "https://" + url,
       name,
       icon,
-    });
+    };
+
+    // Cache the icon if available
+    if (icon && window.iconCache) {
+      try {
+        const cachedIcon = await window.iconCache.getIconWithCache(icon);
+        appData.cachedIcon = cachedIcon;
+      } catch (error) {
+        console.warn('Failed to cache icon:', error);
+      }
+    }
+
+    apps.push(appData);
     localStorage.setItem("customApps", JSON.stringify(apps));
     let order = JSON.parse(localStorage.getItem('appOrder') || 'null');
     if (!order) order = [];
@@ -222,21 +246,21 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
   });
 
   // Enter key in input
-  addAppUrlInput.addEventListener("keypress", function (e) {
+  addAppUrlInput.addEventListener("keypress", async function (e) {
     if (e.key === "Enter") {
       e.preventDefault();
       const url = this.value.trim();
       if (!url) return;
-      addAppFromInput(url);
+      await addAppFromInput(url);
     }
   });
 
   // Confirm button
   if (addAppConfirm) {
-    addAppConfirm.addEventListener("click", function () {
+    addAppConfirm.addEventListener("click", async function () {
       const url = addAppUrlInput.value.trim();
       if (!url) return;
-      addAppFromInput(url);
+      await addAppFromInput(url);
     });
   }
 }

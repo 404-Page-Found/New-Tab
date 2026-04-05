@@ -1,6 +1,10 @@
 // js/app-manager.js - App grid management, drag and drop
 
 // Helper functions
+const escapeHtml = (str) => {
+  if (!str) return '';
+  return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c] || c));
+};
 const getDraggableAppIcons = () => Array.from(document.querySelectorAll('.app-grid .app-icon')).filter(icon => icon.id !== 'new-app');
 const getAppOrder = () => JSON.parse(localStorage.getItem('appOrder') || 'null');
 const saveAppOrder = order => localStorage.setItem('appOrder', JSON.stringify(order));
@@ -50,10 +54,12 @@ const addApp = document.getElementById('new-app');
     }
     // Get translated name
     const displayName = app.nameKey && window.i18n ? window.i18n.t(app.nameKey) : (app.name || app.nameKey);
+    // Use cached icon if available, otherwise use original icon
+    const iconUrl = app.cachedIcon || app.icon;
     // Load icon from external file (use images/icons/feedback.svg) rather than embedding inline SVG in JS.
     // The SVG file (`images/icons/feedback.svg`) uses `currentColor` where appropriate.
-    let iconHtml = `<div class="icon"><img src="${app.icon}" alt="${displayName}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div>`;
-    a.innerHTML = iconHtml + `<span class="app-name">${displayName}</span>`;
+    let iconHtml = `<div class="icon"><img src="${escapeHtml(iconUrl)}" alt="${escapeHtml(displayName)}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div>`;
+    a.innerHTML = iconHtml + `<span class="app-name">${escapeHtml(displayName)}</span>`;
     appGrid.insertBefore(a, addApp);
   });
 
@@ -61,8 +67,17 @@ const addApp = document.getElementById('new-app');
   attachSettingsAppHandler();
 }
 
-// Initial render
-renderAllApps();
+// Initial render after caching
+document.addEventListener('DOMContentLoaded', async () => {
+  if (window.iconCache && window.iconCache.cacheExistingAppIcons) {
+    try {
+      await window.iconCache.cacheExistingAppIcons();
+    } catch (error) {
+      console.warn('Failed to cache existing app icons:', error);
+    }
+  }
+  renderAllApps();
+});
 
 // Re-render function (export for other modules)
 window.renderCustomApps = renderAllApps;
