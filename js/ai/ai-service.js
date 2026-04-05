@@ -582,7 +582,9 @@ const AIService = (function() {
       tooltip.className = 'ai-topic-tooltip';
       document.body.appendChild(tooltip);
       
-      // Mouseenter - show tooltip
+      let tooltipTimeout = null;
+      
+      // Mouseenter - show tooltip after 2 seconds
       btn.addEventListener('mouseenter', () => {
         hoveredDeleteBtn = btn;
         hoveredDeleteTooltip = tooltip;
@@ -597,15 +599,19 @@ const AIService = (function() {
         tooltip.style.top = `${btnRect.top - 8}px`;
         tooltip.style.transform = 'translateX(-50%) translateY(-100%)';
         
-        // Show tooltip
-        tooltip.classList.add('visible');
-        
-        // Update visual feedback
-        updateDeleteButtonFeedback();
+        // Show tooltip after 2 second delay
+        tooltipTimeout = setTimeout(() => {
+          tooltip.classList.add('visible');
+          updateDeleteButtonFeedback();
+        }, 2000);
       });
       
       // Mouseleave - hide tooltip
       btn.addEventListener('mouseleave', () => {
+        if (tooltipTimeout) {
+          clearTimeout(tooltipTimeout);
+          tooltipTimeout = null;
+        }
         if (hoveredDeleteBtn === btn) {
           hoveredDeleteBtn = null;
           hoveredDeleteTooltip = null;
