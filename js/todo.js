@@ -29,6 +29,11 @@ function saveTodos(todos) {
   localStorage.setItem("todos", JSON.stringify(todos));
 }
 
+// Format date as local ISO string (YYYY-MM-DD)
+function formatDateISO(date) {
+  return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+}
+
 // Generate unique ID for todos
 function generateTodoId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
@@ -643,7 +648,8 @@ function createCalendarHtml(currentDate, selectedDateString) {
     if (isToday) classes += ' today';
     if (isSelected) classes += ' selected';
     
-    daysHtml += `<div class="${classes}" data-date="${date.toISOString()}">${date.getDate()}</div>`;
+    const localDate = formatDateISO(date);
+    daysHtml += `<div class="${classes}" data-date="${localDate}">${date.getDate()}</div>`;
   }
   
   return `
@@ -717,7 +723,7 @@ function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
       if (!dayElement || dayElement.classList.contains('other-month')) return;
       
       e.stopPropagation();
-      const selectedDate = new Date(dayElement.dataset.date);
+      const selectedDate = new Date(dayElement.dataset.date + 'T00:00:00');
       updateTodoDueDate(todoId, selectedDate, dueDateElement);
       closeInlineDatePicker(pickerContainer);
     });
@@ -790,7 +796,7 @@ function updateTodoDueDate(todoId, newDate, dueDateElement) {
   if (!todo) return;
   
   const oldDate = todo.dueDate;
-  todo.dueDate = newDate ? newDate.toISOString().split('T')[0] : null;
+  todo.dueDate = newDate ? formatDateISO(newDate) : null;
   
   // Save to localStorage
   saveTodos(todos);
@@ -1196,7 +1202,7 @@ class CustomDatePicker {
   }
 
   formatDateForInput(date) {
-    return date.toISOString().split('T')[0];
+    return formatDateISO(date);
   }
 
   formatDateForDisplay(date) {
