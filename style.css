@@ -5789,6 +5789,7 @@ body.light-theme .todo-bullet .bullet-checked {
   align-items: center;
   gap: 4px;
   cursor: default;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .todo-due-date.overdue {
@@ -6049,16 +6050,16 @@ body.light-theme .todo-bullet .bullet-checked {
 }
 
 .inline-today-date {
-  background: rgba(33, 150, 243, 0.2);
-  color: #2196f3;
-  border: 1px solid rgba(33, 150, 243, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .inline-today-date:hover {
-  background: rgba(33, 150, 243, 0.35);
-  border-color: rgba(33, 150, 243, 0.5);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
 }
 
 .inline-today-date:active {
@@ -6151,15 +6152,15 @@ body.light-theme .inline-clear-date:hover {
 }
 
 body.light-theme .inline-today-date {
-  background: rgba(33, 150, 243, 0.15);
-  color: #2196f3;
-  border-color: rgba(33, 150, 243, 0.25);
+  background: rgba(0, 0, 0, 0.05);
+  color: #1f2937;
+  border-color: rgba(0, 0, 0, 0.1);
 }
 
 body.light-theme .inline-today-date:hover {
-  background: rgba(33, 150, 243, 0.25);
-  border-color: rgba(33, 150, 243, 0.4);
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 /* Light theme for toast notification */
@@ -6489,6 +6490,30 @@ body.light-theme .todo-meta {
 
 body.light-theme .todo-due-date.overdue {
   color: #dc3545;
+}
+
+body.light-theme .todo-due-date {
+  color: #4b5563;
+}
+
+body.light-theme .todo-due-date svg {
+  color: #6b7280;
+}
+
+body.light-theme .todo-due-date.clickable {
+  color: #4b5563;
+}
+
+body.light-theme .todo-due-date.clickable:hover {
+  background: rgba(33, 150, 243, 0.1);
+}
+
+body.light-theme .todo-due-date.empty {
+  color: #9ca3af;
+}
+
+body.light-theme .todo-due-date.empty:hover {
+  background: rgba(33, 150, 243, 0.08);
 }
 
 /* Light theme for todo date button */
