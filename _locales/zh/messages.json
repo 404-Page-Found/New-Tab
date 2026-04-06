@@ -1,9 +1,9 @@
 {
-  "extensionName": {
+  "name": {
     "message": "新标签页",
     "description": "The name of the extension"
   },
-  "extensionDescription": {
+  "description": {
     "message": "一个美丽的新标签页，包含时钟、搜索、应用和待办事项",
     "description": "The description of the extension"
   }
