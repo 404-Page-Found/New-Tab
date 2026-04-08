@@ -121,37 +121,37 @@ function loadIconSize() {
 function applyIconSize() {
   const size = loadIconSize();
   document.documentElement.style.setProperty('--app-icon-size', size + 'px');
-  // Also update icon radius if curvature is set
   applyCurvature();
 
-  // Update slider
+  // Update slider - wait for DOMContentLoaded since settings modal loads later
   const iconSizePicker = document.getElementById("icon-size-picker");
-  if (iconSizePicker && iconSizePicker.value !== size.toString()) {
+  if (iconSizePicker) {
     iconSizePicker.value = size;
   }
 }
-const iconSizePicker = document.getElementById("icon-size-picker");
-if (iconSizePicker) {
-  iconSizePicker.addEventListener("input", function () {
-    let val = parseInt(this.value);
-    if (val < 40) val = 40;
-    if (val > 100) val = 100;
-    localStorage.setItem("iconSize", val);
-    applyIconSize();
-  });
-}
 
-// Reset icon size
-function resetIconSize() {
-  localStorage.removeItem("iconSize");
+document.addEventListener("DOMContentLoaded", function() {
+  const iconSizePicker = document.getElementById("icon-size-picker");
+  if (iconSizePicker) {
+    iconSizePicker.addEventListener("input", function () {
+      let val = parseInt(this.value);
+      if (val < 40) val = 40;
+      if (val > 100) val = 100;
+      localStorage.setItem("iconSize", val);
+      applyIconSize();
+    });
+  }
+
+  const iconSizeReset = document.getElementById("icon-size-reset");
+  if (iconSizeReset) {
+    iconSizeReset.addEventListener("click", function() {
+      localStorage.removeItem("iconSize");
+      applyIconSize();
+    });
+  }
+
   applyIconSize();
-}
-const iconSizeReset = document.getElementById("icon-size-reset");
-if (iconSizeReset) {
-  iconSizeReset.addEventListener("click", resetIconSize);
-}
-
-applyIconSize();
+});
 
 // Map curvature values to percentage border-radius
 const curvatureToPercentage = {
