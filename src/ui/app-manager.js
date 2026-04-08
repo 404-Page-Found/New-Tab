@@ -151,6 +151,8 @@ if (iconSizeReset) {
   iconSizeReset.addEventListener("click", resetIconSize);
 }
 
+applyIconSize();
+
 // Map curvature values to percentage border-radius
 const curvatureToPercentage = {
   '8': '25%',   // Minimal
