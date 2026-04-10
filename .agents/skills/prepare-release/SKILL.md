@@ -27,6 +27,7 @@ gh release create <tag> --title "<title>" --notes "<notes>" --draft
 3. **Update version** - Bump version on dev branch BEFORE creating release PR:
    - Update `manifest.json` version field
    - Update `src/core/version.js` CURRENT_VERSION constant
+   - Update version in all README files (docs/README.en.md, docs/README.zh-CN.md)
    - Commit with message "chore: bump version to v<x.y.z>"
 4. **Acknowledge contributors** - Credit contributors in release notes
 5. **Create release PR** - Branch from main, include CHANGELOG and version updates
@@ -37,7 +38,7 @@ gh release create <tag> --title "<title>" --notes "<notes>" --draft
 
 ## Tips
 
-- Update version in both `manifest.json` and `src/core/version.js` before creating release PR
+- Update version in `manifest.json`, `src/core/version.js`, and all README files before creating release PR
 - Use semantic versioning (e.g., v1.2.0)
 - Include breaking changes in release notes
 - Reference PR numbers in CHANGELOG for context
