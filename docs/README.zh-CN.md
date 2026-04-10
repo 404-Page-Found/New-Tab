@@ -1,6 +1,6 @@
-# New Tab v0.4.0
+# New Tab v0.4.1
 [![许可证: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
-[![版本](https://img.shields.io/badge/version-0.4.0-blue)]()
+[![版本](https://img.shields.io/badge/version-0.4.1-blue)]()
 
 现代化的开源新标签页，提供个性化浏览体验。
 
