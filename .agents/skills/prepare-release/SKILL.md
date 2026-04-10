@@ -37,8 +37,8 @@ gh release create <tag> --title "<title>" --notes "<notes>"
 
 ## Tips
 
+- Update version in both `manifest.json` and `src/core/version.js` before creating release PR
 - Use semantic versioning (e.g., v1.2.0)
 - Include breaking changes in release notes
 - Reference PR numbers in CHANGELOG for context
 - Credit contributors in release notes using `gh pr list --merged`
-- Update version in both `manifest.json` and `src/core/version.js` before creating release PR
