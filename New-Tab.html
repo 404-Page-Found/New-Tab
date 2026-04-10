@@ -12,6 +12,15 @@
   <script src="src/core/version.js"></script>
   </head>
 <body>
+  <!-- Simple Mode Toggle -->
+  <div id="simple-mode-toggle" class="simple-mode-toggle" title="Simple Mode">
+    <span class="simple-mode-label" data-i18n="simpleMode">Simple</span>
+    <div class="toggle-switch">
+      <input type="checkbox" id="simple-mode-checkbox" />
+      <label for="simple-mode-checkbox"></label>
+    </div>
+  </div>
+  
   <!-- Background Container -->
   <div class="background-container" id="background-container">
     <video class="background-video" id="bg-video" autoplay muted loop playsinline preload="metadata" poster="">
@@ -943,6 +952,7 @@
 <script src="src/core/update-checker.js"></script>
 <script src="src/features/onboarding.js"></script>
 <script src="src/features/todo.js"></script>
+<script src="src/features/simple-mode.js"></script>
 <script src="src/ai/network-detector.js"></script>
 <script src="src/ai/offline-mode.js"></script>
 <script src="src/ai/openrouter.js"></script>
