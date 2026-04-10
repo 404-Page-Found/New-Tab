@@ -29,6 +29,11 @@ gh release create <tag> --title "<title>" --notes "<notes>"
 5. **Review changes** - Verify files changed match expectations
 6. **Merge PR** - Use squash merge for clean history
 7. **Create tag** - Tag the release commit
+8. **Create GitHub release** - Create release with `gh release create`
+9. **Update version** - After merging to main, bump version on dev branch:
+   - Update `manifest.json` version field
+   - Update `src/core/version.js` CURRENT_VERSION constant
+   - Commit with message "chore: bump version to v<x.y.z>"
 
 ## Tips
 
@@ -36,3 +41,4 @@ gh release create <tag> --title "<title>" --notes "<notes>"
 - Include breaking changes in release notes
 - Reference PR numbers in CHANGELOG for context
 - Credit contributors in release notes using `gh pr list --merged`
+- Update version in both `manifest.json` and `src/core/version.js` after releasing
