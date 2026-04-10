@@ -15,23 +15,29 @@ description: Prepare and manage releases
 
 ## Creating a Release
 
-Use GitHub CLI to create releases:
+Use GitHub CLI to create a draft release:
 ```bash
-gh release create <tag> --title "<title>" --notes "<notes>"
+gh release create <tag> --title "<title>" --notes "<notes>" --draft
 ```
 
 ## Workflow
 
 1. **Review merged PRs** - List merged PRs since last release
 2. **Update CHANGELOG** - Add entries for each significant change
-3. **Acknowledge contributors** - Credit contributors in release notes
-4. **Create release PR** - Branch from main, include CHANGELOG updates
-5. **Review changes** - Verify files changed match expectations
-6. **Merge PR** - Use squash merge for clean history
-7. **Create tag** - Tag the release commit
+3. **Update version** - Bump version on dev branch BEFORE creating release PR:
+   - Update `manifest.json` version field
+   - Update `src/core/version.js` CURRENT_VERSION constant
+   - Commit with message "chore: bump version to v<x.y.z>"
+4. **Acknowledge contributors** - Credit contributors in release notes
+5. **Create release PR** - Branch from main, include CHANGELOG and version updates
+6. **Review changes** - Verify files changed match expectations
+7. **Merge PR** - Use squash merge for clean history
+8. **Create tag** - Tag the release commit
+9. **Create GitHub release** - Create draft release with `gh release create --draft`
 
 ## Tips
 
+- Update version in both `manifest.json` and `src/core/version.js` before creating release PR
 - Use semantic versioning (e.g., v1.2.0)
 - Include breaking changes in release notes
 - Reference PR numbers in CHANGELOG for context

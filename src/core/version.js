@@ -2,7 +2,7 @@
 
 // Current application version
 // Update this single constant when releasing new versions
-const CURRENT_VERSION = '0.4.0';
+const CURRENT_VERSION = '0.4.1';
 
 // Export for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
