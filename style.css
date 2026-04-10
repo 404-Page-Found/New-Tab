@@ -867,6 +867,7 @@ body {
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  padding-top: 20px;
 }
 
 .search-bar {
@@ -1180,7 +1181,7 @@ body.light-theme .drag-placeholder {
   text-align: center;
   font-size: clamp(3rem, 10vw, 6rem);
   color: #ffffff;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-weight: 200;
   letter-spacing: 4px;
   text-shadow:
@@ -1205,7 +1206,7 @@ body.light-theme .drag-placeholder {
 .date {
   text-align: center;
   color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   font-size: clamp(1rem, 3vw, 1.5em);
   font-weight: 400;
   letter-spacing: 2px;
@@ -8911,4 +8912,171 @@ body.light-theme .md-table-cell {
 
 body.light-theme .md-table-row:hover {
   background: rgba(0, 0, 0, 0.02);
+}
+
+/* ==================== Simple Mode Toggle ==================== */
+
+.simple-mode-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 999;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.simple-mode-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.simple-mode-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  user-select: none;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-switch label {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-switch label::before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + label {
+  background: rgba(33, 150, 243, 0.6);
+}
+
+.toggle-switch input:checked + label::before {
+  transform: translateX(20px);
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.4);
+}
+
+.toggle-switch input:focus + label {
+  box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+}
+
+/* Light theme toggle */
+body.light-theme .simple-mode-toggle {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .simple-mode-toggle:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .simple-mode-label {
+  color: rgba(0, 0, 0, 0.7);
+}
+
+body.light-theme .toggle-switch label {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .toggle-switch label::before {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+body.light-theme .toggle-switch input:checked + label {
+  background: rgba(33, 150, 243, 0.3);
+}
+
+body.light-theme .toggle-switch input:checked + label::before {
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+}
+
+/* ==================== Simple Mode Hidden Elements ==================== */
+
+body.simple-mode #app-grid {
+  display: none !important;
+}
+
+body.simple-mode .todo-section {
+  display: none !important;
+}
+
+body.simple-mode .footer-left {
+  display: none !important;
+}
+
+body.simple-mode .footer-right {
+  display: none !important;
+}
+
+body.simple-mode #settings-modal {
+  display: none !important;
+}
+
+body.simple-mode #ai-chat-modal {
+  display: none !important;
+}
+
+/* Simple mode adjustments for centered content */
+body.simple-mode .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+body.simple-mode #clock,
+body.simple-mode .date {
+  margin-bottom: 10px;
+}
+
+body.simple-mode .search-bar {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  margin-left: auto;
+  margin-right: auto;
 }
