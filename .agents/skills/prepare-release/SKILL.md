@@ -15,9 +15,9 @@ description: Prepare and manage releases
 
 ## Creating a Release
 
-Use GitHub CLI to create releases:
+Use GitHub CLI to create a draft release:
 ```bash
-gh release create <tag> --title "<title>" --notes "<notes>"
+gh release create <tag> --title "<title>" --notes "<notes>" --draft
 ```
 
 ## Workflow
@@ -33,7 +33,7 @@ gh release create <tag> --title "<title>" --notes "<notes>"
 6. **Review changes** - Verify files changed match expectations
 7. **Merge PR** - Use squash merge for clean history
 8. **Create tag** - Tag the release commit
-9. **Create GitHub release** - Create release with `gh release create`
+9. **Create GitHub release** - Create draft release with `gh release create --draft`
 
 ## Tips
 
