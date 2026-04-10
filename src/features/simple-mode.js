@@ -6,12 +6,13 @@ function loadSimpleMode() {
 
 function applySimpleMode() {
   const isSimple = loadSimpleMode();
-  document.body.classList.toggle("simple-mode", isSimple);
-  
   const checkbox = document.getElementById("simple-mode-checkbox");
+  
   if (checkbox) {
     checkbox.checked = isSimple;
   }
+  
+  document.body.classList.toggle("simple-mode", isSimple);
 }
 
 function initSimpleMode() {

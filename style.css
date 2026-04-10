@@ -9037,26 +9037,42 @@ body.light-theme .toggle-switch input:checked + label::before {
 
 body.simple-mode #app-grid {
   display: none !important;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 body.simple-mode .todo-section {
   display: none !important;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 body.simple-mode .footer-left {
   display: none !important;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 body.simple-mode .footer-right {
   display: none !important;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 body.simple-mode #settings-modal {
   display: none !important;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 body.simple-mode #ai-chat-modal {
   display: none !important;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 /* Simple mode adjustments for centered content */
@@ -9066,17 +9082,39 @@ body.simple-mode .container {
   align-items: center;
   min-height: 100vh;
   position: relative;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 body.simple-mode #clock,
 body.simple-mode .date {
   margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 body.simple-mode .search-bar {
   position: absolute;
-  top: 40%;
+  top: 30%;
   transform: translateY(-50%);
   margin-left: auto;
   margin-right: auto;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.1s;
+}
+
+/* Simple mode visible states */
+body.simple-mode #app-grid,
+body.simple-mode .todo-section,
+body.simple-mode .footer-left,
+body.simple-mode .footer-right,
+body.simple-mode #settings-modal,
+body.simple-mode #ai-chat-modal,
+body.simple-mode .container,
+body.simple-mode #clock,
+body.simple-mode .date,
+body.simple-mode .search-bar {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
