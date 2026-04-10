@@ -1,7 +1,7 @@
 # New Tab v0.4.0
 
 **Available Languages**:  
-[![English](https://img.shields.io/badge/English-blue)](docs/README.en.md)
+[![English](https://img.shields.io/badge/English-blue)](docs/README.en-US.md)
 [![简体中文](https://img.shields.io/badge/简体中文-blue)](docs/README.zh-CN.md)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
