@@ -1,5 +1,9 @@
 # New Tab v0.4.0
 
+<p align="center">
+	<img src="icons/icon128.png" alt="New Tab extension icon" width="128">
+</p>
+
 **Available Languages**:  
 [![English](https://img.shields.io/badge/English-blue)](docs/README.en-US.md)
 [![简体中文](https://img.shields.io/badge/简体中文-blue)](docs/README.zh-CN.md)

@@ -1,4 +1,9 @@
 # New Tab v0.4.0
+
+<p align="center">
+	<img src="../icons/icon128.png" alt="New Tab extension icon" width="128">
+</p>
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.4.0-blue)]()
 
