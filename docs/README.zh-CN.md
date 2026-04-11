@@ -1,6 +1,8 @@
 ![New Tab icon](../icons/icon.svg)
 
 # New Tab v0.4.1
+[![Edge 插件商店](https://img.shields.io/badge/Edge-插件商店-0A7CFF?style=for-the-badge&logo=microsoftedge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/new-tab/mcbemnamenhelofgaclcanfcdjnjnhmi)
+[![下载 CRX](https://img.shields.io/badge/下载-CRX-111827?style=for-the-badge&logo=googlechrome&logoColor=white)](https://github.com/404-Page-Found/New-Tab/releases/latest/download/New-Tab.crx)
 [![许可证: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![版本](https://img.shields.io/badge/version-0.4.1-blue)](../CHANGELOG.md)
 

@@ -2,6 +2,9 @@
 
 # New Tab v0.4.1
 
+[![Microsoft Edge Add-ons](https://img.shields.io/badge/Microsoft%20Edge-Add--ons-0A7CFF?style=for-the-badge&logo=microsoftedge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/new-tab/mcbemnamenhelofgaclcanfcdjnjnhmi)
+[![Download CRX](https://img.shields.io/badge/Download-CRX-111827?style=for-the-badge&logo=googlechrome&logoColor=white)](https://github.com/404-Page-Found/New-Tab/releases/latest/download/New-Tab.crx)
+
 **Available Languages**:  
 [![English](https://img.shields.io/badge/English-blue)](docs/README.en-US.md)
 [![简体中文](https://img.shields.io/badge/简体中文-blue)](docs/README.zh-CN.md)

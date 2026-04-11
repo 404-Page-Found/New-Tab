@@ -1,6 +1,8 @@
 ![New Tab icon](../icons/icon.svg)
 
 # New Tab v0.4.1
+[![Microsoft Edge Add-ons](https://img.shields.io/badge/Microsoft%20Edge-Add--ons-0A7CFF?style=for-the-badge&logo=microsoftedge&logoColor=white)](https://microsoftedge.microsoft.com/addons/detail/new-tab/mcbemnamenhelofgaclcanfcdjnjnhmi)
+[![Download CRX](https://img.shields.io/badge/Download-CRX-111827?style=for-the-badge&logo=googlechrome&logoColor=white)](https://github.com/404-Page-Found/New-Tab/releases/latest/download/New-Tab.crx)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![Version](https://img.shields.io/badge/version-0.4.1-blue)](../CHANGELOG.md)
 
