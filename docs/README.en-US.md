@@ -21,7 +21,7 @@ A personalized new tab extension for Chromium-based browsers. It replaces the de
 ## 🚀 Installation
 Recommended install methods:
 1. Microsoft Edge users: install from [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/new-tab/mcbemnamenhelofgaclcanfcdjnjnhmi).
-2. Other Chromium browser users: download the latest `New-Tab.crx` from [Releases](https://github.com/404-Page-Found/New-Tab/releases/latest).
+2. Other Chromium browser users: follow the manual installation instructions below. The latest package is also available as [New-Tab.crx](https://github.com/404-Page-Found/New-Tab/releases/latest/download/New-Tab.crx) from [Releases](https://github.com/404-Page-Found/New-Tab/releases/latest).
 
 Manual or development install:
 1. Download or clone this repository.

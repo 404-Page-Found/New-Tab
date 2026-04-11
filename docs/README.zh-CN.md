@@ -21,7 +21,7 @@
 ## 🚀 安装方式
 推荐安装方式：
 1. Microsoft Edge 用户：优先通过 [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/new-tab/mcbemnamenhelofgaclcanfcdjnjnhmi) 安装。
-2. 其他 Chromium 浏览器用户：从 [Releases](https://github.com/404-Page-Found/New-Tab/releases/latest) 下载最新的 `New-Tab.crx` 安装包。
+2. 其他 Chromium 浏览器用户：请按照下方手动安装说明进行安装；最新安装包也可从 [Releases](https://github.com/404-Page-Found/New-Tab/releases/latest) 下载为 [New-Tab.crx](https://github.com/404-Page-Found/New-Tab/releases/latest/download/New-Tab.crx)。
 
 手动安装或本地开发：
 1. 下载或克隆本仓库。
