@@ -28,14 +28,11 @@ A personalized new tab extension for Chromium-based browsers. It replaces the de
 4. Click **Load unpacked** and select the project root folder.
 5. Open a new tab to start using the extension.
 
-## 🛠️ Development
-- No build step is required. The extension is written in vanilla JavaScript and loaded directly by the browser.
-- Main entry point: `New-Tab.html`
-- Styles: `style.css`
-- Source code: `src/`
-- Localization files: `_locales/`
-- Background asset helper scripts: `background/tools/`
-- There is no automated test suite in the repository yet. Manual verification is done by reloading the unpacked extension and testing the new tab page in the browser.
+## 🖼️ Screenshots
+| Screen | Preview |
+|------|------|
+| Dashboard | ![](screenshots/New-Tab_1.png) |
+| Background picker | ![](screenshots/New-Tab_2.png) |
 
 ## 📁 Project Structure
 ```text
@@ -51,14 +48,17 @@ _locales/            # extension translations
 background/tools/    # background thumbnail and video preview generators
 ```
 
-## 🖼️ Screenshots
-| Screen | Preview |
-|------|------|
-| Dashboard | ![](screenshots/New-Tab_1.png) |
-| Background picker | ![](screenshots/New-Tab_2.png) |
-
 ## 👥 Contributing
 Contributions are welcome. See our [Contributing Guide](CONTRIBUTING.md) for workflow and branch conventions.
+
+Development notes:
+- No build step is required. The extension is written in vanilla JavaScript and loaded directly by the browser.
+- Main entry point: `New-Tab.html`
+- Styles: `style.css`
+- Source code: `src/`
+- Localization files: `_locales/`
+- Background asset helper scripts: `background/tools/`
+- There is no automated test suite in the repository yet. Manual verification is done by reloading the unpacked extension and testing the new tab page in the browser.
 
 ## 📄 License
 This project is licensed under the [MIT License](LICENSE).
