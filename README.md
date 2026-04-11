@@ -22,6 +22,11 @@ A personalized new tab extension for Chromium-based browsers. It replaces the de
 - Built-in onboarding tour, update checks, and AI chat with offline fallback
 
 ## 🚀 Installation
+Recommended install methods:
+1. Microsoft Edge users: install from [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/new-tab/mcbemnamenhelofgaclcanfcdjnjnhmi).
+2. Other Chromium browser users: download the latest `New-Tab.crx` from [Releases](https://github.com/404-Page-Found/New-Tab/releases/latest).
+
+Manual or development install:
 1. Download or clone this repository.
 2. Open `chrome://extensions` or `edge://extensions`.
 3. Enable Developer mode.

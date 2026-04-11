@@ -17,6 +17,11 @@
 - 内置新手引导、更新检查，以及带离线兜底的 AI 聊天
 
 ## 🚀 安装方式
+推荐安装方式：
+1. Microsoft Edge 用户：优先通过 [Edge Add-ons](https://microsoftedge.microsoft.com/addons/detail/new-tab/mcbemnamenhelofgaclcanfcdjnjnhmi) 安装。
+2. 其他 Chromium 浏览器用户：从 [Releases](https://github.com/404-Page-Found/New-Tab/releases/latest) 下载最新的 `New-Tab.crx` 安装包。
+
+手动安装或本地开发：
 1. 下载或克隆本仓库。
 2. 打开 `chrome://extensions` 或 `edge://extensions`。
 3. 启用开发者模式。
