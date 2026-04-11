@@ -1,34 +1,59 @@
 ![New Tab icon](../icons/icon.svg)
 
 # New Tab v0.4.1
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.4.1-blue)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
+[![Version](https://img.shields.io/badge/version-0.4.1-blue)](../CHANGELOG.md)
 
-A modern open-source new tab page for personalized browsing experience.
+A personalized new tab extension for Chromium-based browsers. It replaces the default new tab page with a customizable dashboard for search, shortcuts, backgrounds, todos, onboarding, and AI assistance.
 
-## ✨ Features
-- Customizable layouts and themes
-- Responsive design
-- Quick access
-- Buildin backgrounds
-- Quick search functionality
-- Motto
-- Todo list
-- Weather widget (coming soon!)
+## ✨ Highlights
+- Clock, date, and daily motto on a clean dashboard
+- Search bar with switchable search engines
+- App grid with built-in actions, custom shortcuts, and drag-and-drop ordering
+- Static and live backgrounds, including uploaded images and videos
+- Todo list with due dates, overdue state, filters, and progress tracking
+- Simple mode plus settings for themes, colors, fonts, icon size, and icon shape
+- English and Simplified Chinese interface support
+- Built-in onboarding tour, update checks, and AI chat with offline fallback
 
-## 🚀 Quick Start
-1. Download the extension from `Edge Add-ons ` or the released `.crx` file
-2. To install the extension from `.crx` file, go to manage extension page in your browser, turn on developer mode, drag and drop or select load unpacked and choose the `.crx` file. 
-3. Start using your personalised new tab
+## 🚀 Installation
+1. Download or clone this repository.
+2. Open `chrome://extensions` or `edge://extensions`.
+3. Enable Developer mode.
+4. Click **Load unpacked** and select the project root folder.
+5. Open a new tab to start using the extension.
+
+## 🛠️ Development
+- No build step is required. The extension is written in vanilla JavaScript and loaded directly by the browser.
+- Main entry point: `New-Tab.html`
+- Styles: `style.css`
+- Source code: `src/`
+- Localization files: `_locales/`
+- Background asset helper scripts: `background/tools/`
+- There is no automated test suite in the repository yet. Manual verification is done by reloading the unpacked extension and testing the new tab page in the browser.
+
+## 📁 Project Structure
+```text
+New-Tab.html         # main extension page
+style.css            # global styles
+src/
+	ai/                # AI assistant, network detection, offline handling
+	core/              # startup, language, version, utilities, update checks
+	data/              # built-in backgrounds, custom backgrounds, motto data
+	features/          # todo list, onboarding, simple mode, drag/drop helpers
+	ui/                # settings, app manager, add-app flow, search engine UI
+_locales/            # extension translations
+background/tools/    # background thumbnail and video preview generators
+```
 
 ## 🖼️ Screenshots
-| Feature | Preview |
+| Screen | Preview |
 |------|------|
 | Main Interface | ![](../screenshots/New-Tab_1.png) |
-| Multi-backgrounds | ![](../screenshots/New-Tab_2.png) |
+| Background picker | ![](../screenshots/New-Tab_2.png) |
 
 ## 👥 Contributing
-Project is still in developing stage. Contributions are highly welcome! Please follow the steps in our [Contributing Guide](CONTRIBUTING.en.md).
+Contributions are welcome. See our [Contributing Guide](CONTRIBUTING.en.md) for workflow and branch conventions.
 
 ## 📄 License
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](../LICENSE).
