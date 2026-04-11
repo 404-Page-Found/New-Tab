@@ -1,3 +1,5 @@
+![New Tab icon](../icons/icon.svg)
+
 # New Tab v0.4.1
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-0.4.1-blue)]()

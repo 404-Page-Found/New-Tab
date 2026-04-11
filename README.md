@@ -1,3 +1,5 @@
+![New Tab icon](icons/icon.svg)
+
 # New Tab v0.4.1
 
 **Available Languages**:  
