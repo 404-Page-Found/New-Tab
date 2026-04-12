@@ -16,6 +16,9 @@ function saveEngine(engine) {
   localStorage.setItem("defaultEngine", engine);
 }
 
+// Reference to the current outside-click handler so we can remove it on re-init
+let _outsideClickHandler = null;
+
 // Initialize search engine dropdown
 function initSearchEngine() {
   const enginesEl = document.querySelector(".search-engines");
@@ -61,12 +64,17 @@ function initSearchEngine() {
   });
 
   // Close dropdown when clicking outside
-  document.addEventListener("click", (e) => {
+  // Remove any previously registered handler to prevent stacking
+  if (_outsideClickHandler) {
+    document.removeEventListener("click", _outsideClickHandler);
+  }
+  _outsideClickHandler = (e) => {
     if (!enginesEl.contains(e.target)) {
       dropdownEl.classList.remove("dropdown-open");
       selectedEngineEl.classList.remove("dropdown-active");
     }
-  });
+  };
+  document.addEventListener("click", _outsideClickHandler);
 }
 
 // Modify search event listener
