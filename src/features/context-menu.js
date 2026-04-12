@@ -216,27 +216,34 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Close modal on confirm
-    thumbnailConfirm.addEventListener('click', async function() {
+    thumbnailConfirm.addEventListener('click', function() {
       const newIcon = thumbnailInput.value.trim();
-      if (newIcon && window.thumbnailAppIdx !== -1) {
+      const appIdx = window.thumbnailAppIdx;
+      
+      if (newIcon && appIdx !== -1) {
         const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
-        if (apps[window.thumbnailAppIdx]) {
-          apps[window.thumbnailAppIdx].icon = newIcon;
+        if (apps[appIdx]) {
+          apps[appIdx].icon = newIcon;
           // Clear stale cached icon so the new URL is used immediately
-          delete apps[window.thumbnailAppIdx].cachedIcon;
-          // Re-cache the new icon URL right away
-          if (window.iconCache) {
-            try {
-              const cachedIcon = await window.iconCache.getIconWithCache(newIcon);
-              if (cachedIcon && cachedIcon !== newIcon) {
-                apps[window.thumbnailAppIdx].cachedIcon = cachedIcon;
-              }
-            } catch (e) {
-              console.warn('Failed to cache new icon:', e);
-            }
-          }
+          delete apps[appIdx].cachedIcon;
           localStorage.setItem("customApps", JSON.stringify(apps));
           if (window.renderCustomApps) window.renderCustomApps();
+          
+          // Re-cache the new icon URL in the background without blocking the confirm flow
+          if (window.iconCache) {
+            window.iconCache.getIconWithCache(newIcon).then(function(cachedIcon) {
+              if (cachedIcon && cachedIcon !== newIcon) {
+                const latestApps = JSON.parse(localStorage.getItem("customApps") || "[]");
+                if (latestApps[appIdx] && latestApps[appIdx].icon === newIcon) {
+                  latestApps[appIdx].cachedIcon = cachedIcon;
+                  localStorage.setItem("customApps", JSON.stringify(latestApps));
+                  if (window.renderCustomApps) window.renderCustomApps();
+                }
+              }
+            }).catch(function(e) {
+              console.warn('Failed to cache new icon:', e);
+            });
+          }
         }
       }
       thumbnailModal.style.display = 'none';
