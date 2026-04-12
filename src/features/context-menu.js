@@ -219,12 +219,16 @@ document.addEventListener('DOMContentLoaded', function() {
     thumbnailConfirm.addEventListener('click', function() {
       const newIcon = thumbnailInput.value.trim();
       if (newIcon && window.thumbnailAppIdx !== -1) {
-        const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
-        if (apps[window.thumbnailAppIdx]) {
-          apps[window.thumbnailAppIdx].icon = newIcon;
-          delete apps[window.thumbnailAppIdx].cachedIcon;
-          localStorage.setItem("customApps", JSON.stringify(apps));
-          if (window.renderCustomApps) window.renderCustomApps();
+        try {
+          const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
+          if (apps[window.thumbnailAppIdx]) {
+            apps[window.thumbnailAppIdx].icon = newIcon;
+            delete apps[window.thumbnailAppIdx].cachedIcon;
+            localStorage.setItem("customApps", JSON.stringify(apps));
+            if (window.renderCustomApps) window.renderCustomApps();
+          }
+        } catch (e) {
+          console.error("Failed to update custom app thumbnail:", e);
         }
       }
       thumbnailModal.style.display = 'none';
