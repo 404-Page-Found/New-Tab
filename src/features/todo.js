@@ -581,6 +581,9 @@ function showInlineDatePicker(todoId, dueDateElement) {
   // Append to body to avoid overflow clipping from parent containers
   document.body.appendChild(pickerContainer);
   
+  // Store the dueDateElement reference for later use
+  pickerContainer._dueDateElement = dueDateElement;
+  
   // Position the picker relative to the due date element
   positionPickerRelativeToElement(pickerContainer, dueDateElement);
   
@@ -772,21 +775,39 @@ function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
   pickerContainer._handleScroll = handleScroll;
   
   // Delay adding the listener to prevent immediate closure
-  setTimeout(() => {
+  pickerContainer._listenerBindTimeout = setTimeout(() => {
     document.addEventListener('click', handleOutsideClick);
     window.addEventListener('resize', handleResize);
     window.addEventListener('scroll', handleScroll, true);
+    pickerContainer._listenerBindTimeout = null;
   }, 100);
 }
 
 // Update inline calendar display
 function updateInlineCalendar(pickerContainer, currentDate, selectedDateString) {
+  // Clear any pending listener bind timeout
+  if (pickerContainer._listenerBindTimeout) {
+    clearTimeout(pickerContainer._listenerBindTimeout);
+    pickerContainer._listenerBindTimeout = null;
+  }
+  
+  // Remove previous global listeners to prevent memory leaks
+  if (pickerContainer._handleOutsideClick) {
+    document.removeEventListener('click', pickerContainer._handleOutsideClick);
+  }
+  if (pickerContainer._handleResize) {
+    window.removeEventListener('resize', pickerContainer._handleResize);
+  }
+  if (pickerContainer._handleScroll) {
+    window.removeEventListener('scroll', pickerContainer._handleScroll, true);
+  }
+  
   const calendarHtml = createCalendarHtml(currentDate, selectedDateString);
   pickerContainer.innerHTML = calendarHtml;
   
   // Re-setup event listeners for the updated calendar
   const todoId = pickerContainer.dataset.todoId;
-  const dueDateElement = pickerContainer.parentElement;
+  const dueDateElement = pickerContainer._dueDateElement;
   setupInlinePickerListeners(pickerContainer, todoId, dueDateElement);
 }
 
@@ -878,6 +899,12 @@ function showToast(message) {
 // Close inline date picker
 function closeInlineDatePicker(pickerContainer) {
   if (!pickerContainer || !pickerContainer.parentNode) return;
+  
+  // Clear any pending listener bind timeout
+  if (pickerContainer._listenerBindTimeout) {
+    clearTimeout(pickerContainer._listenerBindTimeout);
+    pickerContainer._listenerBindTimeout = null;
+  }
   
   pickerContainer.classList.remove('visible');
   
