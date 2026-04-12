@@ -216,12 +216,25 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // Close modal on confirm
-    thumbnailConfirm.addEventListener('click', function() {
+    thumbnailConfirm.addEventListener('click', async function() {
       const newIcon = thumbnailInput.value.trim();
       if (newIcon && window.thumbnailAppIdx !== -1) {
         const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
         if (apps[window.thumbnailAppIdx]) {
           apps[window.thumbnailAppIdx].icon = newIcon;
+          // Clear stale cached icon so the new URL is used immediately
+          delete apps[window.thumbnailAppIdx].cachedIcon;
+          // Re-cache the new icon URL right away
+          if (window.iconCache) {
+            try {
+              const cachedIcon = await window.iconCache.getIconWithCache(newIcon);
+              if (cachedIcon && cachedIcon !== newIcon) {
+                apps[window.thumbnailAppIdx].cachedIcon = cachedIcon;
+              }
+            } catch (e) {
+              console.warn('Failed to cache new icon:', e);
+            }
+          }
           localStorage.setItem("customApps", JSON.stringify(apps));
           if (window.renderCustomApps) window.renderCustomApps();
         }
