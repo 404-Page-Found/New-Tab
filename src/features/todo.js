@@ -781,6 +781,17 @@ function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
 
 // Update inline calendar display
 function updateInlineCalendar(pickerContainer, currentDate, selectedDateString) {
+  // Remove previous global listeners to prevent memory leaks
+  if (pickerContainer._handleOutsideClick) {
+    document.removeEventListener('click', pickerContainer._handleOutsideClick);
+  }
+  if (pickerContainer._handleResize) {
+    window.removeEventListener('resize', pickerContainer._handleResize);
+  }
+  if (pickerContainer._handleScroll) {
+    window.removeEventListener('scroll', pickerContainer._handleScroll, true);
+  }
+  
   const calendarHtml = createCalendarHtml(currentDate, selectedDateString);
   pickerContainer.innerHTML = calendarHtml;
   
