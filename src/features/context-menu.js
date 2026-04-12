@@ -222,6 +222,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
         if (apps[window.thumbnailAppIdx]) {
           apps[window.thumbnailAppIdx].icon = newIcon;
+          delete apps[window.thumbnailAppIdx].cachedIcon;
           localStorage.setItem("customApps", JSON.stringify(apps));
           if (window.renderCustomApps) window.renderCustomApps();
         }
