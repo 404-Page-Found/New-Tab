@@ -31,7 +31,7 @@ const AppGridState = {
     const order = this.getOrder();
     if (!order) return null;
     const customIds = order.filter(id => id.startsWith('custom-app-'));
-    return customIds[visualIndex] != null ? customIds[visualIndex] : null;
+    return customIds[visualIndex] ?? null;
   },
 
   // --- Higher-level operations ---

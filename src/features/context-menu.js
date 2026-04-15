@@ -1,5 +1,6 @@
 // js/context-menu.js - Right-click context menu for custom apps
 
+
 let currentAppId = null;
 
 // Create context menu element
