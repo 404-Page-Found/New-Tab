@@ -1,6 +1,7 @@
 // js/context-menu.js - Right-click context menu for custom apps
 
-let currentAppIndex = -1;
+
+let currentAppId = null;
 
 // Create context menu element
 const contextMenu = document.createElement("div");
@@ -43,10 +44,8 @@ document.addEventListener("contextmenu", function (e) {
   if (appIcon) {
     e.preventDefault();
 
-    // Find the index of this app
-    const appGrid = document.querySelector(".app-grid");
-    const apps = Array.from(appGrid.querySelectorAll(".app-icon.custom-app"));
-    currentAppIndex = apps.indexOf(appIcon);
+    // Store the id of the right-clicked custom app
+    currentAppId = appIcon.id;
 
     // Position and show context menu
     let left = e.pageX;
@@ -77,17 +76,13 @@ document.addEventListener("click", function (e) {
 
 // Rename functionality
 document.getElementById("rename-app").addEventListener("click", function () {
-  if (currentAppIndex === -1) return;
-  // Find by persistent id
-  const order = JSON.parse(localStorage.getItem('appOrder') || 'null');
-  const id = order.filter(id => id.startsWith('custom-app-'))[currentAppIndex];
-  const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
-  const idx = apps.findIndex(app => app.id === id);
-  if (idx === -1) return;
-  const currentApp = apps[idx];
+  if (!currentAppId) return;
+  const apps = AppGridState.getCustomApps();
+  const currentApp = apps.find(app => app.id === currentAppId);
+  if (!currentApp) return;
   
-  // Store the app index for the modal handler
-  window.renameAppIdx = idx;
+  // Store the app id for the modal handler
+  window.renameAppId = currentAppId;
   
   // Set the current name in the input
   document.getElementById('rename-app-input').value = currentApp.name;
@@ -116,22 +111,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close modal on cancel button
     renameCancel.addEventListener('click', function() {
       renameModal.style.display = 'none';
-      window.renameAppIdx = -1;
+      window.renameAppId = null;
     });
     
     // Close modal on confirm
     renameConfirm.addEventListener('click', function() {
       const newName = renameInput.value.trim();
-      if (newName && window.renameAppIdx !== -1) {
-        const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
-        if (apps[window.renameAppIdx]) {
-          apps[window.renameAppIdx].name = newName;
-          localStorage.setItem("customApps", JSON.stringify(apps));
-          if (window.renderCustomApps) window.renderCustomApps();
-        }
+      if (newName && window.renameAppId) {
+        AppGridState.renameApp(window.renameAppId, newName);
+        if (window.renderCustomApps) window.renderCustomApps();
       }
       renameModal.style.display = 'none';
-      window.renameAppIdx = -1;
+      window.renameAppId = null;
     });
     
     // Close modal on Enter key in input
@@ -145,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
     renameModal.addEventListener('click', function(e) {
       if (e.target === renameModal) {
         renameModal.style.display = 'none';
-        window.renameAppIdx = -1;
+        window.renameAppId = null;
       }
     });
   }
@@ -153,17 +144,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Change thumbnail functionality
 document.getElementById("change-thumbnail").addEventListener("click", function () {
-  if (currentAppIndex === -1) return;
+  if (!currentAppId) return;
   // Find by persistent id
-  const order = JSON.parse(localStorage.getItem('appOrder') || 'null');
-  const id = order.filter(id => id.startsWith('custom-app-'))[currentAppIndex];
-  const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
-  const idx = apps.findIndex(app => app.id === id);
-  if (idx === -1) return;
-  const currentApp = apps[idx];
+  const apps = AppGridState.getCustomApps();
+  const currentApp = apps.find(app => app.id === currentAppId);
+  if (!currentApp) return;
   
-  // Store the app index and app data for the modal handler
-  window.thumbnailAppIdx = idx;
+  // Store the app id for the modal handler
+  window.thumbnailAppId = currentAppId;
   
   // Set the current icon URL in the input
   document.getElementById('thumbnail-app-input').value = currentApp.icon || '';
@@ -201,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close modal on cancel button
     thumbnailCancel.addEventListener('click', function() {
       thumbnailModal.style.display = 'none';
-      window.thumbnailAppIdx = -1;
+      window.thumbnailAppId = null;
     });
     
     // Update preview when input changes
@@ -218,21 +206,16 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close modal on confirm
     thumbnailConfirm.addEventListener('click', function() {
       const newIcon = thumbnailInput.value.trim();
-      if (newIcon && window.thumbnailAppIdx !== -1) {
+      if (newIcon && window.thumbnailAppId) {
         try {
-          const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
-          if (apps[window.thumbnailAppIdx]) {
-            apps[window.thumbnailAppIdx].icon = newIcon;
-            delete apps[window.thumbnailAppIdx].cachedIcon;
-            localStorage.setItem("customApps", JSON.stringify(apps));
-            if (window.renderCustomApps) window.renderCustomApps();
-          }
+          AppGridState.updateThumbnail(window.thumbnailAppId, newIcon);
+          if (window.renderCustomApps) window.renderCustomApps();
         } catch (e) {
           console.error("Failed to update custom app thumbnail:", e);
         }
       }
       thumbnailModal.style.display = 'none';
-      window.thumbnailAppIdx = -1;
+      window.thumbnailAppId = null;
     });
     
     // Close modal on Enter key in input
@@ -246,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function() {
     thumbnailModal.addEventListener('click', function(e) {
       if (e.target === thumbnailModal) {
         thumbnailModal.style.display = 'none';
-        window.thumbnailAppIdx = -1;
+        window.thumbnailAppId = null;
       }
     });
   }
@@ -254,17 +237,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Delete functionality
 document.getElementById("delete-app").addEventListener("click", function () {
-  if (currentAppIndex === -1) return;
+  if (!currentAppId) return;
   // Find by persistent id
-  let order = JSON.parse(localStorage.getItem('appOrder') || 'null');
-  const id = order.filter(id => id.startsWith('custom-app-'))[currentAppIndex];
-  let apps = JSON.parse(localStorage.getItem("customApps") || "[]");
-  const idx = apps.findIndex(app => app.id === id);
-  if (idx === -1) return;
-  const currentApp = apps[idx];
+  const apps = AppGridState.getCustomApps();
+  const currentApp = apps.find(app => app.id === currentAppId);
+  if (!currentApp) return;
   
-  // Store the app index and app data for the modal handler
-  window.deleteAppIdx = idx;
+  // Store the app id for the modal handler
+  window.deleteAppId = currentAppId;
   
   // Update the delete preview
   const previewIcon = document.getElementById('delete-preview-icon');
@@ -293,45 +273,33 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close modal on cancel button
     deleteCancel.addEventListener('click', function() {
       deleteModal.style.display = 'none';
-      window.deleteAppIdx = -1;
+      window.deleteAppId = null;
     });
     
     // Delete on confirm
     deleteConfirm.addEventListener('click', function() {
-      if (window.deleteAppIdx !== -1) {
-        let apps = JSON.parse(localStorage.getItem("customApps") || "[]");
-        let order = JSON.parse(localStorage.getItem('appOrder') || 'null');
-        
-        if (apps[window.deleteAppIdx]) {
-          const id = apps[window.deleteAppIdx].id;
-          apps.splice(window.deleteAppIdx, 1);
-          localStorage.setItem("customApps", JSON.stringify(apps));
-          
-          // Remove from order
-          order = order.filter(oid => oid !== id);
-          localStorage.setItem('appOrder', JSON.stringify(order));
-          
-          if (window.renderCustomApps) window.renderCustomApps();
-        }
+      if (window.deleteAppId) {
+        AppGridState.deleteApp(window.deleteAppId);
+        if (window.renderCustomApps) window.renderCustomApps();
       }
       deleteModal.style.display = 'none';
-      window.deleteAppIdx = -1;
+      window.deleteAppId = null;
     });
     
     // Close modal on backdrop click
     deleteModal.addEventListener('click', function(e) {
       if (e.target === deleteModal) {
         deleteModal.style.display = 'none';
-        window.deleteAppIdx = -1;
+        window.deleteAppId = null;
       }
     });
   }
 });
 
-// Initialize modal indices
-window.renameAppIdx = -1;
-window.thumbnailAppIdx = -1;
-window.deleteAppIdx = -1;
+// Initialize modal ids
+window.renameAppId = null;
+window.thumbnailAppId = null;
+window.deleteAppId = null;
 
 // Prevent default context menu on default apps
 document.addEventListener("contextmenu", function (e) {

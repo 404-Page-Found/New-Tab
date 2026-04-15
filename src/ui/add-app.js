@@ -29,7 +29,6 @@ function renderDefaultAppsList() {
     `;
     btn.addEventListener("click", async function () {
       if (existingNames.has(app.name)) return;
-      const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
       const id = 'custom-app-' + Date.now() + '-' + Math.floor(Math.random()*100000);
       const appData = { id, url: app.url, name: app.name, icon: app.icon };
 
@@ -43,12 +42,7 @@ function renderDefaultAppsList() {
         }
       }
 
-      apps.push(appData);
-      localStorage.setItem("customApps", JSON.stringify(apps));
-      let order = JSON.parse(localStorage.getItem('appOrder') || 'null');
-      if (!order) order = [];
-      order.push(id);
-      localStorage.setItem('appOrder', JSON.stringify(order));
+      AppGridState.addApp(appData);
       if (window.renderCustomApps) window.renderCustomApps();
       const modal = document.getElementById("add-app-modal");
       if (modal) modal.style.display = "none";
@@ -211,7 +205,6 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
   const addAppFromInput = async (url) => {
     let name = extractAppName(url);
     const icon = getFaviconUrl(url);
-    const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
     const id = 'custom-app-' + Date.now() + '-' + Math.floor(Math.random()*100000);
     const appData = {
       id,
@@ -230,12 +223,7 @@ if (addAppBtn && addAppModal && addAppUrlInput) {
       }
     }
 
-    apps.push(appData);
-    localStorage.setItem("customApps", JSON.stringify(apps));
-    let order = JSON.parse(localStorage.getItem('appOrder') || 'null');
-    if (!order) order = [];
-    order.push(id);
-    localStorage.setItem('appOrder', JSON.stringify(order));
+    AppGridState.addApp(appData);
     if (window.renderCustomApps) window.renderCustomApps();
     addAppModal.style.display = "none";
   };

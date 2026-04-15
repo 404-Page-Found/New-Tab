@@ -293,45 +293,19 @@
     const sourceId = dragState.sourceId;
     if (!sourceId) return;
 
-    // Get current order from localStorage
-    let order = JSON.parse(localStorage.getItem('appOrder') || 'null');
-    if (!order) {
-      return;
-    }
-
     // Compute where we want to move the source; prefer the placeholder index
     let toIdx = dragState.dropIndex;
-    const fromIdx = order.indexOf(sourceId);
 
     if (toIdx === -1 && target) {
       // fallback when we dropped directly on another icon
-      toIdx = order.indexOf(target.id);
+      const order = AppGridState.getOrder();
+      if (order) toIdx = order.indexOf(target.id);
     }
 
-    // nothing to do if source not found
-    if (fromIdx === -1) {
+    // Reorder via the shared state helper and refresh
+    if (!AppGridState.reorder(sourceId, toIdx)) {
       return;
     }
-
-    // If toIdx is invalid (e.g. placeholder at end) treat it as insertion at the end
-    if (toIdx === -1 || toIdx > order.length) {
-      toIdx = order.length;
-    }
-
-    // When moving forward in the array the removal shifts indices left;
-    // compensate so the item ends up *after* the drop position.
-    let adjustedToIdx = toIdx;
-    if (fromIdx < toIdx) {
-      adjustedToIdx = toIdx - 1;
-    }
-
-    // Reorder
-    const newOrder = order.slice();
-    const [movedItem] = newOrder.splice(fromIdx, 1);
-    newOrder.splice(adjustedToIdx, 0, movedItem);
-
-    // Persist and refresh
-    localStorage.setItem('appOrder', JSON.stringify(newOrder));
     if (typeof window.renderAllApps === 'function') {
       window.renderAllApps();
     }
