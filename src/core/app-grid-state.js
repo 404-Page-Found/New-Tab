@@ -24,16 +24,6 @@ const AppGridState = {
 
   // --- Id helpers ---
 
-  // Return the id of the nth custom app as it appears in appOrder.
-  // This matches the visual DOM index among `.app-icon.custom-app` elements
-  // because renderAllApps renders in order.
-  customAppIdByVisualIndex(visualIndex) {
-    const order = this.getOrder();
-    if (!order) return null;
-    const customIds = order.filter(id => id.startsWith('custom-app-'));
-    return customIds[visualIndex] ?? null;
-  },
-
   // --- Higher-level operations ---
 
   isValidAppData(appData) {
