@@ -36,14 +36,28 @@ const AppGridState = {
 
   // --- Higher-level operations ---
 
-  // Add a new custom app. appData must include an .id field.
+  isValidAppData(appData) {
+    return !!appData &&
+      typeof appData === 'object' &&
+      typeof appData.id === 'string' &&
+      appData.id.trim() !== '' &&
+      typeof appData.url === 'string' &&
+      appData.url.trim() !== '' &&
+      typeof appData.name === 'string' &&
+      appData.name.trim() !== '';
+  },
+
+  // Add a new custom app. appData must include valid id, url, and name fields.
   addApp(appData) {
+    if (!this.isValidAppData(appData)) return false;
+
     const apps = this.getCustomApps();
     apps.push(appData);
     this.saveCustomApps(apps);
     const order = this.getOrder() || [];
     order.push(appData.id);
     this.saveOrder(order);
+    return true;
   },
 
   // Rename a custom app identified by id.
