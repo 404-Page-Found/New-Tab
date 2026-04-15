@@ -6,12 +6,12 @@ const escapeHtml = (str) => {
   return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c] || c));
 };
 const getDraggableAppIcons = () => Array.from(document.querySelectorAll('.app-grid .app-icon')).filter(icon => icon.id !== 'new-app');
-const getAppOrder = () => JSON.parse(localStorage.getItem('appOrder') || 'null');
-const saveAppOrder = order => localStorage.setItem('appOrder', JSON.stringify(order));
+const getAppOrder = () => AppGridState.getOrder();
+const saveAppOrder = order => AppGridState.saveOrder(order);
 
 // Load custom apps from localStorage
 function loadCustomApps() {
-  return JSON.parse(localStorage.getItem("customApps") || "[]");
+  return AppGridState.getCustomApps();
 }
 
 // Default apps

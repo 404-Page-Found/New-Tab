@@ -254,7 +254,7 @@ const iconCache = {
   // Cache icons for existing apps
   async cacheExistingAppIcons() {
     try {
-      const apps = JSON.parse(localStorage.getItem("customApps") || "[]");
+      const apps = AppGridState.getCustomApps();
       const promises = apps.map(async (app) => {
         if (app.icon && !app.cachedIcon) {
           try {
@@ -270,7 +270,7 @@ const iconCache = {
       });
 
       const updatedApps = await Promise.all(promises);
-      localStorage.setItem("customApps", JSON.stringify(updatedApps));
+      AppGridState.saveCustomApps(updatedApps);
       return updatedApps;
     } catch (error) {
       console.warn('Failed to cache existing app icons:', error);
