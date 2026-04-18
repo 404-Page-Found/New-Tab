@@ -9001,36 +9001,38 @@ body.light-theme .md-table-row:hover {
 
 /* Light theme toggle */
 body.light-theme .simple-mode-toggle {
-  background: rgba(0, 0, 0, 0.05);
-  border-color: rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(15, 23, 42, 0.12);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
 }
 
 body.light-theme .simple-mode-toggle:hover {
-  background: rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.15);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.98);
+  border-color: rgba(33, 150, 243, 0.2);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
 }
 
 body.light-theme .simple-mode-label {
-  color: rgba(0, 0, 0, 0.7);
+  color: #111827;
+  font-weight: 600;
 }
 
 body.light-theme .toggle-switch label {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(148, 163, 184, 0.45);
 }
 
 body.light-theme .toggle-switch label::before {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  background: #ffffff;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.16);
 }
 
 body.light-theme .toggle-switch input:checked + label {
-  background: rgba(33, 150, 243, 0.3);
+  background: linear-gradient(135deg, #2196f3, #1e88e5);
 }
 
 body.light-theme .toggle-switch input:checked + label::before {
   background: #fff;
-  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+  box-shadow: 0 2px 8px rgba(33, 150, 243, 0.35);
 }
 
 /* ==================== Simple Mode Hidden Elements ==================== */
