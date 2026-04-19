@@ -365,7 +365,7 @@ function updateFilterCounts() {
   if (badgePending) badgePending.textContent = pending;
   if (badgeCompleted) badgeCompleted.textContent = completed;
   if (badgeOverdue) badgeOverdue.textContent = overdue;
-  if (todoCount) todoCount.textContent = all > 0 ? `${completed}/${all}` : '';
+  if (todoCount) todoCount.textContent = `${completed}/${all}`;
 }
 
 // Quick actions
