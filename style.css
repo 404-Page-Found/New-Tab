@@ -42,40 +42,7 @@
   gap: 8px;
 }
 
-.motto-btn {
-  background: rgb(200, 200, 200);
-  border: 1.5px solid rgba(0, 0, 0, 0.08);
-  cursor: pointer;
-  font-size: 1.1em;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  line-height: 1;
-  opacity: 0.85;
-  z-index: 1999;
-}
-
-#refresh-motto-btn {
-  color: #343232;
-  background: rgb(200, 200, 200);
-  padding: 2px 5px;
-  border: none;
-  border-radius: 8px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-#refresh-motto-btn:hover {
-  background: rgba(33, 150, 243, 0.15);
-  transform: scale(1.08) translateY(-1px);
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
-}
-
-#refresh-motto-btn:active {
-  transform: scale(0.96) translateY(0);
-}
-
+#refresh-motto-btn,
 #copy-motto-btn {
   color: #343232;
   background: rgb(200, 200, 200);
@@ -88,12 +55,14 @@
   justify-content: center;
 }
 
+#refresh-motto-btn:hover,
 #copy-motto-btn:hover {
   background: rgba(33, 150, 243, 0.15);
   transform: scale(1.08) translateY(-1px);
   box-shadow: 0 4px 12px rgba(33, 150, 243, 0.2);
 }
 
+#refresh-motto-btn:active,
 #copy-motto-btn:active {
   transform: scale(0.96) translateY(0);
 }
@@ -283,12 +252,7 @@
   transform: translateY(0);
 }
 
-.add-app-validation-message.malformed {
-  color: #f44336;
-  background: rgba(244, 67, 54, 0.1);
-  border: 1px solid rgba(244, 67, 54, 0.2);
-}
-
+.add-app-validation-message.malformed,
 .add-app-validation-message.undetectable {
   color: #f44336;
   background: rgba(244, 67, 54, 0.1);
@@ -309,6 +273,10 @@
   visibility: hidden;
   transition: all 0.2s ease;
   z-index: 10;
+  background: rgba(0, 0, 0, 0.85);
+  color: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .search-validation-feedback.show {
@@ -320,28 +288,13 @@
   position: relative;
 }
 
-/* Light theme validation message */
-body.light-theme .add-app-validation-message.malformed {
-  color: #dc3545;
-  background: rgba(220, 53, 69, 0.08);
-  border-color: rgba(220, 53, 69, 0.2);
-}
-
+body.light-theme .add-app-validation-message.malformed,
 body.light-theme .add-app-validation-message.undetectable {
   color: #dc3545;
   background: rgba(220, 53, 69, 0.08);
   border-color: rgba(220, 53, 69, 0.2);
 }
 
-/* Search bar validation feedback - dark theme */
-.search-validation-feedback {
-  background: rgba(0, 0, 0, 0.85);
-  color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-}
-
-/* Search bar validation feedback - light theme */
 body.light-theme .search-validation-feedback {
   background: rgba(255, 255, 255, 0.95);
   color: rgba(0, 0, 0, 0.8);
@@ -1611,68 +1564,73 @@ body.light-theme .drag-placeholder {
   border-color: #2196f3;
 }
 
-.apps-setting-group {
+/* Shared Settings Group Styles */
+.apps-setting-group,
+.general-setting-group,
+.theme-setting-group,
+.clock-setting-group,
+.date-setting-group,
+.about-setting-group {
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 1px solid rgba(107, 114, 128, 0.2);
 }
 
-.apps-setting-group:last-child {
+.apps-setting-group:last-child,
+.general-setting-group:last-child,
+.theme-setting-group:last-child,
+.clock-setting-group:last-child,
+.date-setting-group:last-child,
+.about-setting-group:last-child {
   border-bottom: none;
   margin-bottom: 0;
 }
 
-.apps-setting-group h4 {
+.apps-setting-group h4,
+.general-setting-group h4,
+.theme-setting-group h4,
+.clock-setting-group h4,
+.date-setting-group h4 {
   margin: 0 0 4px 0;
   font-size: 14px;
   font-weight: 600;
   color: var(--settings-text-color);
 }
 
-.apps-setting-group p {
+.apps-setting-group p,
+.general-setting-group p,
+.theme-setting-group p,
+.clock-setting-group p,
+.date-setting-group p {
   margin: 0 0 16px 0;
   font-size: 12px;
   color: rgba(107, 114, 128, 0.8);
   line-height: 1.4;
 }
 
-/* General Settings */
-.general-setting-group {
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
-}
-
-.general-setting-group:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-}
-
-.general-setting-group h4 {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--settings-text-color);
-}
-
-.general-setting-group p {
-  margin: 0 0 16px 0;
-  font-size: 12px;
-  color: rgba(107, 114, 128, 0.8);
-  line-height: 1.4;
-}
-
-.general-options {
+.general-options,
+.clock-options,
+.date-options,
+.icon-size-options {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 16px;
   margin-top: 12px;
 }
 
-.general-option {
+.general-option,
+.clock-option,
+.date-option,
+.icon-size-option {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.clock-option.reset-option,
+.date-option.reset-option,
+.icon-size-option.reset-option {
+  order: 4;
 }
 
 /* Modern Curvature Options */
@@ -1757,31 +1715,6 @@ body.light-theme .drag-placeholder {
 }
 
 /* Theme Options - Modern Layout */
-.theme-setting-group {
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
-}
-
-.theme-setting-group:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-}
-
-.theme-setting-group h4 {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--settings-text-color);
-}
-
-.theme-setting-group p {
-  margin: 0 0 16px 0;
-  font-size: 12px;
-  color: rgba(107, 114, 128, 0.8);
-  line-height: 1.4;
-}
-
 .theme-options {
   display: flex;
   gap: 16px;
@@ -2787,109 +2720,7 @@ body.light-theme .copy-notification {
   background: rgba(244, 67, 54, 0.2);
 }
 
-/* Modern Clock Settings */
-.clock-setting-group {
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
-}
-
-.clock-setting-group:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-}
-
-.clock-setting-group h4 {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--settings-text-color);
-}
-
-.clock-setting-group p {
-  margin: 0 0 16px 0;
-  font-size: 12px;
-  color: rgba(107, 114, 128, 0.8);
-  line-height: 1.4;
-}
-
-.clock-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
-  margin-top: 12px;
-}
-
-.clock-option {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.clock-option.reset-option {
-  order: 4;
-}
-
 /* Modern Date Settings */
-.date-setting-group {
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
-}
-
-.date-setting-group:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-}
-
-.date-setting-group h4 {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--settings-text-color);
-}
-
-.date-setting-group p {
-  margin: 0 0 16px 0;
-  font-size: 12px;
-  color: rgba(107, 114, 128, 0.8);
-  line-height: 1.4;
-}
-
-.date-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
-  margin-top: 12px;
-}
-
-.date-option {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.date-option.reset-option {
-  order: 4;
-}
-
-.icon-size-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
-  margin-top: 12px;
-}
-
-.icon-size-option {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.icon-size-option.reset-option {
-  order: 4;
-}
-
 .setting-card {
   display: flex;
   align-items: center;
@@ -3002,26 +2833,6 @@ body.light-theme .copy-notification {
 
 .reset-card:hover .setting-icon {
   stroke: #ff0000;
-}
-
-/* Light theme adjustments for date settings */
-body.light-theme .date-setting-group h4,
-body.light-theme .date-setting-group p {
-  color: rgba(55, 65, 81, 0.9);
-}
-
-body.light-theme .date-setting-group p {
-  color: rgba(107, 114, 128, 0.8);
-}
-
-/* Light theme adjustments for clock settings */
-body.light-theme .clock-setting-group h4,
-body.light-theme .clock-setting-group p {
-  color: rgba(55, 65, 81, 0.9);
-}
-
-body.light-theme .clock-setting-group p {
-  color: rgba(107, 114, 128, 0.8);
 }
 
 body.light-theme .setting-card {
@@ -3520,17 +3331,6 @@ body.light-theme .app-context-menu {
 }
 
 /* About Section Styles */
-.about-setting-group {
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
-}
-
-.about-setting-group:last-child {
-  border-bottom: none;
-  margin-bottom: 0;
-}
-
 .about-setting-group h4 {
   margin: 0 0 4px 0;
   font-size: 18px;
@@ -3568,17 +3368,8 @@ body.light-theme .app-context-menu {
   text-decoration: underline;
 }
 
-/* Light theme adjustments for About section */
 body.light-theme .about-setting-group {
   border-color: rgba(0, 0, 0, 0.1);
-}
-
-body.light-theme .about-setting-group h4 {
-  color: rgba(55, 65, 81, 0.9);
-}
-
-body.light-theme .about-setting-group > p {
-  color: rgba(107, 114, 128, 0.8);
 }
 
 body.light-theme .about-cards .setting-card a {
@@ -6031,31 +5822,12 @@ body.light-theme .todo-bullet .bullet-checked {
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
-}
-
-.inline-clear-date {
   background: rgba(255, 255, 255, 0.1);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.inline-clear-date:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
-}
-
-.inline-clear-date:active {
-  transform: translateY(0);
-}
-
-.inline-today-date {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
+.inline-clear-date:hover,
 .inline-today-date:hover {
   background: rgba(255, 255, 255, 0.2);
   border-color: rgba(255, 255, 255, 0.3);
@@ -6063,6 +5835,7 @@ body.light-theme .todo-bullet .bullet-checked {
   box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
 }
 
+.inline-clear-date:active,
 .inline-today-date:active {
   transform: translateY(0);
 }
@@ -6140,24 +5913,14 @@ body.light-theme .inline-calendar-days .calendar-day.other-month {
   color: rgba(31, 41, 55, 0.3);
 }
 
-body.light-theme .inline-clear-date {
-  background: rgba(0, 0, 0, 0.05);
-  color: #1f2937;
-  border-color: rgba(0, 0, 0, 0.1);
-}
-
-body.light-theme .inline-clear-date:hover {
-  background: rgba(0, 0, 0, 0.1);
-  border-color: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
+body.light-theme .inline-clear-date,
 body.light-theme .inline-today-date {
   background: rgba(0, 0, 0, 0.05);
   color: #1f2937;
   border-color: rgba(0, 0, 0, 0.1);
 }
 
+body.light-theme .inline-clear-date:hover,
 body.light-theme .inline-today-date:hover {
   background: rgba(0, 0, 0, 0.1);
   border-color: rgba(0, 0, 0, 0.2);
