@@ -753,30 +753,9 @@ body.light-theme .btn-secondary:hover {
 }
 
 /* Responsive video adjustments for different screen sizes */
-@media screen and (max-width: 768px) {
-  .background-video {
-    object-fit: cover;
-    object-position: center center;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .background-video {
-    object-fit: cover;
-    object-position: center center;
-  }
-}
-
-/* Landscape orientation adjustments for mobile */
-@media screen and (orientation: landscape) and (max-height: 500px) {
-  .background-video {
-    object-fit: cover;
-    object-position: center center;
-  }
-}
-
-/* Portrait orientation adjustments for mobile */
-@media screen and (orientation: portrait) {
+@media screen and (max-width: 768px), screen and (max-width: 480px),
+  screen and (orientation: landscape) and (max-height: 500px),
+  screen and (orientation: portrait) {
   .background-video {
     object-fit: cover;
     object-position: center center;
@@ -1263,7 +1242,6 @@ body.light-theme .drag-placeholder {
   font-size: 1em;
   overflow-y: auto;
 }
-.settings-content label,
 .settings-content .bg-thumbnails,
 .settings-content > div {
   margin-bottom: 10px !important;
@@ -1952,34 +1930,14 @@ body.light-theme #motto-text {
   color: #374151;
 }
 
-body.light-theme #refresh-motto-btn {
-  color: #4b5563;
-  background: rgba(255, 255, 255, 0.95);
-}
-
-body.light-theme #refresh-motto-btn:hover {
-  background: rgba(33, 150, 243, 0.12);
-  border-color: rgba(33, 150, 243, 0.3);
-  color: #1976d2;
-  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
-}
-
-body.light-theme #refresh-motto-btn:active {
-  background: rgba(33, 150, 243, 0.18);
-  transform: scale(0.96) translateY(0);
-}
-
-body.light-theme #refresh-motto-btn:focus-visible {
-  outline: 2px solid #2196f3;
-  outline-offset: 2px;
-}
-
+body.light-theme #refresh-motto-btn,
 body.light-theme #copy-motto-btn {
   color: #4b5563;
   background: rgba(255, 255, 255, 0.95);
   opacity: 1;
 }
 
+body.light-theme #refresh-motto-btn:hover,
 body.light-theme #copy-motto-btn:hover {
   background: rgba(33, 150, 243, 0.12);
   border-color: rgba(33, 150, 243, 0.3);
@@ -1987,11 +1945,13 @@ body.light-theme #copy-motto-btn:hover {
   box-shadow: 0 4px 12px rgba(33, 150, 243, 0.15);
 }
 
+body.light-theme #refresh-motto-btn:active,
 body.light-theme #copy-motto-btn:active {
   background: rgba(33, 150, 243, 0.18);
   transform: scale(0.96) translateY(0);
 }
 
+body.light-theme #refresh-motto-btn:focus-visible,
 body.light-theme #copy-motto-btn:focus-visible {
   outline: 2px solid #2196f3;
   outline-offset: 2px;
