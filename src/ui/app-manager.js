@@ -120,29 +120,49 @@ applyOpenNewTabSetting();
 window.addEventListener("themeChanged", applyOpenNewTabSetting);
 
 // Load and apply icon size
+const ICON_SIZE_OPTIONS = [48, 60, 72];
+
+function getClosestSize(size, options) {
+  return options.reduce((closest, option) => {
+    return Math.abs(option - size) < Math.abs(closest - size) ? option : closest;
+  }, options[0]);
+}
+
+function syncSizeButtons(groupName, size, options) {
+  const activeSize = getClosestSize(size, options);
+  const buttons = document.querySelectorAll(`[data-size-group="${groupName}"] .size-choice-button`);
+  buttons.forEach((button) => {
+    const buttonSize = parseInt(button.dataset.size, 10);
+    const isActive = buttonSize === activeSize;
+    button.classList.toggle("active", isActive);
+    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+  });
+}
+
 function loadIconSize() {
-  return parseInt(localStorage.getItem("iconSize") || "60");
+  const size = parseInt(localStorage.getItem("iconSize") || "60", 10);
+  const normalizedSize = Number.isFinite(size) ? getClosestSize(size, ICON_SIZE_OPTIONS) : 60;
+  if (normalizedSize !== size) {
+    localStorage.setItem("iconSize", normalizedSize);
+  }
+  return normalizedSize;
 }
 function applyIconSize() {
   const size = loadIconSize();
   document.documentElement.style.setProperty('--app-icon-size', size + 'px');
   applyCurvature();
-
-  // Update slider - wait for DOMContentLoaded since settings modal loads later
-  const iconSizePicker = document.getElementById("icon-size-picker");
-  if (iconSizePicker) {
-    iconSizePicker.value = size;
-  }
+  syncSizeButtons("icon", size, ICON_SIZE_OPTIONS);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
-  const iconSizePicker = document.getElementById("icon-size-picker");
-  if (iconSizePicker) {
-    iconSizePicker.addEventListener("input", function () {
-      let val = parseInt(this.value);
-      if (val < 40) val = 40;
-      if (val > 100) val = 100;
-      localStorage.setItem("iconSize", val);
+  const iconSizeGroup = document.querySelector('[data-size-group="icon"]');
+  if (iconSizeGroup) {
+    iconSizeGroup.addEventListener("click", function (event) {
+      const button = event.target.closest(".size-choice-button");
+      if (!button) return;
+      const size = parseInt(button.dataset.size, 10);
+      if (!Number.isFinite(size)) return;
+      localStorage.setItem("iconSize", size);
       applyIconSize();
     });
   }

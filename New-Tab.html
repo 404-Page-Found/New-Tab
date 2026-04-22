@@ -326,8 +326,12 @@
                       <path d="m5.64 5.64 4.24 4.24"></path>
                     </svg>
                     <div class="setting-content">
-                      <label for="icon-size-picker" data-i18n="size">Size</label>
-                      <input type="range" id="icon-size-picker" min="40" max="100" value="60" step="1" />
+                      <label class="size-label" data-i18n="size">Size</label>
+                      <div class="size-choice-group" data-size-group="icon">
+                        <button type="button" class="size-choice-button" data-size="48" aria-pressed="false">S</button>
+                        <button type="button" class="size-choice-button" data-size="60" aria-pressed="true">M</button>
+                        <button type="button" class="size-choice-button" data-size="72" aria-pressed="false">L</button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -413,8 +417,12 @@
                       <path d="m5.64 5.64 4.24 4.24"></path>
                     </svg>
                     <div class="setting-content">
-                      <label for="clock-size-picker" data-i18n="size">Size</label>
-                      <input type="range" id="clock-size-picker" min="20" max="200" value="80" step="1" />
+                      <label class="size-label" data-i18n="size">Size</label>
+                      <div class="size-choice-group" data-size-group="clock">
+                        <button type="button" class="size-choice-button" data-size="60" aria-pressed="false">S</button>
+                        <button type="button" class="size-choice-button" data-size="80" aria-pressed="true">M</button>
+                        <button type="button" class="size-choice-button" data-size="100" aria-pressed="false">L</button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -498,8 +506,12 @@
                       <path d="m5.64 5.64 4.24 4.24"></path>
                     </svg>
                     <div class="setting-content">
-                      <label for="date-size-picker" data-i18n="size">Size</label>
-                      <input type="range" id="date-size-picker" min="10" max="80" value="24" step="1" />
+                      <label class="size-label" data-i18n="size">Size</label>
+                      <div class="size-choice-group" data-size-group="date">
+                        <button type="button" class="size-choice-button" data-size="20" aria-pressed="false">S</button>
+                        <button type="button" class="size-choice-button" data-size="24" aria-pressed="true">M</button>
+                        <button type="button" class="size-choice-button" data-size="30" aria-pressed="false">L</button>
+                      </div>
                     </div>
                   </div>
                 </div>
