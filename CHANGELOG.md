@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.4.2 (2026-04-23)
+
+### Features
+- Feat(app): introduce AppGridState to consolidate app grid state management (#93)
+
+### Bug Fixes
+- Fix(app): prevent stale cached icons after thumbnail changes (#87)
+- Fix(search): re-init the search engine dropdown correctly after rebuilds (#72)
+
+### UI Improvements
+- Style(ui): refine icon, clock, and date size controls
+- Style(ui): improve color picker sizing and padding
+- Style(ui): update clock and date structure and styles
+- Style(background): consolidate background video media queries and button styles
+- Style(theme): align and improve light theme toggle contrast
+- Style(todo): simplify todo counter and toggle styles
+- Style(app): re-apply open-in-new-tab preference after rebuilding links
+
+### Documentation
+- Docs: update installation instructions in the README files for clarity
+- Docs: add Microsoft Edge Add-ons and Download CRX badges to the README files
+- Docs: enhance the README and installation details
+
 ## v0.4.1 (2026-04-10)
 
 ### Bug Fixes
