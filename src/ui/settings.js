@@ -333,7 +333,7 @@ function loadClockStyle() {
 }
 function applyClockStyle() {
   const style = loadClockStyle();
-  const clock = document.getElementById("clock");
+  const clock = document.querySelector("#clock .clock-time") || document.getElementById("clock");
   if (clock) {
     clock.style.color = style.color;
     clock.style.fontFamily = style.font;

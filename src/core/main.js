@@ -2,7 +2,7 @@
 
 function updateTime() {
   const now = new Date();
-  const timeElement = document.getElementById("clock");
+  const timeElement = document.getElementById("clock-time") || document.getElementById("clock");
   const dateElement = document.getElementById("date");
 
   // Update time

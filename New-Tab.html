@@ -31,8 +31,10 @@
   </div>
   
   <div class="container">
-      <div id="clock" class="clock"></div>
-      <div id="date" class="date"></div>
+      <div id="clock" class="clock">
+        <span id="clock-time" class="clock-time"></span>
+        <span id="date" class="date"></span>
+      </div>
       <div class="search-bar">
         <div class="search-engines"></div>
         <input type="text" placeholder="{{searchPlaceholder}}" data-i18n="searchPlaceholder" autofocus />
@@ -208,7 +210,6 @@
           <button class="settings-menu-item" data-section="clock" data-i18n="clock">
             Clock
           </button>
-          <button class="settings-menu-item" data-section="date" data-i18n="date">Date</button>
           <button class="settings-menu-item" data-section="themes" data-i18n="themes">
             Themes
           </button>
@@ -348,8 +349,8 @@
           </section>
           <section class="settings-section" data-section="clock" style="display: none">
             <div class="clock-setting-group">
-              <h4 data-i18n="clockSettings">Clock Style</h4>
-              <p data-i18n="clockSettingsDesc">Customize the appearance of your clock display</p>
+              <h4>Clock &amp; Date Style</h4>
+              <p>Customize the appearance of your clock and date display</p>
               <div class="clock-options">
                 <div class="clock-option">
                   <div class="setting-card">
@@ -432,11 +433,9 @@
                 </div>
               </div>
             </div>
-          </section>
-          <section class="settings-section" data-section="date" style="display: none">
             <div class="date-setting-group">
-              <h4 data-i18n="dateSettings">Date Style</h4>
-              <p data-i18n="dateSettingsDesc">Customize the appearance of your date display</p>
+              <h4>Date Style</h4>
+              <p>Customize the appearance of your date display</p>
               <div class="date-options">
                 <div class="date-option">
                   <div class="setting-card">

@@ -1109,11 +1109,18 @@ body.light-theme .drag-placeholder {
     0 0 2px #000;
   transition: opacity 0.2s ease;
 }
-.clock {
+#clock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.clock-time {
   text-align: center;
   font-size: clamp(3rem, 10vw, 6rem);
   color: #ffffff;
-  margin-bottom: 10px;
   font-weight: 200;
   letter-spacing: 4px;
   text-shadow:
@@ -1138,7 +1145,7 @@ body.light-theme .drag-placeholder {
 .date {
   text-align: center;
   color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 20px;
+  margin-bottom: 0;
   font-size: clamp(1rem, 3vw, 1.5em);
   font-weight: 400;
   letter-spacing: 2px;
@@ -1913,7 +1920,7 @@ body.light-theme .app-name {
     0 0 2px #000;
 }
 
-body.light-theme .clock,
+body.light-theme .clock-time,
 body.light-theme .date {
   color: #0a0a0a;
   text-shadow: none;
@@ -2685,6 +2692,8 @@ body.light-theme .copy-notification {
   display: flex;
   align-items: center;
   gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
   padding: 20px 16px;
   border-radius: 12px;
   background: rgba(255, 255, 255, 0.05);
@@ -2715,6 +2724,7 @@ body.light-theme .copy-notification {
 
 .setting-content {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -2734,6 +2744,7 @@ body.light-theme .copy-notification {
 .setting-content input[type="number"],
 .setting-content input[type="range"] {
   width: 100%;
+  box-sizing: border-box;
   padding: 8px 10px;
   border-radius: 8px;
   border: 2px solid rgba(107, 114, 128, 0.5);
@@ -3789,7 +3800,7 @@ body.light-theme .update-settings-group .setting-btn:hover {
     color: black !important;
   }
 
-  .clock,
+  .clock-time,
   .date {
     color: black !important;
     text-shadow: none !important;
@@ -3846,7 +3857,7 @@ body.light-theme .update-settings-group .setting-btn:hover {
       0 0 2px #000;
   }
 
-  body:not(.light-theme) .clock,
+  body:not(.light-theme) .clock-time,
   body:not(.light-theme) .date {
     color: #0a0a0a;
     text-shadow: none;
