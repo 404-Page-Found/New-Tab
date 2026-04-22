@@ -65,6 +65,9 @@ const addApp = document.getElementById('new-app');
 
   // Re-attach settings app click handler after render
   attachSettingsAppHandler();
+
+  // Re-apply the open-in-new-tab preference after rebuilding links.
+  applyOpenNewTabSetting();
 }
 
 // Initial render after caching
@@ -113,6 +116,8 @@ if (openNewTabSetting) {
 
 // Apply on load
 applyOpenNewTabSetting();
+
+window.addEventListener("themeChanged", applyOpenNewTabSetting);
 
 // Load and apply icon size
 function loadIconSize() {
