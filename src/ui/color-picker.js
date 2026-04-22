@@ -46,13 +46,16 @@ class ModernColorPicker {
   }
 
   createPickerPopup() {
-    // Common colors palette
+    // Expanded palette for clock/date styling.
     this.commonColors = [
-      '#ffffff', '#f8f9fa', '#e9ecef', '#dee2e6',
-      '#000000', '#6c757d', '#495057', '#343a40',
-      '#dc3545', '#fd7e14', '#ffc107', '#28a745',
-      '#007bff', '#6610f2', '#6f42c1', '#e83e8c',
-      '#20c997', '#17a2b8', '#6f7884', '#959ba5'
+      '#ffffff', '#f8f9fa', '#e9ecef', '#dee2e6', '#ced4da', '#adb5bd', '#6c757d', '#495057', '#343a40', '#212529',
+      '#000000', '#f03e3e', '#e03131', '#c92a2a', '#ff6b6b', '#fa5252',
+      '#fd7e14', '#ff922b', '#f76707', '#e8590c', '#ffc107', '#ffd43b', '#fab005', '#fcc419',
+      '#40c057', '#37b24d', '#2f9e44', '#12b886', '#0ca678', '#099268',
+      '#22b8cf', '#15aabf', '#1098ad', '#087f5b', '#228be6', '#1c7ed6', '#1971c2', '#1864ab',
+      '#7950f2', '#7048e8', '#6741d9', '#5f3dc4', '#845ef7', '#9c36b5', '#ae3ec9', '#d6336c',
+      '#f06595', '#e64980', '#cc5de8', '#be4bdb', '#94d82d', '#a9e34b', '#c0eb75', '#d0bfff',
+      '#ffa8a8', '#ffd8a8', '#ffec99', '#d3f9d8', '#c5f6fa', '#d0ebff', '#e5dbff', '#ffe3e3'
     ];
 
     // Create popup structure
@@ -116,7 +119,7 @@ class ModernColorPicker {
     // Position the popup near the swatch
     const swatchRect = this.swatch.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
-    const popupHeight = 320;
+    const popupHeight = 240;
 
     // Calculate position - prefer above the swatch if there's more space
     let top = swatchRect.top - popupHeight - 10;

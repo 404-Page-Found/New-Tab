@@ -2910,7 +2910,7 @@ body.light-theme .setting-card button:hover {
 
 .color-picker-popup {
   position: fixed;
-  width: 320px;
+  width: 260px;
   background: rgba(15, 23, 42, 0.95);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -2922,7 +2922,7 @@ body.light-theme .setting-card button:hover {
   transform: scale(0.95) translateY(-10px);
   transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   pointer-events: none;
-  max-height: var(--overlay-max-height);
+  max-height: 240px;
   overflow-y: auto;
 }
 
@@ -2933,20 +2933,20 @@ body.light-theme .setting-card button:hover {
 }
 
 .color-palette {
-  padding: 20px;
+  padding: 10px;
 }
 
 .color-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
+  gap: 8px;
 }
 
 .color-chip {
-  width: 56px;
-  height: 56px;
-  border-radius: 10px;
-  border: 3px solid transparent;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 2px solid transparent;
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
@@ -3024,18 +3024,19 @@ body.light-theme .color-hex {
 /* Responsive adjustments for color picker */
 @media (max-width: 400px) {
   .color-picker-popup {
-    width: 280px;
+    width: 240px;
     margin: 10px;
+    max-height: 200px;
   }
 
   .color-grid {
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
+    gap: 6px;
   }
 
   .color-chip {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
   }
 }
 
