@@ -563,30 +563,36 @@ function handleDueDateClick(event) {
 function showInlineDatePicker(todoId, dueDateElement) {
   // Close any existing inline date pickers
   closeAllInlineDatePickers();
-  
+
   const todo = todos.find(t => t.id === todoId);
   if (!todo) return;
-  
+
   // Create inline date picker container
   const pickerContainer = document.createElement('div');
   pickerContainer.className = 'inline-date-picker';
   pickerContainer.dataset.todoId = todoId;
-  
+
   // Create calendar HTML
   const currentDate = todo.dueDate ? new Date(todo.dueDate) : new Date();
   const calendarHtml = createCalendarHtml(currentDate, todo.dueDate);
-  
+
   pickerContainer.innerHTML = calendarHtml;
-  
+
   // Append to body to avoid overflow clipping from parent containers
   document.body.appendChild(pickerContainer);
-  
+
   // Position the picker relative to the due date element
   positionPickerRelativeToElement(pickerContainer, dueDateElement);
-  
-  // Add event listeners for the inline picker
-  setupInlinePickerListeners(pickerContainer, todoId, dueDateElement);
-  
+
+  // Store references for cleanup
+  pickerContainer._dueDateElement = dueDateElement;
+
+  // Bind calendar DOM handlers (rebound on month change)
+  setupInlineCalendarHandlers(pickerContainer, todoId, dueDateElement);
+
+  // Bind global listeners ONCE (outside-click, resize, scroll)
+  bindGlobalPickerListeners(pickerContainer, dueDateElement);
+
   // Show the picker with animation
   requestAnimationFrame(() => {
     pickerContainer.classList.add('visible');
@@ -688,17 +694,42 @@ function createCalendarHtml(currentDate, selectedDateString) {
   `;
 }
 
-// Setup event listeners for inline date picker
-function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
+// Bind global listeners once per picker (no setTimeout)
+function bindGlobalPickerListeners(pickerContainer, dueDateElement) {
+  const handleOutsideClick = (e) => {
+    if (!pickerContainer.contains(e.target) && !dueDateElement.contains(e.target)) {
+      closeInlineDatePicker(pickerContainer);
+    }
+  };
+
+  const handleResize = () => {
+    positionPickerRelativeToElement(pickerContainer, dueDateElement);
+  };
+
+  const handleScroll = () => {
+    positionPickerRelativeToElement(pickerContainer, dueDateElement);
+  };
+
+  pickerContainer._handleOutsideClick = handleOutsideClick;
+  pickerContainer._handleResize = handleResize;
+  pickerContainer._handleScroll = handleScroll;
+
+  document.addEventListener('click', handleOutsideClick);
+  window.addEventListener('resize', handleResize);
+  window.addEventListener('scroll', handleScroll, true);
+}
+
+// Setup calendar DOM handlers only (rebound on month navigation)
+function setupInlineCalendarHandlers(pickerContainer, todoId, dueDateElement) {
   const todo = todos.find(t => t.id === todoId);
   if (!todo) return;
-  
+
   let currentDate = todo.dueDate ? new Date(todo.dueDate) : new Date();
-  
+
   // Navigation buttons
   const prevBtn = pickerContainer.querySelector('.inline-prev-month');
   const nextBtn = pickerContainer.querySelector('.inline-next-month');
-  
+
   if (prevBtn) {
     prevBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -706,7 +737,7 @@ function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
       updateInlineCalendar(pickerContainer, currentDate, todo.dueDate);
     });
   }
-  
+
   if (nextBtn) {
     nextBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -714,25 +745,25 @@ function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
       updateInlineCalendar(pickerContainer, currentDate, todo.dueDate);
     });
   }
-  
+
   // Day click handlers
   const daysContainer = pickerContainer.querySelector('.inline-calendar-days');
   if (daysContainer) {
     daysContainer.addEventListener('click', (e) => {
       const dayElement = e.target.closest('.calendar-day');
       if (!dayElement || dayElement.classList.contains('other-month')) return;
-      
+
       e.stopPropagation();
       const selectedDate = new Date(dayElement.dataset.date + 'T00:00:00');
       updateTodoDueDate(todoId, selectedDate, dueDateElement);
       closeInlineDatePicker(pickerContainer);
     });
   }
-  
+
   // Footer buttons
   const clearBtn = pickerContainer.querySelector('.inline-clear-date');
   const todayBtn = pickerContainer.querySelector('.inline-today-date');
-  
+
   if (clearBtn) {
     clearBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -740,7 +771,7 @@ function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
       closeInlineDatePicker(pickerContainer);
     });
   }
-  
+
   if (todayBtn) {
     todayBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -748,46 +779,18 @@ function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
       closeInlineDatePicker(pickerContainer);
     });
   }
-  
-  // Click outside to close
-  const handleOutsideClick = (e) => {
-    if (!pickerContainer.contains(e.target) && !dueDateElement.contains(e.target)) {
-      closeInlineDatePicker(pickerContainer);
-    }
-  };
-  
-  // Reposition picker on window resize
-  const handleResize = () => {
-    positionPickerRelativeToElement(pickerContainer, dueDateElement);
-  };
-  
-  // Reposition picker on scroll
-  const handleScroll = () => {
-    positionPickerRelativeToElement(pickerContainer, dueDateElement);
-  };
-  
-  // Store references for cleanup
-  pickerContainer._handleOutsideClick = handleOutsideClick;
-  pickerContainer._handleResize = handleResize;
-  pickerContainer._handleScroll = handleScroll;
-  
-  // Delay adding the listener to prevent immediate closure
-  setTimeout(() => {
-    document.addEventListener('click', handleOutsideClick);
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleScroll, true);
-  }, 100);
 }
 
 // Update inline calendar display
 function updateInlineCalendar(pickerContainer, currentDate, selectedDateString) {
+  const todoId = pickerContainer.dataset.todoId;
+  const dueDateElement = pickerContainer._dueDateElement;
+
   const calendarHtml = createCalendarHtml(currentDate, selectedDateString);
   pickerContainer.innerHTML = calendarHtml;
-  
-  // Re-setup event listeners for the updated calendar
-  const todoId = pickerContainer.dataset.todoId;
-  const dueDateElement = pickerContainer.parentElement;
-  setupInlinePickerListeners(pickerContainer, todoId, dueDateElement);
+
+  // Rebind calendar DOM handlers only (globals are already bound once)
+  setupInlineCalendarHandlers(pickerContainer, todoId, dueDateElement);
 }
 
 // Update todo due date with visual feedback
