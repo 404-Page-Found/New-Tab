@@ -48,9 +48,10 @@ const addApp = document.getElementById('new-app');
     a.className = 'app-icon ' + app.className;
     a.id = app.id;
     a.draggable = true;
-    if (app.className === 'custom-app') {
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
+    const openInNewTab = loadOpenNewTabSetting();
+    if (openInNewTab) {
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener noreferrer');
     }
     // Get translated name
     const displayName = app.nameKey && window.i18n ? window.i18n.t(app.nameKey) : (app.name || app.nameKey);
