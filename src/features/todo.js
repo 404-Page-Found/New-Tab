@@ -587,6 +587,9 @@ function showInlineDatePicker(todoId, dueDateElement) {
   // Add event listeners for the inline picker
   setupInlinePickerListeners(pickerContainer, todoId, dueDateElement);
   
+  // Store reference for cleanup on calendar updates
+  pickerContainer._dueDateElement = dueDateElement;
+  
   // Show the picker with animation
   requestAnimationFrame(() => {
     pickerContainer.classList.add('visible');
@@ -781,12 +784,22 @@ function setupInlinePickerListeners(pickerContainer, todoId, dueDateElement) {
 
 // Update inline calendar display
 function updateInlineCalendar(pickerContainer, currentDate, selectedDateString) {
+  // Remove old listeners before re-binding
+  if (pickerContainer._handleOutsideClick) {
+    document.removeEventListener('click', pickerContainer._handleOutsideClick);
+  }
+  if (pickerContainer._handleResize) {
+    window.removeEventListener('resize', pickerContainer._handleResize);
+  }
+  if (pickerContainer._handleScroll) {
+    window.removeEventListener('scroll', pickerContainer._handleScroll, true);
+  }
+  
   const calendarHtml = createCalendarHtml(currentDate, selectedDateString);
   pickerContainer.innerHTML = calendarHtml;
   
-  // Re-setup event listeners for the updated calendar
   const todoId = pickerContainer.dataset.todoId;
-  const dueDateElement = pickerContainer.parentElement;
+  const dueDateElement = pickerContainer._dueDateElement;
   setupInlinePickerListeners(pickerContainer, todoId, dueDateElement);
 }
 
