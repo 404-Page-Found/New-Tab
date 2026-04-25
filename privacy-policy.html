@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy - New Tab</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f7f5;
+      --panel: #ffffff;
+      --text: #1f2328;
+      --muted: #5f6b7a;
+      --accent: #2f6feb;
+      --border: #d0d7de;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1115;
+        --panel: #171a21;
+        --text: #e6edf3;
+        --muted: #9aa4b2;
+        --accent: #79c0ff;
+        --border: #30363d;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font: 16px/1.6 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(47, 111, 235, 0.12), transparent 30%),
+        radial-gradient(circle at top right, rgba(122, 92, 255, 0.08), transparent 24%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 48px 20px 72px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+    }
+
+    h1, h2 {
+      line-height: 1.2;
+      margin: 0 0 16px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: -0.03em;
+    }
+
+    h2 {
+      font-size: 1.15rem;
+      margin-top: 28px;
+    }
+
+    p, li {
+      color: var(--muted);
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    .meta {
+      margin-bottom: 24px;
+      color: var(--muted);
+    }
+
+    a {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="card">
+      <h1>Privacy Policy</h1>
+      <p class="meta">New Tab extension</p>
+      <p>This extension is designed to keep your data on your device whenever possible.</p>
+
+      <h2>Data stored locally</h2>
+      <p>The extension stores your preferences and content locally in your browser, including theme, language, background choices, app layout, todo items, onboarding progress, and AI conversation history. This data is saved only on your device and is not sent to our servers.</p>
+
+      <h2>Search</h2>
+      <p>When you search from the new tab page, your query is passed to your browser's default search provider through Chrome's search API. The extension does not maintain its own search index or store your search queries on a remote service.</p>
+
+      <h2>AI features</h2>
+      <p>If you use the AI assistant or related features, the prompts you enter and any API credentials you configure may be sent directly to the third-party service you selected in order to provide the requested response. Those services process the data according to their own privacy policies.</p>
+
+      <h2>Sharing</h2>
+      <p>We do not sell personal data or share it with advertisers.</p>
+
+      <h2>Retention</h2>
+      <p>You can clear the stored data by removing the extension or clearing the browser data associated with it.</p>
+
+      <h2>Contact</h2>
+      <p>If you have questions about this policy, please contact the developer through the project repository or the support channel linked with the extension listing.</p>
+    </div>
+  </main>
+</body>
+</html>

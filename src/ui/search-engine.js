@@ -1,115 +1,62 @@
-// js/search-engine.js - Search engine configuration and handling
+// js/search-engine.js - Search handling for the new tab page
 
-// Search Engine Configuration
-const searchEngines = {
-  bing: { nameKey: "bing", url: "https://www.bing.com/search?q=", icon: "https://www.bing.com/favicon.ico" },
-  google: { nameKey: "google", url: "https://www.google.com/search?q=", icon: "https://www.google.com/favicon.ico" },
-};
+let isSearchHandlerBound = false;
 
-// Load saved search engine
-function getSavedEngine() {
-  return localStorage.getItem("defaultEngine") || "bing";
-}
-
-// Save search engine
-function saveEngine(engine) {
-  localStorage.setItem("defaultEngine", engine);
-}
-
-// Reference to the current outside-click handler so we can remove it on re-init
-let _outsideClickHandler = null;
-
-// Initialize search engine dropdown
-function initSearchEngine() {
-  const enginesEl = document.querySelector(".search-engines");
-  let savedEngine = getSavedEngine();
-  if (!searchEngines[savedEngine]) {
-    saveEngine("bing");
-    savedEngine = getSavedEngine();
-  }
-  const savedEngineName = window.i18n ? window.i18n.t(searchEngines[savedEngine].nameKey) : searchEngines[savedEngine].nameKey;
-  enginesEl.innerHTML = `
-    <div class="selected-engine">
-      <img src="${searchEngines[savedEngine].icon}" alt="${savedEngineName}" />
-      <span class="dropdown-arrow">▼</span>
-    </div>
-    <div class="engine-dropdown">
-      ${Object.keys(searchEngines).map(key => {
-        const name = window.i18n ? window.i18n.t(searchEngines[key].nameKey) : searchEngines[key].nameKey;
-        return `
-        <div class="engine-option" data-key="${key}" ${key === savedEngine ? 'id="selected"' : ''}>
-          <img src="${searchEngines[key].icon}" alt="${name}" />
-          <span>${name}</span>
-        </div>
-      `;
-      }).join("")}
-    </div>
-  `;
-  const selectedEngineEl = enginesEl.querySelector(".selected-engine");
-  const dropdownEl = enginesEl.querySelector(".engine-dropdown");
-
-  selectedEngineEl.addEventListener("click", () => {
-    const isOpen = dropdownEl.classList.toggle("dropdown-open");
-    selectedEngineEl.classList.toggle("dropdown-active", isOpen);
-  });
-
-  dropdownEl.querySelectorAll(".engine-option").forEach(option => {
-    option.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const key = option.getAttribute("data-key");
-      saveEngine(key);
-      initSearchEngine(); // Re-render to update selected
-      dropdownEl.classList.remove("dropdown-open");
+function openDefaultSearch(query) {
+  if (typeof chrome !== "undefined" && chrome.search && typeof chrome.search.query === "function") {
+    chrome.search.query({
+      text: query,
+      disposition: "CURRENT_TAB",
+    }).catch((error) => {
+      console.error("Failed to open search results with the default provider:", error);
     });
-  });
-
-  // Close dropdown when clicking outside
-  // Remove any previously registered handler to prevent stacking
-  if (_outsideClickHandler) {
-    document.removeEventListener("click", _outsideClickHandler);
+    return true;
   }
-  _outsideClickHandler = (e) => {
-    if (!enginesEl.contains(e.target)) {
-      dropdownEl.classList.remove("dropdown-open");
-      selectedEngineEl.classList.remove("dropdown-active");
-    }
-  };
-  document.addEventListener("click", _outsideClickHandler);
+
+  console.error("chrome.search.query is not available in this context.");
+  return false;
 }
 
-// Modify search event listener
-const searchInput = document.querySelector(".search-bar input");
-if (searchInput) {
-  searchInput.addEventListener("keypress", function (e) {
-    if (e.key === "Enter") {
-      const query = this.value.trim();
-      if (!query) return;
-      
-      const selectedEngine = searchEngines[getSavedEngine()];
-      
-      // Use the new validation utility to determine if it's a URL or search query
-      const validation = validateUrl(query);
-      
-      if (validation.status === 'valid') {
-        // It's a valid URL, navigate directly
-        window.location.href = validation.url.href;
-      } else if (validation.status === 'undetectable') {
-        // Doesn't look like a URL, treat as search query
-        window.location.href = `${selectedEngine.url}${encodeURIComponent(query)}`;
-      } else {
-        // Malformed URL - show feedback but still try to navigate
-        // Show validation message on the search bar
-        showSearchValidationFeedback(validation.message);
-        // Still try to navigate with https:// prefix for malformed URLs that might work
-        window.location.href = `https://${query}`;
-      }
+function runSearch(query) {
+  const validation = validateUrl(query);
+
+  if (validation.status === "valid") {
+    window.location.href = validation.url.href;
+    return;
+  }
+
+  if (validation.status === "malformed") {
+    showSearchValidationFeedback(validation.message);
+  }
+
+  openDefaultSearch(query);
+}
+
+// Initialize search handling
+function initSearchEngine() {
+  if (isSearchHandlerBound) {
+    return;
+  }
+
+  const searchInput = document.querySelector(".search-bar input");
+  if (!searchInput) {
+    return;
+  }
+
+  searchInput.addEventListener("keydown", function (event) {
+    if (event.key !== "Enter") {
+      return;
     }
+
+    event.preventDefault();
+    const query = this.value.trim();
+    if (!query) return;
+
+    runSearch(query);
   });
-  
-  // Clear validation feedback when user starts typing
-  searchInput.addEventListener("input", function() {
-    clearSearchValidationFeedback();
-  });
+
+  searchInput.addEventListener("input", clearSearchValidationFeedback);
+  isSearchHandlerBound = true;
 }
 
 // Show validation feedback in search bar

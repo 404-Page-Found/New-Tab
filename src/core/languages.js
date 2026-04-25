@@ -12,8 +12,6 @@ const translations = {
     addTodoPlaceholder: "Add a new todo...",
     dueDate: "Due Date",
     addTodo: "Add Todo",
-    bing: "Bing",
-    google: "Google",
     noTodos: "No todos yet. Add one above!",
     noTodosHint: "Try adding due dates for better organization.",
     newAppTitle: "New App",
@@ -184,7 +182,7 @@ const translations = {
     onboardingClockTitle: "Clock & Date Display",
     onboardingClockContent: "Your current time and date are displayed here. You can customize the appearance in Settings.",
     onboardingSearchTitle: "Smart Search",
-    onboardingSearchContent: "Search the web directly from your new tab. Click the search icon to switch between different search engines.",
+    onboardingSearchContent: "Search the web directly from your new tab. Results use your browser's default search provider.",
     onboardingAppsTitle: "App Shortcuts",
     onboardingAppsContent: "Add your favorite websites as quick-launch icons. Drag and drop to reorder them.",
     onboardingBackgroundTitle: "Beautiful Backgrounds",
@@ -250,8 +248,6 @@ const translations = {
     addTodoPlaceholder: "添加新待办事项...",
     dueDate: "到期日期",
     addTodo: "添加待办",
-    bing: "必应",
-    google: "谷歌",
     noTodos: "还没有待办事项。在上方添加一个！",
     noTodosHint: "尝试添加到期日期以更好地组织。",
     newAppTitle: "新建应用",
@@ -422,7 +418,7 @@ const translations = {
     onboardingClockTitle: "时钟和日期显示",
     onboardingClockContent: "此处显示您当前的日期和时间。您可以在设置中自定义外观。",
     onboardingSearchTitle: "智能搜索",
-    onboardingSearchContent: "直接从新标签页搜索网络。点击搜索图标可在不同的搜索引擎之间切换。",
+    onboardingSearchContent: "直接从新标签页搜索网络。结果会使用浏览器的默认搜索提供程序打开。",
     onboardingAppsTitle: "应用快捷方式",
     onboardingAppsContent: "将您最喜爱的网站添加为快速启动图标。拖拽重新排序。",
     onboardingBackgroundTitle: "美丽的背景",
@@ -599,7 +595,7 @@ function updateDynamicTranslations() {
     window.customDatePicker.renderCalendar();
   }
 
-  // Update search engine names
+  // Refresh search handling
   if (window.initSearchEngine) {
     window.initSearchEngine();
   }
