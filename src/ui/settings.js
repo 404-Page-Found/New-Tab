@@ -861,6 +861,8 @@ function initAboutSection() {
 window.initAboutSection = initAboutSection;
 
 // Search Engines Settings
+let searchEnginesSectionInitialized = false;
+
 function loadSearchEnginesSettings() {
   if (window.getCustomEnginesList) {
     return window.getCustomEnginesList();
@@ -953,6 +955,12 @@ function hideEditForm() {
 }
 
 function initSearchEnginesSection() {
+  if (searchEnginesSectionInitialized) {
+    applySearchEnginesSettings();
+    return;
+  }
+  searchEnginesSectionInitialized = true;
+
   applySearchEnginesSettings();
 
   const addBtn = document.getElementById("add-engine-btn");

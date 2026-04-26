@@ -146,7 +146,14 @@ function getEngineLabel(engineKey) {
 
 function runSelectedEngineSearch(query) {
   const selectedEngine = getAllEngines()[getSavedEngine()] || searchEngines.bing;
-  window.location.href = `${selectedEngine.url}${encodeURIComponent(query)}`;
+  const encodedQuery = encodeURIComponent(query);
+  let url;
+  if (selectedEngine.url.includes('{query}')) {
+    url = selectedEngine.url.replace('{query}', encodedQuery);
+  } else {
+    url = selectedEngine.url + encodedQuery;
+  }
+  window.location.href = url;
 }
 
 function renderSearchEngineSelector() {
@@ -171,7 +178,7 @@ function renderSearchEngineSelector() {
 
   enginesEl.innerHTML = `
     <div class="selected-engine" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false" title="${savedEngineLabel}">
-      <img src="${savedEngineData.icon}" alt="${savedEngineLabel}" />
+      <img src="${savedEngineData.icon}" alt="${savedEngineLabel}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23999%22 stroke-width=%222%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><path d=%22M12 8v4m0 4h.01%22/></svg>'" />
       <span class="dropdown-arrow">▼</span>
     </div>
     <div class="engine-dropdown" role="listbox">
