@@ -1,4 +1,4 @@
-// js/context-menu.js - Right-click context menu for custom apps
+// src/features/context-menu.js - Right-click context menu for custom apps
 
 
 let currentAppId = null;

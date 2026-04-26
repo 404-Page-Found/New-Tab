@@ -1,4 +1,4 @@
-// js/ai/offline-mode.js - Offline mode response engine
+// src/ai/offline-mode.js - Offline mode response engine
 // Provides local responses when API is unavailable
 
 const OfflineMode = (function() {

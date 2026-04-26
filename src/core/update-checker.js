@@ -1,4 +1,4 @@
-// js/update-checker.js - Automatic update checking from GitHub releases
+// src/core/update-checker.js - Automatic update checking from GitHub releases
 
 class UpdateChecker {
   constructor() {

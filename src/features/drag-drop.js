@@ -1,4 +1,4 @@
-// js/drag-drop.js - Drag and drop functionality for app grid
+// src/features/drag-drop.js - Drag and drop functionality for app grid
 
 (function() {
   'use strict';

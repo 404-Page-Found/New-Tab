@@ -1,4 +1,4 @@
-// js/ai/openrouter.js - OpenRouter API Integration via Cloudflare Proxy
+// src/ai/openrouter.js - OpenRouter API Integration via Cloudflare Proxy
 // For security, API requests are proxied through Cloudflare Workers
 // API key is stored server-side and never exposed to the client
 

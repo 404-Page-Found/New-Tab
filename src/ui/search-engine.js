@@ -1,4 +1,4 @@
-// js/search-engine.js - Search engine configuration and handling
+// src/ui/search-engine.js - Search engine configuration and handling
 
 const searchEngines = {
   bing: {

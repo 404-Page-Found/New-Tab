@@ -1,4 +1,4 @@
-// js/ai/network-detector.js - Network availability detection module
+// src/ai/network-detector.js - Network availability detection module
 // Detects online/offline status and checks API health
 
 const NetworkDetector = (function() {

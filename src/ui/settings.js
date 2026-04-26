@@ -1,4 +1,4 @@
-// js/settings.js - Background, clock/date style settings
+// src/ui/settings.js - Background, clock/date style settings
 
 // Background selection
 function loadBg() {

@@ -1,4 +1,4 @@
-// js/add-app.js - Add app modal and functionality
+// src/ui/add-app.js - Add app modal and functionality
 
 // Default apps list
 const defaultAppsList = [];

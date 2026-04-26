@@ -1,4 +1,4 @@
-// js/todo.js - Modern Todo List Functionality
+// src/features/todo.js - Modern Todo List Functionality
 
 // State management
 let todos = [];

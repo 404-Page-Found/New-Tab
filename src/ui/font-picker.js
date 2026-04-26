@@ -1,4 +1,4 @@
-// js/font-picker.js - Modern Font Picker Component
+// src/ui/font-picker.js - Modern Font Picker Component
 
 class ModernFontPicker {
   constructor(options = {}) {

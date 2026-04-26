@@ -1,4 +1,4 @@
-// js/app-manager.js - App grid management, drag and drop
+// src/ui/app-manager.js - App grid management, drag and drop
 
 // Helper functions
 const escapeHtml = (str) => {
