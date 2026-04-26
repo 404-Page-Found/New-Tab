@@ -696,6 +696,10 @@ if (settingsMenu) {
         // Apply background selection after loading
         applyBg();
       }
+      // Initialize search engines section
+      if (section === 'search-engines' && window.initSearchEnginesSection) {
+        window.initSearchEnginesSection();
+      }
       // No special logic needed for 'about' tab, just show the section
     });
   });
@@ -855,6 +859,199 @@ function initAboutSection() {
 
 // Expose initAboutSection globally so language changes can re-render it
 window.initAboutSection = initAboutSection;
+
+// Search Engines Settings
+function loadSearchEnginesSettings() {
+  if (window.getCustomEnginesList) {
+    return window.getCustomEnginesList();
+  }
+  return [];
+}
+
+function applySearchEnginesSettings() {
+  const listEl = document.getElementById("custom-search-engines-list");
+  if (!listEl) return;
+
+  const engines = loadSearchEnginesSettings();
+  if (engines.length === 0) {
+    listEl.innerHTML = `
+      <div class="no-custom-engines" style="padding: 16px; text-align: center; color: rgba(107, 114, 128, 0.6); font-size: 13px;">
+        No custom search engines yet. Add one below.
+      </div>
+    `;
+  } else {
+    listEl.innerHTML = engines
+      .map(
+        (engine) => `
+      <div class="custom-engine-item" data-id="${engine.id}">
+        <img src="${engine.icon || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23999%22 stroke-width=%222%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><path d=%22M12 8v4m0 4h.01%22/></svg>'}" alt="${engine.name}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23999%22 stroke-width=%222%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><path d=%22M12 8v4m0 4h.01%22/></svg>'" />
+        <div class="custom-engine-info">
+          <span class="custom-engine-name">${engine.name}</span>
+          <span class="custom-engine-url">${engine.url}</span>
+        </div>
+        <div class="custom-engine-actions">
+          <button class="edit-btn" data-id="${engine.id}">Edit</button>
+          <button class="delete-btn" data-id="${engine.id}">Delete</button>
+        </div>
+      </div>
+    `
+      )
+      .join("");
+  }
+}
+
+function showFormError(errorElId, message) {
+  const errorEl = document.getElementById(errorElId);
+  if (errorEl) {
+    errorEl.textContent = message;
+    errorEl.style.display = "block";
+  }
+}
+
+function hideFormError(errorElId) {
+  const errorEl = document.getElementById(errorElId);
+  if (errorEl) {
+    errorEl.style.display = "none";
+  }
+}
+
+function showAddForm() {
+  const addForm = document.querySelector(".add-search-engine-form");
+  const editForm = document.getElementById("edit-search-engine-form");
+  if (editForm) editForm.style.display = "none";
+  if (addForm) addForm.style.display = "block";
+  document.getElementById("new-engine-name").value = "";
+  document.getElementById("new-engine-url").value = "";
+  document.getElementById("new-engine-icon").value = "";
+  hideFormError("add-engine-error");
+}
+
+function showEditForm(id) {
+  const engines = loadSearchEnginesSettings();
+  const engine = engines.find((e) => e.id === id);
+  if (!engine) return;
+
+  const addForm = document.querySelector(".add-search-engine-form");
+  const editForm = document.getElementById("edit-search-engine-form");
+  if (addForm) addForm.style.display = "none";
+  if (editForm) {
+    editForm.style.display = "block";
+    document.getElementById("edit-engine-id").value = id;
+    document.getElementById("edit-engine-name").value = engine.name;
+    document.getElementById("edit-engine-url").value = engine.url;
+    document.getElementById("edit-engine-icon").value = engine.icon || "";
+    hideFormError("edit-engine-error");
+  }
+}
+
+function hideEditForm() {
+  const editForm = document.getElementById("edit-search-engine-form");
+  if (editForm) {
+    editForm.style.display = "none";
+    hideFormError("edit-engine-error");
+  }
+}
+
+function initSearchEnginesSection() {
+  applySearchEnginesSettings();
+
+  const addBtn = document.getElementById("add-engine-btn");
+  if (addBtn) {
+    addBtn.addEventListener("click", () => {
+      const name = document.getElementById("new-engine-name").value.trim();
+      const url = document.getElementById("new-engine-url").value.trim();
+      const icon = document.getElementById("new-engine-icon").value.trim();
+
+      if (!name) {
+        showFormError("add-engine-error", "Please enter a name for the search engine.");
+        return;
+      }
+
+      if (!url) {
+        showFormError("add-engine-error", "Please enter a search URL.");
+        return;
+      }
+
+      if (!window.validateSearchEngineUrl || !window.validateSearchEngineUrl(url)) {
+        showFormError("add-engine-error", "Please enter a valid URL starting with http:// or https://.");
+        return;
+      }
+
+      if (window.addCustomEngine) {
+        window.addCustomEngine(name, url, icon);
+        applySearchEnginesSettings();
+        showAddForm();
+        if (window.renderSearchEngineSelector) {
+          window.renderSearchEngineSelector();
+        }
+      }
+    });
+  }
+
+  const saveBtn = document.getElementById("save-engine-btn");
+  if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+      const id = document.getElementById("edit-engine-id").value;
+      const name = document.getElementById("edit-engine-name").value.trim();
+      const url = document.getElementById("edit-engine-url").value.trim();
+      const icon = document.getElementById("edit-engine-icon").value.trim();
+
+      if (!name) {
+        showFormError("edit-engine-error", "Please enter a name for the search engine.");
+        return;
+      }
+
+      if (!url) {
+        showFormError("edit-engine-error", "Please enter a search URL.");
+        return;
+      }
+
+      if (!window.validateSearchEngineUrl || !window.validateSearchEngineUrl(url)) {
+        showFormError("edit-engine-error", "Please enter a valid URL starting with http:// or https://.");
+        return;
+      }
+
+      if (window.updateCustomEngine) {
+        window.updateCustomEngine(id, name, url, icon);
+        applySearchEnginesSettings();
+        hideEditForm();
+        if (window.renderSearchEngineSelector) {
+          window.renderSearchEngineSelector();
+        }
+      }
+    });
+  }
+
+  const cancelBtn = document.getElementById("cancel-edit-btn");
+  if (cancelBtn) {
+    cancelBtn.addEventListener("click", hideEditForm);
+  }
+
+  const listEl = document.getElementById("custom-search-engines-list");
+  if (listEl) {
+    listEl.addEventListener("click", (e) => {
+      const editBtn = e.target.closest(".edit-btn");
+      const deleteBtn = e.target.closest(".delete-btn");
+
+      if (editBtn && editBtn.dataset.id) {
+        showEditForm(editBtn.dataset.id);
+      }
+
+      if (deleteBtn && deleteBtn.dataset.id) {
+        if (window.removeCustomEngine) {
+          window.removeCustomEngine(deleteBtn.dataset.id);
+          applySearchEnginesSettings();
+          hideEditForm();
+          if (window.renderSearchEngineSelector) {
+            window.renderSearchEngineSelector();
+          }
+        }
+      }
+    });
+  }
+}
+
+window.initSearchEnginesSection = initSearchEnginesSection;
 
 function initSettings() {
   // Apply initial settings

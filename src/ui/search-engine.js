@@ -6,14 +6,101 @@ const searchEngines = {
     fallbackName: "Bing",
     url: "https://www.bing.com/search?q=",
     icon: "https://www.bing.com/favicon.ico",
+    isBuiltIn: true,
   },
   google: {
     nameKey: "google",
     fallbackName: "Google",
     url: "https://www.google.com/search?q=",
     icon: "https://www.google.com/favicon.ico",
+    isBuiltIn: true,
   },
 };
+
+function getAllEngines() {
+  const customEngines = getCustomEngines();
+  return { ...customEngines, ...searchEngines };
+}
+
+function getCustomEngines() {
+  try {
+    const stored = localStorage.getItem("customSearchEngines");
+    if (!stored) return {};
+    const engines = JSON.parse(stored);
+    if (!Array.isArray(engines)) return {};
+    const result = {};
+    engines.forEach((engine) => {
+      if (engine.id && engine.name && engine.url) {
+        result[engine.id] = {
+          nameKey: "",
+          fallbackName: engine.name,
+          url: engine.url,
+          icon: engine.icon || "",
+          isBuiltIn: false,
+          isCustom: true,
+          id: engine.id,
+        };
+      }
+    });
+    return result;
+  } catch (error) {
+    console.warn("Failed to load custom search engines:", error);
+    return {};
+  }
+}
+
+function saveCustomEngines(engines) {
+  try {
+    localStorage.setItem("customSearchEngines", JSON.stringify(engines));
+  } catch (error) {
+    console.warn("Failed to save custom search engines:", error);
+  }
+}
+
+function addCustomEngine(name, url, icon) {
+  const engines = getCustomEnginesList();
+  const id = "custom_" + Date.now();
+  engines.push({ id, name, url, icon });
+  saveCustomEngines(engines);
+  return id;
+}
+
+function updateCustomEngine(id, name, url, icon) {
+  const engines = getCustomEnginesList();
+  const index = engines.findIndex((e) => e.id === id);
+  if (index === -1) return false;
+  engines[index] = { id, name, url, icon };
+  saveCustomEngines(engines);
+  return true;
+}
+
+function removeCustomEngine(id) {
+  const engines = getCustomEnginesList();
+  const filtered = engines.filter((e) => e.id !== id);
+  saveCustomEngines(filtered);
+  if (getSavedEngine() === id) {
+    saveEngine("bing");
+  }
+}
+
+function getCustomEnginesList() {
+  try {
+    const stored = localStorage.getItem("customSearchEngines");
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function validateSearchEngineUrl(url) {
+  if (!url || typeof url !== "string") return false;
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
 
 let isSearchHandlerBound = false;
 let outsideClickHandler = null;
@@ -21,7 +108,8 @@ let outsideClickHandler = null;
 function getSavedEngine() {
   try {
     const savedEngine = localStorage.getItem("defaultEngine") || "bing";
-    return searchEngines[savedEngine] ? savedEngine : "bing";
+    const allEngines = getAllEngines();
+    return allEngines[savedEngine] ? savedEngine : "bing";
   } catch (error) {
     console.warn("Failed to read saved search engine:", error);
     return "bing";
@@ -29,7 +117,8 @@ function getSavedEngine() {
 }
 
 function saveEngine(engineKey) {
-  if (!searchEngines[engineKey]) {
+  const allEngines = getAllEngines();
+  if (!allEngines[engineKey]) {
     return;
   }
 
@@ -41,21 +130,22 @@ function saveEngine(engineKey) {
 }
 
 function getEngineLabel(engineKey) {
-  const engine = searchEngines[engineKey];
+  const allEngines = getAllEngines();
+  const engine = allEngines[engineKey];
   if (!engine) {
     return "";
   }
 
-  if (!window.i18n || typeof window.i18n.t !== "function") {
-    return engine.fallbackName;
+  if (!engine.isCustom && window.i18n && typeof window.i18n.t === "function") {
+    const translatedName = window.i18n.t(engine.nameKey);
+    return translatedName === engine.nameKey ? engine.fallbackName : translatedName;
   }
 
-  const translatedName = window.i18n.t(engine.nameKey);
-  return translatedName === engine.nameKey ? engine.fallbackName : translatedName;
+  return engine.fallbackName;
 }
 
 function runSelectedEngineSearch(query) {
-  const selectedEngine = searchEngines[getSavedEngine()] || searchEngines.bing;
+  const selectedEngine = getAllEngines()[getSavedEngine()] || searchEngines.bing;
   window.location.href = `${selectedEngine.url}${encodeURIComponent(query)}`;
 }
 
@@ -71,6 +161,8 @@ function renderSearchEngineSelector() {
 
   const savedEngine = getSavedEngine();
   const savedEngineLabel = getEngineLabel(savedEngine);
+  const allEngines = getAllEngines();
+  const savedEngineData = allEngines[savedEngine];
 
   if (outsideClickHandler) {
     document.removeEventListener("click", outsideClickHandler);
@@ -79,16 +171,16 @@ function renderSearchEngineSelector() {
 
   enginesEl.innerHTML = `
     <div class="selected-engine" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false" title="${savedEngineLabel}">
-      <img src="${searchEngines[savedEngine].icon}" alt="${savedEngineLabel}" />
+      <img src="${savedEngineData.icon}" alt="${savedEngineLabel}" />
       <span class="dropdown-arrow">▼</span>
     </div>
     <div class="engine-dropdown" role="listbox">
-      ${Object.keys(searchEngines)
+      ${Object.keys(allEngines)
         .map((engineKey) => {
           const engineLabel = getEngineLabel(engineKey);
           return `
         <div class="engine-option${engineKey === savedEngine ? " is-selected" : ""}" data-key="${engineKey}" role="option" aria-selected="${engineKey === savedEngine}">
-          <img src="${searchEngines[engineKey].icon}" alt="${engineLabel}" />
+          <img src="${allEngines[engineKey].icon}" alt="${engineLabel}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23999%22 stroke-width=%222%22><circle cx=%2212%22 cy=%2212%22 r=%2210%22/><path d=%22M12 8v4m0 4h.01%22/></svg>'" />
           <span>${engineLabel}</span>
         </div>
       `;
@@ -213,5 +305,15 @@ function clearSearchValidationFeedback() {
 // Initialize on page load
 initSearchEngine();
 
-// Expose for global access (used by language switching)
+// Expose for global access (used by language switching and settings)
 window.initSearchEngine = initSearchEngine;
+window.getAllEngines = getAllEngines;
+window.getCustomEngines = getCustomEngines;
+window.getCustomEnginesList = getCustomEnginesList;
+window.addCustomEngine = addCustomEngine;
+window.updateCustomEngine = updateCustomEngine;
+window.removeCustomEngine = removeCustomEngine;
+window.validateSearchEngineUrl = validateSearchEngineUrl;
+window.getSavedEngine = getSavedEngine;
+window.saveEngine = saveEngine;
+window.getEngineLabel = getEngineLabel;

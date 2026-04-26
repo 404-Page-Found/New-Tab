@@ -3783,6 +3783,209 @@ body.light-theme .language-code {
   color: #666;
 }
 
+/* Search Engines Settings */
+.search-engines-setting-group {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.search-engines-setting-group:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.search-engines-setting-group h4 {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.search-engines-setting-group p {
+  margin: 0 0 16px 0;
+  font-size: 12px;
+  color: rgba(107, 114, 128, 0.8);
+  line-height: 1.4;
+}
+
+.custom-search-engines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.custom-engine-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.custom-engine-item img {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+.custom-engine-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.custom-engine-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--settings-text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-engine-url {
+  font-size: 11px;
+  color: rgba(107, 114, 128, 0.7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.custom-engine-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.custom-engine-actions button {
+  padding: 6px 10px;
+  font-size: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.custom-engine-actions .edit-btn {
+  background: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+}
+
+.custom-engine-actions .edit-btn:hover {
+  background: rgba(33, 150, 243, 0.2);
+}
+
+.custom-engine-actions .delete-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.custom-engine-actions .delete-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.add-search-engine-form,
+.edit-search-engine-form {
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(107, 114, 128, 0.15);
+}
+
+.add-search-engine-form h5,
+.edit-search-engine-form h5 {
+  margin: 0 0 16px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--settings-text-color);
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--settings-text-color);
+}
+
+.form-group input[type="text"],
+.form-group input[type="url"] {
+  width: 100%;
+  padding: 8px 12px;
+  font-size: 13px;
+  border: 1px solid rgba(107, 114, 128, 0.3);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--settings-text-color);
+  box-sizing: border-box;
+}
+
+.form-group input::placeholder {
+  color: rgba(107, 114, 128, 0.6);
+}
+
+.form-group small {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: rgba(107, 114, 128, 0.6);
+}
+
+.form-error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: 4px;
+}
+
+.form-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+/* Light theme adjustments for search engines */
+body.light-theme .search-engines-setting-group {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .custom-engine-item {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .custom-engine-name {
+  color: rgba(55, 65, 81, 0.9);
+}
+
+body.light-theme .add-search-engine-form,
+body.light-theme .edit-search-engine-form {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .form-group label {
+  color: rgba(55, 65, 81, 0.9);
+}
+
+body.light-theme .form-group input[type="text"],
+body.light-theme .form-group input[type="url"] {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.15);
+  color: #1f2937;
+}
+
 /* Light Theme Adjustments for Update Features */
 body.light-theme .update-notification {
   background: rgba(255, 255, 255, 0.95);

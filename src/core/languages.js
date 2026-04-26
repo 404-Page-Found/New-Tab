@@ -101,6 +101,19 @@ const translations = {
     english: "English",
     chinese: "中文",
 
+    // Search engines settings
+    searchEngines: "Search Engines",
+    searchEnginesSettings: "Search Engines",
+    searchEnginesSettingsDesc: "Add and manage custom search engines",
+    engineName: "Name",
+    engineUrl: "Search URL",
+    engineIcon: "Icon URL (optional)",
+    engineUrlHint: "The URL with {query} placeholder for your search term",
+    addSearchEngine: "Add Search Engine",
+    editSearchEngine: "Edit Search Engine",
+    addEngine: "Add Engine",
+    saveChanges: "Save Changes",
+
     // About settings
     aboutSettings: "About New-Tab",
     aboutSettingsDesc: "Customize your new tab experience with beautiful backgrounds, apps, and settings",
@@ -336,6 +349,19 @@ const translations = {
     languageSettingsDesc: "选择您喜欢的语言",
     english: "English",
     chinese: "中文",
+
+    // Search engines settings
+    searchEngines: "搜索引擎",
+    searchEnginesSettings: "搜索引擎",
+    searchEnginesSettingsDesc: "添加和管理自定义搜索引擎",
+    engineName: "名称",
+    engineUrl: "搜索网址",
+    engineIcon: "图标网址（可选）",
+    engineUrlHint: "包含 {query} 占位符的搜索网址",
+    addSearchEngine: "添加搜索引擎",
+    editSearchEngine: "编辑搜索引擎",
+    addEngine: "添加引擎",
+    saveChanges: "保存更改",
 
     // About settings
     aboutSettings: "关于 New-Tab",

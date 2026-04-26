@@ -216,6 +216,9 @@
           <button class="settings-menu-item" data-section="language" data-i18n="language">
             Language
           </button>
+          <button class="settings-menu-item" data-section="search-engines" data-i18n="searchEngines">
+            Search Engines
+          </button>
           <button class="settings-menu-item" data-section="about" data-i18n="about">About</button>
         </nav>
         <div class="settings-content">
@@ -570,6 +573,56 @@
                   <input type="radio" name="language" value="zh" />
                   <span class="label" data-i18n="chinese">中文 (Chinese)</span>
                 </label>
+              </div>
+            </div>
+          </section>
+          <section class="settings-section" data-section="search-engines" style="display: none">
+            <div class="search-engines-setting-group">
+              <h4 data-i18n="searchEnginesSettings">Search Engines</h4>
+              <p data-i18n="searchEnginesSettingsDesc">Add and manage custom search engines</p>
+
+              <div class="custom-search-engines-list" id="custom-search-engines-list">
+              </div>
+
+              <div class="add-search-engine-form">
+                <h5 data-i18n="addSearchEngine">Add Search Engine</h5>
+                <div class="form-group">
+                  <label for="new-engine-name" data-i18n="engineName">Name</label>
+                  <input type="text" id="new-engine-name" placeholder="DuckDuckGo" />
+                </div>
+                <div class="form-group">
+                  <label for="new-engine-url" data-i18n="engineUrl">Search URL</label>
+                  <input type="url" id="new-engine-url" placeholder="https://duckduckgo.com/?q=" />
+                  <small data-i18n="engineUrlHints">The URL with {query} placeholder for your search term</small>
+                </div>
+                <div class="form-group">
+                  <label for="new-engine-icon" data-i18n="engineIcon">Icon URL (optional)</label>
+                  <input type="url" id="new-engine-icon" placeholder="https://example.com/icon.png" />
+                </div>
+                <div class="form-error" id="add-engine-error" style="display: none;"></div>
+                <button type="button" id="add-engine-btn" class="setting-btn" data-i18n="addEngine">Add Engine</button>
+              </div>
+
+              <div class="edit-search-engine-form" id="edit-search-engine-form" style="display: none;">
+                <h5 data-i18n="editSearchEngine">Edit Search Engine</h5>
+                <input type="hidden" id="edit-engine-id" />
+                <div class="form-group">
+                  <label for="edit-engine-name" data-i18n="engineName">Name</label>
+                  <input type="text" id="edit-engine-name" />
+                </div>
+                <div class="form-group">
+                  <label for="edit-engine-url" data-i18n="engineUrl">Search URL</label>
+                  <input type="url" id="edit-engine-url" />
+                </div>
+                <div class="form-group">
+                  <label for="edit-engine-icon" data-i18n="engineIcon">Icon URL (optional)</label>
+                  <input type="url" id="edit-engine-icon" />
+                </div>
+                <div class="form-error" id="edit-engine-error" style="display: none;"></div>
+                <div class="form-buttons">
+                  <button type="button" id="save-engine-btn" class="setting-btn" data-i18n="saveChanges">Save Changes</button>
+                  <button type="button" id="cancel-edit-btn" class="setting-btn secondary" data-i18n="cancel">Cancel</button>
+                </div>
               </div>
             </div>
           </section>
