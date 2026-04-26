@@ -1,4 +1,4 @@
-// js/ai/ai-service.js - AI Service Module
+// src/ai/ai-service.js - AI Service Module
 // Handles chat UI, message management, topics/conversations, and integrates with OpenRouter API
 // Includes offline mode support for when API is unavailable
 

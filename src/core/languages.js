@@ -1,4 +1,4 @@
-// js/languages.js - Internationalization support
+// src/core/languages.js - Internationalization support
 
 const translations = {
   en: {

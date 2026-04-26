@@ -1,4 +1,4 @@
-// js/ai/markdown-parser.js - Optimized Markdown Parser
+// src/ai/markdown-parser.js - Optimized Markdown Parser
 // High-performance markdown parser with caching, syntax highlighting, and task list support
 
 const MarkdownParser = (function() {

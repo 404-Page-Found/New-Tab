@@ -1,4 +1,4 @@
-// js/version.js - Centralized version management
+// src/core/version.js - Centralized version management
 
 // Current application version
 // Update this single constant when releasing new versions

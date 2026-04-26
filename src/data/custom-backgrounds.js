@@ -1,4 +1,4 @@
-// js/custom-backgrounds.js - Custom background upload and management via IndexedDB
+// src/data/custom-backgrounds.js - Custom background upload and management via IndexedDB
 
 (function () {
   const DB_NAME = 'NewTabCustomBackgrounds';

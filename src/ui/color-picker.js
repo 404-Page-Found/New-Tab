@@ -1,4 +1,4 @@
-// js/color-picker.js - Modern Color Picker Component
+// src/ui/color-picker.js - Modern Color Picker Component
 
 class ModernColorPicker {
   constructor(options = {}) {

@@ -1,4 +1,4 @@
-// js/utils.js - Common utility functions
+// src/core/utils.js - Common utility functions
 
 // URL Validation Utility
 // Returns an object with status, url, message, and originalInput

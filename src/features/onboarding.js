@@ -1,4 +1,4 @@
-// js/onboarding.js - Interactive onboarding tour for new users
+// src/features/onboarding.js - Interactive onboarding tour for new users
 
 class OnboardingTour {
   constructor() {
