@@ -941,6 +941,7 @@ body {
   border-radius: 3px;
 }
 
+.engine-option.is-selected,
 .engine-option[id="selected"] {
   background: rgba(33, 150, 243, 0.2);
 }
