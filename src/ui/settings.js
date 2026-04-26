@@ -511,7 +511,9 @@ if (clockStyleReset) {
     localStorage.removeItem("clockColor");
     localStorage.removeItem("clockFont");
     localStorage.removeItem("clockSize");
+    localStorage.removeItem("clockFormat");
     applyClockStyle();
+    applyClockFormat();
   });
 }
 
@@ -576,7 +578,56 @@ if (dateStyleReset) {
     localStorage.removeItem("dateColor");
     localStorage.removeItem("dateFont");
     localStorage.removeItem("dateSize");
+    localStorage.removeItem("dateFormat");
     applyDateStyle();
+    applyDateFormat();
+  });
+}
+
+// Clock and date format options
+const CLOCK_FORMAT_OPTIONS = ["auto", "12h", "24h"];
+const DATE_FORMAT_OPTIONS = ["auto", "long", "short", "compact"];
+
+function loadClockFormat() {
+  return localStorage.getItem("clockFormat") || "auto";
+}
+
+function loadDateFormat() {
+  return localStorage.getItem("dateFormat") || "auto";
+}
+
+function applyClockFormat() {
+  const format = loadClockFormat();
+  const picker = document.getElementById("clock-format-picker");
+  if (picker && picker.value !== format) {
+    picker.value = format;
+  }
+  if (window.updateTime) window.updateTime();
+}
+
+function applyDateFormat() {
+  const format = loadDateFormat();
+  const picker = document.getElementById("date-format-picker");
+  if (picker && picker.value !== format) {
+    picker.value = format;
+  }
+  if (window.updateTime) window.updateTime();
+}
+
+// Event listeners for format selectors
+const clockFormatPicker = document.getElementById("clock-format-picker");
+if (clockFormatPicker) {
+  clockFormatPicker.addEventListener("change", function () {
+    localStorage.setItem("clockFormat", this.value);
+    applyClockFormat();
+  });
+}
+
+const dateFormatPicker = document.getElementById("date-format-picker");
+if (dateFormatPicker) {
+  dateFormatPicker.addEventListener("change", function () {
+    localStorage.setItem("dateFormat", this.value);
+    applyDateFormat();
   });
 }
 
@@ -861,6 +912,8 @@ function initSettings() {
   applyBg();
   applyClockStyle();
   applyDateStyle();
+  applyClockFormat();
+  applyDateFormat();
   applyTheme();
   applyTodoEnabled();
   applyLanguageSetting();
