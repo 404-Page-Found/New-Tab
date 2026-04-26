@@ -97,6 +97,24 @@ const backgroundsMap = {
     url: 'background/Water_Beside_Forest.jpeg',
   },
   // Live Video Background
+  'Animated Wallpaper - Kitten': {
+    title: 'Animated Wallpaper - Kitten',
+    thumb: 'background/thumbs/Animated-Wallpaper-Kitten.jpeg',
+    url: 'background/live_background/Animated-Wallpaper-Kitten.mp4',
+    type: 'video'
+  },
+  'Anime Cartoon - Cottage': {
+    title: 'Anime Cartoon - Cottage',
+    thumb: 'background/thumbs/Anime-Cartoon-Cottage.jpeg',
+    url: 'background/live_background/Anime-Cartoon-Cottage.mp4',
+    type: 'video'
+  },
+  'Boy Running - Green Hillside': {
+    title: 'Boy Running - Green Hillside',
+    thumb: 'background/thumbs/Boy-Running-Green-Hillside.jpeg',
+    url: 'background/live_background/Boy-Running-Green-Hillside.mp4',
+    type: 'video'
+  },
   'Tyndall - Morning Light': {
     title: 'Tyndall - Morning Light',
     thumb: 'background/thumbs/Tyndall-Morning_Light.jpeg', // Actual video thumbnail
