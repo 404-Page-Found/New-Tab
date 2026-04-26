@@ -5473,7 +5473,9 @@ body.light-theme .quick-action-btn.danger {
   border-radius: 12px;
   backdrop-filter: blur(15px);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    border-color 0.22s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.22s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: grab;
   position: relative;
   overflow: hidden;
@@ -5547,8 +5549,7 @@ body.light-theme .todo-bullet .bullet-checked {
 }
 
 .todo-item:hover {
-  background: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 /* Removed old todo-item:hover::before as it used the old bar */
@@ -6255,7 +6256,7 @@ body.light-theme .todo-item {
 }
 
 body.light-theme .todo-item:hover {
-  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(31, 41, 55, 0.12);
 }
 
 body.light-theme .todo-item.completed {

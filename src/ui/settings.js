@@ -16,6 +16,63 @@ function supportsVideoElement() {
   return !!(document.createElement('video').play);
 }
 
+const VIDEO_THUMBNAIL_HIDE_DELAY_MS = 3000;
+const IMAGE_THUMBNAIL_HIDE_DELAY_MS = 2500;
+
+let backgroundTransitionTimeout = null;
+let backgroundLoadVersion = 0;
+
+function clearBackgroundTransitionTimeout() {
+  if (!backgroundTransitionTimeout) return;
+
+  clearTimeout(backgroundTransitionTimeout);
+  backgroundTransitionTimeout = null;
+}
+
+function canReuseCurrentVideo(videoEl, backgroundId) {
+  if (!videoEl) return false;
+
+  return (
+    videoEl.dataset.currentBg === backgroundId &&
+    !videoEl.classList.contains('hidden') &&
+    videoEl.classList.contains('active') &&
+    !videoEl.paused &&
+    !videoEl.ended &&
+    !videoEl.error &&
+    !!videoEl.currentSrc &&
+    videoEl.readyState >= 2
+  );
+}
+
+function resetBackgroundVideo(videoEl, unloadSource) {
+  if (!videoEl) return;
+
+  clearBackgroundTransitionTimeout();
+
+  videoEl.oncanplaythrough = null;
+  videoEl.onloadeddata = null;
+  videoEl.onplaying = null;
+  videoEl.onloadedmetadata = null;
+  videoEl.onerror = null;
+  videoEl.onpause = null;
+
+  videoEl.classList.remove('active', 'ready', 'loading');
+  videoEl.classList.add('hidden');
+  videoEl.pause();
+
+  delete videoEl.dataset.currentBg;
+  delete videoEl.dataset.wasPlaying;
+
+  if (!unloadSource) return;
+
+  const sourceEl = videoEl.querySelector('source');
+  if (!sourceEl) return;
+
+  sourceEl.removeAttribute('src');
+  sourceEl.type = 'video/mp4';
+  videoEl.load();
+}
+
 // Video background resize handler - ensures video scales properly on window resize
 function initVideoResizeHandler() {
   const videoEl = document.getElementById('bg-video');
@@ -100,8 +157,17 @@ function applyBg() {
     thumbs[i].classList.toggle('selected', thumbs[i].getAttribute('data-bg') === bg);
   }
 
+  const thumbnailEl = document.getElementById('bg-thumbnail');
+  const fullEl = document.getElementById('bg-full');
+  const videoEl = document.getElementById('bg-video');
+  const containerEl = document.getElementById('background-container');
+
   // Handle custom backgrounds (stored in IndexedDB)
   if (window._customBackgrounds && window._customBackgrounds.isCustom(bg)) {
+    backgroundLoadVersion += 1;
+    clearBackgroundTransitionTimeout();
+    resetBackgroundVideo(videoEl, true);
+    containerEl && containerEl.classList.remove('video-fallback', 'video-error');
     window._customBackgrounds.apply(bg);
     return;
   }
@@ -109,11 +175,14 @@ function applyBg() {
   // Get background data from the map
   const bgData = window._backgrounds ? window._backgrounds.find(b => b.id === bg) : null;
   if (!bgData) return;
-  
-  const thumbnailEl = document.getElementById('bg-thumbnail');
-  const fullEl = document.getElementById('bg-full');
-  const videoEl = document.getElementById('bg-video');
-  const containerEl = document.getElementById('background-container');
+
+  if (bgData.type === 'video' && canReuseCurrentVideo(videoEl, bgData.id)) {
+    return;
+  }
+
+  const loadVersion = ++backgroundLoadVersion;
+
+  clearBackgroundTransitionTimeout();
   
   if (!thumbnailEl || !fullEl) return;
   
@@ -149,13 +218,16 @@ function applyBg() {
     containerEl.classList.remove('video-error');
     
     if (videoEl) {
+      resetBackgroundVideo(videoEl, false);
+
       // Reset video element state
       videoEl.classList.remove('hidden');
-      videoEl.classList.remove('active', 'ready');
+      videoEl.dataset.currentBg = bgData.id;
       
       // Keep thumbnail visible while video loads (placeholder)
       // This matches the image background behavior - show blurred thumbnail first
       thumbnailEl.classList.remove('hidden');
+      thumbnailEl.classList.remove('clearing');
       
       // Set thumbnail source for placeholder (show blurred version while video loads)
       thumbnailEl.src = bgData.thumb;
@@ -176,6 +248,10 @@ function applyBg() {
       // Start playing immediately while fading in - mimics image loading behavior
       // This ensures the video starts playback right away without waiting for full buffer
       const startVideoPlayback = function() {
+        if (loadVersion !== backgroundLoadVersion || videoEl.dataset.currentBg !== bgData.id) {
+          return;
+        }
+
         const playPromise = videoEl.play();
         if (playPromise !== undefined) {
           playPromise.catch(error => {
@@ -188,7 +264,10 @@ function applyBg() {
       // Helper to trigger crossfade between thumbnail and video
       let crossfadeTriggered = false;
       const triggerCrossfade = function() {
-        if (crossfadeTriggered) return;
+        if (crossfadeTriggered || loadVersion !== backgroundLoadVersion || videoEl.dataset.currentBg !== bgData.id) {
+          return;
+        }
+
         crossfadeTriggered = true;
         
         // Start video playback immediately
@@ -209,78 +288,92 @@ function applyBg() {
         // After crossfade completes, fully hide the thumbnail
         // Use 3000ms to ensure video is fully visible before hiding thumbnail
         // This matches the 2.5s opacity transition in CSS
-        setTimeout(() => {
+        backgroundTransitionTimeout = setTimeout(() => {
+          if (loadVersion !== backgroundLoadVersion || videoEl.dataset.currentBg !== bgData.id) {
+            return;
+          }
+
           thumbnailEl.classList.add('hidden');
           thumbnailEl.classList.remove('clearing');
-        }, 3000); // Match CSS opacity transition duration
+          backgroundTransitionTimeout = null;
+        }, VIDEO_THUMBNAIL_HIDE_DELAY_MS); // Match CSS opacity transition duration
       };
       
       // Video can play through - trigger crossfade
-      videoEl.addEventListener('canplaythrough', triggerCrossfade, { once: true });
+      videoEl.oncanplaythrough = triggerCrossfade;
       
       // Fallback: if canplaythrough takes too long, trigger on loadeddata
-      videoEl.addEventListener('loadeddata', function() {
+      videoEl.onloadeddata = function() {
+        videoEl.onloadeddata = null;
         if (!crossfadeTriggered) {
           triggerCrossfade();
         }
-      }, { once: true });
+      };
       
       // Additional fallback: ensure crossfade happens after video starts playing
-      videoEl.addEventListener('playing', function() {
+      videoEl.onplaying = function() {
+        videoEl.onplaying = null;
         if (!crossfadeTriggered) {
           triggerCrossfade();
         }
-      }, { once: true });
+      };
       
       // Video loaded metadata - ensure proper sizing
-      videoEl.addEventListener('loadedmetadata', function() {
+      videoEl.onloadedmetadata = function() {
+        videoEl.onloadedmetadata = null;
+        if (loadVersion !== backgroundLoadVersion || videoEl.dataset.currentBg !== bgData.id) {
+          return;
+        }
+
         // Force video to maintain proper scaling after metadata loads
         videoEl.style.width = '100%';
         videoEl.style.height = '100%';
-      }, { once: true });
+      };
       
       // Video playback error - fallback to thumbnail
-      videoEl.addEventListener('error', function() {
+      videoEl.onerror = function() {
+        if (loadVersion !== backgroundLoadVersion || videoEl.dataset.currentBg !== bgData.id) {
+          return;
+        }
+
         console.warn('Video background failed to load, falling back to image');
         containerEl.classList.add('video-error');
-        videoEl.classList.add('hidden');
+        resetBackgroundVideo(videoEl, true);
         thumbnailEl.classList.remove('hidden');
+        thumbnailEl.classList.remove('clearing');
         thumbnailEl.src = bgData.thumb;
         const fullImg = new Image();
         fullImg.onload = function() {
+          if (loadVersion !== backgroundLoadVersion) {
+            return;
+          }
+
           fullEl.src = bgData.thumb;
           requestAnimationFrame(() => {
             fullEl.classList.add('loaded');
           });
         };
         fullImg.src = bgData.thumb;
-      });
+      };
       
       // Handle visibility change to pause/resume video for better performance
-      videoEl.addEventListener('pause', function() {
+      videoEl.onpause = function() {
+        if (loadVersion !== backgroundLoadVersion || videoEl.dataset.currentBg !== bgData.id) {
+          return;
+        }
+
         if (!document.hidden && videoEl.classList.contains('active')) {
           videoEl.play().catch(() => {});
         }
-      });
-      
-      // Resume playback when tab becomes visible
-      document.addEventListener('visibilitychange', function() {
-        if (!document.hidden && videoEl.classList.contains('active') && videoEl.paused) {
-          videoEl.play().catch(() => {});
-        }
-      });
+      };
     }
     return;
   }
   
   // Reset video element for image backgrounds
-  if (videoEl) {
-    videoEl.classList.remove('active', 'loading');
-    videoEl.classList.add('hidden');
-    videoEl.pause();
-    videoEl.querySelector('source').src = '';
-  }
+  resetBackgroundVideo(videoEl, true);
   containerEl && containerEl.classList.remove('video-fallback');
+  containerEl && containerEl.classList.remove('video-error');
   
   // Handle image background (original logic)
   // Reset states
@@ -294,9 +387,17 @@ function applyBg() {
   // Start loading full resolution image
   const fullImg = new Image();
   fullImg.onload = function() {
+    if (loadVersion !== backgroundLoadVersion) {
+      return;
+    }
+
     fullEl.src = bgData.url;
     // Small delay to ensure browser has rendered
     requestAnimationFrame(() => {
+      if (loadVersion !== backgroundLoadVersion) {
+        return;
+      }
+
       fullEl.classList.add('loaded');
       
       // Add clearing class to animate blur-to-clear while fading out
@@ -305,10 +406,15 @@ function applyBg() {
       
       // After crossfade completes, fully hide the thumbnail
       // Use 2500ms to match the CSS clearing transition duration (2.5s opacity)
-      setTimeout(() => {
+      backgroundTransitionTimeout = setTimeout(() => {
+        if (loadVersion !== backgroundLoadVersion) {
+          return;
+        }
+
         thumbnailEl.classList.add('hidden');
         thumbnailEl.classList.remove('clearing');
-      }, 2500); // Match CSS clearing transition duration
+        backgroundTransitionTimeout = null;
+      }, IMAGE_THUMBNAIL_HIDE_DELAY_MS); // Match CSS clearing transition duration
     });
   };
   fullImg.src = bgData.url;

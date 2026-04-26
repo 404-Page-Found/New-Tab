@@ -7,6 +7,8 @@
 
   let db = null;
   let blobUrlCache = {};
+  let customBackgroundLoadVersion = 0;
+  let customBackgroundTransitionTimeout = null;
 
   // --- IndexedDB helpers ---
 
@@ -203,6 +205,46 @@
     blobUrlCache = {};
   }
 
+  function clearCustomBackgroundTransitionTimeout() {
+    if (!customBackgroundTransitionTimeout) return;
+
+    clearTimeout(customBackgroundTransitionTimeout);
+    customBackgroundTransitionTimeout = null;
+  }
+
+  function isActiveCustomBackgroundRequest(id, loadVersion) {
+    return loadVersion === customBackgroundLoadVersion && localStorage.getItem('homepageBg') === id;
+  }
+
+  function resetCustomBackgroundVideo(videoEl, unloadSource) {
+    if (!videoEl) return;
+
+    clearCustomBackgroundTransitionTimeout();
+
+    videoEl.oncanplaythrough = null;
+    videoEl.onloadeddata = null;
+    videoEl.onplaying = null;
+    videoEl.onloadedmetadata = null;
+    videoEl.onerror = null;
+    videoEl.onpause = null;
+
+    videoEl.classList.remove('active', 'ready', 'loading');
+    videoEl.classList.add('hidden');
+    videoEl.pause();
+
+    delete videoEl.dataset.currentBg;
+    delete videoEl.dataset.wasPlaying;
+
+    if (!unloadSource) return;
+
+    var sourceEl = videoEl.querySelector('source');
+    if (!sourceEl) return;
+
+    sourceEl.removeAttribute('src');
+    sourceEl.type = 'video/mp4';
+    videoEl.load();
+  }
+
   // --- Upload handling ---
 
   function handleUpload(type) {
@@ -350,8 +392,10 @@
   // --- Apply custom background ---
 
   function applyCustomBackground(id) {
+    var loadVersion = ++customBackgroundLoadVersion;
+
     return getCustomBackground(id).then(function (bg) {
-      if (!bg) return false;
+      if (!bg || !isActiveCustomBackgroundRequest(id, loadVersion)) return false;
 
       var thumbnailEl = document.getElementById('bg-thumbnail');
       var fullEl = document.getElementById('bg-full');
@@ -360,10 +404,20 @@
 
       if (!thumbnailEl || !fullEl) return false;
 
+      clearCustomBackgroundTransitionTimeout();
+
       // Revoke old blob URLs to free memory
       revokeAllBlobUrls();
 
+      if (!isActiveCustomBackgroundRequest(id, loadVersion)) return false;
+
       var blobUrl = URL.createObjectURL(bg.data);
+
+      if (!isActiveCustomBackgroundRequest(id, loadVersion)) {
+        URL.revokeObjectURL(blobUrl);
+        return false;
+      }
+
       blobUrlCache[id] = blobUrl;
 
       if (bg.type === 'video') {
@@ -374,53 +428,101 @@
         thumbnailEl.src = bg.thumb;
 
         if (videoEl) {
-          videoEl.classList.remove('hidden', 'active', 'ready', 'loading');
+          resetCustomBackgroundVideo(videoEl, false);
+
+          videoEl.classList.remove('hidden');
           videoEl.classList.add('loading');
+          videoEl.dataset.currentBg = id;
 
           if (containerEl) {
             containerEl.classList.remove('video-fallback', 'video-error');
           }
 
-          videoEl.querySelector('source').src = blobUrl;
+          var sourceEl = videoEl.querySelector('source');
+          if (!sourceEl) {
+            URL.revokeObjectURL(blobUrl);
+            delete blobUrlCache[id];
+            return false;
+          }
+
+          sourceEl.src = blobUrl;
+          sourceEl.type = bg.data.type || 'video/mp4';
           videoEl.load();
 
           var crossfadeTriggered = false;
           function triggerCrossfade() {
-            if (crossfadeTriggered) return;
+            if (crossfadeTriggered || !isActiveCustomBackgroundRequest(id, loadVersion) || videoEl.dataset.currentBg !== id) {
+              return;
+            }
+
             crossfadeTriggered = true;
             videoEl.play().catch(function () {});
             videoEl.classList.remove('loading');
             videoEl.classList.add('active', 'ready');
             thumbnailEl.classList.add('clearing');
-            setTimeout(function () {
+
+            customBackgroundTransitionTimeout = setTimeout(function () {
+              if (!isActiveCustomBackgroundRequest(id, loadVersion) || videoEl.dataset.currentBg !== id) {
+                return;
+              }
+
               thumbnailEl.classList.add('hidden');
               thumbnailEl.classList.remove('clearing');
+              customBackgroundTransitionTimeout = null;
             }, 3000);
           }
 
           videoEl.oncanplaythrough = triggerCrossfade;
           videoEl.onloadeddata = function () {
+            videoEl.onloadeddata = null;
             if (!videoEl.classList.contains('active')) triggerCrossfade();
           };
           videoEl.onplaying = function () {
+            videoEl.onplaying = null;
             if (!videoEl.classList.contains('active')) triggerCrossfade();
           };
+          videoEl.onloadedmetadata = function () {
+            videoEl.onloadedmetadata = null;
+
+            if (!isActiveCustomBackgroundRequest(id, loadVersion) || videoEl.dataset.currentBg !== id) {
+              return;
+            }
+
+            videoEl.style.width = '100%';
+            videoEl.style.height = '100%';
+          };
           videoEl.onerror = function () {
+            if (!isActiveCustomBackgroundRequest(id, loadVersion) || videoEl.dataset.currentBg !== id) {
+              return;
+            }
+
             containerEl && containerEl.classList.add('video-error');
-            videoEl.classList.add('hidden');
+            resetCustomBackgroundVideo(videoEl, true);
             thumbnailEl.classList.remove('hidden');
+            thumbnailEl.classList.remove('clearing');
             fullEl.src = bg.thumb;
-            requestAnimationFrame(function () { fullEl.classList.add('loaded'); });
+
+            requestAnimationFrame(function () {
+              if (!isActiveCustomBackgroundRequest(id, loadVersion)) {
+                return;
+              }
+
+              fullEl.classList.add('loaded');
+            });
+          };
+          videoEl.onpause = function () {
+            if (!isActiveCustomBackgroundRequest(id, loadVersion) || videoEl.dataset.currentBg !== id) {
+              return;
+            }
+
+            if (!document.hidden && videoEl.classList.contains('active')) {
+              videoEl.play().catch(function () {});
+            }
           };
         }
       } else {
         // Image background
-        if (videoEl) {
-          videoEl.classList.remove('active', 'loading');
-          videoEl.classList.add('hidden');
-          videoEl.pause();
-          videoEl.querySelector('source').src = '';
-        }
+        resetCustomBackgroundVideo(videoEl, true);
         containerEl && containerEl.classList.remove('video-fallback', 'video-error');
 
         fullEl.classList.remove('loaded');
@@ -429,13 +531,28 @@
 
         var fullImg = new Image();
         fullImg.onload = function () {
+          if (!isActiveCustomBackgroundRequest(id, loadVersion)) {
+            return;
+          }
+
           fullEl.src = blobUrl;
+
           requestAnimationFrame(function () {
+            if (!isActiveCustomBackgroundRequest(id, loadVersion)) {
+              return;
+            }
+
             fullEl.classList.add('loaded');
             thumbnailEl.classList.add('clearing');
-            setTimeout(function () {
+
+            customBackgroundTransitionTimeout = setTimeout(function () {
+              if (!isActiveCustomBackgroundRequest(id, loadVersion)) {
+                return;
+              }
+
               thumbnailEl.classList.add('hidden');
               thumbnailEl.classList.remove('clearing');
+              customBackgroundTransitionTimeout = null;
             }, 2500);
           });
         };
@@ -540,11 +657,7 @@
         renderCustomBackgrounds();
         // Auto-select the newly uploaded background
         localStorage.setItem('homepageBg', bg.id);
-        if (bg.type === 'video') {
-          applyCustomBackground(bg.id);
-        } else {
-          applyBg();
-        }
+        applyBg();
       }
     });
   });
