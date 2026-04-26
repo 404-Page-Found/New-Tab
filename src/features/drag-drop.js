@@ -7,7 +7,9 @@
   let dragState = {
     sourceId: null,
     sourceElement: null,
+    sourceOrderIndex: -1,
     placeholder: null,
+    placeholderIndex: -1,
     dropIndex: -1
   };
 
@@ -17,11 +19,15 @@
   }
 
   // Get all draggable app icons (excluding add-app button)
-  function getDraggableIcons() {
+  function getDraggableIcons(options = {}) {
+    const { includeSource = false } = options;
     const grid = getAppGrid();
     if (!grid) return [];
     return Array.from(grid.querySelectorAll('.app-icon')).filter(
-      icon => icon.id !== 'new-app' && icon.id !== 'add-app'
+      icon =>
+        icon.id !== 'new-app' &&
+        icon.id !== 'add-app' &&
+        (includeSource || icon.id !== dragState.sourceId)
     );
   }
 
@@ -31,12 +37,15 @@
     if (!grid) return null;
     
     const style = window.getComputedStyle(grid);
-    const gap = parseInt(style.gap) || 50;
+    const fallbackGap = parseFloat(style.gap) || 50;
+    const columnGap = parseFloat(style.columnGap) || fallbackGap;
+    const rowGap = parseFloat(style.rowGap) || fallbackGap;
     const paddingLeft = parseInt(style.paddingLeft) || 70;
     const paddingRight = parseInt(style.paddingRight) || 70;
     
     return {
-      gap,
+      columnGap,
+      rowGap,
       paddingLeft,
       paddingRight,
       gridWidth: grid.offsetWidth - paddingLeft - paddingRight
@@ -54,8 +63,8 @@
     
     // Get the first icon to calculate item dimensions
     const firstIcon = icons[0];
-    const itemWidth = firstIcon.offsetWidth + layout.gap;
-    const itemsPerRow = Math.floor(layout.gridWidth / itemWidth) || 1;
+    const itemWidth = firstIcon.offsetWidth + layout.columnGap;
+    const itemsPerRow = Math.floor((layout.gridWidth + layout.columnGap) / itemWidth) || 1;
     
     // Get grid bounding rect
     const gridRect = grid.getBoundingClientRect();
@@ -69,7 +78,7 @@
     
     // Calculate row and column
     const col = Math.max(0, Math.floor(relativeX / itemWidth));
-    const row = Math.max(0, Math.floor(relativeY / (firstIcon.offsetHeight + layout.gap)));
+    const row = Math.max(0, Math.floor(relativeY / (firstIcon.offsetHeight + layout.rowGap)));
     
     // Calculate index
     let index = row * itemsPerRow + col;
@@ -80,6 +89,15 @@
     if (index > icons.length) index = icons.length;
     
     return index;
+  }
+
+  function getOrderIndexFromPlaceholderIndex(placeholderIndex) {
+    if (placeholderIndex < 0) return -1;
+    if (dragState.sourceOrderIndex < 0) return placeholderIndex;
+
+    return placeholderIndex >= dragState.sourceOrderIndex
+      ? placeholderIndex + 1
+      : placeholderIndex;
   }
 
   // Create placeholder element
@@ -137,7 +155,8 @@
     // Animate other icons to dodge
     animateDodging(insertIndex);
     
-    dragState.dropIndex = insertIndex;
+    dragState.placeholderIndex = insertIndex;
+    dragState.dropIndex = getOrderIndexFromPlaceholderIndex(insertIndex);
   }
 
   // Animate icons to dodge around the placeholder
@@ -160,6 +179,7 @@
     if (dragState.placeholder && dragState.placeholder.parentNode) {
       dragState.placeholder.parentNode.removeChild(dragState.placeholder);
     }
+    dragState.placeholderIndex = -1;
     dragState.dropIndex = -1;
   }
 
@@ -203,10 +223,14 @@
   function handleDragStart(e, target) {
     dragState.sourceId = target.id;
     dragState.sourceElement = target;
+    dragState.sourceOrderIndex = getDraggableIcons({ includeSource: true }).indexOf(target);
+    dragState.placeholderIndex = dragState.sourceOrderIndex;
+    dragState.dropIndex = getOrderIndexFromPlaceholderIndex(dragState.placeholderIndex);
 
     // Use requestAnimationFrame so the browser captures the drag image
-    // before we apply the faded/shrunken style
+    // before we replace the source slot with a placeholder.
     requestAnimationFrame(() => {
+      insertPlaceholder(dragState.placeholderIndex);
       target.classList.add('dragging');
     });
     e.dataTransfer.effectAllowed = 'move';
@@ -227,7 +251,7 @@
     e.preventDefault();
     const newIndex = calculateDropIndex(e);
     
-    if (newIndex !== dragState.dropIndex && newIndex >= 0) {
+    if (newIndex !== dragState.placeholderIndex && newIndex >= 0) {
       insertPlaceholder(newIndex);
     }
   }
@@ -250,7 +274,9 @@
     // Reset state
     dragState.sourceId = null;
     dragState.sourceElement = null;
+    dragState.sourceOrderIndex = -1;
     dragState.placeholder = null;
+    dragState.placeholderIndex = -1;
   }
 
   // Drag over handler (fires when cursor is over an icon).  It is
@@ -270,7 +296,7 @@
       // Update placeholder position based on target
       const icons = getDraggableIcons();
       const targetIndex = icons.indexOf(target);
-      if (targetIndex !== -1 && targetIndex !== dragState.dropIndex) {
+      if (targetIndex !== -1 && targetIndex !== dragState.placeholderIndex) {
         insertPlaceholder(targetIndex);
       }
     }

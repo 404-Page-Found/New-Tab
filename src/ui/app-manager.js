@@ -57,6 +57,7 @@ const addApp = document.getElementById('new-app');
     const displayName = app.nameKey && window.i18n ? window.i18n.t(app.nameKey) : (app.name || app.nameKey);
     // Use cached icon if available, otherwise use original icon
     const iconUrl = app.cachedIcon || app.icon;
+    a.title = displayName;
     // Load icon from external file (use images/icons/feedback.svg) rather than embedding inline SVG in JS.
     // The SVG file (`images/icons/feedback.svg`) uses `currentColor` where appropriate.
     let iconHtml = `<div class="icon"><img src="${escapeHtml(iconUrl)}" alt="${escapeHtml(displayName)}" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/edent/SuperTinyIcons/images/svg/globe.svg';"></div>`;
