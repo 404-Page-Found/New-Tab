@@ -1,28 +1,66 @@
 // main.js - Main initialization, time, date, motto
 
+// Detect if locale uses 12-hour time by checking Intl.DateTimeFormat resolved options
+function localeUses12Hour(locale) {
+  return new Intl.DateTimeFormat(locale, { hour: 'numeric' }).resolvedOptions().hour12;
+}
+
 function updateTime() {
   const now = new Date();
   const timeElement = document.getElementById("clock-time") || document.getElementById("clock");
   const dateElement = document.getElementById("date");
 
-  // Update time
-  const hours = String(now.getHours()).padStart(2, "0");
-  const minutes = String(now.getMinutes()).padStart(2, "0");
-  timeElement.textContent = `${hours}:${minutes}`;
-
-  // Update date - use current language for locale
+  const clockFormat = localStorage.getItem("clockFormat");
+  const dateFormat = localStorage.getItem("dateFormat");
   const currentLang = window.i18n ? window.i18n.currentLanguage() : 'en';
   const locale = currentLang === 'zh' ? 'zh-CN' : 'en-US';
-  
-  // For Chinese locale, manually format to add space between weekday and date
-  if (currentLang === 'zh') {
-    const weekday = now.toLocaleDateString('zh-CN', { weekday: "long" });
-    const month = now.toLocaleDateString('zh-CN', { month: "long" });
-    const day = now.toLocaleDateString('zh-CN', { day: "numeric" });
-    dateElement.textContent = `${month}${day} ${weekday}`;
+
+  // Update time based on format preference
+  let hours = now.getHours();
+  let minutes = String(now.getMinutes()).padStart(2, "0");
+  let timeStr;
+
+  if (clockFormat === "12h") {
+    const period = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    timeStr = `${hours}:${minutes} ${period}`;
+  } else if (clockFormat === "24h") {
+    timeStr = `${String(hours).padStart(2, "0")}:${minutes}`;
   } else {
-    const options = { weekday: "long", month: "long", day: "numeric" };
-    dateElement.textContent = now.toLocaleDateString(locale, options);
+    // Auto: respect locale preference (12h or 24h)
+    if (localeUses12Hour(locale)) {
+      const period = hours >= 12 ? "PM" : "AM";
+      hours = hours % 12 || 12;
+      timeStr = `${hours}:${minutes} ${period}`;
+    } else {
+      timeStr = `${String(hours).padStart(2, "0")}:${minutes}`;
+    }
+  }
+  timeElement.textContent = timeStr;
+
+  // Update date based on format preference
+  if (dateFormat === "short") {
+    dateElement.textContent = now.toLocaleDateString(locale, {
+      month: "numeric",
+      day: "numeric",
+      year: "numeric"
+    });
+  } else if (dateFormat === "compact") {
+    dateElement.textContent = now.toLocaleDateString(locale, {
+      month: "short",
+      day: "numeric"
+    });
+  } else {
+    // Long/auto/default: use locale-based format
+    if (currentLang === 'zh') {
+      const weekday = now.toLocaleDateString('zh-CN', { weekday: "long" });
+      const month = now.toLocaleDateString('zh-CN', { month: "long" });
+      const day = now.toLocaleDateString('zh-CN', { day: "numeric" });
+      dateElement.textContent = `${month}${day} ${weekday}`;
+    } else {
+      const options = { weekday: "long", month: "long", day: "numeric" };
+      dateElement.textContent = now.toLocaleDateString(locale, options);
+    }
   }
 }
 

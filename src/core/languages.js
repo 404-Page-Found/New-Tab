@@ -80,6 +80,10 @@ const translations = {
     // Clock settings
     clockSettings: "Clock Style",
     clockSettingsDesc: "Customize the appearance of your clock display",
+    timeFormat: "Time Format",
+    auto: "Auto",
+    hour12: "12-hour",
+    hour24: "24-hour",
     color: "Color",
     font: "Font",
     size: "Size",
@@ -88,6 +92,10 @@ const translations = {
     // Date settings
     dateSettings: "Date Style",
     dateSettingsDesc: "Customize the appearance of your date display",
+    dateFormat: "Date Format",
+    dateLong: "Long (e.g., Saturday, April 25)",
+    dateShort: "Short (e.g., 4/25/2026)",
+    dateCompact: "Compact (e.g., Apr 25)",
 
     // Themes settings
     themeSettings: "Theme",
@@ -316,6 +324,10 @@ const translations = {
     // Clock settings
     clockSettings: "时钟样式",
     clockSettingsDesc: "自定义时钟显示的外观",
+    timeFormat: "时间格式",
+    auto: "自动",
+    hour12: "12小时",
+    hour24: "24小时",
     color: "颜色",
     font: "字体",
     size: "大小",
@@ -324,6 +336,10 @@ const translations = {
     // Date settings
     dateSettings: "日期样式",
     dateSettingsDesc: "自定义日期显示的外观",
+    dateFormat: "日期格式",
+    dateLong: "完整 (例如：星期六，四月 25)",
+    dateShort: "短 (例如：4/25/2026)",
+    dateCompact: "简洁 (例如：四月 25)",
 
     // Themes settings
     themeSettings: "主题",
